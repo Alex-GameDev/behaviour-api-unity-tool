@@ -1,8 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class KeyRotation : MonoBehaviour {
+public class KeyRotation : MonoBehaviour
+{
+    public Toggle toggle;
+
+    private void Start()
+    {
+        gameObject.SetActive(toggle.isOn);
+    }
 
     private void Update()
     {

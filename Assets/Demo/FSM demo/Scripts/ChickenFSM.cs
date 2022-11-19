@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class ChickenFSM : MonoBehaviour {
+public class ChickenFSM : MonoBehaviour
+{
 
     #region variables
 

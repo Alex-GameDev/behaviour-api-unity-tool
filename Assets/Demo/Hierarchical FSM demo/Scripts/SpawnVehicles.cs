@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnVehicles : MonoBehaviour {
-
+public class SpawnVehicles : MonoBehaviour
+{
     #region variables
 
-    [SerializeField] private GameObject[] vehicles = new GameObject[8];
+    [SerializeField] private List<GameObject> _vehicles = new List<GameObject>();
 
     #endregion variables
 
@@ -18,7 +18,7 @@ public class SpawnVehicles : MonoBehaviour {
 
     private void SpawnVehicle()
     {
-        int vehicleIndex = Random.Range(0, vehicles.Length);
-        Instantiate(vehicles[vehicleIndex], transform.position, transform.rotation);
+        int vehicleIndex = Random.Range(0, _vehicles.Count);
+        Instantiate(_vehicles[vehicleIndex], transform.position, transform.rotation);
     }
 }
