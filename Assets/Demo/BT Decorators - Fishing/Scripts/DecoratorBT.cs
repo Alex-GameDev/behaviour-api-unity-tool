@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DecoratorBT : MonoBehaviour {
+public class DecoratorBT : MonoBehaviour
+{
 
     #region variables
 
@@ -61,11 +62,13 @@ public class DecoratorBT : MonoBehaviour {
 
     private ReturnValues RodThrown()
     {
-        if(animator.GetBool("throw")) {
+        if (animator.GetBool("throw"))
+        {
             //animator.SetBool("throw", false);
             return ReturnValues.Succeed;
         }
-        else {
+        else
+        {
             return ReturnValues.Running;
         }
     }
@@ -78,13 +81,15 @@ public class DecoratorBT : MonoBehaviour {
         animator.SetBool("pickUp", true);
         GameObject gameObject;
         Vector3 newPosition = new Vector3(rodPoint.position.x, -1, rodPoint.position.z);
-        if(random == 0) {
+        if (random == 0)
+        {
             Quaternion newRotation = Quaternion.Euler(-60, 25, rodPoint.rotation.z);
             gameObject = Instantiate(boot, newPosition, newRotation, rodPoint);
             gameObject.GetComponent<Rigidbody>().useGravity = false;
             fishCatched = false;
         }
-        else {
+        else
+        {
             Quaternion newRotation = Quaternion.Euler(-90, rodPoint.rotation.y, 90);
             gameObject = Instantiate(fish, newPosition, newRotation, rodPoint);
             gameObject.GetComponent<Rigidbody>().useGravity = false;
@@ -97,18 +102,21 @@ public class DecoratorBT : MonoBehaviour {
 
     private ReturnValues SomethingCatched()
     {
-        if(animator.GetBool("pickUp")) {
+        if (animator.GetBool("pickUp"))
+        {
             //animator.SetBool("pickUp", false);
             return ReturnValues.Succeed;
         }
-        else {
+        else
+        {
             return ReturnValues.Running;
         }
     }
 
     private void ReturnToWater()
     {
-        if(!fishCatched) {
+        if (!fishCatched)
+        {
             Quaternion newRotation = Quaternion.Euler(-60, 25, toWaterPoint.rotation.z);
             GameObject bootObject = Instantiate(boot, toWaterPoint.position, newRotation);
 
@@ -120,17 +128,20 @@ public class DecoratorBT : MonoBehaviour {
 
     private ReturnValues ReturnedToWater()
     {
-        if(fishCatched) {
+        if (fishCatched)
+        {
             return ReturnValues.Failed;
         }
-        else {
+        else
+        {
             return ReturnValues.Succeed;
         }
     }
 
     private void StoreBasket()
     {
-        if(fishCatched) {
+        if (fishCatched)
+        {
             Quaternion newRotation = Quaternion.Euler(-90, toBasketPoint.rotation.y, toBasketPoint.rotation.z);
             Instantiate(fish, toBasketPoint.position, newRotation);
 
@@ -141,10 +152,12 @@ public class DecoratorBT : MonoBehaviour {
 
     private ReturnValues StoredInBasket()
     {
-        if(fishCatched) {
+        if (fishCatched)
+        {
             return ReturnValues.Succeed;
         }
-        else {
+        else
+        {
             return ReturnValues.Failed;
         }
     }
