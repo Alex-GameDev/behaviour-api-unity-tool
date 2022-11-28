@@ -21,8 +21,8 @@ public class RadarFSMRunner : BehaviourGraphRunner
         var @break = new UnityTimePerception(20f);
 
         var subFSM = CreateLightSubFSM();
-        var workingState = radarFSM.CreateState("working", new EnterSystemAction(subFSM));
-        var brokenState = radarFSM.CreateState("broken", new BlinkAction(radarLight, speedText, Color.yellow));
+        var workingState = radarFSM.CreateState("working state", new EnterSystemAction(subFSM));
+        var brokenState = radarFSM.CreateState("broken state", new BlinkAction(radarLight, speedText, Color.yellow));
 
         // La FSM cambia de un estado a otro con el paso del tiempo:
         var @fixed = radarFSM.CreateTransition("fixed", brokenState, workingState, fix);
