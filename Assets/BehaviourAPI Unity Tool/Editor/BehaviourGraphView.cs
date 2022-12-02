@@ -14,6 +14,7 @@ namespace BehaviourAPI.Unity.Editor
         BehaviourGraphAsset GraphAsset;
         public BehaviourGraphView(BehaviourGraphAsset graphAsset)
         {
+
             GraphAsset = graphAsset;
             AddGridBackground();
             AddManipulators();

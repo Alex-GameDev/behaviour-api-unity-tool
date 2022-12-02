@@ -13,7 +13,6 @@ namespace BehaviourAPI.Unity.Editor
         public VisualTreeAsset NodeLayout;
 
         [Header("Style")]
-        public StyleSheet VariablesStylesheet;
         public StyleSheet GraphStylesheet;
         public StyleSheet NodeStylesheet;
 
