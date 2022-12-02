@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: mass
   prefab: {fileID: 8343304650585571258, guid: bf44ccdf405f65c46991b2e9d32a2577, type: 3}
-  height: 0.01
+  height: 0.03

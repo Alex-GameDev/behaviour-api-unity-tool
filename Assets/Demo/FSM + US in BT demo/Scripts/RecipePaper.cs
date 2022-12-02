@@ -18,6 +18,7 @@ public class RecipePaper : MonoBehaviour
     public void SetRecipe(Recipe recipe)
     {
         _recipeNameText.text = recipe.RecipeName;
+        _ingredientText.text = "";
         recipe.ingredients.ForEach(ingredient => _ingredientText.text += $"{ingredient.Name}\n");
     }
 
