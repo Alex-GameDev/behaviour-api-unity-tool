@@ -17,7 +17,6 @@ public class BoyBTRunner : BehaviourGraphRunner
     [SerializeField] GameObject explosionFX;
 
     private bool _hasKey, _keyFound;
-    private bool _isDoorOpened, _isDoorSmashed;
     AudioSource _audioSource;
     NavMeshAgent meshAgent;
 
@@ -68,7 +67,6 @@ public class BoyBTRunner : BehaviourGraphRunner
         GameObject explosion = Instantiate(explosionFX, _door.transform);
         _audioSource.clip = explosionClip;
         _audioSource.Play();
-        _isDoorSmashed = true;
         Destroy(explosion, 3);
     }
 
