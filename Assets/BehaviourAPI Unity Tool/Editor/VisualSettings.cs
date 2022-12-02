@@ -3,6 +3,9 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using System;
+using UnityEditorInternal;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -15,6 +18,20 @@ namespace BehaviourAPI.Unity.Editor
         [Header("Style")]
         public StyleSheet GraphStylesheet;
         public StyleSheet NodeStylesheet;
+
+        [Header("External assemblies")]
+        public string[] assemblies = GetDefaultAssemblies();
+
+        private static string[] GetDefaultAssemblies()
+        {
+            return new string[]{
+                "Assembly-CSharp",
+                "BehaviourAPI.Core",
+                "BehaviourAPI.StateMachines",
+                "BehaviourAPI.BehaviourTrees",
+                "BehaviourAPI.UtilitySystems"
+            };
+        }
 
         public static VisualSettings GetOrCreateSettings()
         {
@@ -40,6 +57,12 @@ namespace BehaviourAPI.Unity.Editor
                 var path = AssetDatabase.GUIDToAssetPath(guids[0]);
                 return AssetDatabase.LoadAssetAtPath<VisualSettings>(path);
             }
+        }
+
+        [ContextMenu("Reset assemblies")]
+        public void ResetAssemblies()
+        {
+            assemblies = GetDefaultAssemblies();
         }
     }
 

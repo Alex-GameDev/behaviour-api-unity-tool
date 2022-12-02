@@ -1,0 +1,16 @@
+{
+    "name": "BehaviourAPI.Unity.Editor",
+    "rootNamespace": "BehaviourAPI.Unity.Editor",
+    "references": [
+        "GUID:f450a44da37d8aa46bb58424a8923a12"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

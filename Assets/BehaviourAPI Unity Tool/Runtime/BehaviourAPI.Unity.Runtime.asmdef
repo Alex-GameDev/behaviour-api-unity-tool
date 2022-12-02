@@ -1,0 +1,14 @@
+{
+    "name": "BehaviourAPI.Unity.Runtime",
+    "rootNamespace": "BehaviourAPI.Unity.Runtime",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
