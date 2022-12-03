@@ -30,6 +30,14 @@ namespace BehaviourAPI.Unity.Runtime
             return nodeasset;
         }
 
+        public void RemoveNode(NodeAsset node)
+        {
+            if (Graph == null) return;
+
+            AssetDatabase.RemoveObjectFromAsset(node);
+            AssetDatabase.SaveAssets();
+        }
+
         public void Clear()
         {
             graph = null;

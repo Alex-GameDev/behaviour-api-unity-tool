@@ -30,6 +30,7 @@ namespace BehaviourAPI.Unity.Editor
         GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
             graphViewChange.movedElements?.ForEach(OnElementMoved);
+            graphViewChange.elementsToRemove?.ForEach(OnElementRemoved);
             return graphViewChange;
         }
 
@@ -38,6 +39,14 @@ namespace BehaviourAPI.Unity.Editor
             if(element is NodeView nodeView)
             {
                 nodeView.Node.Position = element.GetPosition().position;
+            }
+        }
+
+        void OnElementRemoved(GraphElement element)
+        {
+            if (element is NodeView nodeView)
+            {
+                GraphAsset.RemoveNode(nodeView.Node);
             }
         }
 
