@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BehaviourAPI.Core;
+using UnityEditor;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 
@@ -24,6 +25,8 @@ namespace BehaviourAPI.Unity.Runtime
             if (!type.IsSubclassOf(Graph.NodeType)) return null;
 
             var nodeasset = NodeAsset.Create(type, position);
+            AssetDatabase.AddObjectToAsset(nodeasset, this);
+            AssetDatabase.SaveAssets();
             return nodeasset;
         }
 

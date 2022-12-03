@@ -70,7 +70,7 @@ namespace BehaviourAPI.Unity.Editor
         void CreateNode(Type type, Vector2 position) 
         {
             Vector2 pos = GetLocalMousePosition(position - editorWindow.position.position);
-            NodeAsset asset = NodeAsset.Create(type, pos);
+            NodeAsset asset = GraphAsset.CreateNode(type, pos);
 
             if(asset != null)
             {
