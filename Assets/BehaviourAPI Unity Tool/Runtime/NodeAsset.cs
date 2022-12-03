@@ -3,30 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using BehaviourAPI.Core;
 using UnityEngine;
+using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Runtime
 {
     public class NodeAsset : ScriptableObject
     {
-        [SerializeReference] Node Node;
+        [SerializeReference] Node node;
 
-        public void SetNode(Node node)
+        [SerializeField] Vector2 position;
+
+        public Node Node
         {
-            Node = node;
+            get => node;
+            set => node = value;
         }
 
-        public static NodeAsset Create<T>(string name) where T : Node, new()
+        public Vector2 Position
         {
-            var nodeAsset = CreateInstance<NodeAsset>();
-            nodeAsset.name = name;
-            nodeAsset.Node = new T();
-            return nodeAsset;
+            get => position;
+            set => position = value;
         }
 
-        public static NodeAsset Create(Type type, string name)
+        public static NodeAsset Create(Type type, Vector2 pos)
         {
             var nodeAsset = CreateInstance<NodeAsset>();
-            nodeAsset.name = name;
+            nodeAsset.Position = pos;
             nodeAsset.Node = (Node)Activator.CreateInstance(type);
             return nodeAsset;
         }

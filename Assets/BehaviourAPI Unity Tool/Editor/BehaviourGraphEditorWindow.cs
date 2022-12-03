@@ -20,7 +20,6 @@ namespace BehaviourAPI.Unity.Editor
 
         private void CreateGUI()
         {
-            Debug.Log("Creating gui");
             var graphView = AddGraphView();
         }
 

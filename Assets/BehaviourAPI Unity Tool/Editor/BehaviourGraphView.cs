@@ -70,7 +70,22 @@ namespace BehaviourAPI.Unity.Editor
         void CreateNode(Type type, Vector2 position) 
         {
             Vector2 pos = GetLocalMousePosition(position - editorWindow.position.position);
-            Debug.Log(pos);
+            NodeAsset asset = NodeAsset.Create(type, pos);
+
+            if(asset != null)
+            {
+                DrawNodeView(asset);
+            }
+            else
+            {
+                Debug.LogWarning("Error creating the node");
+            }
+        }
+
+        void DrawNodeView(NodeAsset asset)
+        {
+            NodeView nodeView = new NodeView(asset);
+            AddElement(nodeView);
         }
 
         void Connect(Node source, Node target, int sourceIdx, int targetIdx) { }

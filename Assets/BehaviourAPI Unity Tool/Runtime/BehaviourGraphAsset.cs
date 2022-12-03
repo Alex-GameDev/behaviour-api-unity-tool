@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using BehaviourAPI.Core;
 using UnityEngine;
+using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Runtime
 {
@@ -10,14 +11,20 @@ namespace BehaviourAPI.Unity.Runtime
     {
         [SerializeReference] BehaviourGraph graph;
 
-        public BehaviourGraph Graph { get => graph; set => graph = value; }
+        public BehaviourGraph Graph 
+        { 
+            get => graph;
+            set => graph = value; 
+        }
 
-        public static BehaviourGraphAsset Create<T>(string name) where T : BehaviourGraph, new()
+        public NodeAsset CreateNode(Type type, Vector2 position)
         {
-            var graphAsset = CreateInstance<BehaviourGraphAsset>();
-            graphAsset.name = name;
-            graphAsset.graph = new T();
-            return graphAsset;
+            if(Graph == null) return null;
+
+            if (!type.IsSubclassOf(Graph.NodeType)) return null;
+
+            var nodeasset = NodeAsset.Create(type, position);
+            return nodeasset;
         }
 
         public static BehaviourGraphAsset Create(Type type, string name)
