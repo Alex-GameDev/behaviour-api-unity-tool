@@ -24,6 +24,21 @@ namespace BehaviourAPI.Unity.Editor
             AddManipulators();
             AddCreateNodeWindow();
             AddStyles();
+            graphViewChanged = OnGraphViewChanged;
+        }
+
+        GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
+        {
+            graphViewChange.movedElements?.ForEach(OnElementMoved);
+            return graphViewChange;
+        }
+
+        void OnElementMoved(GraphElement element)
+        {
+            if(element is NodeView nodeView)
+            {
+                nodeView.Node.Position = element.GetPosition().position;
+            }
         }
 
         void AddCreateNodeWindow()
