@@ -1,5 +1,33 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6280526872592758807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c605a6822db5b1a42b0c6b7ff591c5b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  node:
+    rid: 4601479338428203019
+  position: {x: 576, y: 257}
+  parents: []
+  childs:
+  - {fileID: 0}
+  - {fileID: -1931967577055627217}
+  - {fileID: -6091915084518185623}
+  references:
+    version: 2
+    RefIds:
+    - rid: 4601479338428203019
+      type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        Name: Sel
+        IsRandomized: 0
 --- !u!114 &-6091915084518185623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14,14 +42,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   node:
     rid: 4601479338428203016
-  position: {x: 495, y: 283}
+  position: {x: 505, y: 399}
+  parents:
+  - {fileID: -6280526872592758807}
+  childs: []
   references:
     version: 2
     RefIds:
     - rid: 4601479338428203016
       type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
-        Name: 
+        Name: Action 1
 --- !u!114 &-1931967577055627217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36,38 +67,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   node:
     rid: 4601479338428203017
-  position: {x: 661, y: 282}
+  position: {x: 602, y: 403}
+  parents:
+  - {fileID: -6280526872592758807}
+  childs: []
   references:
     version: 2
     RefIds:
     - rid: 4601479338428203017
       type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
-        Name: 
---- !u!114 &-1931734678099509440
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c605a6822db5b1a42b0c6b7ff591c5b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  node:
-    rid: 4601479338428203018
-  position: {x: 435, y: 195}
-  references:
-    version: 2
-    RefIds:
-    - rid: 4601479338428203018
-      type: {class: LoopUntilNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        Name: 
-        TargetStatus: 2
-        MaxIterations: -1
+        Name: Action 2
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,7 +95,7 @@ MonoBehaviour:
   nodes:
   - {fileID: -6091915084518185623}
   - {fileID: -1931967577055627217}
-  - {fileID: -1931734678099509440}
+  - {fileID: -6280526872592758807}
   references:
     version: 2
     RefIds:
