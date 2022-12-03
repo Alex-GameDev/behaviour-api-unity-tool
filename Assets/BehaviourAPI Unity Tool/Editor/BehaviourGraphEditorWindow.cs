@@ -9,25 +9,24 @@ namespace BehaviourAPI.Unity.Editor
 {
     public class BehaviourGraphEditorWindow : EditorWindow
     {
-        //public static BehaviourGraphAsset asset
-        public BehaviourGraphAsset graphAsset;
+        public static BehaviourGraphAsset GraphAsset;
 
-        [MenuItem("behaviour-api-unity-tool/BehaviourGraphWindow")]
-        private static void ShowWindow()
+        public static void OpenGraph(BehaviourGraphAsset graphAsset)
         {
-            var window = GetWindow<BehaviourGraphEditorWindow>();
-            window.titleContent = new GUIContent("BehaviourGraphWindow");
-            window.Show();
+            GraphAsset = graphAsset;
+            BehaviourGraphEditorWindow window = GetWindow<BehaviourGraphEditorWindow>();            
+            window.titleContent = new GUIContent($"Behaviour graph editor ({graphAsset.Graph.GetType().Name})");
         }
 
         private void CreateGUI()
         {
+            Debug.Log("Creating gui");
             var graphView = AddGraphView();
         }
 
         private BehaviourGraphView AddGraphView()
         {
-            var graphView = new BehaviourGraphView(graphAsset, this);
+            var graphView = new BehaviourGraphView(GraphAsset, this);
             graphView.StretchToParentSize();
             rootVisualElement.Add(graphView);
             return graphView;

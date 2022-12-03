@@ -8,10 +8,9 @@ namespace BehaviourAPI.Unity.Runtime
     [CreateAssetMenu(menuName = "BehaviourAPI/Graph", order = 0)]
     public class BehaviourGraphAsset : ScriptableObject
     {
-        /// <summary>
-        /// The behaviour graph
-        /// </summary>
         [SerializeReference] BehaviourGraph graph;
+
+        public BehaviourGraph Graph { get => graph; set => graph = value; }
 
         public static BehaviourGraphAsset Create<T>(string name) where T : BehaviourGraph, new()
         {
