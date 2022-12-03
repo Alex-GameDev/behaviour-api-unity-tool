@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Unity.Runtime;
 using UnityEditor;
@@ -29,6 +30,20 @@ namespace BehaviourAPI.Unity.Editor
             AddStyles();
             graphViewChanged = OnGraphViewChanged;
             DrawGraph();
+        }
+
+        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+        {
+            List<Port> compatiblePorts = new List<Port>();
+
+            ports.ForEach(port =>
+            {
+                if (port == startPort) return;
+                if (port.direction == startPort.direction) return;
+                compatiblePorts.Add(port);
+            });
+
+            return compatiblePorts;
         }
 
         GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)

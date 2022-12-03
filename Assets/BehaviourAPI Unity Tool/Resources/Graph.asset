@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6280526872592758807
+--- !u!114 &-303460085800245184
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13,71 +13,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   node:
-    rid: 4601479338428203019
-  position: {x: 576, y: 257}
+    rid: 4601479340230705154
+  position: {x: 713, y: 446}
   parents: []
-  childs:
-  - {fileID: 0}
-  - {fileID: -1931967577055627217}
-  - {fileID: -6091915084518185623}
+  childs: []
   references:
     version: 2
     RefIds:
-    - rid: 4601479338428203019
-      type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+    - rid: 4601479340230705154
+      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
-        Name: Sel
+        Name: 
         IsRandomized: 0
---- !u!114 &-6091915084518185623
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c605a6822db5b1a42b0c6b7ff591c5b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  node:
-    rid: 4601479338428203016
-  position: {x: 505, y: 399}
-  parents:
-  - {fileID: -6280526872592758807}
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 4601479338428203016
-      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        Name: Action 1
---- !u!114 &-1931967577055627217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c605a6822db5b1a42b0c6b7ff591c5b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  node:
-    rid: 4601479338428203017
-  position: {x: 602, y: 403}
-  parents:
-  - {fileID: -6280526872592758807}
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 4601479338428203017
-      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        Name: Action 2
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,11 +40,59 @@ MonoBehaviour:
   graph:
     rid: 4601479338428203015
   nodes:
-  - {fileID: -6091915084518185623}
-  - {fileID: -1931967577055627217}
-  - {fileID: -6280526872592758807}
+  - {fileID: 4339258672958422560}
+  - {fileID: 851206153344354829}
+  - {fileID: -303460085800245184}
   references:
     version: 2
     RefIds:
     - rid: 4601479338428203015
       type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+--- !u!114 &851206153344354829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c605a6822db5b1a42b0c6b7ff591c5b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  node:
+    rid: 4601479340230705153
+  position: {x: 568, y: 371}
+  parents: []
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 4601479340230705153
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        Name: 
+--- !u!114 &4339258672958422560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c605a6822db5b1a42b0c6b7ff591c5b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  node:
+    rid: 4601479340230705152
+  position: {x: 491, y: 373}
+  parents: []
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 4601479340230705152
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        Name: 
