@@ -11,12 +11,16 @@ namespace BehaviourAPI.Unity.Editor
     {
         HierarchicalTypeNode rootTypeNode;
 
+        Action<Type, Vector2> OnSelectEntryAction;
+
         public void SetRootType(Type rootType)
         {
             var assemblies = VisualSettings.GetOrCreateSettings().assemblies;
             var types = TypeUtilities.GetTypesDerivedFrom(rootType, assemblies);
             rootTypeNode = new HierarchicalTypeNode(rootType, types);
         }
+
+        public void SetOnSelectEntryCallback(Action<Type, Vector2> callback) => OnSelectEntryAction = callback;
 
         public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
         {
@@ -50,7 +54,8 @@ namespace BehaviourAPI.Unity.Editor
         public bool OnSelectEntry(SearchTreeEntry SearchTreeEntry, SearchWindowContext context)
         {
             var pos = context.screenMousePosition;
-            Debug.Log((Type)SearchTreeEntry.userData);
+            var type = (Type)SearchTreeEntry.userData;
+            OnSelectEntryAction?.Invoke(type, pos);
             return true;
         }
 

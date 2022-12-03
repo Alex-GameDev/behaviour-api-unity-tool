@@ -1,6 +1,7 @@
 using System;
 using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Unity.Runtime;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -14,21 +15,24 @@ namespace BehaviourAPI.Unity.Editor
     {
         BehaviourGraphAsset GraphAsset;
         HierarchySearchWindow searchWindow;
-        public BehaviourGraphView(BehaviourGraphAsset graphAsset)
+        EditorWindow editorWindow;
+        public BehaviourGraphView(BehaviourGraphAsset graphAsset, EditorWindow parentWindow)
         {
             GraphAsset = graphAsset;
+            editorWindow = parentWindow;
             AddGridBackground();
             AddManipulators();
             AddCreateNodeWindow();
             AddStyles();
         }
 
-        private void AddCreateNodeWindow()
+        void AddCreateNodeWindow()
         {
             if (searchWindow == null)
             {
                 searchWindow = ScriptableObject.CreateInstance<HierarchySearchWindow>();
                 searchWindow.SetRootType(typeof(BTNode));
+                searchWindow.SetOnSelectEntryCallback(CreateNode);
             }
 
             nodeCreationRequest = context =>
@@ -50,7 +54,7 @@ namespace BehaviourAPI.Unity.Editor
             Insert(0, gridBackground);
         }
 
-        private void AddManipulators()
+        void AddManipulators()
         {
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
             this.AddManipulator(new ContentDragger());
@@ -58,8 +62,18 @@ namespace BehaviourAPI.Unity.Editor
             this.AddManipulator(new RectangleSelector());
         }
 
-        public void CreateNode(Type type, Vector2 position) { }
-        public void Connect(Node source, Node target, int sourceIdx, int targetIdx) { }
+        Vector2 GetLocalMousePosition(Vector2 mousePosition)
+        {
+            return contentViewContainer.WorldToLocal(mousePosition);
+        }
+
+        void CreateNode(Type type, Vector2 position) 
+        {
+            Vector2 pos = GetLocalMousePosition(position - editorWindow.position.position);
+            Debug.Log(pos);
+        }
+
+        void Connect(Node source, Node target, int sourceIdx, int targetIdx) { }
 
     }
 }

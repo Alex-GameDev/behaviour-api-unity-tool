@@ -27,7 +27,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private BehaviourGraphView AddGraphView()
         {
-            var graphView = new BehaviourGraphView(graphAsset);
+            var graphView = new BehaviourGraphView(graphAsset, this);
             graphView.StretchToParentSize();
             rootVisualElement.Add(graphView);
             return graphView;
