@@ -14,10 +14,12 @@ namespace BehaviourAPI.Unity.Editor
     {
         [Header("Layout")]
         public VisualTreeAsset NodeLayout;
+        public VisualTreeAsset InspectorLayout;
 
         [Header("Style")]
         public StyleSheet GraphStylesheet;
         public StyleSheet NodeStylesheet;
+        public StyleSheet InspectorStylesheet;
 
         [Header("External assemblies")]
         public string[] assemblies = GetDefaultAssemblies();

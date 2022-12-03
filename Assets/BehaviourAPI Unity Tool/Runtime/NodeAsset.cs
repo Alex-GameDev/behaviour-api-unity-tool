@@ -11,7 +11,7 @@ namespace BehaviourAPI.Unity.Runtime
     {
         [SerializeReference] Node node;
 
-        [SerializeField] Vector2 position;
+        [HideInInspector][SerializeField] Vector2 position;
 
         public Node Node
         {

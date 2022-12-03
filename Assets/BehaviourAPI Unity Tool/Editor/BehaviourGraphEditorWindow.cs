@@ -21,6 +21,7 @@ namespace BehaviourAPI.Unity.Editor
         private void CreateGUI()
         {
             var graphView = AddGraphView();
+            var nodeInspectorView = AddNodeInspectorView();
         }
 
         private BehaviourGraphView AddGraphView()
@@ -29,6 +30,12 @@ namespace BehaviourAPI.Unity.Editor
             graphView.StretchToParentSize();
             rootVisualElement.Add(graphView);
             return graphView;
+        }
+        private NodeInspectorView AddNodeInspectorView()
+        {
+            var nodeInspector = new NodeInspectorView();
+            rootVisualElement.Add(nodeInspector);
+            return nodeInspector;
         }
     }
 }
