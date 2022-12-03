@@ -10,6 +10,8 @@ namespace BehaviourAPI.Unity.Editor
     public class BehaviourGraphEditorWindow : EditorWindow
     {
         public static BehaviourGraphAsset GraphAsset;
+        NodeInspectorView nodeInspector;
+
 
         public static void OpenGraph(BehaviourGraphAsset graphAsset)
         {
@@ -22,6 +24,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             var graphView = AddGraphView();
             var nodeInspectorView = AddNodeInspectorView();
+            graphView.NodeSelected += nodeInspectorView.UpdateInspector;
         }
 
         private BehaviourGraphView AddGraphView()

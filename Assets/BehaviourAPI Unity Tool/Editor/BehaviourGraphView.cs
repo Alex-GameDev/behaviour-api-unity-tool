@@ -16,6 +16,9 @@ namespace BehaviourAPI.Unity.Editor
         BehaviourGraphAsset GraphAsset;
         HierarchySearchWindow searchWindow;
         EditorWindow editorWindow;
+
+        public Action<NodeAsset> NodeSelected { get; set; }
+
         public BehaviourGraphView(BehaviourGraphAsset graphAsset, EditorWindow parentWindow)
         {
             GraphAsset = graphAsset;
@@ -109,6 +112,7 @@ namespace BehaviourAPI.Unity.Editor
         void DrawNodeView(NodeAsset asset)
         {
             NodeView nodeView = new NodeView(asset);
+            nodeView.Selected = (asset) => NodeSelected?.Invoke(asset);
             AddElement(nodeView);
         }
 
