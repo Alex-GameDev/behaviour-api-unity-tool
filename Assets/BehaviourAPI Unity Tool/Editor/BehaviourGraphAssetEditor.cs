@@ -25,7 +25,7 @@ namespace BehaviourAPI.Unity.Editor
                 }
                 if (GUILayout.Button($"Clear graph"))
                 {
-                    graphAsset.Graph = null;
+                    graphAsset.Clear();
                 }
             }
             else
@@ -39,7 +39,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     if (GUILayout.Button($"Create {types[i].Name}"))
                     {
-                        graphAsset.Graph = (BehaviourGraph) Activator.CreateInstance(types[i]);
+                        graphAsset.BindGraph(types[i]);
                         BehaviourGraphEditorWindow.OpenGraph(graphAsset);
                     }
                 }

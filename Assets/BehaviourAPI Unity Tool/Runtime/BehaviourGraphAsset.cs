@@ -27,6 +27,16 @@ namespace BehaviourAPI.Unity.Runtime
             return nodeasset;
         }
 
+        public void Clear()
+        {
+            graph = null;
+        }
+
+        public void BindGraph(Type type)
+        {
+            graph = (BehaviourGraph)Activator.CreateInstance(type);
+        }
+
         public static BehaviourGraphAsset Create(Type type, string name)
         {
             var graphAsset = CreateInstance<BehaviourGraphAsset>();
