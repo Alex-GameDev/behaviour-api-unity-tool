@@ -16,8 +16,8 @@ MonoBehaviour:
   GraphStylesheet: {fileID: 7433441132597879392, guid: 7c0d7e55f67e0e14a9d76c01345095dc, type: 3}
   NodeStylesheet: {fileID: 7433441132597879392, guid: 81512d53a4bea9b4494135dc1f99b76f, type: 3}
   assemblies:
-  - Assembly-CSharp
   - BehaviourAPI.Core
   - BehaviourAPI.StateMachines
   - BehaviourAPI.BehaviourTrees
   - BehaviourAPI.UtilitySystems
+  - Assembly-CSharp

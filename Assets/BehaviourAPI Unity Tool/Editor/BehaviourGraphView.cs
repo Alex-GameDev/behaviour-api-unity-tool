@@ -1,4 +1,5 @@
 using System;
+using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Unity.Runtime;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -12,13 +13,29 @@ namespace BehaviourAPI.Unity.Editor
     public class BehaviourGraphView : GraphView
     {
         BehaviourGraphAsset GraphAsset;
+        HierarchySearchWindow searchWindow;
         public BehaviourGraphView(BehaviourGraphAsset graphAsset)
         {
-
             GraphAsset = graphAsset;
             AddGridBackground();
             AddManipulators();
+            AddCreateNodeWindow();
             AddStyles();
+        }
+
+        private void AddCreateNodeWindow()
+        {
+            if (searchWindow == null)
+            {
+                searchWindow = ScriptableObject.CreateInstance<HierarchySearchWindow>();
+                searchWindow.SetRootType(typeof(BTNode));
+            }
+
+            nodeCreationRequest = context =>
+            {
+                var searchContext = new SearchWindowContext(context.screenMousePosition);
+                SearchWindow.Open(searchContext, searchWindow);
+            };
         }
 
         void AddStyles()
