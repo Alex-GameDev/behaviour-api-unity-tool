@@ -28,6 +28,7 @@ namespace BehaviourAPI.Unity.Editor
             AddCreateNodeWindow();
             AddStyles();
             graphViewChanged = OnGraphViewChanged;
+            DrawGraph();
         }
 
         GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
@@ -114,6 +115,13 @@ namespace BehaviourAPI.Unity.Editor
             NodeView nodeView = new NodeView(asset);
             nodeView.Selected = (asset) => NodeSelected?.Invoke(asset);
             AddElement(nodeView);
+        }
+
+        void DrawGraph()
+        {
+            if (GraphAsset == null) return;
+
+            GraphAsset.Nodes.ForEach(DrawNodeView);
         }
 
         void Connect(Node source, Node target, int sourceIdx, int targetIdx) { }

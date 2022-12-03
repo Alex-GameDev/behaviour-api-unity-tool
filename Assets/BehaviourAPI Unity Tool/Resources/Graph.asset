@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7109687453325381320
+--- !u!114 &-6091915084518185623
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13,39 +13,61 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   node:
-    rid: 4601479330122956880
-  position: {x: 540, y: 155}
+    rid: 4601479338428203016
+  position: {x: 495, y: 283}
   references:
     version: 2
     RefIds:
-    - rid: 4601479330122956880
+    - rid: 4601479338428203016
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        Name: 
+--- !u!114 &-1931967577055627217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c605a6822db5b1a42b0c6b7ff591c5b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  node:
+    rid: 4601479338428203017
+  position: {x: 661, y: 282}
+  references:
+    version: 2
+    RefIds:
+    - rid: 4601479338428203017
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        Name: 
+--- !u!114 &-1931734678099509440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c605a6822db5b1a42b0c6b7ff591c5b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  node:
+    rid: 4601479338428203018
+  position: {x: 435, y: 195}
+  references:
+    version: 2
+    RefIds:
+    - rid: 4601479338428203018
       type: {class: LoopUntilNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
         Name: 
         TargetStatus: 2
         MaxIterations: -1
---- !u!114 &-4793127223308758031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c605a6822db5b1a42b0c6b7ff591c5b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  node:
-    rid: 4601479338428203009
-  position: {x: 624, y: 330}
-  references:
-    version: 2
-    RefIds:
-    - rid: 4601479338428203009
-      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        Name: 
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,9 +81,13 @@ MonoBehaviour:
   m_Name: Graph
   m_EditorClassIdentifier: 
   graph:
-    rid: 4601479330122956856
+    rid: 4601479338428203015
+  nodes:
+  - {fileID: -6091915084518185623}
+  - {fileID: -1931967577055627217}
+  - {fileID: -1931734678099509440}
   references:
     version: 2
     RefIds:
-    - rid: 4601479330122956856
+    - rid: 4601479338428203015
       type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}

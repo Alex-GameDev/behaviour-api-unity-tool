@@ -12,10 +12,17 @@ namespace BehaviourAPI.Unity.Runtime
     {
         [SerializeReference] BehaviourGraph graph;
 
+        [SerializeField] List<NodeAsset> nodes;
+
         public BehaviourGraph Graph 
         { 
             get => graph;
             set => graph = value; 
+        }
+
+        public List<NodeAsset> Nodes
+        {
+            get => nodes;
         }
 
         public NodeAsset CreateNode(Type type, Vector2 position)
@@ -25,6 +32,7 @@ namespace BehaviourAPI.Unity.Runtime
             if (!type.IsSubclassOf(Graph.NodeType)) return null;
 
             var nodeasset = NodeAsset.Create(type, position);
+            Nodes.Add(nodeasset);
             AssetDatabase.AddObjectToAsset(nodeasset, this);
             AssetDatabase.SaveAssets();
             return nodeasset;
@@ -34,6 +42,7 @@ namespace BehaviourAPI.Unity.Runtime
         {
             if (Graph == null) return;
 
+            Nodes.Remove(node);
             AssetDatabase.RemoveObjectFromAsset(node);
             AssetDatabase.SaveAssets();
         }
@@ -46,14 +55,6 @@ namespace BehaviourAPI.Unity.Runtime
         public void BindGraph(Type type)
         {
             graph = (BehaviourGraph)Activator.CreateInstance(type);
-        }
-
-        public static BehaviourGraphAsset Create(Type type, string name)
-        {
-            var graphAsset = CreateInstance<BehaviourGraphAsset>();
-            graphAsset.name = name;
-            graphAsset.graph = (BehaviourGraph)Activator.CreateInstance(type);
-            return graphAsset;
         }
     }
 }
