@@ -10,8 +10,6 @@ namespace BehaviourAPI.Unity.Editor
     public class BehaviourGraphEditorWindow : EditorWindow
     {
         public static BehaviourGraphAsset GraphAsset;
-        NodeInspectorView nodeInspector;
-
 
         public static void OpenGraph(BehaviourGraphAsset graphAsset)
         {
@@ -20,25 +18,34 @@ namespace BehaviourAPI.Unity.Editor
             window.titleContent = new GUIContent($"Behaviour graph editor ({graphAsset.Graph.GetType().Name})");
         }
 
-        private void CreateGUI()
+        void CreateGUI()
         {
-            var graphView = AddGraphView();
+            //var graphView = AddGraphView();
+            var graphVisualElement = AddGraphVisualElement();
             var nodeInspectorView = AddNodeInspectorView();
-            graphView.NodeSelected += nodeInspectorView.UpdateInspector;
+            //graphView.NodeSelected += nodeInspectorView.UpdateInspector;
         }
 
-        private BehaviourGraphView AddGraphView()
+        BehaviourGraphView AddGraphView()
         {
             var graphView = new BehaviourGraphView(GraphAsset, this);
             graphView.StretchToParentSize();
             rootVisualElement.Add(graphView);
             return graphView;
         }
-        private NodeInspectorView AddNodeInspectorView()
+        NodeInspectorView AddNodeInspectorView()
         {
             var nodeInspector = new NodeInspectorView();
             rootVisualElement.Add(nodeInspector);
             return nodeInspector;
+        }
+
+        GraphVisualElement AddGraphVisualElement()
+        {
+            var graphVisualElement = new GraphVisualElement();
+            graphVisualElement.StretchToParentSize();
+            rootVisualElement.Add(graphVisualElement);
+            return graphVisualElement;
         }
     }
 }

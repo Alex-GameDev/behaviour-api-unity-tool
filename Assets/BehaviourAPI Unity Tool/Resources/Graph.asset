@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   node:
     rid: 4601479340230705154
-  position: {x: 713, y: 446}
+  position: {x: 725, y: 178}
   parents: []
   childs: []
   references:
@@ -24,7 +24,7 @@ MonoBehaviour:
       type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
         Name: 
-        IsRandomized: 0
+        IsRandomized: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,7 +62,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   node:
     rid: 4601479340230705153
-  position: {x: 568, y: 371}
+  position: {x: 897, y: 416}
   parents: []
   childs: []
   references:
@@ -86,7 +86,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   node:
     rid: 4601479340230705152
-  position: {x: 491, y: 373}
+  position: {x: 530, y: 424}
   parents: []
   childs: []
   references:
