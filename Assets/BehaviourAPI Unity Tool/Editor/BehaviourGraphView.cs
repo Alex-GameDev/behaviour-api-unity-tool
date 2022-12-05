@@ -35,11 +35,26 @@ namespace BehaviourAPI.Unity.Editor
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
             List<Port> compatiblePorts = new List<Port>();
+            var startPortNodeView = (NodeView)startPort.node;
 
             ports.ForEach(port =>
             {
                 if (port == startPort) return;
-                if (port.direction == startPort.direction) return;
+
+                if (startPort.direction == port.direction) return;
+
+                var portNodeView = (NodeView)port.node;
+
+                if (startPort.direction == Direction.Input)
+                {
+                    if (!startPort.portType.IsSubclassOf(port.portType)) return;
+                    if (startPortNodeView.Node.Parents.Contains(portNodeView.Node)) return;
+                }
+                else
+                {
+                    if (!port.portType.IsSubclassOf(startPort.portType)) return;
+                    if (portNodeView.Node.Parents.Contains(startPortNodeView.Node)) return;
+                }
                 compatiblePorts.Add(port);
             });
 
@@ -50,7 +65,16 @@ namespace BehaviourAPI.Unity.Editor
         {
             graphViewChange.movedElements?.ForEach(OnElementMoved);
             graphViewChange.elementsToRemove?.ForEach(OnElementRemoved);
+            graphViewChange.edgesToCreate?.ForEach(OnEdgeCreated);
             return graphViewChange;
+        }
+
+        private void OnEdgeCreated(Edge edge)
+        {
+            var source = (NodeView)edge.output.node;
+            var target = (NodeView)edge.input.node;
+            source.OnConnected(Direction.Output, source.outputContainer.IndexOf(edge.output), target);
+            target.OnConnected(Direction.Input, target.inputContainer.IndexOf(edge.input), source);
         }
 
         void OnElementMoved(GraphElement element)
@@ -66,6 +90,14 @@ namespace BehaviourAPI.Unity.Editor
             if (element is NodeView nodeView)
             {
                 GraphAsset.RemoveNode(nodeView.Node);
+            }
+            if(element is Edge edge)
+            {
+                Debug.Log("Edge removed");
+                var source = (NodeView)edge.output.node;
+                var target = (NodeView)edge.input.node;
+                source.OnDisconnected(Direction.Output, source.outputContainer.IndexOf(edge.output));
+                target.OnDisconnected(Direction.Input, target.inputContainer.IndexOf(edge.input));
             }
         }
 
@@ -140,6 +172,5 @@ namespace BehaviourAPI.Unity.Editor
         }
 
         void Connect(Node source, Node target, int sourceIdx, int targetIdx) { }
-
     }
 }
