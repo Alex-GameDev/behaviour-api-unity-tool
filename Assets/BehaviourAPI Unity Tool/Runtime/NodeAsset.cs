@@ -9,6 +9,8 @@ namespace BehaviourAPI.Unity.Runtime
 {
     public class NodeAsset : ScriptableObject
     {
+        public string Name;
+
         [SerializeReference] Node node;
 
         [HideInInspector][SerializeField] Vector2 position;

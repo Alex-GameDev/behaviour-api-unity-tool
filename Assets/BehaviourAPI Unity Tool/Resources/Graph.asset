@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c605a6822db5b1a42b0c6b7ff591c5b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Name: 
   node:
     rid: 4601479376253222924
-  position: {x: 1310, y: 344}
+  position: {x: 1331, y: 360}
   parents: []
   childs:
   - {fileID: 5896979671685096004}
   - {fileID: 9022503381547804937}
+  - {fileID: 7049209428004605115}
   references:
     version: 2
     RefIds:
@@ -63,9 +65,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c605a6822db5b1a42b0c6b7ff591c5b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Name: 
   node:
     rid: 4601479376253222932
-  position: {x: 1166, y: 684}
+  position: {x: 1159, y: 702}
   parents:
   - {fileID: -6500594717867184828}
   childs: []
@@ -88,10 +91,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c605a6822db5b1a42b0c6b7ff591c5b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Name: 
   node:
     rid: 4601479376253222934
-  position: {x: 1605, y: 785}
-  parents: []
+  position: {x: 1503, y: 718}
+  parents:
+  - {fileID: -6500594717867184828}
   childs: []
   references:
     version: 2
@@ -112,9 +117,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c605a6822db5b1a42b0c6b7ff591c5b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Name: 
   node:
     rid: 4601479376253222933
-  position: {x: 1352, y: 707}
+  position: {x: 1331, y: 704}
   parents:
   - {fileID: -6500594717867184828}
   childs: []

@@ -5,6 +5,7 @@ namespace BehaviourAPI.Unity.Editor
     using System;
     using UnityEditor;
     using UnityEditor.Experimental.GraphView;
+    using UnityEditor.UIElements;
     using UnityEngine.UIElements;
     using Vector2 = UnityEngine.Vector2;
 
@@ -24,6 +25,8 @@ namespace BehaviourAPI.Unity.Editor
             Node = node;
             SetPosition(new UnityEngine.Rect(node.Position, Vector2.zero));
             DrawPorts();
+            styleSheets.Add(VisualSettings.GetOrCreateSettings().NodeStylesheet);
+            SetUpDataBinding();
         }
 
         void DrawPorts()
@@ -67,6 +70,13 @@ namespace BehaviourAPI.Unity.Editor
                 Node.Parents.Remove(other.Node);
             else
                 Node.Childs.Remove(other.Node);           
+        }
+
+        void SetUpDataBinding()
+        {
+            var titleInputField = this.Q<TextField>(name: "title-input-field");
+            titleInputField.bindingPath = "Name";
+            titleInputField.Bind(new SerializedObject(Node));
         }
     }
 }

@@ -1,8 +1,8 @@
-:root
+:root 
 {
-    --node-metrics-width-min: 100;
-    --node-metrics-width-max: 300;
-}  
+    --node-metrics-width-min: 100px;
+    --node-metrics-width-max: 300px;
+}
 
 .port-container {
     align-items: center;
