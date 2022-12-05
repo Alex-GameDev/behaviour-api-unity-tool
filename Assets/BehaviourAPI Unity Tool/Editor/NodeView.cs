@@ -5,6 +5,7 @@ namespace BehaviourAPI.Unity.Editor
     using System;
     using UnityEditor;
     using UnityEditor.Experimental.GraphView;
+    using UnityEngine.UIElements;
     using Vector2 = UnityEngine.Vector2;
 
     /// <summary>
@@ -27,32 +28,23 @@ namespace BehaviourAPI.Unity.Editor
 
         void DrawPorts()
         {
-            int numberOfInputPorts = Node.Node.MaxInputConnections != -1 ?
-                Node.Node.MaxInputConnections : Node.Parents.Count * 2 + 1;
+            if (Node.Node.MaxInputConnections != 0)
+            {
+                var capacity = Node.Node.MaxInputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
+                var port = InstantiatePort(Orientation.Vertical, Direction.Input, capacity, Node.Node.GetType());
+                port.portName = "";
+                port.style.flexDirection = FlexDirection.Column;
+                inputContainer.Add(port);
+            }
 
-            int numberOfOutputPorts = Node.Node.MaxOutputConnections != -1 ?
-                Node.Node.MaxOutputConnections : Node.Childs.Count * 2 + 1;
-
-            for (int i = 0; i < numberOfInputPorts; i++)
-                InsertPort(Direction.Input, i);
-
-            for (int i = 0; i < numberOfOutputPorts; i++)
-                InsertPort(Direction.Output, i);
-        }
-
-        void InsertPort(Direction direction, int index)
-        {
-            var portType = direction == Direction.Input ? Node.Node.GetType() : Node.Node.ChildType;
-            var port = InstantiatePort(Orientation.Vertical, direction, Port.Capacity.Single, portType);
-            port.portName = "";
-            var container = direction == Direction.Input ? inputContainer : outputContainer;
-            container.Insert(index, port);
-        }
-
-        void DeletePort(Direction direction, int index)
-        {
-            var container = direction == Direction.Input ? inputContainer : outputContainer;
-            container.RemoveAt(index);
+            if (Node.Node.MaxOutputConnections != 0)
+            {
+                var capacity = Node.Node.MaxOutputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
+                var port = InstantiatePort(Orientation.Vertical, Direction.Output, capacity, Node.Node.ChildType);
+                port.portName = "";
+                port.style.flexDirection = FlexDirection.ColumnReverse;
+                outputContainer.Add(port);
+            }
         }
 
         public override void OnSelected()
@@ -61,35 +53,20 @@ namespace BehaviourAPI.Unity.Editor
             Selected?.Invoke(Node);
         }
 
-        public void OnConnected(Direction direction, int portIndex, NodeView other)
+        public void OnConnected(Direction direction, NodeView other)
         {
             if(direction == Direction.Input)
-                Node.Parents.Insert(portIndex / 2, other.Node);
+                Node.Parents.Add(other.Node);
             else
-                Node.Childs.Insert(portIndex / 2, other.Node);
-
-            var capacity = direction == Direction.Input ? Node.Node.MaxInputConnections : Node.Node.MaxOutputConnections;
-            if (capacity == -1)
-            {
-                InsertPort(direction, portIndex + 1);
-                InsertPort(direction, portIndex);
-            }
+                Node.Childs.Add(other.Node);
         }
 
-        public void OnDisconnected(Direction direction, int portIndex)
+        public void OnDisconnected(Direction direction, NodeView other)
         {
             if (direction == Direction.Input)
-                Node.Parents.RemoveAt(portIndex / 2);
+                Node.Parents.Remove(other.Node);
             else
-                Node.Childs.RemoveAt(portIndex / 2);
-
-            var capacity = direction == Direction.Input ? Node.Node.MaxInputConnections : Node.Node.MaxOutputConnections;
-            var currentConnections = direction == Direction.Input ? Node.Parents.Count : Node.Childs.Count;
-            if(capacity == -1 && currentConnections > 0)
-            {
-                DeletePort(direction, portIndex - 1);
-                DeletePort(direction, portIndex);
-            }           
+                Node.Childs.Remove(other.Node);           
         }
     }
 }

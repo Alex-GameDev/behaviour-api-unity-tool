@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Unity.Runtime;
 using UnityEditor;
@@ -39,9 +40,9 @@ namespace BehaviourAPI.Unity.Editor
 
             ports.ForEach(port =>
             {
-                if (port == startPort) return;
-
                 if (startPort.direction == port.direction) return;
+
+                if(startPort.node == port.node) return; 
 
                 var portNodeView = (NodeView)port.node;
 
@@ -73,8 +74,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             var source = (NodeView)edge.output.node;
             var target = (NodeView)edge.input.node;
-            source.OnConnected(Direction.Output, source.outputContainer.IndexOf(edge.output), target);
-            target.OnConnected(Direction.Input, target.inputContainer.IndexOf(edge.input), source);
+            source.OnConnected(Direction.Output, target);
+            target.OnConnected(Direction.Input, source);
         }
 
         void OnElementMoved(GraphElement element)
@@ -93,11 +94,10 @@ namespace BehaviourAPI.Unity.Editor
             }
             if(element is Edge edge)
             {
-                Debug.Log("Edge removed");
                 var source = (NodeView)edge.output.node;
                 var target = (NodeView)edge.input.node;
-                source.OnDisconnected(Direction.Output, source.outputContainer.IndexOf(edge.output));
-                target.OnDisconnected(Direction.Input, target.inputContainer.IndexOf(edge.input));
+                source.OnDisconnected(Direction.Output,target);
+                target.OnDisconnected(Direction.Input, source);
             }
         }
 
@@ -157,20 +157,38 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        void DrawNodeView(NodeAsset asset)
+        NodeView DrawNodeView(NodeAsset asset)
         {
             NodeView nodeView = new NodeView(asset);
             nodeView.Selected = (asset) => NodeSelected?.Invoke(asset);
             AddElement(nodeView);
+            return nodeView;
         }
 
         void DrawGraph()
         {
             if (GraphAsset == null) return;
 
-            GraphAsset.Nodes.ForEach(DrawNodeView);
-        }
+            var nodeViews = GraphAsset.Nodes.Select(DrawNodeView).ToList();
 
-        void Connect(Node source, Node target, int sourceIdx, int targetIdx) { }
+            nodeViews.ForEach(nodeView =>
+            {
+                for(int i = 0; i < nodeView.Node.Childs.Count; i++)
+                {
+                    Edge edge = new Edge();
+                    var child = nodeView.Node.Childs[i];
+                    var childIdx = GraphAsset.Nodes.IndexOf(child);
+                    var other = nodeViews[childIdx];
+                    AddElement(edge);
+                    Port source = (Port)nodeView.outputContainer[0];
+                    Port target = (Port)other.inputContainer[0];
+                    edge.input = target;
+                    edge.output = source;
+                    source.Connect(edge);
+                    target.Connect(edge);
+                    edge.MarkDirtyRepaint();
+                }
+            });
+        }
     }
 }
