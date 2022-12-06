@@ -59,7 +59,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (Node.Node is IActionHandler actionHandler)
             {
-                var containerView = new ContainerView();
+                var containerView = new ContainerView(Node);
                 extensionContainer.Add(containerView);
             }
         }
@@ -72,7 +72,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public void OnConnected(Direction direction, NodeView other)
         {
-            if(direction == Direction.Input)
+            if (direction == Direction.Input)
                 Node.Parents.Add(other.Node);
             else
                 Node.Childs.Add(other.Node);
@@ -83,7 +83,7 @@ namespace BehaviourAPI.Unity.Editor
             if (direction == Direction.Input)
                 Node.Parents.Remove(other.Node);
             else
-                Node.Childs.Remove(other.Node);           
+                Node.Childs.Remove(other.Node);
         }
 
         void SetUpDataBinding()
