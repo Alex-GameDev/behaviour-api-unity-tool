@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using BehaviourAPI.Core;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
@@ -17,9 +18,9 @@ namespace BehaviourAPI.Unity.Runtime
         [HideInInspector][SerializeField] List<NodeAsset> parents;
         [HideInInspector][SerializeField] List<NodeAsset> childs;
 
-        public Node Node{ get => node; set => node = value; }
+        public Node Node { get => node; set => node = value; }
 
-        public Vector2 Position{ get => position; set => position = value; }
+        public Vector2 Position { get => position; set => position = value; }
         public List<NodeAsset> Parents { get => parents; private set => parents = value; }
         public List<NodeAsset> Childs { get => childs; private set => childs = value; }
 
@@ -29,6 +30,12 @@ namespace BehaviourAPI.Unity.Runtime
             nodeAsset.Position = pos;
             nodeAsset.Node = (Node)Activator.CreateInstance(type);
             return nodeAsset;
+        }
+
+        public void BindConnections()
+        {
+            // node.Children.AddRange(childs.Select(c => c.Node));
+            // node.Parents.AddRange(parents.Select(c => c.Node));
         }
     }
 }

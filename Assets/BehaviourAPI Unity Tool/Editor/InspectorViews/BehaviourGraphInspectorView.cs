@@ -1,25 +1,20 @@
-using BehaviourAPI.Unity.Runtime;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using BehaviourAPI.Unity.Runtime;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    public class NodeInspectorView : VisualElement
+    public class BehaviourGraphInspectorView : VisualElement
     {
         VisualElement _inspectorContent;
-        public NodeInspectorView()
+
+        public BehaviourGraphInspectorView()
         {
             AddLayout();
             AddStyles();
-        }
-
-        private void AddLayout()
-        {
-            var visualTree = VisualSettings.GetOrCreateSettings().InspectorLayout;
-            var inspectorFromUXML = visualTree.Instantiate();
-            Add(inspectorFromUXML);
-            _inspectorContent = this.Q("inspector-container");
         }
 
         private void AddStyles()
@@ -28,10 +23,18 @@ namespace BehaviourAPI.Unity.Editor
             styleSheets.Add(styleSheet);
         }
 
-        public void UpdateInspector(NodeAsset nodeAsset)
+        private void AddLayout()
+        {
+            var visualTree = VisualSettings.GetOrCreateSettings().graphInspectorLayout;
+            var inspectorFromUXML = visualTree.Instantiate();
+            Add(inspectorFromUXML);
+            _inspectorContent = this.Q("inspector-container");
+        }
+
+        public void UpdateInspector(BehaviourGraphAsset graphAsset)
         {
             _inspectorContent.Clear();
-            var editor = UnityEditor.Editor.CreateEditor(nodeAsset);
+            var editor = UnityEditor.Editor.CreateEditor(graphAsset);
             IMGUIContainer container = new IMGUIContainer(() =>
             {
                 if (editor && editor.target)

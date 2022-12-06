@@ -14,7 +14,9 @@ namespace BehaviourAPI.Unity.Editor
     {
         [Header("Layout")]
         public VisualTreeAsset NodeLayout;
-        public VisualTreeAsset InspectorLayout;
+        public VisualTreeAsset NodeInspectorLayout;
+        public VisualTreeAsset graphInspectorLayout;
+
 
         [Header("Style")]
         public StyleSheet GraphStylesheet;

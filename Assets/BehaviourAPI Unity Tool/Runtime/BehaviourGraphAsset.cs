@@ -14,10 +14,10 @@ namespace BehaviourAPI.Unity.Runtime
 
         [SerializeField] List<NodeAsset> nodes;
 
-        public BehaviourGraph Graph 
-        { 
+        public BehaviourGraph Graph
+        {
             get => graph;
-            set => graph = value; 
+            set => graph = value;
         }
 
         public List<NodeAsset> Nodes
@@ -27,7 +27,7 @@ namespace BehaviourAPI.Unity.Runtime
 
         public NodeAsset CreateNode(Type type, Vector2 position)
         {
-            if(Graph == null) return null;
+            if (Graph == null) return null;
 
             if (!type.IsSubclassOf(Graph.NodeType)) return null;
 
@@ -55,6 +55,18 @@ namespace BehaviourAPI.Unity.Runtime
         public void BindGraph(Type type)
         {
             graph = (BehaviourGraph)Activator.CreateInstance(type);
+        }
+
+        /// <summary>
+        /// Create the nodes and conections of <see cref="graph"/> using the data stored in <see cref="Nodes"/>
+        /// </summary>
+        public void Build()
+        {
+            Nodes.ForEach(nodeAsset =>
+            {
+                nodeAsset.BindConnections();
+                //graph.AddNode(nodeAsset.Node);
+            });
         }
     }
 }

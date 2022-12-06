@@ -15,7 +15,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479376253222924
-  position: {x: 1331, y: 360}
+  position: {x: 720, y: 449}
   parents: []
   childs:
   - {fileID: 5896979671685096004}
@@ -27,7 +27,6 @@ MonoBehaviour:
     - rid: 4601479376253222924
       type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
-        Name: a
         IsRandomized: 0
 --- !u!114 &11400000
 MonoBehaviour:
@@ -68,7 +67,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479376253222932
-  position: {x: 1159, y: 702}
+  position: {x: 557, y: 739}
   parents:
   - {fileID: -6500594717867184828}
   childs: []
@@ -77,8 +76,6 @@ MonoBehaviour:
     RefIds:
     - rid: 4601479376253222932
       type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        Name: 
 --- !u!114 &7049209428004605115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,7 +91,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479376253222934
-  position: {x: 1485, y: 718}
+  position: {x: 910, y: 755}
   parents:
   - {fileID: -6500594717867184828}
   childs: []
@@ -103,8 +100,6 @@ MonoBehaviour:
     RefIds:
     - rid: 4601479376253222934
       type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        Name: 
 --- !u!114 &9022503381547804937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,7 +115,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479376253222933
-  position: {x: 1331, y: 704}
+  position: {x: 728, y: 737}
   parents:
   - {fileID: -6500594717867184828}
   childs: []
@@ -129,5 +124,3 @@ MonoBehaviour:
     RefIds:
     - rid: 4601479376253222933
       type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        Name: 
