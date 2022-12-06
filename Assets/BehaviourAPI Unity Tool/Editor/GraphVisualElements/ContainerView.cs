@@ -19,6 +19,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             nodeAsset = asset;
             AddLayout();
+
         }
 
         void AddLayout()

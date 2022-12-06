@@ -13,12 +13,14 @@ namespace BehaviourAPI.Unity.Runtime
         public string Name;
 
         [SerializeReference] Node node;
+        [SerializeField] ActionAsset actionAsset;
 
         [HideInInspector][SerializeField] Vector2 position;
         [HideInInspector][SerializeField] List<NodeAsset> parents;
         [HideInInspector][SerializeField] List<NodeAsset> childs;
 
         public Node Node { get => node; set => node = value; }
+        public ActionAsset ActionAsset { get => actionAsset; set => actionAsset = value; }
 
         public Vector2 Position { get => position; set => position = value; }
         public List<NodeAsset> Parents { get => parents; private set => parents = value; }
