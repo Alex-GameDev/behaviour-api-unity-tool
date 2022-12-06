@@ -37,7 +37,7 @@ namespace BehaviourAPI.Unity.Demo
 
             var loop = bt.CreateDecorator<BehaviourAPI.BehaviourTrees.IteratorNode>("loop", seq).SetIterations(-1);
 
-            bt.SetStartNode(loop);
+            bt.SetRootNode(loop);
 
             return bt;
         }

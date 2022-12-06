@@ -49,7 +49,7 @@ public class PizzaBoyRunner : BehaviourGraphRunner
 
         var seq = bt.CreateComposite<SequencerNode>("pizza seq", false, recipeAction, makePizzaAction, bakeAction);
         var root = bt.CreateDecorator<IteratorNode>("loop", seq).SetIterations(-1);
-        bt.SetStartNode(root);
+        bt.SetRootNode(root);
         _bt = bt;
         return bt;
     }

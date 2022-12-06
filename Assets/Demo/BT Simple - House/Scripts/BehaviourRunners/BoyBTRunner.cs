@@ -56,7 +56,7 @@ public class BoyBTRunner : BehaviourGraphRunner
         var sel = bt.CreateComposite<BehaviourAPI.BehaviourTrees.SelectorNode>("sel", false, openDoor, seq, explode);
         var root = bt.CreateComposite<BehaviourAPI.BehaviourTrees.SequencerNode>("root", false, walkToDoor, sel, enter);
 
-        bt.SetStartNode(root);
+        bt.SetRootNode(root);
 
         return bt;
     }
