@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Default settings
   m_EditorClassIdentifier: 
   NodeLayout: {fileID: 9197481963319205126, guid: 740771a82fa776540b6c8fcedcc0bf44, type: 3}
+  ContainerLayout: {fileID: 9197481963319205126, guid: 737f70af6609c0a449de562edf0d2ba0, type: 3}
   NodeInspectorLayout: {fileID: 9197481963319205126, guid: 1627405eb2ab9804e97b0fca98d7f5b1, type: 3}
   graphInspectorLayout: {fileID: 9197481963319205126, guid: 3a7876f8abda6c34f9e410673202f985, type: 3}
   GraphStylesheet: {fileID: 7433441132597879392, guid: 7c0d7e55f67e0e14a9d76c01345095dc, type: 3}

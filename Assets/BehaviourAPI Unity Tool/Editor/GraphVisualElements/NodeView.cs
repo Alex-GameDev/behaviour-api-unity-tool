@@ -1,5 +1,7 @@
 namespace BehaviourAPI.Unity.Editor
 {
+    using BehaviourAPI.Core.Actions;
+    using BehaviourAPI.Core.Perceptions;
     using BehaviourAPI.Unity.Runtime;
     using Core;
     using System;
@@ -25,6 +27,7 @@ namespace BehaviourAPI.Unity.Editor
             Node = node;
             SetPosition(new UnityEngine.Rect(node.Position, Vector2.zero));
             DrawPorts();
+            DrawExtensionContainer();
             styleSheets.Add(VisualSettings.GetOrCreateSettings().NodeStylesheet);
             SetUpDataBinding();
         }
@@ -47,6 +50,17 @@ namespace BehaviourAPI.Unity.Editor
                 port.portName = "";
                 port.style.flexDirection = FlexDirection.ColumnReverse;
                 outputContainer.Add(port);
+            }
+        }
+
+        void DrawExtensionContainer()
+        {
+            var extensionContainer = this.Q(name: "extension");
+
+            if (Node.Node is IActionHandler actionHandler)
+            {
+                var containerView = new ContainerView();
+                extensionContainer.Add(containerView);
             }
         }
 
