@@ -15,6 +15,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479376253222924
+  actionAsset: {fileID: 0}
   position: {x: 720, y: 449}
   parents: []
   childs:
@@ -67,7 +68,8 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479376253222932
-  position: {x: 557, y: 739}
+  actionAsset: {fileID: 0}
+  position: {x: 574, y: 753}
   parents:
   - {fileID: -6500594717867184828}
   childs: []
@@ -91,7 +93,8 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479376253222934
-  position: {x: 894, y: 753}
+  actionAsset: {fileID: 0}
+  position: {x: 946, y: 769}
   parents:
   - {fileID: -6500594717867184828}
   childs: []
@@ -115,6 +118,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479376253222933
+  actionAsset: {fileID: 0}
   position: {x: 728, y: 737}
   parents:
   - {fileID: -6500594717867184828}

@@ -6,7 +6,8 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
 {
-    public class ExitAction : ActionAsset
+    [CreateAssetMenu(fileName = "Exit action")]
+    public class ExitActionAsset : ActionAsset
     {
         public Status ExitStatus;
     }
