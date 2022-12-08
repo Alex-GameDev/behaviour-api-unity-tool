@@ -7,40 +7,10 @@ using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    public class BehaviourGraphInspectorView : VisualElement
+    public class BehaviourGraphInspectorView : InspectorView<GraphAsset>
     {
-        VisualElement _inspectorContent;
-
-        public BehaviourGraphInspectorView()
+        public BehaviourGraphInspectorView() : base(VisualSettings.GetOrCreateSettings().graphInspectorLayout)
         {
-            AddLayout();
-            AddStyles();
-        }
-
-        private void AddStyles()
-        {
-            var styleSheet = VisualSettings.GetOrCreateSettings().InspectorStylesheet;
-            styleSheets.Add(styleSheet);
-        }
-
-        private void AddLayout()
-        {
-            var visualTree = VisualSettings.GetOrCreateSettings().graphInspectorLayout;
-            var inspectorFromUXML = visualTree.Instantiate();
-            Add(inspectorFromUXML);
-            _inspectorContent = this.Q("inspector-container");
-        }
-
-        public void UpdateInspector(GraphAsset graphAsset)
-        {
-            _inspectorContent.Clear();
-            var editor = UnityEditor.Editor.CreateEditor(graphAsset);
-            IMGUIContainer container = new IMGUIContainer(() =>
-            {
-                if (editor && editor.target)
-                    editor.OnInspectorGUI();
-            });
-            _inspectorContent.Add(container);
-        }
+        }     
     }
 }

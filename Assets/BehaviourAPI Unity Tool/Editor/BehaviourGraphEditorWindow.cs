@@ -38,7 +38,8 @@ namespace BehaviourAPI.Unity.Editor
 
             if (SystemAsset.RootGraph != null)
             {
-
+                HideEmptySystemPanel();
+                DisplayGraph(SystemAsset.RootGraph);
             }
             else
             {
@@ -91,6 +92,8 @@ namespace BehaviourAPI.Unity.Editor
         void ShowEmptySystemPanel()
         {
             _rootgraphContainer.style.visibility = Visibility.Visible;
+            _graphInspector.Hide();
+            _nodeInspector.Hide();
             _createGraphList.Clear();
             TypeUtilities.GetAllGraphTypes().ForEach(gType => _createGraphList
                 .Add(new Button(() => CreateRootGraph(gType)) { text = gType.Name })
@@ -99,6 +102,8 @@ namespace BehaviourAPI.Unity.Editor
 
         void HideEmptySystemPanel()
         {
+            _graphInspector.Show();
+            _nodeInspector.Show(); 
             _rootgraphContainer.style.visibility = Visibility.Hidden;
         }
 
