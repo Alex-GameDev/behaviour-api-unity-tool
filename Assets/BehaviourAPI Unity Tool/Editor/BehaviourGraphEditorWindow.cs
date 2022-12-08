@@ -141,13 +141,24 @@ namespace BehaviourAPI.Unity.Editor
 
         void SaveSystemData()
         {
-            if (IsAsset) AssetDatabase.SaveAssets();
-            else EditorSceneManager.SaveScene(SceneManager.GetActiveScene());
+            if (IsAsset) 
+                AssetDatabase.SaveAssets();
+            else 
+                EditorSceneManager.SaveScene(SceneManager.GetActiveScene());
         }
 
         void OnAddGraph(GraphAsset graph)
         {
-            // After-add
+            if (IsAsset)
+            {
+                graph.name = graph.Graph.GetType().Name;
+                AssetDatabase.AddObjectToAsset(graph, SystemAsset);
+            }               
+            else
+                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+
+            if (autoSave) SaveSystemData();
+
             bool isRoot = SystemAsset.RootGraph == graph;
             _selectGraphToolbarMenu.menu.AppendAction(graph.Graph.GetType().Name + (isRoot ? " (Root)" : ""), 
                 (d) => DisplayGraph(graph));
@@ -155,7 +166,12 @@ namespace BehaviourAPI.Unity.Editor
 
         void OnRemoveGraph(GraphAsset graph)
         {
-            // Pre-remove
+            // TODO: Fix to execute after remove
+            if (IsAsset)
+                AssetDatabase.RemoveObjectFromAsset(graph);
+            else
+                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+
             _selectGraphToolbarMenu.menu.RemoveItemAt(SystemAsset.Graphs.IndexOf(graph));
         }
 
