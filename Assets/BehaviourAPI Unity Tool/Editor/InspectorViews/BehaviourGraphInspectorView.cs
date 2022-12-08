@@ -31,7 +31,7 @@ namespace BehaviourAPI.Unity.Editor
             _inspectorContent = this.Q("inspector-container");
         }
 
-        public void UpdateInspector(BehaviourGraphAsset graphAsset)
+        public void UpdateInspector(GraphAsset graphAsset)
         {
             _inspectorContent.Clear();
             var editor = UnityEditor.Editor.CreateEditor(graphAsset);

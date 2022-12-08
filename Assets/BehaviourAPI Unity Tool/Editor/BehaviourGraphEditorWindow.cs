@@ -9,15 +9,15 @@ namespace BehaviourAPI.Unity.Editor
 {
     public class BehaviourGraphEditorWindow : EditorWindow
     {
-        public static BehaviourGraphAsset GraphAsset;
+        public static BehaviourSystemAsset SystemAsset;
         NodeInspectorView nodeInspector;
 
-        public static void OpenGraph(BehaviourGraphAsset graphAsset)
+        public static void OpenGraph(BehaviourSystemAsset systemAsset)
         {
-            GraphAsset = graphAsset;
+            SystemAsset = systemAsset;
             BehaviourGraphEditorWindow window = GetWindow<BehaviourGraphEditorWindow>();
             window.minSize = new Vector2(550, 250);
-            window.titleContent = new GUIContent($"Behaviour graph editor ({graphAsset.Graph.GetType().Name})");
+            window.titleContent = new GUIContent($"Behaviour graph editor");
         }
 
         private void CreateGUI()
@@ -26,16 +26,17 @@ namespace BehaviourAPI.Unity.Editor
             var nodeInspectorView = AddNodeInspectorView();
             var graphInspectorView = AddGraphInspectorView();
             graphView.NodeSelected += nodeInspectorView.UpdateInspector;
-            graphInspectorView.UpdateInspector(GraphAsset);
+            //graphInspectorView.UpdateInspector(GraphAsset);
         }
 
         private BehaviourGraphView AddGraphView()
         {
-            var graphView = new BehaviourGraphView(GraphAsset, this);
+            var graphView = new BehaviourGraphView(this);
             graphView.StretchToParentSize();
             rootVisualElement.Add(graphView);
             return graphView;
         }
+
         private NodeInspectorView AddNodeInspectorView()
         {
             var nodeInspector = new NodeInspectorView();

@@ -8,6 +8,9 @@ using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Runtime
 {
+    /// <summary>
+    /// Stores a node as an unity object
+    /// </summary>
     public class NodeAsset : ScriptableObject
     {
         public string Name;
@@ -30,12 +33,6 @@ namespace BehaviourAPI.Unity.Runtime
             nodeAsset.Position = pos;
             nodeAsset.Node = (Node)Activator.CreateInstance(type);
             return nodeAsset;
-        }
-
-        public void BindConnections()
-        {
-            // node.Children.AddRange(childs.Select(c => c.Node));
-            // node.Parents.AddRange(parents.Select(c => c.Node));
         }
     }
 }

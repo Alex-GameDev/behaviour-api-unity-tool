@@ -15,22 +15,21 @@ namespace BehaviourAPI.Unity.Editor
     /// </summary>
     public class BehaviourGraphView : GraphView
     {
-        BehaviourGraphAsset GraphAsset;
+        GraphAsset GraphAsset;
         HierarchySearchWindow searchWindow;
         EditorWindow editorWindow;
 
         public Action<NodeAsset> NodeSelected { get; set; }
 
-        public BehaviourGraphView(BehaviourGraphAsset graphAsset, EditorWindow parentWindow)
+        public BehaviourGraphView(EditorWindow parentWindow)
         {
-            GraphAsset = graphAsset;
             editorWindow = parentWindow;
             AddGridBackground();
             AddManipulators();
             AddCreateNodeWindow();
             AddStyles();
             graphViewChanged = OnGraphViewChanged;
-            DrawGraph();
+            //DrawGraph();
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
