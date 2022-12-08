@@ -16,6 +16,10 @@ namespace BehaviourAPI.Unity.Editor
         BehaviourGraphView _graphView;
         NodeInspectorView _nodeInspector;
         BehaviourGraphInspectorView _graphInspector;
+
+        ScrollView _createGraphList;
+
+        GraphAsset _currentGraphAsset;
         
 
         public static void OpenGraph(BehaviourSystemAsset systemAsset)
@@ -29,7 +33,20 @@ namespace BehaviourAPI.Unity.Editor
         private void CreateGUI()
         {
             AddLayout();
+
+            if (SystemAsset == null) return;
+
+            if (SystemAsset.RootGraph != null)
+            {
+
+            }
+            else
+            {
+                ShowEmptySystemPanel();
+            }
         }
+
+        #region ----------------------------- Create GUI -----------------------------
 
         void AddLayout()
         {
@@ -42,9 +59,10 @@ namespace BehaviourAPI.Unity.Editor
             _graphInspector = AddGraphInspectorView();
             _graphView.NodeSelected += _nodeInspector.UpdateInspector;
             _rootgraphContainer = rootVisualElement.Q("bw-rootgraph");
+            _createGraphList = rootVisualElement.Q<ScrollView>("bw-graphs-scrollview");
         }
 
-        private BehaviourGraphView AddGraphView()
+        BehaviourGraphView AddGraphView()
         {
             var graphView = new BehaviourGraphView(this);
             graphView.StretchToParentSize();
@@ -52,18 +70,59 @@ namespace BehaviourAPI.Unity.Editor
             return graphView;
         }
 
-        private NodeInspectorView AddNodeInspectorView()
+        NodeInspectorView AddNodeInspectorView()
         {
             var nodeInspector = new NodeInspectorView();
             _container.Add(nodeInspector);
             return nodeInspector;
         }
 
-        private BehaviourGraphInspectorView AddGraphInspectorView()
+        BehaviourGraphInspectorView AddGraphInspectorView()
         {
             var graphInspector = new BehaviourGraphInspectorView();
             _container.Add(graphInspector);
             return graphInspector;
         }
+
+        #endregion
+
+        #region ----------------------- Layout event callbacks -----------------------
+
+        void ShowEmptySystemPanel()
+        {
+            _rootgraphContainer.style.visibility = Visibility.Visible;
+            _createGraphList.Clear();
+            TypeUtilities.GetAllGraphTypes().ForEach(gType => _createGraphList
+                .Add(new Button(() => CreateRootGraph(gType)) { text = gType.Name })
+            );            
+        }
+
+        void HideEmptySystemPanel()
+        {
+            _rootgraphContainer.style.visibility = Visibility.Hidden;
+        }
+
+        void DisplayGraph(GraphAsset graphAsset)
+        {
+            _currentGraphAsset = graphAsset;
+            _graphInspector.UpdateInspector(graphAsset);
+            _graphView.SetGraph(graphAsset);
+        }
+
+        #endregion
+
+        #region ----------------------------- Modify asset -----------------------------
+
+        void CreateRootGraph(Type type)
+        {
+            if (SystemAsset == null) return;
+
+            var rootGraph = SystemAsset.CreateGraph(type);
+            SystemAsset.RootGraph = rootGraph;       
+            HideEmptySystemPanel();
+            DisplayGraph(rootGraph);
+        }
+
+        #endregion
     }
 }

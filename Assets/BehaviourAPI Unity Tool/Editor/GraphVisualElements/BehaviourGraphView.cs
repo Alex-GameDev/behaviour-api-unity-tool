@@ -29,7 +29,12 @@ namespace BehaviourAPI.Unity.Editor
             AddCreateNodeWindow();
             AddStyles();
             graphViewChanged = OnGraphViewChanged;
-            //DrawGraph();
+        }
+
+        public void SetGraph(GraphAsset graph)
+        {
+            GraphAsset = graph;
+            DrawGraph();
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -166,6 +171,7 @@ namespace BehaviourAPI.Unity.Editor
 
         void DrawGraph()
         {
+            ClearGraph();
             if (GraphAsset == null) return;
 
             var nodeViews = GraphAsset.Nodes.Select(DrawNodeView).ToList();
@@ -188,6 +194,11 @@ namespace BehaviourAPI.Unity.Editor
                     edge.MarkDirtyRepaint();
                 }
             });
+        }
+
+        void ClearGraph()
+        {
+            graphElements.ForEach(RemoveElement);
         }
     }
 }

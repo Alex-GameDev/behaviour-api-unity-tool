@@ -1,3 +1,4 @@
+using BehaviourAPI.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,6 +25,12 @@ namespace BehaviourAPI.Unity.Editor
         {
             var assemblies = assemblyNames.ToList().Select(a => Assembly.Load(a));
             return GetTypesDerivedFrom(type, assemblies);
+        }
+
+        public static List<Type> GetAllGraphTypes()
+        {
+            return GetTypesDerivedFrom(typeof(BehaviourGraph), VisualSettings.GetOrCreateSettings().assemblies)
+                .FindAll(t => !t.IsAbstract);
         }
     }
 
