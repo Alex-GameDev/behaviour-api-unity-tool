@@ -13,11 +13,11 @@ namespace BehaviourAPI.Unity.Editor
     public class VisualSettings : ScriptableObject
     {
         [Header("Layout")]
+        public VisualTreeAsset BehaviourSystemWindowLayout;
         public VisualTreeAsset NodeLayout;
         public VisualTreeAsset ContainerLayout;
         public VisualTreeAsset NodeInspectorLayout;
         public VisualTreeAsset graphInspectorLayout;
-
 
         [Header("Style")]
         public StyleSheet GraphStylesheet;

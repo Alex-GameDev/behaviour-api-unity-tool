@@ -6,6 +6,9 @@
         </ui:VisualElement>
         <ui:VisualElement name="body" class="body">
             <ui:IMGUIContainer name="inspector-container" />
+            <ui:VisualElement name="actions-container">
+                <ui:Button text="Create Action" display-tooltip-when-elided="true" name="create-action-btn" />
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

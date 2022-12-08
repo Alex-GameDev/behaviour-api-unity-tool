@@ -46,19 +46,19 @@ namespace BehaviourAPI.Unity.Editor
 
         void AssignAction()
         {
-            var actionAsset = ScriptableObject.CreateInstance<ExitActionAsset>();
-            nodeAsset.ActionAsset = actionAsset;
-            AssetDatabase.AddObjectToAsset(nodeAsset, actionAsset);
-            AssetDatabase.SaveAssets();
+            //var actionAsset = ScriptableObject.CreateInstance<ExitActionAsset>();
+            //nodeAsset.ActionAsset = actionAsset;
+            //AssetDatabase.AddObjectToAsset(nodeAsset, actionAsset);
+            //AssetDatabase.SaveAssets();
             _assignDiv.style.display = DisplayStyle.None;
             _actionDiv.style.display = DisplayStyle.Flex;
         }
 
         void RemoveAction()
         {
-            AssetDatabase.RemoveObjectFromAsset(nodeAsset.ActionAsset);
-            nodeAsset.ActionAsset = null;
-            AssetDatabase.SaveAssets();
+            //AssetDatabase.RemoveObjectFromAsset(nodeAsset.ActionAsset);
+            //nodeAsset.ActionAsset = null;
+            //AssetDatabase.SaveAssets();
             _assignDiv.style.display = DisplayStyle.Flex;
             _actionDiv.style.display = DisplayStyle.None;
         }

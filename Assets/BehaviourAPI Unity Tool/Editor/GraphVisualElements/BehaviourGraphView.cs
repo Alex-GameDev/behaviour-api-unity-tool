@@ -15,15 +15,15 @@ namespace BehaviourAPI.Unity.Editor
     /// </summary>
     public class BehaviourGraphView : GraphView
     {
-        BehaviourGraphAsset GraphAsset;
+        GraphAsset GraphAsset;
+
         HierarchySearchWindow searchWindow;
         EditorWindow editorWindow;
 
         public Action<NodeAsset> NodeSelected { get; set; }
 
-        public BehaviourGraphView(BehaviourGraphAsset graphAsset, EditorWindow parentWindow)
+        public BehaviourGraphView(EditorWindow parentWindow)
         {
-            GraphAsset = graphAsset;
             editorWindow = parentWindow;
             AddGridBackground();
             AddManipulators();
@@ -32,6 +32,58 @@ namespace BehaviourAPI.Unity.Editor
             graphViewChanged = OnGraphViewChanged;
             DrawGraph();
         }
+
+        /// <summary>
+        /// Asigna un grafo a la vista
+        /// </summary>
+        /// <param name="graphAsset"></param>
+        public void SetGraph(GraphAsset graphAsset)
+        {
+            GraphAsset = graphAsset;
+            DrawGraph();
+        }
+
+        #region ---------------------------- Initialization ----------------------------
+
+        void AddCreateNodeWindow()
+        {
+            if (searchWindow == null)
+            {
+                searchWindow = ScriptableObject.CreateInstance<HierarchySearchWindow>();
+                searchWindow.SetRootType(typeof(BTNode));
+                searchWindow.SetOnSelectEntryCallback(CreateNode);
+            }
+
+            nodeCreationRequest = context =>
+            {
+                var searchContext = new SearchWindowContext(context.screenMousePosition);
+                SearchWindow.Open(searchContext, searchWindow);
+            };
+        }
+
+        void AddStyles()
+        {
+            StyleSheet styleSheet = VisualSettings.GetOrCreateSettings().GraphStylesheet;
+            styleSheets.Add(styleSheet);
+        }
+
+        void AddGridBackground()
+        {
+            GridBackground gridBackground = new GridBackground();
+            Insert(0, gridBackground);
+        }
+
+        void AddManipulators()
+        {
+            SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
+            this.AddManipulator(new ContentDragger());
+            this.AddManipulator(new SelectionDragger());
+            this.AddManipulator(new RectangleSelector());
+        }
+
+        #endregion
+
+        #region -------------------------- Inherited methods --------------------------
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
@@ -61,6 +113,10 @@ namespace BehaviourAPI.Unity.Editor
 
             return compatiblePorts;
         }
+
+        #endregion
+
+        #region -------------------------- Event callbacks ----------------------------
 
         GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
@@ -101,46 +157,14 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        void AddCreateNodeWindow()
-        {
-            if (searchWindow == null)
-            {
-                searchWindow = ScriptableObject.CreateInstance<HierarchySearchWindow>();
-                searchWindow.SetRootType(typeof(BTNode));
-                searchWindow.SetOnSelectEntryCallback(CreateNode);
-            }
-
-            nodeCreationRequest = context =>
-            {
-                var searchContext = new SearchWindowContext(context.screenMousePosition);
-                SearchWindow.Open(searchContext, searchWindow);
-            };
-        }
-
-        void AddStyles()
-        {
-            StyleSheet styleSheet = VisualSettings.GetOrCreateSettings().GraphStylesheet;
-            styleSheets.Add(styleSheet);
-        }
-
-        void AddGridBackground()
-        {
-            GridBackground gridBackground = new GridBackground();
-            Insert(0, gridBackground);
-        }
-
-        void AddManipulators()
-        {
-            SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
-            this.AddManipulator(new ContentDragger());
-            this.AddManipulator(new SelectionDragger());
-            this.AddManipulator(new RectangleSelector());
-        }
-
         Vector2 GetLocalMousePosition(Vector2 mousePosition)
         {
             return contentViewContainer.WorldToLocal(mousePosition);
         }
+
+        #endregion
+
+        #region ---------------------------- Create nodes ----------------------------
 
         void CreateNode(Type type, Vector2 position) 
         {
@@ -165,8 +189,11 @@ namespace BehaviourAPI.Unity.Editor
             return nodeView;
         }
 
+        #endregion
+
         void DrawGraph()
         {
+            ClearGraph();
             if (GraphAsset == null) return;
 
             var nodeViews = GraphAsset.Nodes.Select(DrawNodeView).ToList();
@@ -189,6 +216,11 @@ namespace BehaviourAPI.Unity.Editor
                     edge.MarkDirtyRepaint();
                 }
             });
+        }
+
+        void ClearGraph()
+        {
+            graphElements.ForEach(RemoveElement);
         }
     }
 }

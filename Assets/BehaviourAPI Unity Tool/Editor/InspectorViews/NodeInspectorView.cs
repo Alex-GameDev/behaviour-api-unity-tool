@@ -39,5 +39,8 @@ namespace BehaviourAPI.Unity.Editor
             });
             _inspectorContent.Add(container);
         }
+        
+        public void Show() => style.display = DisplayStyle.Flex;
+        public void Hide() => style.display = DisplayStyle.None;
     }
 }

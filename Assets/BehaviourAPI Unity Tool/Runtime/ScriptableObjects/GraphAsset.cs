@@ -1,18 +1,22 @@
-using System;
-using System.Collections.Generic;
 using BehaviourAPI.Core;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Runtime
 {
-    [CreateAssetMenu(menuName = "BehaviourAPI/Graph", order = 0)]
-    public class BehaviourGraphAsset : ScriptableObject
+    /// <summary>
+    /// Stores a behaviour graph as an unity object.
+    /// </summary>
+    public class GraphAsset : ScriptableObject
     {
         [SerializeReference] BehaviourGraph graph;
 
-        [SerializeField] List<NodeAsset> nodes;
+        [HideInInspector][SerializeField] List<NodeAsset> nodes = new List<NodeAsset>();
 
         public BehaviourGraph Graph
         {
@@ -40,33 +44,14 @@ namespace BehaviourAPI.Unity.Runtime
 
         public void RemoveNode(NodeAsset node)
         {
-            if (Graph == null) return;
 
-            Nodes.Remove(node);
-            AssetDatabase.RemoveObjectFromAsset(node);
-            AssetDatabase.SaveAssets();
         }
 
-        public void Clear()
+        public static GraphAsset Create(Type graphType)
         {
-            graph = null;
-        }
-
-        public void BindGraph(Type type)
-        {
-            graph = (BehaviourGraph)Activator.CreateInstance(type);
-        }
-
-        /// <summary>
-        /// Create the nodes and conections of <see cref="graph"/> using the data stored in <see cref="Nodes"/>
-        /// </summary>
-        public void Build()
-        {
-            Nodes.ForEach(nodeAsset =>
-            {
-                nodeAsset.BindConnections();
-                //graph.AddNode(nodeAsset.Node);
-            });
+            var graphAsset = CreateInstance<GraphAsset>();
+            graphAsset.Graph = (BehaviourGraph)Activator.CreateInstance(graphType);
+            return graphAsset;
         }
     }
 }

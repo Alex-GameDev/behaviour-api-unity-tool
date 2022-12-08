@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a64cb58aab7be7848b88eab8be55573d, type: 3}
   m_Name: Default settings
   m_EditorClassIdentifier: 
+  BehaviourSystemWindowLayout: {fileID: 9197481963319205126, guid: 7c2f6fb0b15b4b847a0dd42bdd6cbf0d, type: 3}
   NodeLayout: {fileID: 9197481963319205126, guid: 740771a82fa776540b6c8fcedcc0bf44, type: 3}
   ContainerLayout: {fileID: 9197481963319205126, guid: 737f70af6609c0a449de562edf0d2ba0, type: 3}
   NodeInspectorLayout: {fileID: 9197481963319205126, guid: 1627405eb2ab9804e97b0fca98d7f5b1, type: 3}

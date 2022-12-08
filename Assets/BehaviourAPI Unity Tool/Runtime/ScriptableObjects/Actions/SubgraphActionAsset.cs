@@ -6,6 +6,6 @@ namespace BehaviourAPI.Unity.Runtime
 {
     public class SubgraphActionAsset : ActionAsset
     {
-        public BehaviourGraphAsset graphAsset;
+        public GraphAsset graphAsset;
     }
 }
