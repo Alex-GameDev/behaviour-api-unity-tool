@@ -59,7 +59,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (Node.Node is IActionHandler actionHandler)
             {
-                var containerView = new ContainerView();
+                var containerView = new ContainerView(Node);
                 extensionContainer.Add(containerView);
             }
         }
