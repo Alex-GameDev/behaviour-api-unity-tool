@@ -2,7 +2,7 @@
     <Style src="project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/Styles/editor%20window.uss?fileID=7433441132597879392&amp;guid=fd4790495fdc36a4c8007fe53ea5ed24&amp;type=3#editor window" />
     <uie:Toolbar name="bw-toolbar" class="bw-toolbar">
         <ui:VisualElement style="flex-direction: row;">
-            <uie:ToolbarMenu display-tooltip-when-elided="true" name="bw-toolbar-graph-menu" />
+            <uie:ToolbarMenu display-tooltip-when-elided="true" name="bw-toolbar-graph-menu" text="graph" />
             <uie:ToolbarSpacer name="bw-toolbar-spacer" />
             <uie:ToolbarButton text="save&#10;" display-tooltip-when-elided="true" name="bw-toolbar-save-btn" />
             <uie:ToolbarButton text="clear" display-tooltip-when-elided="true" name="bw-toolbar-clear-btn" />

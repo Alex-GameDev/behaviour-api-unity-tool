@@ -5,26 +5,36 @@ using UnityEditor.UIElements;
 using System;
 using BehaviourAPI.Unity.Runtime;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.SceneManagement;
+using UnityEditor.VersionControl;
+using UnityEngine.SceneManagement;
 
 namespace BehaviourAPI.Unity.Editor
 {
     public class BehaviourGraphEditorWindow : EditorWindow
     {
         public static BehaviourSystemAsset SystemAsset;
+        public static bool IsAsset;
 
         VisualElement _container, _rootgraphContainer;
         BehaviourGraphView _graphView;
         NodeInspectorView _nodeInspector;
         BehaviourGraphInspectorView _graphInspector;
 
+        ToolbarMenu _selectGraphToolbarMenu;
+        ToolbarToggle _autosaveToolbarToggle;
+        ToolbarButton _saveToolbarButton;
+
         ScrollView _createGraphList;
 
         GraphAsset _currentGraphAsset;
-        
+        bool autoSave = false;
 
-        public static void OpenGraph(BehaviourSystemAsset systemAsset)
+
+        public static void OpenGraph(BehaviourSystemAsset systemAsset, bool isAsset = true)
         {
             SystemAsset = systemAsset;
+            IsAsset = isAsset;
             BehaviourGraphEditorWindow window = GetWindow<BehaviourGraphEditorWindow>();
             window.minSize = new Vector2(550, 250);
             window.titleContent = new GUIContent($"Behaviour graph editor");
@@ -61,6 +71,8 @@ namespace BehaviourAPI.Unity.Editor
             _graphView.NodeSelected += _nodeInspector.UpdateInspector;
             _rootgraphContainer = rootVisualElement.Q("bw-rootgraph");
             _createGraphList = rootVisualElement.Q<ScrollView>("bw-graphs-scrollview");
+
+            SetUpToolbar();
         }
 
         BehaviourGraphView AddGraphView()
@@ -83,6 +95,19 @@ namespace BehaviourAPI.Unity.Editor
             var graphInspector = new BehaviourGraphInspectorView();
             _container.Add(graphInspector);
             return graphInspector;
+        }
+
+        void SetUpToolbar()
+        {
+            _selectGraphToolbarMenu = rootVisualElement.Q<ToolbarMenu>("bw-toolbar-graph-menu");
+            _autosaveToolbarToggle = rootVisualElement.Q<ToolbarToggle>("bw-toolbar-autosave-toggle");
+            _saveToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-save-btn");
+
+            _saveToolbarButton.clicked += SaveSystemData;
+            _autosaveToolbarToggle.RegisterValueChangedCallback((evt) => autoSave = evt.newValue);
+
+            if (SystemAsset == null || SystemAsset.Graphs.Count == 0) return;
+            SystemAsset.Graphs.ForEach(g => _selectGraphToolbarMenu.menu.AppendAction(g.Graph.GetType().Name, (d) => DisplayGraph(g)));
         }
 
         #endregion
@@ -114,6 +139,26 @@ namespace BehaviourAPI.Unity.Editor
             _graphView.SetGraph(graphAsset);
         }
 
+        void SaveSystemData()
+        {
+            if (IsAsset) AssetDatabase.SaveAssets();
+            else EditorSceneManager.SaveScene(SceneManager.GetActiveScene());
+        }
+
+        void OnAddGraph(GraphAsset graph)
+        {
+            // After-add
+            bool isRoot = SystemAsset.RootGraph == graph;
+            _selectGraphToolbarMenu.menu.AppendAction(graph.Graph.GetType().Name + (isRoot ? " (Root)" : ""), 
+                (d) => DisplayGraph(graph));
+        }
+
+        void OnRemoveGraph(GraphAsset graph)
+        {
+            // Pre-remove
+            _selectGraphToolbarMenu.menu.RemoveItemAt(SystemAsset.Graphs.IndexOf(graph));
+        }
+
         #endregion
 
         #region ----------------------------- Modify asset -----------------------------
@@ -125,6 +170,7 @@ namespace BehaviourAPI.Unity.Editor
             var rootGraph = SystemAsset.CreateGraph(type);
             SystemAsset.RootGraph = rootGraph;       
             HideEmptySystemPanel();
+            OnAddGraph(rootGraph);
             DisplayGraph(rootGraph);
         }
 
