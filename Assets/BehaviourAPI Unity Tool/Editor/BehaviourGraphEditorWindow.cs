@@ -4,13 +4,19 @@ using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using System;
 using BehaviourAPI.Unity.Runtime;
+using UnityEditor.Experimental.GraphView;
 
 namespace BehaviourAPI.Unity.Editor
 {
     public class BehaviourGraphEditorWindow : EditorWindow
     {
         public static BehaviourSystemAsset SystemAsset;
-        NodeInspectorView nodeInspector;
+
+        VisualElement _container, _rootgraphContainer;
+        BehaviourGraphView _graphView;
+        NodeInspectorView _nodeInspector;
+        BehaviourGraphInspectorView _graphInspector;
+        
 
         public static void OpenGraph(BehaviourSystemAsset systemAsset)
         {
@@ -22,32 +28,41 @@ namespace BehaviourAPI.Unity.Editor
 
         private void CreateGUI()
         {
-            var graphView = AddGraphView();
-            var nodeInspectorView = AddNodeInspectorView();
-            var graphInspectorView = AddGraphInspectorView();
-            graphView.NodeSelected += nodeInspectorView.UpdateInspector;
-            //graphInspectorView.UpdateInspector(GraphAsset);
+            AddLayout();
+        }
+
+        void AddLayout()
+        {
+            var windowLayout = VisualSettings.GetOrCreateSettings().BehaviourGraphEditorWindowLayout.Instantiate();
+            rootVisualElement.Add(windowLayout);
+
+            _container = rootVisualElement.Q("bw-content");
+            _graphView = AddGraphView();
+            _nodeInspector = AddNodeInspectorView();
+            _graphInspector = AddGraphInspectorView();
+            _graphView.NodeSelected += _nodeInspector.UpdateInspector;
+            _rootgraphContainer = rootVisualElement.Q("bw-rootgraph");
         }
 
         private BehaviourGraphView AddGraphView()
         {
             var graphView = new BehaviourGraphView(this);
             graphView.StretchToParentSize();
-            rootVisualElement.Add(graphView);
+            rootVisualElement.Insert(0, graphView);
             return graphView;
         }
 
         private NodeInspectorView AddNodeInspectorView()
         {
             var nodeInspector = new NodeInspectorView();
-            rootVisualElement.Add(nodeInspector);
+            _container.Add(nodeInspector);
             return nodeInspector;
         }
 
         private BehaviourGraphInspectorView AddGraphInspectorView()
         {
             var graphInspector = new BehaviourGraphInspectorView();
-            rootVisualElement.Add(graphInspector);
+            _container.Add(graphInspector);
             return graphInspector;
         }
     }
