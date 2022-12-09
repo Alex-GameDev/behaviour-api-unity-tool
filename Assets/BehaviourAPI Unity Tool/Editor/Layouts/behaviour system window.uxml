@@ -3,10 +3,12 @@
     <uie:Toolbar name="bw-toolbar" class="bw-toolbar">
         <ui:VisualElement style="flex-direction: row;">
             <uie:ToolbarMenu display-tooltip-when-elided="true" name="bw-toolbar-graph-menu" text="graph" />
+            <uie:ToolbarButton text="add" display-tooltip-when-elided="true" name="bw-toolbar-add-btn" tooltip="Adds a new graph to the system" />
+            <uie:ToolbarButton text="set root" display-tooltip-when-elided="true" name="bw-toolbar-setroot-btn" tooltip="set the current graph to the root of the system" />
+            <uie:ToolbarButton text="delete" display-tooltip-when-elided="true" name="bw-toolbar-delete-btn" tooltip="delete the current graph" />
             <uie:ToolbarSpacer name="bw-toolbar-spacer" />
             <uie:ToolbarButton text="save&#10;" display-tooltip-when-elided="true" name="bw-toolbar-save-btn" />
-            <uie:ToolbarButton text="clear" display-tooltip-when-elided="true" name="bw-toolbar-clear-btn" />
-            <uie:ToolbarButton text="delete" display-tooltip-when-elided="true" name="bw-toolbar-delete-btn" />
+            <uie:ToolbarButton text="clear" display-tooltip-when-elided="true" name="bw-toolbar-clear-btn" tooltip="remove all nodes from the current graph" />
         </ui:VisualElement>
         <uie:ToolbarToggle label="auto save" name="bw-toolbar-autosave-toggle" />
     </uie:Toolbar>
