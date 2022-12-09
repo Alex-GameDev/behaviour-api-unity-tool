@@ -17,7 +17,7 @@ namespace BehaviourAPI.Unity.Editor
         public static BehaviourSystemAsset SystemAsset;
         public static bool IsAsset;
 
-        VisualElement _container, _rootgraphContainer;
+        VisualElement _container, _emptyGraphPanel;
         BehaviourGraphView _graphView;
         NodeInspectorView _nodeInspector;
         BehaviourGraphInspectorView _graphInspector;
@@ -25,8 +25,6 @@ namespace BehaviourAPI.Unity.Editor
         ToolbarMenu _selectGraphToolbarMenu;
         ToolbarToggle _autosaveToolbarToggle;
         ToolbarButton _saveToolbarButton, _deleteGraphToolbarButton, _addGraphToolbarButton;
-
-        ScrollView _createGraphList;
 
         GraphAsset _currentGraphAsset;
         bool autoSave = false;
@@ -48,12 +46,11 @@ namespace BehaviourAPI.Unity.Editor
 
             if (SystemAsset.Graphs.Count > 0)
             {
-                HideEmptySystemPanel();
                 DisplayGraph(SystemAsset.RootGraph);
             }
             else
             {
-                ShowEmptySystemPanel();
+                _emptyGraphPanel.style.display = DisplayStyle.Flex;
             }
         }
 
@@ -69,10 +66,18 @@ namespace BehaviourAPI.Unity.Editor
             _nodeInspector = AddNodeInspectorView();
             _graphInspector = AddGraphInspectorView();
             _graphView.NodeSelected += _nodeInspector.UpdateInspector;
-            _rootgraphContainer = rootVisualElement.Q("bw-rootgraph");
-            _createGraphList = rootVisualElement.Q<ScrollView>("bw-graphs-scrollview");
 
+            _emptyGraphPanel = AddEmptyGraphPanel();
+            _emptyGraphPanel.style.display = DisplayStyle.None;
             SetUpToolbar();
+        }
+
+        VisualElement AddEmptyGraphPanel()
+        {
+            var visualElement = VisualSettings.GetOrCreateSettings().EmptyGraphPanel.Instantiate();
+            rootVisualElement.Add(visualElement);
+            visualElement.Q<Button>("egp-add-btn").clicked += ShowGraphCreationPanel;
+            return visualElement;
         }
 
         BehaviourGraphView AddGraphView()
@@ -116,22 +121,9 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ----------------------- Layout event callbacks -----------------------
 
-        void ShowEmptySystemPanel()
+        void ShowGraphCreationPanel()
         {
-            _rootgraphContainer.style.visibility = Visibility.Visible;
-            _graphInspector.Hide();
-            _nodeInspector.Hide();
-            _createGraphList.Clear();
-            TypeUtilities.GetAllGraphTypes().ForEach(gType => _createGraphList
-                .Add(new Button(() => CreateRootGraph(gType)) { text = gType.Name })
-            );            
-        }
-
-        void HideEmptySystemPanel()
-        {
-            _graphInspector.Show();
-            _nodeInspector.Show(); 
-            _rootgraphContainer.style.visibility = Visibility.Hidden;
+            GraphCreationWindow.CreateGraphCreationWindow(CreateGraph);
         }
 
         void DisplayGraph(GraphAsset graphAsset)
@@ -139,10 +131,13 @@ namespace BehaviourAPI.Unity.Editor
             _currentGraphAsset = graphAsset;
             _graphInspector.UpdateInspector(graphAsset);
             _graphView.SetGraph(graphAsset);
+
+            _emptyGraphPanel.style.display = DisplayStyle.None;
         }
 
         void DisplayDeleteGraphAlertWindow()
         {
+            if(SystemAsset == null || SystemAsset.Graphs.Count == 0) return;
             AlertWindow.CreateAlertWindow("Are you sure to delete the current graph?", DeleteCurrentGraph);
         }
 
@@ -188,24 +183,13 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ----------------------------- Modify asset -----------------------------
 
-        void CreateRootGraph(Type type)
+        void CreateGraph(string name, Type type)
         {
-            var rootGraph = CreateGraph(type); 
+            if (SystemAsset == null) return;
 
-            if(rootGraph == null) return;
-
-            SystemAsset.RootGraph = rootGraph;
-            HideEmptySystemPanel();
-        }
-
-        GraphAsset CreateGraph(Type type)
-        {
-            if (SystemAsset == null) return null;
-
-            var graphAsset = SystemAsset.CreateGraph(type);
+            var graphAsset = SystemAsset.CreateGraph(name, type);
             OnAddGraph(graphAsset);
             DisplayGraph(graphAsset);
-            return graphAsset;
         }
 
         void DeleteCurrentGraph()
@@ -218,12 +202,11 @@ namespace BehaviourAPI.Unity.Editor
 
             if(SystemAsset.Graphs.Count > 0)
             {
-                HideEmptySystemPanel();
                 DisplayGraph(SystemAsset.RootGraph);
             }
             else
             {
-                ShowEmptySystemPanel();
+                _emptyGraphPanel.style.display = DisplayStyle.Flex;
             }
         }
 

@@ -15,6 +15,7 @@ namespace BehaviourAPI.Unity.Runtime
     public class GraphAsset : ScriptableObject
     {
         [SerializeReference] BehaviourGraph graph;
+        [SerializeField] string Name;
 
         [HideInInspector][SerializeField] List<NodeAsset> nodes = new List<NodeAsset>();
 
@@ -47,10 +48,11 @@ namespace BehaviourAPI.Unity.Runtime
 
         }
 
-        public static GraphAsset Create(Type graphType)
+        public static GraphAsset Create(string name, Type graphType)
         {
             var graphAsset = CreateInstance<GraphAsset>();
             graphAsset.Graph = (BehaviourGraph)Activator.CreateInstance(graphType);
+            graphAsset.Name = name;
             return graphAsset;
         }
     }

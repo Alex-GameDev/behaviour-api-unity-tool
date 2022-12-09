@@ -34,9 +34,9 @@ namespace BehaviourAPI.Unity.Runtime
             get => graphs;
         }
 
-        public GraphAsset CreateGraph(Type type)
+        public GraphAsset CreateGraph(string name, Type type)
         {
-            var graphAsset = GraphAsset.Create(type);
+            var graphAsset = GraphAsset.Create(name, type);
 
             if(graphAsset != null)
             {

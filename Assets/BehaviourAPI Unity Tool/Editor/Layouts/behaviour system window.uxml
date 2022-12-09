@@ -13,11 +13,4 @@
         <uie:ToolbarToggle label="auto save" name="bw-toolbar-autosave-toggle" />
     </uie:Toolbar>
     <ui:VisualElement name="bw-content" />
-    <ui:VisualElement name="bw-rootgraph" class="bw-rootgraph">
-        <ui:VisualElement name="bw-rootgraph-panel" class="bw-rootgraph-panel">
-            <ui:Label text="Select a graph system to start editing" display-tooltip-when-elided="true" name="bw-rootgraph-title" class="bw-rootgraph-title" />
-            <ui:VisualElement name="bw-rootgraph-div" class="bw-divider" />
-            <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="bw-graphs-scrollview" class="bw-graphs-scrollview" />
-        </ui:VisualElement>
-    </ui:VisualElement>
 </ui:UXML>

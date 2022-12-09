@@ -30,7 +30,6 @@ namespace BehaviourAPI.Unity.Editor
 
         public void CreateGUI()
         {
-            Debug.Log("C");
             var visualTree = VisualSettings.GetOrCreateSettings().AlertWindowLayout;
             VisualElement labelFromUXML = visualTree.Instantiate();
             rootVisualElement.Add(labelFromUXML);

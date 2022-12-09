@@ -15,10 +15,13 @@ namespace BehaviourAPI.Unity.Editor
         [Header("Layout")]
         public VisualTreeAsset BehaviourGraphEditorWindowLayout;
         public VisualTreeAsset AlertWindowLayout;
+        public VisualTreeAsset GraphCreationWindowLayout;
+
         public VisualTreeAsset NodeLayout;
         public VisualTreeAsset ContainerLayout;
         public VisualTreeAsset NodeInspectorLayout;
         public VisualTreeAsset graphInspectorLayout;
+        public VisualTreeAsset EmptyGraphPanel;
 
 
         [Header("Style")]
@@ -30,6 +33,7 @@ namespace BehaviourAPI.Unity.Editor
         [Header("External assemblies")]
         public string[] assemblies = GetDefaultAssemblies();
 
+       
         private static string[] GetDefaultAssemblies()
         {
             return new string[]{
