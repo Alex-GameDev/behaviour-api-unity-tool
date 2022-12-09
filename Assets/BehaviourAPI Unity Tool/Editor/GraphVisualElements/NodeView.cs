@@ -78,6 +78,11 @@ namespace BehaviourAPI.Unity.Editor
                 Node.Childs.Add(other.Node);
         }
 
+        public void OnMoved(Vector2 pos)
+        {
+            Node.Position = pos;
+        }
+
         public void OnDisconnected(Direction direction, NodeView other)
         {
             if (direction == Direction.Input)

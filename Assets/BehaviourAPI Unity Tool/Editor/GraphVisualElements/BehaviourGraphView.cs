@@ -92,7 +92,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             if(element is NodeView nodeView)
             {
-                nodeView.Node.Position = element.GetPosition().position;
+                nodeView.OnMoved(element.GetPosition().position);                
             }
         }
 

@@ -1,5 +1,32 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-2600237846094061374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: SelectorNode
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 4601479474301894658
+  position: {x: 601, y: 216}
+  parents: []
+  childs:
+  - {fileID: 7203137968040491344}
+  - {fileID: 2698660430357787085}
+  references:
+    version: 2
+    RefIds:
+    - rid: 4601479474301894658
+      type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14,6 +41,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   graphs:
   - {fileID: 4204433378359354308}
+--- !u!114 &2698660430357787085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: LeafNode
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 4601479474301894660
+  position: {x: 706, y: 456}
+  parents:
+  - {fileID: -2600237846094061374}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 4601479474301894660
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
 --- !u!114 &4204433378359354308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29,9 +80,36 @@ MonoBehaviour:
   graph:
     rid: 4601479473140072452
   Name: 
-  nodes: []
+  nodes:
+  - {fileID: -2600237846094061374}
+  - {fileID: 7203137968040491344}
+  - {fileID: 2698660430357787085}
   references:
     version: 2
     RefIds:
     - rid: 4601479473140072452
       type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+--- !u!114 &7203137968040491344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: LeafNode
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 4601479474301894659
+  position: {x: 461, y: 448}
+  parents:
+  - {fileID: -2600237846094061374}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 4601479474301894659
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
