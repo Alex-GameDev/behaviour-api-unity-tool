@@ -171,7 +171,7 @@ namespace BehaviourAPI.Unity.Editor
                 (d) => DisplayGraph(graph));
         }
 
-        void OnRemoveGraph(GraphAsset graph)
+        void OnRemoveGraph(GraphAsset graph, int index)
         {
             // TODO: Fix to execute after remove
             if (IsAsset)
@@ -181,7 +181,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (autoSave) SaveSystemData();
 
-            //_selectGraphToolbarMenu.menu.RemoveItemAt(SystemAsset.Graphs.IndexOf(graph));            
+            _selectGraphToolbarMenu.menu.RemoveItemAt(index);            
         }
 
         #endregion
@@ -212,8 +212,9 @@ namespace BehaviourAPI.Unity.Editor
         {
             if(SystemAsset == null || _currentGraphAsset == null) return;
 
+            var id = SystemAsset.Graphs.IndexOf(_currentGraphAsset);
             SystemAsset.RemoveGraph(_currentGraphAsset);
-            OnRemoveGraph(_currentGraphAsset);
+            OnRemoveGraph(_currentGraphAsset, id);
 
             if(SystemAsset.Graphs.Count > 0)
             {
