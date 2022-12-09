@@ -8,6 +8,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.SceneManagement;
 using UnityEditor.VersionControl;
 using UnityEngine.SceneManagement;
+using UnityEngine.Assertions.Must;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -23,13 +24,12 @@ namespace BehaviourAPI.Unity.Editor
 
         ToolbarMenu _selectGraphToolbarMenu;
         ToolbarToggle _autosaveToolbarToggle;
-        ToolbarButton _saveToolbarButton;
+        ToolbarButton _saveToolbarButton, _deleteGraphToolbarButton, _addGraphToolbarButton;
 
         ScrollView _createGraphList;
 
         GraphAsset _currentGraphAsset;
         bool autoSave = false;
-
 
         public static void OpenGraph(BehaviourSystemAsset systemAsset, bool isAsset = true)
         {
@@ -46,7 +46,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (SystemAsset == null) return;
 
-            if (SystemAsset.RootGraph != null)
+            if (SystemAsset.Graphs.Count > 0)
             {
                 HideEmptySystemPanel();
                 DisplayGraph(SystemAsset.RootGraph);
@@ -102,7 +102,9 @@ namespace BehaviourAPI.Unity.Editor
             _selectGraphToolbarMenu = rootVisualElement.Q<ToolbarMenu>("bw-toolbar-graph-menu");
             _autosaveToolbarToggle = rootVisualElement.Q<ToolbarToggle>("bw-toolbar-autosave-toggle");
             _saveToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-save-btn");
+            _deleteGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-delete-btn");
 
+            _deleteGraphToolbarButton.clicked += DisplayDeleteGraphAlertWindow;
             _saveToolbarButton.clicked += SaveSystemData;
             _autosaveToolbarToggle.RegisterValueChangedCallback((evt) => autoSave = evt.newValue);
 
@@ -139,6 +141,11 @@ namespace BehaviourAPI.Unity.Editor
             _graphView.SetGraph(graphAsset);
         }
 
+        void DisplayDeleteGraphAlertWindow()
+        {
+            AlertWindow.CreateAlertWindow("Are you sure to delete the current graph?", DeleteCurrentGraph);
+        }
+
         void SaveSystemData()
         {
             if (IsAsset) 
@@ -172,7 +179,9 @@ namespace BehaviourAPI.Unity.Editor
             else
                 EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
 
-            _selectGraphToolbarMenu.menu.RemoveItemAt(SystemAsset.Graphs.IndexOf(graph));
+            if (autoSave) SaveSystemData();
+
+            //_selectGraphToolbarMenu.menu.RemoveItemAt(SystemAsset.Graphs.IndexOf(graph));            
         }
 
         #endregion
@@ -181,13 +190,40 @@ namespace BehaviourAPI.Unity.Editor
 
         void CreateRootGraph(Type type)
         {
-            if (SystemAsset == null) return;
+            var rootGraph = CreateGraph(type); 
 
-            var rootGraph = SystemAsset.CreateGraph(type);
-            SystemAsset.RootGraph = rootGraph;       
+            if(rootGraph == null) return;
+
+            SystemAsset.RootGraph = rootGraph;
             HideEmptySystemPanel();
-            OnAddGraph(rootGraph);
-            DisplayGraph(rootGraph);
+        }
+
+        GraphAsset CreateGraph(Type type)
+        {
+            if (SystemAsset == null) return null;
+
+            var graphAsset = SystemAsset.CreateGraph(type);
+            OnAddGraph(graphAsset);
+            DisplayGraph(graphAsset);
+            return graphAsset;
+        }
+
+        void DeleteCurrentGraph()
+        {
+            if(SystemAsset == null || _currentGraphAsset == null) return;
+
+            SystemAsset.RemoveGraph(_currentGraphAsset);
+            OnRemoveGraph(_currentGraphAsset);
+
+            if(SystemAsset.Graphs.Count > 0)
+            {
+                HideEmptySystemPanel();
+                DisplayGraph(SystemAsset.RootGraph);
+            }
+            else
+            {
+                ShowEmptySystemPanel();
+            }
         }
 
         #endregion

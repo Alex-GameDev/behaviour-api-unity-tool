@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Default settings
   m_EditorClassIdentifier: 
   BehaviourGraphEditorWindowLayout: {fileID: 9197481963319205126, guid: 318c3fa672ee7f646ba015538107d92d, type: 3}
+  AlertWindowLayout: {fileID: 9197481963319205126, guid: 1719b4f5842a6fd489b43787651390af, type: 3}
   NodeLayout: {fileID: 9197481963319205126, guid: 740771a82fa776540b6c8fcedcc0bf44, type: 3}
   ContainerLayout: {fileID: 9197481963319205126, guid: 737f70af6609c0a449de562edf0d2ba0, type: 3}
   NodeInspectorLayout: {fileID: 9197481963319205126, guid: 1627405eb2ab9804e97b0fca98d7f5b1, type: 3}

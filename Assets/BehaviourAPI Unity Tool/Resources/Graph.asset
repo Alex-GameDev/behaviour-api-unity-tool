@@ -12,5 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db249917b7c50574eaa600c74aff1437, type: 3}
   m_Name: Graph
   m_EditorClassIdentifier: 
-  rootGraph: {fileID: 0}
   graphs: []

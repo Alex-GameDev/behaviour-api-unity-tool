@@ -14,6 +14,7 @@ namespace BehaviourAPI.Unity.Editor
     {
         [Header("Layout")]
         public VisualTreeAsset BehaviourGraphEditorWindowLayout;
+        public VisualTreeAsset AlertWindowLayout;
         public VisualTreeAsset NodeLayout;
         public VisualTreeAsset ContainerLayout;
         public VisualTreeAsset NodeInspectorLayout;

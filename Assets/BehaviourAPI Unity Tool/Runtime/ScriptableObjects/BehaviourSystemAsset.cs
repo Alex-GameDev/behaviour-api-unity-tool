@@ -13,13 +13,20 @@ namespace BehaviourAPI.Unity.Runtime
     [CreateAssetMenu(menuName = "BehaviourAPI/Graph", order = 0)]
     public class BehaviourSystemAsset : ScriptableObject
     {
-        [SerializeField] GraphAsset rootGraph;
         [SerializeField] List<GraphAsset> graphs = new List<GraphAsset>();
 
         public GraphAsset RootGraph
         {
-            get => rootGraph;
-            set => rootGraph = value;
+            get
+            {
+                if(graphs.Count == 0) return null;
+                else return graphs[0];
+            }
+            set
+            {
+                if (graphs.Count > 0)
+                    graphs.MoveAtFirst(value);
+            }
         }
 
         public List<GraphAsset> Graphs
@@ -38,10 +45,9 @@ namespace BehaviourAPI.Unity.Runtime
             return graphAsset;
         }
 
-        public void CreateRootGraph(Type graphType)
+        public void RemoveGraph(GraphAsset graph)
         {
-            var asset = CreateGraph(graphType);
-            RootGraph = asset;
+            graphs.Remove(graph);
         }
     }
 }
