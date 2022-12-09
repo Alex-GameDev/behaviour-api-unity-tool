@@ -17,11 +17,12 @@ namespace BehaviourAPI.Unity.Editor
     {
         GraphAsset GraphAsset;
         HierarchySearchWindow searchWindow;
-        EditorWindow editorWindow;
+        BehaviourGraphEditorWindow editorWindow;
 
-        public Action<NodeAsset> NodeSelected { get; set; }
+        public Action<NodeAsset> NodeSelected, NodeAdded, NodeRemoved;
+        public Action<IEnumerable<NodeAsset>> NodesAdded, NodesRemoved; //Bulk actions
 
-        public BehaviourGraphView(EditorWindow parentWindow)
+        public BehaviourGraphView(BehaviourGraphEditorWindow parentWindow)
         {
             editorWindow = parentWindow;
             AddGridBackground();
@@ -34,6 +35,7 @@ namespace BehaviourAPI.Unity.Editor
         public void SetGraph(GraphAsset graph)
         {
             GraphAsset = graph;
+            searchWindow.SetRootType(graph.Graph.NodeType);
             DrawGraph();
         }
 
@@ -46,20 +48,24 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (startPort.direction == port.direction) return;
 
-                if(startPort.node == port.node) return; 
+                if(startPort.node == port.node) return;
 
                 var portNodeView = (NodeView)port.node;
 
-                if (startPort.direction == Direction.Input)
+                if(portNodeView != null)
                 {
-                    if (!startPort.portType.IsSubclassOf(port.portType)) return;
-                    if (startPortNodeView.Node.Parents.Contains(portNodeView.Node)) return;
+                    if (startPort.direction == Direction.Input)
+                    {
+                        if (!startPort.portType.IsSubclassOf(port.portType)) return;
+                        if (startPortNodeView.Node.Parents.Contains(portNodeView.Node)) return;
+                    }
+                    else
+                    {
+                        if (!port.portType.IsSubclassOf(startPort.portType)) return;
+                        if (portNodeView.Node.Parents.Contains(startPortNodeView.Node)) return;
+                    }
                 }
-                else
-                {
-                    if (!port.portType.IsSubclassOf(startPort.portType)) return;
-                    if (portNodeView.Node.Parents.Contains(startPortNodeView.Node)) return;
-                }
+
                 compatiblePorts.Add(port);
             });
 
@@ -95,6 +101,7 @@ namespace BehaviourAPI.Unity.Editor
             if (element is NodeView nodeView)
             {
                 GraphAsset.RemoveNode(nodeView.Node);
+                NodeRemoved?.Invoke(nodeView.Node);
             }
             if(element is Edge edge)
             {
@@ -116,6 +123,8 @@ namespace BehaviourAPI.Unity.Editor
 
             nodeCreationRequest = context =>
             {
+                if (GraphAsset == null) return;
+
                 var searchContext = new SearchWindowContext(context.screenMousePosition);
                 SearchWindow.Open(searchContext, searchWindow);
             };
@@ -159,6 +168,8 @@ namespace BehaviourAPI.Unity.Editor
             {
                 Debug.LogWarning("Error creating the node");
             }
+
+            NodeAdded?.Invoke(asset);
         }
 
         NodeView DrawNodeView(NodeAsset asset)
@@ -200,5 +211,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             graphElements.ForEach(RemoveElement);
         }
+
+        public void ClearView() => ClearGraph();
     }
 }

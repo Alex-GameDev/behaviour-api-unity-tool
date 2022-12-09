@@ -38,14 +38,12 @@ namespace BehaviourAPI.Unity.Runtime
 
             var nodeasset = NodeAsset.Create(type, position);
             Nodes.Add(nodeasset);
-            AssetDatabase.AddObjectToAsset(nodeasset, this);
-            AssetDatabase.SaveAssets();
             return nodeasset;
         }
 
         public void RemoveNode(NodeAsset node)
         {
-
+            Nodes.Remove(node);
         }
 
         public static GraphAsset Create(string name, Type graphType)

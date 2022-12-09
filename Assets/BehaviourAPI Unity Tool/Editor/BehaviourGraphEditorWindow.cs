@@ -9,6 +9,7 @@ using UnityEditor.SceneManagement;
 using UnityEditor.VersionControl;
 using UnityEngine.SceneManagement;
 using UnityEngine.Assertions.Must;
+using UnityEditor.Graphs;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -65,7 +66,10 @@ namespace BehaviourAPI.Unity.Editor
             _graphView = AddGraphView();
             _nodeInspector = AddNodeInspectorView();
             _graphInspector = AddGraphInspectorView();
+
             _graphView.NodeSelected += _nodeInspector.UpdateInspector;
+            _graphView.NodeAdded += OnAddNode;
+            _graphView.NodeRemoved += OnRemoveNode;
 
             _emptyGraphPanel = AddEmptyGraphPanel();
             _emptyGraphPanel.style.display = DisplayStyle.None;
@@ -168,15 +172,40 @@ namespace BehaviourAPI.Unity.Editor
 
         void OnRemoveGraph(GraphAsset graph, int index)
         {
-            // TODO: Fix to execute after remove
             if (IsAsset)
+            {
+                graph.Nodes.ForEach(AssetDatabase.RemoveObjectFromAsset);
                 AssetDatabase.RemoveObjectFromAsset(graph);
+            }               
             else
                 EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
 
             if (autoSave) SaveSystemData();
 
             _selectGraphToolbarMenu.menu.RemoveItemAt(index);            
+        }
+
+        void OnAddNode(NodeAsset node)
+        {
+            if (IsAsset)
+            {
+                node.name = node.Node.GetType().Name;
+                AssetDatabase.AddObjectToAsset(node, SystemAsset);
+            }
+            else
+                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+
+            if (autoSave) SaveSystemData();
+        }
+
+        void OnRemoveNode(NodeAsset node)
+        {
+            if (IsAsset)
+                AssetDatabase.RemoveObjectFromAsset(node);
+            else
+                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+
+            if (autoSave) SaveSystemData();
         }
 
         #endregion
@@ -206,6 +235,7 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
+                _graphView.ClearView();
                 _emptyGraphPanel.style.display = DisplayStyle.Flex;
             }
         }
