@@ -41,6 +41,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   graphs:
   - {fileID: 4204433378359354308}
+  perceptions: []
+  actions: []
+  pushPerceptions: []
 --- !u!114 &2698660430357787085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,9 +80,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
   m_Name: BehaviourTree
   m_EditorClassIdentifier: 
+  Name: 
   graph:
     rid: 4601479473140072452
-  Name: 
   nodes:
   - {fileID: -2600237846094061374}
   - {fileID: 7203137968040491344}
@@ -104,7 +107,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479474301894659
-  position: {x: 461, y: 448}
+  position: {x: 476, y: 472}
   parents:
   - {fileID: -2600237846094061374}
   childs: []

@@ -109,16 +109,32 @@ namespace BehaviourAPI.Unity.Editor
         void SetUpToolbar()
         {
             _selectGraphToolbarMenu = rootVisualElement.Q<ToolbarMenu>("bw-toolbar-graph-menu");
+            _addGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-add-btn");
             _autosaveToolbarToggle = rootVisualElement.Q<ToolbarToggle>("bw-toolbar-autosave-toggle");
             _saveToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-save-btn");
             _deleteGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-delete-btn");
 
+            _addGraphToolbarButton.clicked += ShowGraphCreationPanel;
             _deleteGraphToolbarButton.clicked += DisplayDeleteGraphAlertWindow;
             _saveToolbarButton.clicked += SaveSystemData;
             _autosaveToolbarToggle.RegisterValueChangedCallback((evt) => autoSave = evt.newValue);
 
+            UpdateGraphSelectionToolbar();
+
             if (SystemAsset == null || SystemAsset.Graphs.Count == 0) return;
-            SystemAsset.Graphs.ForEach(g => _selectGraphToolbarMenu.menu.AppendAction(g.Graph.GetType().Name, (d) => DisplayGraph(g)));
+            
+        }
+
+        void UpdateGraphSelectionToolbar()
+        {
+            _selectGraphToolbarMenu.menu.MenuItems().Clear();
+
+            SystemAsset.Graphs.ForEach(g => 
+                _selectGraphToolbarMenu.menu.AppendAction(
+                    $"{g.Name} ({g.Graph.GetType().Name}) {(SystemAsset.RootGraph == g ? "- root" : "")}", 
+                    (d) => DisplayGraph(g), 
+                _currentGraphAsset == g ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal)
+            );
         }
 
         #endregion
@@ -137,6 +153,7 @@ namespace BehaviourAPI.Unity.Editor
             _graphView.SetGraph(graphAsset);
 
             _emptyGraphPanel.style.display = DisplayStyle.None;
+            UpdateGraphSelectionToolbar();
         }
 
         void DisplayDeleteGraphAlertWindow()
@@ -166,11 +183,11 @@ namespace BehaviourAPI.Unity.Editor
             if (autoSave) SaveSystemData();
 
             bool isRoot = SystemAsset.RootGraph == graph;
-            _selectGraphToolbarMenu.menu.AppendAction(graph.Graph.GetType().Name + (isRoot ? " (Root)" : ""), 
-                (d) => DisplayGraph(graph));
+
+            UpdateGraphSelectionToolbar();
         }
 
-        void OnRemoveGraph(GraphAsset graph, int index)
+        void OnRemoveGraph(GraphAsset graph)
         {
             if (IsAsset)
             {
@@ -182,7 +199,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (autoSave) SaveSystemData();
 
-            _selectGraphToolbarMenu.menu.RemoveItemAt(index);            
+            UpdateGraphSelectionToolbar();
         }
 
         void OnAddNode(NodeAsset node)
@@ -225,9 +242,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             if(SystemAsset == null || _currentGraphAsset == null) return;
 
-            var id = SystemAsset.Graphs.IndexOf(_currentGraphAsset);
             SystemAsset.RemoveGraph(_currentGraphAsset);
-            OnRemoveGraph(_currentGraphAsset, id);
+            OnRemoveGraph(_currentGraphAsset);
 
             if(SystemAsset.Graphs.Count > 0)
             {
