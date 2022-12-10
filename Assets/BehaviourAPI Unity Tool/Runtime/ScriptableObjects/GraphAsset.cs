@@ -14,9 +14,9 @@ namespace BehaviourAPI.Unity.Runtime
     /// </summary>
     public class GraphAsset : ScriptableObject
     {
-        [SerializeReference] BehaviourGraph graph;
-        [SerializeField] string Name;
+        public string Name;
 
+        [SerializeReference] BehaviourGraph graph;
         [HideInInspector][SerializeField] List<NodeAsset> nodes = new List<NodeAsset>();
 
         public BehaviourGraph Graph
