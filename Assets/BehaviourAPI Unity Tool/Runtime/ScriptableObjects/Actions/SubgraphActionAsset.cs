@@ -7,13 +7,6 @@ namespace BehaviourAPI.Unity.Runtime
     /// </summary>
     public class SubgraphActionAsset : ActionAsset
     {
-        [SerializeField] GraphAsset subgraph;
-
-        public static SubgraphActionAsset Create(string name)
-        {
-            var subgraphActionAsset = CreateInstance<SubgraphActionAsset>();
-            subgraphActionAsset.Name = name;
-            return subgraphActionAsset;
-        }
+        [SerializeField] GraphAsset subgraph;        
     }
 }

@@ -9,12 +9,5 @@ namespace BehaviourAPI.Unity.Runtime
     {
         [SerializeField] NodeAsset target;
         [SerializeField] Status status;
-
-        public static ExecutionStatusPerceptionAsset Create(string name)
-        {
-            var executionStatusPerceptionAsset = CreateInstance<ExecutionStatusPerceptionAsset>();
-            executionStatusPerceptionAsset.Name = name;
-            return executionStatusPerceptionAsset;
-        }
     }
 }

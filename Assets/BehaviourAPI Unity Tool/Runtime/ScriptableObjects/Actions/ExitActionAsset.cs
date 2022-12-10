@@ -9,12 +9,5 @@ namespace BehaviourAPI.Unity.Runtime
     public abstract class ExitActionAsset : ActionAsset
     {
         [SerializeField] Status status;
-
-        public static ExitActionAsset Create(string name)
-        {
-            var exitActionAsset = CreateInstance<ExitActionAsset>();
-            exitActionAsset.Name = name;
-            return exitActionAsset;
-        }
     }
 }

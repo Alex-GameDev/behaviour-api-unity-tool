@@ -19,5 +19,14 @@ namespace BehaviourAPI.Unity.Runtime
         {
             get => handlers;
         }
+
+        public static PerceptionAsset Create(string name, Type type)
+        {
+            if (!type.IsSubclassOf(typeof(PerceptionAsset))) return null;
+
+            var perceptionAsset = (PerceptionAsset)CreateInstance(type);
+            perceptionAsset.Name = name;
+            return perceptionAsset;
+        }
     }
 }
