@@ -1,11 +1,12 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/Styles/inspector.uss?fileID=7433441132597879392&amp;guid=6226efe727dd4b1478bfb904741ed97c&amp;type=3#inspector" />
-    <ui:VisualElement class="container" style="right: 0; top: 0; position: absolute;">
-        <ui:VisualElement name="header" class="header">
-            <ui:Label text="INSPECTOR" display-tooltip-when-elided="true" class="element-title" />
+    <ui:VisualElement name="iw-root" class="container" style="top: 20px; position: absolute;">
+        <ui:VisualElement name="iw-header" class="header">
+            <ui:Label text="NODE" display-tooltip-when-elided="true" name="iw-title" class="element-title" />
         </ui:VisualElement>
-        <ui:VisualElement name="body" class="body">
-            <ui:IMGUIContainer name="inspector-container" />
+        <ui:VisualElement name="iw-body" class="body">
+            <ui:VisualElement name="iw-main-container" />
+            <ui:IMGUIContainer name="iw-inspector-container" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

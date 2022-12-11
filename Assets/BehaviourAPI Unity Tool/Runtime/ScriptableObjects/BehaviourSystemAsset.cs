@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using BehaviourAPI.Core;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 
@@ -23,7 +24,7 @@ namespace BehaviourAPI.Unity.Runtime
         {
             get
             {
-                if(graphs.Count == 0) return null;
+                if (graphs.Count == 0) return null;
                 else return graphs[0];
             }
             set
@@ -43,7 +44,7 @@ namespace BehaviourAPI.Unity.Runtime
         {
             var graphAsset = GraphAsset.Create(name, type);
 
-            if(graphAsset != null)
+            if (graphAsset != null)
             {
                 Graphs.Add(graphAsset);
             }
@@ -54,7 +55,7 @@ namespace BehaviourAPI.Unity.Runtime
         {
             var actionAsset = ActionAsset.Create(name, type);
 
-            if(actionAsset != null)
+            if (actionAsset != null)
             {
                 Actions.Add(actionAsset);
             }

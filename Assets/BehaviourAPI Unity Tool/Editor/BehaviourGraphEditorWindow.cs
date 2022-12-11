@@ -10,6 +10,7 @@ using UnityEditor.VersionControl;
 using UnityEngine.SceneManagement;
 using UnityEngine.Assertions.Must;
 using UnityEditor.Graphs;
+using System.Collections.Generic;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -21,13 +22,17 @@ namespace BehaviourAPI.Unity.Editor
         VisualElement _container, _emptyGraphPanel;
         BehaviourGraphView _graphView;
         NodeInspectorView _nodeInspector;
+        IHidable _currentInspector;
         BehaviourGraphInspectorView _graphInspector;
+        ActionInspectorView _actionInspector;
 
         ToolbarMenu _selectGraphToolbarMenu;
         ToolbarToggle _autosaveToolbarToggle;
         ToolbarButton _saveToolbarButton, _deleteGraphToolbarButton, _addGraphToolbarButton;
 
         GraphAsset _currentGraphAsset;
+
+       
         bool autoSave = false;
 
         public static void OpenGraph(BehaviourSystemAsset systemAsset, bool isAsset = true)
@@ -66,6 +71,7 @@ namespace BehaviourAPI.Unity.Editor
             _graphView = AddGraphView();
             _nodeInspector = AddNodeInspectorView();
             _graphInspector = AddGraphInspectorView();
+            _actionInspector = AddActionInspectorView();
 
             _graphView.NodeSelected += _nodeInspector.UpdateInspector;
             _graphView.NodeAdded += OnAddNode;
@@ -73,7 +79,12 @@ namespace BehaviourAPI.Unity.Editor
 
             _emptyGraphPanel = AddEmptyGraphPanel();
             _emptyGraphPanel.style.display = DisplayStyle.None;
+
+            SetUpInspectorMenu();
             SetUpToolbar();
+
+            _actionInspector.Hide();
+            ChangeInspector(_graphInspector);
         }
 
         VisualElement AddEmptyGraphPanel()
@@ -99,11 +110,24 @@ namespace BehaviourAPI.Unity.Editor
             return nodeInspector;
         }
 
+        ActionInspectorView AddActionInspectorView()
+        {
+            var actionInspector = new ActionInspectorView();
+            _container.Add(actionInspector);
+            return actionInspector;
+        }
+
         BehaviourGraphInspectorView AddGraphInspectorView()
         {
             var graphInspector = new BehaviourGraphInspectorView();
             _container.Add(graphInspector);
             return graphInspector;
+        }
+
+        private void SetUpInspectorMenu()
+        {
+            rootVisualElement.Q<Button>("im-graph-btn").clicked += () => ChangeInspector(_graphInspector);
+            rootVisualElement.Q<Button>("im-actions-btn").clicked += () => ChangeInspector(_actionInspector);
         }
 
         void SetUpToolbar()
@@ -135,6 +159,17 @@ namespace BehaviourAPI.Unity.Editor
                     (d) => DisplayGraph(g), 
                 _currentGraphAsset == g ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal)
             );
+        }
+
+        void ChangeInspector(IHidable inspector)
+        {
+            if (_currentInspector == inspector) return;
+
+            if (_currentInspector != null) _currentInspector.Hide();
+
+            _currentInspector = inspector;
+
+            if (_currentInspector != null) _currentInspector.Show();
         }
 
         #endregion

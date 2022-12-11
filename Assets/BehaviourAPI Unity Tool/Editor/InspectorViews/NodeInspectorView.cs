@@ -7,7 +7,7 @@ namespace BehaviourAPI.Unity.Editor
 {
     public class NodeInspectorView : InspectorView<NodeAsset>
     {
-        public NodeInspectorView() : base(VisualSettings.GetOrCreateSettings().NodeInspectorLayout)
+        public NodeInspectorView() : base("Node", Side.Left)
         {
         }
     }

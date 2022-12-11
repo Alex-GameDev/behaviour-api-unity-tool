@@ -9,7 +9,7 @@ namespace BehaviourAPI.Unity.Editor
 {
     public class BehaviourGraphInspectorView : InspectorView<GraphAsset>
     {
-        public BehaviourGraphInspectorView() : base(VisualSettings.GetOrCreateSettings().graphInspectorLayout)
+        public BehaviourGraphInspectorView() : base("Graph", Side.Right)
         {
         }     
     }

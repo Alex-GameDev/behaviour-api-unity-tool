@@ -9,28 +9,43 @@ using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    public class InspectorView<T> : VisualElement where T :ScriptableObject
+    public class InspectorView<T> : VisualElement, IHidable where T :ScriptableObject
     {
-        VisualElement _inspectorContent;
+        public enum Side { Left, Right }
 
-        public InspectorView(VisualTreeAsset layoutAsset)
+        protected VisualElement _inspectorContent;
+        protected VisualElement _root;
+        protected VisualElement _mainContainer;
+        protected Label _titleLabel;
+
+        public InspectorView(string title, Side side)
         {
-            AddLayout(layoutAsset);
+            AddLayout();
             AddStyles();
+
+            _titleLabel.text = title;
+            if (side == Side.Left) _root.style.left = new StyleLength(0f);
+            else if(side == Side.Right) _root.style.right = new StyleLength(0f);
         }
 
-        private void AddStyles()
+        protected virtual void AddStyles()
         {
             var styleSheet = VisualSettings.GetOrCreateSettings().InspectorStylesheet;
             styleSheets.Add(styleSheet);
+
         }
-        private void AddLayout(VisualTreeAsset layoutAsset)
+        protected virtual void AddLayout()
         {
-            var inspectorFromUXML = layoutAsset.Instantiate();
+            var inspectorFromUXML = VisualSettings.GetOrCreateSettings().InspectorLayout.Instantiate();
             Add(inspectorFromUXML);
-            _inspectorContent = this.Q("inspector-container");
+            _inspectorContent = this.Q("iw-inspector-container");
+            _root = this.Q("iw-root");
+            _titleLabel = this.Q<Label>("iw-title");
+            _mainContainer = this.Q("im-main-container");
+
         }
-        public void UpdateInspector(T asset)
+
+        public virtual void UpdateInspector(T asset)
         {
             _inspectorContent.Clear();
             var editor = UnityEditor.Editor.CreateEditor(asset);
