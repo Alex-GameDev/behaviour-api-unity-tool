@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-direction: row; justify-content: space-between; width: 220px; background-color: rgb(51, 51, 51); border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; margin-top: 1px; margin-bottom: 1px;">
+        <ui:Label text="Label" display-tooltip-when-elided="true" name="li-name" style="width: 180px;" />
+        <ui:Button text="X" display-tooltip-when-elided="true" name="li-remove-btn" style="width: 30px;" />
+    </ui:VisualElement>
+</ui:UXML>

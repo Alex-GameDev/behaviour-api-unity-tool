@@ -18,6 +18,8 @@ namespace BehaviourAPI.Unity.Editor
         protected VisualElement _mainContainer;
         protected Label _titleLabel;
 
+        protected T _selectedElement;
+
         public InspectorView(string title, Side side)
         {
             AddLayout();
@@ -41,13 +43,14 @@ namespace BehaviourAPI.Unity.Editor
             _inspectorContent = this.Q("iw-inspector-container");
             _root = this.Q("iw-root");
             _titleLabel = this.Q<Label>("iw-title");
-            _mainContainer = this.Q("im-main-container");
+            _mainContainer = this.Q("iw-main-container");
 
         }
 
         public virtual void UpdateInspector(T asset)
         {
             _inspectorContent.Clear();
+            _selectedElement = asset;
             var editor = UnityEditor.Editor.CreateEditor(asset);
             IMGUIContainer container = new IMGUIContainer(() =>
             {

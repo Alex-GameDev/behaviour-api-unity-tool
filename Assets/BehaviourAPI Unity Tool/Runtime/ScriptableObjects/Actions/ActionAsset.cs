@@ -26,5 +26,12 @@ namespace BehaviourAPI.Unity.Runtime
             actionAsset.Name = name;
             return actionAsset;
         }
+
+        public static T Create<T>(string name) where T : ActionAsset
+        {
+            var actionAsset = CreateInstance<T>();
+            actionAsset.Name = name;
+            return actionAsset;
+        }
     }
 }

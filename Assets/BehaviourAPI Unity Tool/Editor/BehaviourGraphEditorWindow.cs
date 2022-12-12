@@ -112,8 +112,10 @@ namespace BehaviourAPI.Unity.Editor
 
         ActionInspectorView AddActionInspectorView()
         {
-            var actionInspector = new ActionInspectorView();
+            var actionInspector = new ActionInspectorView(SystemAsset);
             _container.Add(actionInspector);
+            actionInspector.OnCreateAction += CreateAction;
+            actionInspector.OnRemoveAction += RemoveAction;
             return actionInspector;
         }
 
@@ -145,8 +147,7 @@ namespace BehaviourAPI.Unity.Editor
 
             UpdateGraphSelectionToolbar();
 
-            if (SystemAsset == null || SystemAsset.Graphs.Count == 0) return;
-            
+            if (SystemAsset == null || SystemAsset.Graphs.Count == 0) return;            
         }
 
         void UpdateGraphSelectionToolbar()
@@ -260,6 +261,29 @@ namespace BehaviourAPI.Unity.Editor
             if (autoSave) SaveSystemData();
         }
 
+        void OnAddAction(ActionAsset action)
+        {
+            if (IsAsset)
+            {
+                action.name = action.GetType().Name;
+                AssetDatabase.AddObjectToAsset(action, SystemAsset);
+            }
+            else
+                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+
+            if (autoSave) SaveSystemData();
+        }
+
+        void OnRemoveAction(ActionAsset action)
+        {
+            if (IsAsset)
+                AssetDatabase.RemoveObjectFromAsset(action);
+            else
+                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+
+            if (autoSave) SaveSystemData();
+        }
+
         #endregion
 
         #region ----------------------------- Modify asset -----------------------------
@@ -289,6 +313,23 @@ namespace BehaviourAPI.Unity.Editor
                 _graphView.ClearView();
                 _emptyGraphPanel.style.display = DisplayStyle.Flex;
             }
+        }
+
+        void CreateAction(Type type)
+        {
+            if (SystemAsset == null) return;
+
+            Debug.Log("Create action");
+            var action = SystemAsset.CreateAction("new action", type);
+            OnAddAction(action);
+        }
+
+        void RemoveAction(ActionAsset action)
+        {
+            if (SystemAsset == null) return;
+
+            SystemAsset.RemoveAction(action);
+            OnRemoveAction(action);
         }
 
         #endregion

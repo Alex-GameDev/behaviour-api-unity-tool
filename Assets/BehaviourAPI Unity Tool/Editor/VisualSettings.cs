@@ -22,6 +22,8 @@ namespace BehaviourAPI.Unity.Editor
         public VisualTreeAsset InspectorLayout;
         public VisualTreeAsset EmptyGraphPanel;
 
+        public VisualTreeAsset ListItemLayout;
+
 
         [Header("Style")]
         public StyleSheet BehaviourGraphEditorWindowStylesheet;
