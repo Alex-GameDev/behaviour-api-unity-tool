@@ -25,6 +25,7 @@ namespace BehaviourAPI.Unity.Editor
         IHidable _currentInspector;
         BehaviourGraphInspectorView _graphInspector;
         ActionInspectorView _actionInspector;
+        PerceptionInspectorView _perceptionInspector;
 
         ToolbarMenu _selectGraphToolbarMenu;
         ToolbarToggle _autosaveToolbarToggle;
@@ -72,6 +73,7 @@ namespace BehaviourAPI.Unity.Editor
             _nodeInspector = AddNodeInspectorView();
             _graphInspector = AddGraphInspectorView();
             _actionInspector = AddActionInspectorView();
+            _perceptionInspector = AddPerceptionInspectorView();
 
             _graphView.NodeSelected += _nodeInspector.UpdateInspector;
             _graphView.NodeAdded += OnAddNode;
@@ -83,7 +85,6 @@ namespace BehaviourAPI.Unity.Editor
             SetUpInspectorMenu();
             SetUpToolbar();
 
-            _actionInspector.Hide();
             ChangeInspector(_graphInspector);
         }
 
@@ -116,7 +117,18 @@ namespace BehaviourAPI.Unity.Editor
             _container.Add(actionInspector);
             actionInspector.OnCreateAction += CreateAction;
             actionInspector.OnRemoveAction += RemoveAction;
+            actionInspector.Hide();
             return actionInspector;
+        }
+
+        PerceptionInspectorView AddPerceptionInspectorView()
+        {
+            var perceptionInspector = new PerceptionInspectorView(SystemAsset);
+            _container.Add(perceptionInspector);
+            perceptionInspector.OnCreatePerception += CreatePerception;
+            perceptionInspector.OnRemovePerception += RemovePerception;
+            perceptionInspector.Hide();
+            return perceptionInspector;
         }
 
         BehaviourGraphInspectorView AddGraphInspectorView()
@@ -130,6 +142,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             rootVisualElement.Q<Button>("im-graph-btn").clicked += () => ChangeInspector(_graphInspector);
             rootVisualElement.Q<Button>("im-actions-btn").clicked += () => ChangeInspector(_actionInspector);
+            rootVisualElement.Q<Button>("im-perceptions-btn").clicked += () => ChangeInspector(_perceptionInspector);
         }
 
         void SetUpToolbar()
@@ -284,6 +297,29 @@ namespace BehaviourAPI.Unity.Editor
             if (autoSave) SaveSystemData();
         }
 
+        void OnAddPerception(PerceptionAsset perception)
+        {
+            if (IsAsset)
+            {
+                perception.name = perception.GetType().Name;
+                AssetDatabase.AddObjectToAsset(perception, SystemAsset);
+            }
+            else
+                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+
+            if (autoSave) SaveSystemData();
+        }
+
+        void OnRemovePerception(PerceptionAsset perception)
+        {
+            if (IsAsset)
+                AssetDatabase.RemoveObjectFromAsset(perception);
+            else
+                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+
+            if (autoSave) SaveSystemData();
+        }
+
         #endregion
 
         #region ----------------------------- Modify asset -----------------------------
@@ -319,7 +355,6 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (SystemAsset == null) return;
 
-            Debug.Log("Create action");
             var action = SystemAsset.CreateAction("new action", type);
             OnAddAction(action);
         }
@@ -330,6 +365,22 @@ namespace BehaviourAPI.Unity.Editor
 
             SystemAsset.RemoveAction(action);
             OnRemoveAction(action);
+        }
+
+        void CreatePerception(Type type)
+        {
+            if (SystemAsset == null) return;
+
+            var perception = SystemAsset.CreatePerception("new perception", type);
+            OnAddPerception(perception);
+        }
+
+        void RemovePerception(PerceptionAsset perception)
+        {
+            if (SystemAsset == null) return;
+
+            SystemAsset.RemovePerception(perception);
+            OnRemovePerception(perception);
         }
 
         #endregion
