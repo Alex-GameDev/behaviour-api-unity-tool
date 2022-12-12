@@ -11,6 +11,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Assertions.Must;
 using UnityEditor.Graphs;
 using System.Collections.Generic;
+using BehaviourAPI.Core.Perceptions;
+using System.Runtime.InteropServices;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -76,8 +78,8 @@ namespace BehaviourAPI.Unity.Editor
             _perceptionInspector = AddPerceptionInspectorView();
 
             _graphView.NodeSelected += _nodeInspector.UpdateInspector;
-            _graphView.NodeAdded += OnAddNode;
-            _graphView.NodeRemoved += OnRemoveNode;
+            _graphView.NodeAdded += OnAddAsset;
+            _graphView.NodeRemoved += OnRemoveAsset;
 
             _emptyGraphPanel = AddEmptyGraphPanel();
             _emptyGraphPanel.style.display = DisplayStyle.None;
@@ -219,44 +221,12 @@ namespace BehaviourAPI.Unity.Editor
                 EditorSceneManager.SaveScene(SceneManager.GetActiveScene());
         }
 
-        void OnAddGraph(GraphAsset graph)
+        void OnAddAsset(ScriptableObject asset)
         {
             if (IsAsset)
             {
-                graph.name = graph.Graph.GetType().Name;
-                AssetDatabase.AddObjectToAsset(graph, SystemAsset);
-            }               
-            else
-                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-
-            if (autoSave) SaveSystemData();
-
-            bool isRoot = SystemAsset.RootGraph == graph;
-
-            UpdateGraphSelectionToolbar();
-        }
-
-        void OnRemoveGraph(GraphAsset graph)
-        {
-            if (IsAsset)
-            {
-                graph.Nodes.ForEach(AssetDatabase.RemoveObjectFromAsset);
-                AssetDatabase.RemoveObjectFromAsset(graph);
-            }               
-            else
-                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-
-            if (autoSave) SaveSystemData();
-
-            UpdateGraphSelectionToolbar();
-        }
-
-        void OnAddNode(NodeAsset node)
-        {
-            if (IsAsset)
-            {
-                node.name = node.Node.GetType().Name;
-                AssetDatabase.AddObjectToAsset(node, SystemAsset);
+                asset.name = asset.GetType().Name;
+                AssetDatabase.AddObjectToAsset(asset, SystemAsset);
             }
             else
                 EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
@@ -264,60 +234,14 @@ namespace BehaviourAPI.Unity.Editor
             if (autoSave) SaveSystemData();
         }
 
-        void OnRemoveNode(NodeAsset node)
+        void OnRemoveAsset(ScriptableObject asset)
         {
             if (IsAsset)
-                AssetDatabase.RemoveObjectFromAsset(node);
+                AssetDatabase.RemoveObjectFromAsset(asset);
             else
                 EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
 
-            if (autoSave) SaveSystemData();
-        }
-
-        void OnAddAction(ActionAsset action)
-        {
-            if (IsAsset)
-            {
-                action.name = action.GetType().Name;
-                AssetDatabase.AddObjectToAsset(action, SystemAsset);
-            }
-            else
-                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-
-            if (autoSave) SaveSystemData();
-        }
-
-        void OnRemoveAction(ActionAsset action)
-        {
-            if (IsAsset)
-                AssetDatabase.RemoveObjectFromAsset(action);
-            else
-                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-
-            if (autoSave) SaveSystemData();
-        }
-
-        void OnAddPerception(PerceptionAsset perception)
-        {
-            if (IsAsset)
-            {
-                perception.name = perception.GetType().Name;
-                AssetDatabase.AddObjectToAsset(perception, SystemAsset);
-            }
-            else
-                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-
-            if (autoSave) SaveSystemData();
-        }
-
-        void OnRemovePerception(PerceptionAsset perception)
-        {
-            if (IsAsset)
-                AssetDatabase.RemoveObjectFromAsset(perception);
-            else
-                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-
-            if (autoSave) SaveSystemData();
+            if (autoSave) SaveSystemData();                
         }
 
         #endregion
@@ -329,7 +253,9 @@ namespace BehaviourAPI.Unity.Editor
             if (SystemAsset == null) return;
 
             var graphAsset = SystemAsset.CreateGraph(name, type);
-            OnAddGraph(graphAsset);
+            OnAddAsset(graphAsset);
+
+            UpdateGraphSelectionToolbar();
             DisplayGraph(graphAsset);
         }
 
@@ -338,7 +264,11 @@ namespace BehaviourAPI.Unity.Editor
             if(SystemAsset == null || _currentGraphAsset == null) return;
 
             SystemAsset.RemoveGraph(_currentGraphAsset);
-            OnRemoveGraph(_currentGraphAsset);
+
+            if(IsAsset)
+                _currentGraphAsset.Nodes.ForEach(AssetDatabase.RemoveObjectFromAsset);
+
+            OnRemoveAsset(_currentGraphAsset);
 
             if(SystemAsset.Graphs.Count > 0)
             {
@@ -356,7 +286,7 @@ namespace BehaviourAPI.Unity.Editor
             if (SystemAsset == null) return;
 
             var action = SystemAsset.CreateAction("new action", type);
-            OnAddAction(action);
+            OnAddAsset(action);
         }
 
         void RemoveAction(ActionAsset action)
@@ -364,7 +294,7 @@ namespace BehaviourAPI.Unity.Editor
             if (SystemAsset == null) return;
 
             SystemAsset.RemoveAction(action);
-            OnRemoveAction(action);
+            OnRemoveAsset(action);
         }
 
         void CreatePerception(Type type)
@@ -372,7 +302,7 @@ namespace BehaviourAPI.Unity.Editor
             if (SystemAsset == null) return;
 
             var perception = SystemAsset.CreatePerception("new perception", type);
-            OnAddPerception(perception);
+            OnAddAsset(perception);
         }
 
         void RemovePerception(PerceptionAsset perception)
@@ -380,7 +310,7 @@ namespace BehaviourAPI.Unity.Editor
             if (SystemAsset == null) return;
 
             SystemAsset.RemovePerception(perception);
-            OnRemovePerception(perception);
+            OnRemoveAsset(perception);
         }
 
         #endregion
