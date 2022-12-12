@@ -117,8 +117,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             var actionInspector = new ActionInspectorView(SystemAsset);
             _container.Add(actionInspector);
-            actionInspector.OnCreateAction += CreateAction;
-            actionInspector.OnRemoveAction += RemoveAction;
+            actionInspector.OnCreateElement += OnAddAsset;
+            actionInspector.OnRemoveElement += OnRemoveAsset;
             actionInspector.Hide();
             return actionInspector;
         }
@@ -127,8 +127,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             var perceptionInspector = new PerceptionInspectorView(SystemAsset);
             _container.Add(perceptionInspector);
-            perceptionInspector.OnCreatePerception += CreatePerception;
-            perceptionInspector.OnRemovePerception += RemovePerception;
+            perceptionInspector.OnCreateElement += OnAddAsset;
+            perceptionInspector.OnRemoveElement += OnRemoveAsset;
             perceptionInspector.Hide();
             return perceptionInspector;
         }
@@ -279,38 +279,6 @@ namespace BehaviourAPI.Unity.Editor
                 _graphView.ClearView();
                 _emptyGraphPanel.style.display = DisplayStyle.Flex;
             }
-        }
-
-        void CreateAction(Type type)
-        {
-            if (SystemAsset == null) return;
-
-            var action = SystemAsset.CreateAction("new action", type);
-            OnAddAsset(action);
-        }
-
-        void RemoveAction(ActionAsset action)
-        {
-            if (SystemAsset == null) return;
-
-            SystemAsset.RemoveAction(action);
-            OnRemoveAsset(action);
-        }
-
-        void CreatePerception(Type type)
-        {
-            if (SystemAsset == null) return;
-
-            var perception = SystemAsset.CreatePerception("new perception", type);
-            OnAddAsset(perception);
-        }
-
-        void RemovePerception(PerceptionAsset perception)
-        {
-            if (SystemAsset == null) return;
-
-            SystemAsset.RemovePerception(perception);
-            OnRemoveAsset(perception);
         }
 
         #endregion
