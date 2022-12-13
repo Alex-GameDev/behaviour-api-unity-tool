@@ -56,12 +56,12 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     if (startPort.direction == Direction.Input)
                     {
-                        if (!startPort.portType.IsSubclassOf(port.portType)) return;
+                        if (!port.portType.IsAssignableFrom(startPort.portType)) return;
                         if (startPortNodeView.Node.Parents.Contains(portNodeView.Node)) return;
                     }
                     else
                     {
-                        if (!port.portType.IsSubclassOf(startPort.portType)) return;
+                        if (!startPort.portType.IsAssignableFrom(port.portType)) return;
                         if (portNodeView.Node.Parents.Contains(startPortNodeView.Node)) return;
                     }
                 }
