@@ -169,12 +169,15 @@ namespace BehaviourAPI.Unity.Editor
         {
             _selectGraphToolbarMenu.menu.MenuItems().Clear();
 
+            if (SystemAsset == null) return;
+
             SystemAsset.Graphs.ForEach(g => 
                 _selectGraphToolbarMenu.menu.AppendAction(
                     $"{g.Name} ({g.Graph.GetType().Name}) {(SystemAsset.RootGraph == g ? "- root" : "")}", 
                     (d) => DisplayGraph(g), 
                 _currentGraphAsset == g ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal)
             );
+
         }
 
         void ChangeInspector(IHidable inspector)
