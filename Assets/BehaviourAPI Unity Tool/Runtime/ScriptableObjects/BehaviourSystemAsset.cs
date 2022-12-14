@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BehaviourAPI.Core;
-using UnityEditor;
-using UnityEditor.Callbacks;
 using UnityEngine;
-using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Runtime
 {

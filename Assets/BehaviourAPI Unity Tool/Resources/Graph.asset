@@ -20,6 +20,12 @@ MonoBehaviour:
   childs:
   - {fileID: 7203137968040491344}
   - {fileID: 2698660430357787085}
+  action: {fileID: 0}
+  ExitStatus: 0
+  Subgraph: {fileID: 0}
+  executeOnLoop: 0
+  executeOnExit: 0
+  perception: {fileID: 0}
   references:
     version: 2
     RefIds:
@@ -63,6 +69,12 @@ MonoBehaviour:
   parents:
   - {fileID: -2600237846094061374}
   childs: []
+  action: {fileID: 0}
+  ExitStatus: 0
+  Subgraph: {fileID: 0}
+  executeOnLoop: 0
+  executeOnExit: 0
+  perception: {fileID: 0}
   references:
     version: 2
     RefIds:
@@ -111,6 +123,12 @@ MonoBehaviour:
   parents:
   - {fileID: -2600237846094061374}
   childs: []
+  action: {fileID: 0}
+  ExitStatus: 0
+  Subgraph: {fileID: 0}
+  executeOnLoop: 0
+  executeOnExit: 0
+  perception: {fileID: 0}
   references:
     version: 2
     RefIds:

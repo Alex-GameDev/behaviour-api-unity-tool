@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BehaviourAPI.Core;
+using BehaviourAPI.Core.Actions;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 
@@ -20,6 +21,19 @@ namespace BehaviourAPI.Unity.Runtime
         [HideInInspector][SerializeField] Vector2 position;
         [HideInInspector][SerializeField] List<NodeAsset> parents = new List<NodeAsset>();
         [HideInInspector][SerializeField] List<NodeAsset> childs = new List<NodeAsset>();
+
+        // Only if node handles an action
+        [SerializeField] ActionAsset action;
+
+        [SerializeField] Status ExitStatus = Status.None;
+
+        [SerializeField] GraphAsset Subgraph;
+
+        [SerializeField] bool executeOnLoop;
+        [SerializeField] bool dontStopOnInterrupt;
+
+        // Only if node handles an perception
+        [SerializeField] PerceptionAsset perception;
 
         public Node Node { get => node; set => node = value; }
 
