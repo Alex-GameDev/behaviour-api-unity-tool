@@ -15,13 +15,14 @@ namespace BehaviourAPI.Unity.Editor
     /// </summary>
     public class BehaviourGraphView : GraphView
     {
-        GraphAsset GraphAsset;
+        GraphAsset _graphAsset;
         HierarchySearchWindow searchWindow;
         BehaviourGraphEditorWindow editorWindow;
 
         public Action<NodeAsset> NodeSelected, NodeAdded, NodeRemoved;
         public Action<IEnumerable<NodeAsset>> NodesAdded, NodesRemoved; //Bulk actions
 
+        CustomGraphDrawer graphDrawer;
         public BehaviourGraphView(BehaviourGraphEditorWindow parentWindow)
         {
             editorWindow = parentWindow;
@@ -34,7 +35,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public void SetGraph(GraphAsset graph)
         {
-            GraphAsset = graph;
+            _graphAsset = graph;
             searchWindow.SetRootType(graph.Graph.NodeType);
             DrawGraph();
         }
@@ -100,7 +101,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (element is NodeView nodeView)
             {
-                GraphAsset.RemoveNode(nodeView.Node);
+                _graphAsset.RemoveNode(nodeView.Node);
                 NodeRemoved?.Invoke(nodeView.Node);
             }
             if(element is Edge edge)
@@ -123,7 +124,7 @@ namespace BehaviourAPI.Unity.Editor
 
             nodeCreationRequest = context =>
             {
-                if (GraphAsset == null) return;
+                if (_graphAsset == null) return;
 
                 var searchContext = new SearchWindowContext(context.screenMousePosition);
                 SearchWindow.Open(searchContext, searchWindow);
@@ -158,7 +159,7 @@ namespace BehaviourAPI.Unity.Editor
         void CreateNode(Type type, Vector2 position) 
         {
             Vector2 pos = GetLocalMousePosition(position - editorWindow.position.position);
-            NodeAsset asset = GraphAsset.CreateNode(type, pos);
+            NodeAsset asset = _graphAsset.CreateNode(type, pos);
 
             if(asset != null)
             {
@@ -174,7 +175,13 @@ namespace BehaviourAPI.Unity.Editor
 
         NodeView DrawNodeView(NodeAsset asset)
         {
-            NodeView nodeView = new NodeView(asset);
+            if (graphDrawer == null)
+            {
+                Debug.LogWarning("Drawer was not assigned, the default one will be used.");
+                graphDrawer = new DefaultGraphDrawer();
+            }
+
+            NodeView nodeView = graphDrawer.DrawNode(asset);
             nodeView.Selected = (asset) => NodeSelected?.Invoke(asset);
             AddElement(nodeView);
             return nodeView;
@@ -183,9 +190,12 @@ namespace BehaviourAPI.Unity.Editor
         void DrawGraph()
         {
             ClearGraph();
-            if (GraphAsset == null) return;
+            if (_graphAsset == null) return;
 
-            var nodeViews = GraphAsset.Nodes.Select(DrawNodeView).ToList();
+            var graph = _graphAsset.Graph;
+            graphDrawer = TypeUtilities.FindCustomGraphDrawer(graph.GetType());
+
+            var nodeViews = _graphAsset.Nodes.Select(DrawNodeView).ToList();
 
             nodeViews.ForEach(nodeView =>
             {
@@ -193,7 +203,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     Edge edge = new Edge();
                     var child = nodeView.Node.Childs[i];
-                    var childIdx = GraphAsset.Nodes.IndexOf(child);
+                    var childIdx = _graphAsset.Nodes.IndexOf(child);
                     var other = nodeViews[childIdx];
                     AddElement(edge);
                     Port source = (Port)nodeView.outputContainer[0];
@@ -204,7 +214,7 @@ namespace BehaviourAPI.Unity.Editor
                     target.Connect(edge);
                     edge.MarkDirtyRepaint();
                 }
-            });
+            });            
         }
 
         void ClearGraph()

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
@@ -32,6 +33,17 @@ namespace BehaviourAPI.Unity.Editor
             return GetTypesDerivedFrom(typeof(BehaviourGraph), VisualSettings.GetOrCreateSettings().assemblies)
                 .FindAll(t => !t.IsAbstract);
         }
-    }
 
+        public static CustomGraphDrawer FindCustomGraphDrawer(Type graphType, IEnumerable<Assembly> assemblies = null)
+        {
+            if (assemblies == null || assemblies.Count() == 0) return new DefaultGraphDrawer();
+
+            var c = GetTypesDerivedFrom(typeof(CustomGraphDrawer), assemblies).Find(type =>
+            {
+                var attribute = type.GetCustomAttribute<CustomGraphDrawerAttribute>();
+                return attribute?.GraphType == graphType;
+            });
+            return (CustomGraphDrawer)Activator.CreateInstance(c);
+        }
+    }
 }
