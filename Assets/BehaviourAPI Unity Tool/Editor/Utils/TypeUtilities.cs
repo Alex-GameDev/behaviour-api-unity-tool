@@ -36,14 +36,21 @@ namespace BehaviourAPI.Unity.Editor
 
         public static CustomGraphDrawer FindCustomGraphDrawer(Type graphType, IEnumerable<Assembly> assemblies = null)
         {
-            if (assemblies == null || assemblies.Count() == 0) return new DefaultGraphDrawer();
+            if (assemblies == null || assemblies.Count() == 0)
+            {
+                assemblies = VisualSettings.GetOrCreateSettings().assemblies.Select(a => Assembly.Load(a));
+            }
 
             var c = GetTypesDerivedFrom(typeof(CustomGraphDrawer), assemblies).Find(type =>
             {
                 var attribute = type.GetCustomAttribute<CustomGraphDrawerAttribute>();
                 return attribute?.GraphType == graphType;
             });
-            return (CustomGraphDrawer)Activator.CreateInstance(c);
+
+            if (c != null)
+                return (CustomGraphDrawer)Activator.CreateInstance(c);
+            else
+                return new DefaultGraphDrawer();
         }
     }
 }

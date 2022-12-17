@@ -1,0 +1,18 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement name="btnode-div" style="padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px;">
+        <ui:VisualElement name="btnode-port-container" style="position: absolute; left: 0; top: 0; bottom: 0; right: 0;" />
+        <ui:VisualElement name="btnode-status-border" style="padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px; background-color: rgb(89, 89, 89); border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px;">
+            <ui:VisualElement name="btnode-container" style="max-width: 300px; min-width: 150px; background-color: rgb(48, 48, 48); border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
+                <ui:VisualElement name="btnode-main-container">
+                    <ui:VisualElement name="btnode-name-container" style="padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px;">
+                        <ui:TextField picking-mode="Ignore" value="filler text" name="btnode-name-textfield" max-length="20" style="font-size: 10px;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="btnode-icon-container" style="padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; height: 20px;">
+                        <ui:VisualElement name="btnode-icon" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="btnode-task-container" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
