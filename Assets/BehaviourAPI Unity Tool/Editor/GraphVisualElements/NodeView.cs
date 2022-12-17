@@ -5,6 +5,7 @@ namespace BehaviourAPI.Unity.Editor
     using BehaviourAPI.Unity.Runtime;
     using Core;
     using System;
+    using System.Collections.Generic;
     using UnityEditor;
     using UnityEditor.Experimental.GraphView;
     using UnityEditor.UIElements;
@@ -14,55 +15,31 @@ namespace BehaviourAPI.Unity.Editor
     /// <summary>
     /// Visual element that represents a node in a behaviour graph
     /// </summary>
-    public class NodeView : UnityEditor.Experimental.GraphView.Node
+    public abstract class NodeView : UnityEditor.Experimental.GraphView.Node
     {
         public NodeAsset Node { get; set; }
 
         public Action<NodeAsset> Selected = delegate { };
 
-        public static string NODE_LAYOUT => AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().NodeLayout);
+        public List<Port> InputPorts;
+        public List<Port> OutputPorts;
 
-        public NodeView(NodeAsset node) : base(NODE_LAYOUT)
+        public NodeView(NodeAsset node, string layout) : base(layout)
         {
             Node = node;
+            InputPorts = new List<Port>();
+            OutputPorts = new List<Port>();
             SetPosition(new UnityEngine.Rect(node.Position, Vector2.zero));
+            AddLayout();
             DrawPorts();
             DrawExtensionContainer();
             styleSheets.Add(VisualSettings.GetOrCreateSettings().NodeStylesheet);
             SetUpDataBinding();
         }
 
-        void DrawPorts()
-        {
-            if (Node.Node.MaxInputConnections != 0)
-            {
-                var capacity = Node.Node.MaxInputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
-                var port = InstantiatePort(Orientation.Vertical, Direction.Input, capacity, Node.Node.GetType());
-                port.portName = "";
-                port.style.flexDirection = FlexDirection.Column;
-                inputContainer.Add(port);
-            }
-
-            if (Node.Node.MaxOutputConnections != 0)
-            {
-                var capacity = Node.Node.MaxOutputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
-                var port = InstantiatePort(Orientation.Vertical, Direction.Output, capacity, Node.Node.ChildType);
-                port.portName = "";
-                port.style.flexDirection = FlexDirection.ColumnReverse;
-                outputContainer.Add(port);
-            }
-        }
-
-        void DrawExtensionContainer()
-        {
-            var extensionContainer = this.Q(name: "extension");
-
-            if (Node.Node is IActionHandler actionHandler)
-            {
-                var containerView = new ContainerView(Node);
-                extensionContainer.Add(containerView);
-            }
-        }
+        protected abstract void AddLayout();
+        protected abstract void DrawPorts();
+        protected abstract void DrawExtensionContainer();
 
         public override void OnSelected()
         {

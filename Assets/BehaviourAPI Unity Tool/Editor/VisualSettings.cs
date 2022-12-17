@@ -24,12 +24,14 @@ namespace BehaviourAPI.Unity.Editor
 
         public VisualTreeAsset ListItemLayout;
 
-
         [Header("Style")]
         public StyleSheet BehaviourGraphEditorWindowStylesheet;
         public StyleSheet GraphStylesheet;
         public StyleSheet NodeStylesheet;
         public StyleSheet InspectorStylesheet;
+
+        [Header("BT layouts")]
+        public VisualTreeAsset BTNodeLayout;
 
         [Header("External assemblies")]
         public string[] assemblies = GetDefaultAssemblies();
@@ -78,5 +80,4 @@ namespace BehaviourAPI.Unity.Editor
             assemblies = GetDefaultAssemblies();
         }
     }
-
 }
