@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/Styles/node.uss?fileID=7433441132597879392&amp;guid=81512d53a4bea9b4494135dc1f99b76f&amp;type=3#node" />
+    <ui:VisualElement name="ac-container" style="min-height: auto; min-width: auto; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px;">
+        <ui:VisualElement name="ac-assign" style="flex-direction: row; align-items: center; justify-content: center; background-color: rgb(77, 77, 77); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; min-height: 50px;">
+            <ui:Button display-tooltip-when-elided="true" name="container-assign-button" style="width: 40px; height: 40px;" />
+            <ui:Button display-tooltip-when-elided="true" name="container-assign-button" style="width: 40px; height: 40px;" />
+            <ui:Button display-tooltip-when-elided="true" name="container-assign-button" style="width: 40px; height: 40px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="ac-action" style="flex-direction: row; align-items: center; justify-content: center; background-color: rgb(77, 77, 77); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; min-height: 50px; display: none;">
+            <ui:Label text="-" display-tooltip-when-elided="true" name="ac-action-desc" />
+        </ui:VisualElement>
+        <ui:VisualElement name="ac-subgraph" style="flex-direction: row; align-items: center; justify-content: center; background-color: rgb(77, 77, 77); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; min-height: 50px; display: none;">
+            <ui:Button display-tooltip-when-elided="true" name="ac-subgraph-enter-btn" text="ENTER SUBGRAPH" style="width: 100%; height: 100%;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="ac-exit" style="flex-direction: row; align-items: center; justify-content: center; background-color: rgb(77, 77, 77); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; min-height: 50px; display: none;">
+            <ui:Button display-tooltip-when-elided="true" name="ac-exit-status-btn" text="EXIT WITH SUCCESS" style="width: 100%; height: 100%;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

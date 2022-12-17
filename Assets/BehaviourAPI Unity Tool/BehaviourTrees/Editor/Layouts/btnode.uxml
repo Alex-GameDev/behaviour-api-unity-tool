@@ -1,17 +1,34 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <ui:VisualElement name="btnode-div" style="padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px;">
-        <ui:VisualElement name="btnode-port-container" style="position: absolute; left: 0; top: 0; bottom: 0; right: 0;" />
-        <ui:VisualElement name="btnode-status-border" style="padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px; background-color: rgb(89, 89, 89); border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px;">
-            <ui:VisualElement name="btnode-container" style="max-width: 300px; min-width: 150px; background-color: rgb(48, 48, 48); border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
-                <ui:VisualElement name="btnode-main-container">
-                    <ui:VisualElement name="btnode-name-container" style="padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px;">
-                        <ui:TextField picking-mode="Ignore" value="filler text" name="btnode-name-textfield" max-length="20" style="font-size: 10px;" />
+    <ui:VisualElement name="node-div" style="padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px; align-items: center; justify-content: center;">
+        <ui:VisualElement name="node-port-container" style="position: absolute; left: 0; top: 0; bottom: 0; right: 0; align-items: center; border-top-left-radius: 10px; border-bottom-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px;" />
+        <ui:VisualElement name="node-status-border" style="padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px; background-color: rgb(89, 89, 89); border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px;">
+            <ui:VisualElement name="node-container" style="max-width: 300px; min-width: 150px; background-color: rgb(48, 48, 48); border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
+                <ui:VisualElement name="node-main-container">
+                    <ui:VisualElement name="node-name-container" style="padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px;">
+                        <ui:TextField picking-mode="Ignore" value="filler text" name="title-input-field" max-length="20" style="font-size: 10px;" />
                     </ui:VisualElement>
-                    <ui:VisualElement name="btnode-icon-container" style="padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; height: 20px;">
+                    <ui:VisualElement name="node-icon-container" style="padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; height: 20px;">
                         <ui:VisualElement name="btnode-icon" />
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="btnode-task-container" />
+                <ui:VisualElement name="node-action-container">
+                    <ui:VisualElement name="ac-container" style="min-height: auto; min-width: auto; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px;">
+                        <ui:VisualElement name="ac-assign" style="flex-direction: row; align-items: center; justify-content: center; background-color: rgb(41, 41, 41); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; min-height: 50px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
+                            <ui:Button display-tooltip-when-elided="true" name="container-assign-button" tooltip="Asignar acción personalizada" style="width: 40px; height: 40px; background-color: rgb(79, 79, 79);" />
+                            <ui:Button display-tooltip-when-elided="true" name="container-assign-button" tooltip="Asignar subgrafo" style="width: 40px; height: 40px; background-color: rgb(79, 79, 79);" />
+                            <ui:Button display-tooltip-when-elided="true" name="container-assign-button" tooltip="Asignar accion de salida" style="width: 40px; height: 40px; background-color: rgb(79, 79, 79);" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="ac-action" style="flex-direction: row; align-items: center; justify-content: center; background-color: rgb(77, 77, 77); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; min-height: 50px; display: none;">
+                            <ui:Label text="-" display-tooltip-when-elided="true" name="ac-action-desc" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="ac-subgraph" style="flex-direction: row; align-items: center; justify-content: center; background-color: rgb(77, 77, 77); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; min-height: 50px; display: none;">
+                            <ui:Button display-tooltip-when-elided="true" name="ac-subgraph-enter-btn" text="ENTER SUBGRAPH" style="width: 100%; height: 100%;" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="ac-exit" style="flex-direction: row; align-items: center; justify-content: center; background-color: rgb(77, 77, 77); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; min-height: 50px; display: none;">
+                            <ui:Button display-tooltip-when-elided="true" name="ac-exit-status-btn" text="EXIT WITH SUCCESS" style="width: 100%; height: 100%;" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

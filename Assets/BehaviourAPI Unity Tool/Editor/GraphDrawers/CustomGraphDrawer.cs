@@ -4,6 +4,6 @@ namespace BehaviourAPI.Unity.Editor
 {
     public abstract class CustomGraphDrawer
     {
-        public abstract NodeView DrawNode(NodeAsset node);
+        public abstract NodeView DrawNode(NodeAsset nodeAsset);
     }
 }

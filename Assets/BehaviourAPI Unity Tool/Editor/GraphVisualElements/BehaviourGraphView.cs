@@ -206,8 +206,8 @@ namespace BehaviourAPI.Unity.Editor
                     var childIdx = _graphAsset.Nodes.IndexOf(child);
                     var other = nodeViews[childIdx];
                     AddElement(edge);
-                    Port source = (Port)nodeView.outputContainer[0];
-                    Port target = (Port)other.inputContainer[0];
+                    Port source = nodeView.OutputPorts[0];
+                    Port target = other.InputPorts[0];
                     edge.input = target;
                     edge.output = source;
                     source.Connect(edge);

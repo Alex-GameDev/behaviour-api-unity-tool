@@ -6,7 +6,7 @@ namespace BehaviourAPI.Unity.Editor
     {
         public override NodeView DrawNode(NodeAsset node)
         {
-            NodeView nodeView = new NodeView(node);
+            DefaultNodeView nodeView = new DefaultNodeView(node);
             return nodeView;
         }
     }

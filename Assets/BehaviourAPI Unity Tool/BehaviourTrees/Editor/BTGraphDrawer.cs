@@ -7,10 +7,15 @@ namespace BehaviourAPI.Unity.Editor
     [CustomGraphDrawer(typeof(BehaviourTree))]
     public class BTGraphDrawer : CustomGraphDrawer
     {
-        public override NodeView DrawNode(NodeAsset node)
+        public override NodeView DrawNode(NodeAsset nodeAsset)
         {
-            var nodeView = new BTNodeView(node);
-            return nodeView;
+            if(nodeAsset.Node == null) return null;
+
+            var node = nodeAsset.Node;
+            var nodeType = node.GetType();
+
+            if (nodeType.IsAssignableFrom(typeof(BTNode))) return null;
+            return new BTNodeView(nodeAsset);
         }
     }
 }

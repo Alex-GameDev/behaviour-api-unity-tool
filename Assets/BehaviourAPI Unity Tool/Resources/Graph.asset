@@ -15,11 +15,11 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479474301894658
-  position: {x: 601, y: 216}
+  position: {x: 641, y: 322}
   parents: []
   childs:
-  - {fileID: 7203137968040491344}
   - {fileID: 2698660430357787085}
+  - {fileID: 7203137968040491344}
   references:
     version: 2
     RefIds:
@@ -59,7 +59,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479474301894660
-  position: {x: 706, y: 456}
+  position: {x: 806, y: 587}
   parents:
   - {fileID: -2600237846094061374}
   childs: []
@@ -107,7 +107,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479474301894659
-  position: {x: 476, y: 472}
+  position: {x: 508, y: 579}
   parents:
   - {fileID: -2600237846094061374}
   childs: []
