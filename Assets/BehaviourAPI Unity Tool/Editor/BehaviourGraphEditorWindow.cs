@@ -38,10 +38,11 @@ namespace BehaviourAPI.Unity.Editor
        
         bool autoSave = false;
 
-        public static void OpenGraph(BehaviourSystemAsset systemAsset, bool isAsset = true)
+        public static void OpenGraph(BehaviourSystemAsset systemAsset)
         {
             SystemAsset = systemAsset;
-            IsAsset = isAsset;
+            IsAsset = AssetDatabase.Contains(systemAsset);
+            Debug.Log($"Is asset: {IsAsset}");
             BehaviourGraphEditorWindow window = GetWindow<BehaviourGraphEditorWindow>();
             window.minSize = new Vector2(550, 250);
             window.titleContent = new GUIContent($"Behaviour graph editor");
