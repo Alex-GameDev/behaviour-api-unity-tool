@@ -103,5 +103,10 @@ namespace BehaviourAPI.Unity.Runtime
         {
             PushPerceptions.Remove(pushPerception);
         }
+
+        public BehaviourGraph Build()
+        {
+            return null;
+        }
     }
 }

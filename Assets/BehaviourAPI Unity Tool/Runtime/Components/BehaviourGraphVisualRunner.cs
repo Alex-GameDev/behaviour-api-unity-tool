@@ -1,3 +1,4 @@
+using BehaviourAPI.Core;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,43 @@ namespace BehaviourAPI.Unity.Runtime
 {
     public class BehaviourGraphVisualRunner : MonoBehaviour
     {
-        [SerializeField] BehaviourSystemAsset _systemAsset;
+        public BehaviourSystemAsset SystemAsset;
+
+        BehaviourGraph _rootGraph;
+
+        private void Awake() => OnAwake();
+
+        private void Start() => OnStart();
+
+        private void Update() => OnUpdate();
+
+        protected virtual void OnAwake()
+        {
+            if(SystemAsset == null )
+            {
+                Debug.LogError("Not behaviour system attached. Component is removed.");
+                Destroy(this);
+            }
+            else
+            {
+                _rootGraph = SystemAsset.Build();
+
+                if (_rootGraph == null)
+                {
+                    Debug.LogError("Behaviour system is empty. Component is removed.");
+                    Destroy(this);
+                }
+            }
+        }
+
+        protected virtual void OnStart()
+        {
+            _rootGraph.Start();
+        }
+
+        protected virtual void OnUpdate()
+        {
+            _rootGraph.Stop();
+        }
     }
 }
