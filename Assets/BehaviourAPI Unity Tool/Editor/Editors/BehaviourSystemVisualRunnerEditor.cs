@@ -20,6 +20,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if(GUILayout.Button("Bind new BehaviourSystem"))
                 {
+                    Undo.RecordObject(runner, "Bind new Behaviour System");
                     runner.SystemAsset = CreateInstance<BehaviourSystemAsset>();
                     EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
                     Repaint();
@@ -37,6 +38,14 @@ namespace BehaviourAPI.Unity.Editor
                 editor.OnInspectorGUI();
 
                 serializedObject.ApplyModifiedProperties();
+
+                if (GUILayout.Button("Remove System"))
+                {
+                    Undo.RecordObject(runner, "Remove Behaviour System");
+                    runner.SystemAsset = null;
+                    EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+                    Repaint();
+                }
             }
         }
     }

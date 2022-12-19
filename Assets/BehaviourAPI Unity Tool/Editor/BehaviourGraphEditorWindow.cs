@@ -42,7 +42,6 @@ namespace BehaviourAPI.Unity.Editor
         {
             SystemAsset = systemAsset;
             IsAsset = AssetDatabase.Contains(systemAsset);
-            Debug.Log($"Is asset: {IsAsset}");
             BehaviourGraphEditorWindow window = GetWindow<BehaviourGraphEditorWindow>();
             window.minSize = new Vector2(550, 250);
             window.titleContent = new GUIContent($"Behaviour graph editor");
