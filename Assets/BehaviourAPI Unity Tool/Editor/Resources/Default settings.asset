@@ -30,3 +30,4 @@ MonoBehaviour:
   - BehaviourAPI.BehaviourTrees
   - BehaviourAPI.UtilitySystems
   - Assembly-CSharp
+  - BehaviourAPI.Unity.Runtime

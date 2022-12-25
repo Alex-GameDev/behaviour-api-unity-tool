@@ -7,7 +7,7 @@ using UnityEngine.PlayerLoop;
 
 namespace BehaviourAPI.Unity.Runtime
 {
-    public abstract class UnityAction : ActionAsset
+    public abstract class UnityAction : Action
     {
         public Status ExecutionStatus { get; private set; }
         public Action Build() => new FunctionalAction(
@@ -27,13 +27,23 @@ namespace BehaviourAPI.Unity.Runtime
                 Stop();
             });
 
-        protected virtual void Start() { }
+        public override void Start() => OnStart();
 
-        protected abstract void Update();
+        public override void Stop() => OnStop();
 
-        protected virtual void Stop() { }
+        public override Status Update()
+        {
+            OnUpdate();
+            return ExecutionStatus;
+        }
+
         protected void Success() => ExecutionStatus = Status.Success;
         protected void Failure() => ExecutionStatus = Status.Failure;
+
+        protected virtual void OnStart() { }
+        protected abstract void OnUpdate();
+
+        protected virtual void OnStop() { }
 
     }
 }

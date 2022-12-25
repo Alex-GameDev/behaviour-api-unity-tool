@@ -18,12 +18,12 @@ namespace BehaviourAPI.Unity.Runtime
 
         int currentTargetPosId;
 
-        protected override void Start()
+        protected override void OnStart()
         {
             currentTargetPosId = 0;
         }
 
-        protected override void Update()
+        protected override void OnUpdate()
         {
             if (positions.Count == 0) return;
 
