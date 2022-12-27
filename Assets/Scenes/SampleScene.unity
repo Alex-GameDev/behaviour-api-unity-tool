@@ -378,7 +378,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479833748504576
-  position: {x: 151, y: 447}
+  position: {x: 256, y: 381}
   parents: []
   childs: []
   references:
@@ -388,14 +388,11 @@ MonoBehaviour:
       type: {class: LeafNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
       data:
         Action:
-          rid: 4601479874196013057
-    - rid: 4601479874196013057
-      type: {class: PatrolAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+          rid: 4601479874196013067
+    - rid: 4601479874196013067
+      type: {class: ExitAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
       data:
-        transform: {fileID: 0}
-        positions: []
-        speed: 0
-        distanceThreshold: 0
+        status: 3
 --- !u!114 &1939026353
 MonoBehaviour:
   m_ObjectHideFlags: 0

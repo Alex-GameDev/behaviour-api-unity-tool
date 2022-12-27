@@ -20,6 +20,10 @@ MonoBehaviour:
   InspectorLayout: {fileID: 9197481963319205126, guid: 1627405eb2ab9804e97b0fca98d7f5b1, type: 3}
   EmptyGraphPanel: {fileID: 9197481963319205126, guid: fbc6536e21fda5e4bb0550d2fa26f36b, type: 3}
   ListItemLayout: {fileID: 9197481963319205126, guid: fc097e4e5557f5f4a877714170160a93, type: 3}
+  CustomActionLayout: {fileID: 9197481963319205126, guid: 0bdb74d48ffb12e488e66f617b3fc2f1, type: 3}
+  UnityActionLayout: {fileID: 9197481963319205126, guid: 78826450eee3a3d4184f44250776c0e2, type: 3}
+  SubgraphActionLayout: {fileID: 9197481963319205126, guid: f7852915170795c4fa82b9c411f0ba94, type: 3}
+  ExitActionLayout: {fileID: 9197481963319205126, guid: 2069fbb0254a1d74b83d4315de090b5a, type: 3}
   BehaviourGraphEditorWindowStylesheet: {fileID: 7433441132597879392, guid: fd4790495fdc36a4c8007fe53ea5ed24, type: 3}
   GraphStylesheet: {fileID: 7433441132597879392, guid: 7c0d7e55f67e0e14a9d76c01345095dc, type: 3}
   NodeStylesheet: {fileID: 7433441132597879392, guid: 81512d53a4bea9b4494135dc1f99b76f, type: 3}

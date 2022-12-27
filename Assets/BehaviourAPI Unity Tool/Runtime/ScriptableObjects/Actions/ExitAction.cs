@@ -9,7 +9,9 @@ namespace BehaviourAPI.Unity.Runtime
     /// </summary>
     public class ExitAction : Action
     {
-        [SerializeField] Status status;
+        [HideInInspector] [SerializeField] Status status;
+
+        public Status Status { get => status; set => status = value; }
 
         public override void Start()
         {

@@ -5,25 +5,7 @@
             <ui:VisualElement name="ac-empty-div">
                 <ui:Button text="Assign action" display-tooltip-when-elided="true" name="container-assign-button" />
             </ui:VisualElement>
-            <ui:VisualElement name="ac-custom-div">
-                <ui:Label display-tooltip-when-elided="true" name="ac-customaction-label" style="left: 0; right: 0; flex-wrap: nowrap; white-space: normal; -unity-text-align: upper-center;" />
-            </ui:VisualElement>
-            <ui:VisualElement name="ac-unity-div" style="flex-direction: row; justify-content: space-between; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px;">
-                <ui:Label display-tooltip-when-elided="true" name="ac-unityaction-label" style="left: 0; right: 0; flex-wrap: nowrap; white-space: normal; -unity-text-align: upper-center;" />
-            </ui:VisualElement>
-            <ui:VisualElement name="ac-subgraph-div" style="flex-direction: column; justify-content: space-between; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px;">
-                <ui:VisualElement name="ac-subgraph-empty-div">
-                    <ui:Button text="Set subgraph" display-tooltip-when-elided="true" />
-                </ui:VisualElement>
-                <ui:VisualElement name="ac-subgraph-assigned-div">
-                    <ui:Label text="SubgraphName (bind)" display-tooltip-when-elided="true" style="-unity-text-align: upper-center;" />
-                    <ui:Button text="Button" display-tooltip-when-elided="true" />
-                </ui:VisualElement>
-            </ui:VisualElement>
-            <ui:VisualElement name="ac-exit-div" style="flex-direction: column; justify-content: space-between; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px;">
-                <ui:Label text="Exit graph with" display-tooltip-when-elided="true" style="-unity-text-align: upper-center;" />
-                <ui:DropdownField index="-1" choices="System.Collections.Generic.List`1[System.String]" name="ac-exitstatus-dropdown" />
-            </ui:VisualElement>
+            <ui:VisualElement name="ac-assigned-div" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

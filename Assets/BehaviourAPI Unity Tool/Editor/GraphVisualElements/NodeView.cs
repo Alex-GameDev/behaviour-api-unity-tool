@@ -88,13 +88,13 @@ namespace BehaviourAPI.Unity.Editor
 
                     if (typeName == typeof(Action).FullName)
                     {
-                        var containerView = new ContainerView(Node, prop.Copy());
+                        var containerView = new ActionContainerView(Node, prop.Copy());
                         extensionContainer.Add(containerView);
                     }
 
                     if (typeName == typeof(Perception).FullName)
                     {
-                        var containerView = new ContainerView(Node, prop.Copy());
+                        var containerView = new ActionContainerView(Node, prop.Copy());
                         extensionContainer.Add(containerView);
                     }
                 }
