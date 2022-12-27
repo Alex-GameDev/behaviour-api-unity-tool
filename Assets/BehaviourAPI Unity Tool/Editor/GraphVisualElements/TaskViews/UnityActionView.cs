@@ -9,7 +9,7 @@ namespace BehaviourAPI.Unity.Editor
     public class UnityActionView : ActionView<UnityAction>
     {
         public UnityActionView(UnityAction unityAction) : 
-            base(unityAction, VisualSettings.GetOrCreateSettings().UnityActionLayout)
+            base(unityAction, BehaviourAPISettings.instance.UnityActionLayout)
         {
         }
 

@@ -14,7 +14,7 @@ namespace BehaviourAPI.Unity.Editor
         Label _subgraphLabel;
 
         public SubgraphActionView(SubgraphAction subgraphAction) :
-            base(subgraphAction, VisualSettings.GetOrCreateSettings().SubgraphActionLayout)
+            base(subgraphAction, BehaviourAPISettings.instance.SubgraphActionLayout)
         {
             UpdateLayout();
         }

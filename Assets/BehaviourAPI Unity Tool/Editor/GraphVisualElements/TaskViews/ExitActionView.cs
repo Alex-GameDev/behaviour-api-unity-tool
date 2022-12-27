@@ -13,7 +13,7 @@ namespace BehaviourAPI.Unity.Editor
     {
         DropdownField statusDropdown;
         public ExitActionView(ExitAction exitAction) :
-            base(exitAction, VisualSettings.GetOrCreateSettings().ExitActionLayout)
+            base(exitAction, BehaviourAPISettings.instance.ExitActionLayout)
         {            
         }
 

@@ -12,6 +12,8 @@ namespace BehaviourAPI.Unity.Editor
     [CreateAssetMenu(fileName = "Behaviour API Visual Settings", menuName = "BehaviourAPI/Editor/VisualSettings", order = 0)]
     public class VisualSettings : ScriptableObject
     {
+        [SerializeField] string m_firstProperty;
+
         [Header("Layout")]
         public VisualTreeAsset BehaviourGraphEditorWindowLayout;
         public VisualTreeAsset AlertWindowLayout;
