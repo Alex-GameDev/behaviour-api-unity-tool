@@ -9,7 +9,10 @@ namespace BehaviourAPI.Unity.Editor
     using UnityEditor.Experimental.GraphView;
     using UnityEditor.UIElements;
     using UnityEngine.UIElements;
+    using UnityEngine;
     using Vector2 = UnityEngine.Vector2;
+    using Action = Core.Actions.Action;
+    using System.Linq;
 
     /// <summary>
     /// Visual element that represents a node in a behaviour graph
@@ -29,7 +32,21 @@ namespace BehaviourAPI.Unity.Editor
             DrawPorts();
             DrawExtensionContainer();
             styleSheets.Add(VisualSettings.GetOrCreateSettings().NodeStylesheet);
+            SetUpContextualMenu();
             SetUpDataBinding();
+        }
+
+        private void SetUpContextualMenu()
+        {
+            this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
+            {
+                menuEvt.menu.AppendAction("Test", dd => TestAction());
+            }));
+        }
+
+        private void TestAction()
+        {
+           
         }
 
         void DrawPorts()
@@ -53,14 +70,35 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
+        /// <summary>
+        /// Draws the visual elements to assign actions and perceptions
+        /// </summary>
         void DrawExtensionContainer()
         {
             var extensionContainer = this.Q(name: "extension");
 
-            if (Node.Node is IActionHandler actionHandler)
+            SerializedObject nodeObj = new SerializedObject(Node);
+            var prop = nodeObj.GetIterator();
+            bool propertiesLeft = true;
+            while (propertiesLeft)
             {
-                var containerView = new ContainerView(Node);
-                extensionContainer.Add(containerView);
+                if (prop.propertyType == SerializedPropertyType.ManagedReference)
+                {
+                    var typeName = prop.managedReferenceFieldTypename.Split(' ').Last();
+
+                    if (typeName == typeof(Action).FullName)
+                    {
+                        var containerView = new ContainerView(Node, prop.Copy());
+                        extensionContainer.Add(containerView);
+                    }
+
+                    if (typeName == typeof(Perception).FullName)
+                    {
+                        var containerView = new ContainerView(Node, prop.Copy());
+                        extensionContainer.Add(containerView);
+                    }
+                }
+                propertiesLeft = prop.NextVisible(true);
             }
         }
 

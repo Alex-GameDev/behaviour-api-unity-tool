@@ -21,9 +21,9 @@ namespace BehaviourAPI.Unity.Editor
 
         void CreateCustomAction()
         {
-            var action = _systemAsset.CreateAction("new custom action", typeof(CustomActionAsset));
-            OnCreateElement?.Invoke(action);
-            RefreshList();
+            //var action = _systemAsset.CreateAction("new custom action", typeof(CustomActionAsset));
+            //OnCreateElement?.Invoke(action);
+            //RefreshList();
         }
 
         void CreateUnityAction()

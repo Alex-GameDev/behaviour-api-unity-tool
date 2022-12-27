@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
+    /// <summary>
+    /// Creates a window menu to select a type
+    /// </summary>
     public class HierarchySearchWindow : ScriptableObject, ISearchWindowProvider
     {
         HierarchicalTypeNode rootTypeNode;
@@ -42,7 +45,7 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
-                list.Add(new SearchTreeEntry(new GUIContent(typeNode.Type.Name))
+                list.Add(new SearchTreeEntry(new GUIContent($"      {typeNode.Type.Name}"))
                 {
                     level = level,
                     userData = typeNode.Type
