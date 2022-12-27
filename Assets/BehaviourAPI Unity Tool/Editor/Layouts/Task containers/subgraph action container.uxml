@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/Styles/node.uss?fileID=7433441132597879392&amp;guid=81512d53a4bea9b4494135dc1f99b76f&amp;type=3#node" />
+    <ui:VisualElement name="sgc-div" style="flex-direction: column; justify-content: space-between; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px;">
+        <ui:VisualElement name="sgc-empty-div">
+            <ui:Button text="Set subgraph" display-tooltip-when-elided="true" name="sgc-set-btn" />
+        </ui:VisualElement>
+        <ui:VisualElement name="sgc-assigned-div">
+            <ui:Label text="SubgraphName (bind)" display-tooltip-when-elided="true" name="sgc-graph-label" style="-unity-text-align: upper-center;" />
+            <ui:Button text="Remove subgraph" display-tooltip-when-elided="true" name="sgc-remove-btn" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

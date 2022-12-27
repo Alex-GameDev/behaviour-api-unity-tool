@@ -384,13 +384,18 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
     - rid: 4601479833748504576
       type: {class: LeafNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
       data:
         Action:
-          rid: -2
+          rid: 4601479874196013057
+    - rid: 4601479874196013057
+      type: {class: PatrolAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        transform: {fileID: 0}
+        positions: []
+        speed: 0
+        distanceThreshold: 0
 --- !u!114 &1939026353
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -15,8 +15,7 @@ namespace BehaviourAPI.Unity.Editor
     {
         NodeAsset nodeAsset;
         SerializedProperty _actionProperty;
-        VisualElement _assignDiv;
-        VisualElement _actionDiv;
+        VisualElement _emptyDiv, _unityDiv, _customDiv, _subgraphDiv, exitDiv;
   
         public ContainerView(NodeAsset asset, SerializedProperty actionProperty)
         {
@@ -31,8 +30,12 @@ namespace BehaviourAPI.Unity.Editor
             var visualTree = VisualSettings.GetOrCreateSettings().ContainerLayout;
             var inspectorFromUXML = visualTree.Instantiate();
             Add(inspectorFromUXML);
-            _assignDiv = this.Q("container-assign-div");
-            _assignDiv = this.Q("container-action-div");
+
+            _emptyDiv = this.Q("ac-empty-div");
+            _unityDiv = this.Q("ac-action-div");
+            _customDiv = this.Q("ac-action-div");
+            _subgraphDiv = this.Q("ac-action-div");
+            _ = this.Q("ac-action-div");
         }
 
         private void SetUpContextualMenu()

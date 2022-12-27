@@ -24,6 +24,12 @@ namespace BehaviourAPI.Unity.Editor
 
         public VisualTreeAsset ListItemLayout;
 
+        [Header("Containers")]
+        public VisualTreeAsset CustomActionLayout;
+        public VisualTreeAsset UnityActionLayout;
+        public VisualTreeAsset SubgraphActionLayout;
+        public VisualTreeAsset ExitActionLayout;
+
 
         [Header("Style")]
         public StyleSheet BehaviourGraphEditorWindowStylesheet;

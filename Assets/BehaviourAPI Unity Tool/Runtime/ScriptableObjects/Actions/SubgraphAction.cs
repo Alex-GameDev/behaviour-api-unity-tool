@@ -11,6 +11,9 @@ namespace BehaviourAPI.Unity.Runtime
     {
         [SerializeField] GraphAsset subgraph;
 
+
+        public GraphAsset Subgraph { get => subgraph; set => subgraph = value; }
+
         public override void Start()
         {
             subgraph.Graph.Start();
