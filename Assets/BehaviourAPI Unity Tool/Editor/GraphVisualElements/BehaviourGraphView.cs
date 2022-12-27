@@ -16,7 +16,7 @@ namespace BehaviourAPI.Unity.Editor
     public class BehaviourGraphView : GraphView
     {
         GraphAsset GraphAsset;
-        HierarchySearchWindow searchWindow;
+        NodeCreationSearchWindow searchWindow;
         BehaviourGraphEditorWindow editorWindow;
 
         public Action<NodeAsset> NodeSelected, NodeAdded, NodeRemoved;
@@ -116,7 +116,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (searchWindow == null)
             {
-                searchWindow = ScriptableObject.CreateInstance<HierarchySearchWindow>();
+                searchWindow = ScriptableObject.CreateInstance<NodeCreationSearchWindow>();
                 searchWindow.SetRootType(typeof(BTNode));
                 searchWindow.SetOnSelectEntryCallback(CreateNode);
             }

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.Graphs;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
@@ -10,10 +9,9 @@ namespace BehaviourAPI.Unity.Editor
     /// <summary>
     /// Creates a window menu to select a type
     /// </summary>
-    public class HierarchySearchWindow : ScriptableObject, ISearchWindowProvider
+    public class NodeCreationSearchWindow : ScriptableObject, ISearchWindowProvider
     {
         HierarchicalTypeNode rootTypeNode;
-
         Action<Type, Vector2> OnSelectEntryAction;
 
         public void SetRootType(Type rootType)
@@ -61,20 +59,5 @@ namespace BehaviourAPI.Unity.Editor
             OnSelectEntryAction?.Invoke(type, pos);
             return true;
         }
-
-        struct HierarchicalTypeNode
-        {
-            public Type Type;
-            public List<HierarchicalTypeNode> Childs;
-
-            public HierarchicalTypeNode(Type rootType, IEnumerable<Type> derivedTypes)
-            {
-                Type = rootType;
-                Childs = derivedTypes.Where(t => t.BaseType == rootType).ToList()
-                    .Select(subType => new HierarchicalTypeNode(subType, 
-                    derivedTypes.Where(t => t.IsSubclassOf(subType) && t != subType))).ToList();
-            }
-        }
     }
-
 }

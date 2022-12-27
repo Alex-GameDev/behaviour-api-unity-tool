@@ -384,15 +384,13 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 4601479833748504576
       type: {class: LeafNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
       data:
         Action:
-          rid: 4601479874196013067
-    - rid: 4601479874196013067
-      type: {class: ExitAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        status: 3
+          rid: -2
 --- !u!114 &1939026353
 MonoBehaviour:
   m_ObjectHideFlags: 0
