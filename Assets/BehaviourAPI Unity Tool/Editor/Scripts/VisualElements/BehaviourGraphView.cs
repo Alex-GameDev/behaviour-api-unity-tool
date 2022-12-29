@@ -19,7 +19,7 @@ namespace BehaviourAPI.Unity.Editor
         GraphAsset GraphAsset;
 
         ActionSearchWindow _actionSearchWindow;
-        TypeHierarchySearchWindow  _perceptionSearchWindow;
+        PerceptionSearchWindow  _perceptionSearchWindow;
         NodeCreationSearchWindow _nodeSearchWindow;
         BehaviourGraphEditorWindow editorWindow;
 
@@ -35,7 +35,7 @@ namespace BehaviourAPI.Unity.Editor
         #region -------------------------------- Properties --------------------------------
 
         public ActionSearchWindow ActionSearchWindow => _actionSearchWindow;
-        public TypeHierarchySearchWindow PerceptionSearchWindow => PerceptionSearchWindow;
+        public PerceptionSearchWindow PerceptionSearchWindow => PerceptionSearchWindow;
 
         #endregion
 
@@ -156,9 +156,9 @@ namespace BehaviourAPI.Unity.Editor
             return searchWindow;
         }
 
-        TypeHierarchySearchWindow AddPerceptionSearchWindow()
+        PerceptionSearchWindow AddPerceptionSearchWindow()
         {
-            var searchWindow = ScriptableObject.CreateInstance<TypeHierarchySearchWindow>();
+            var searchWindow = ScriptableObject.CreateInstance<PerceptionSearchWindow>();
             return searchWindow;
         }
 

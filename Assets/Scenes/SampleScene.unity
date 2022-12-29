@@ -137,8 +137,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   graphs:
   - {fileID: 1939026353}
-  perceptions: []
-  actions: []
   pushPerceptions: []
 --- !u!114 &433694650
 MonoBehaviour:
@@ -225,14 +223,11 @@ MonoBehaviour:
       type: {class: LeafNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
       data:
         Action:
-          rid: 4601479886830567428
-    - rid: 4601479886830567428
-      type: {class: PatrolAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+          rid: 4601479920550412303
+    - rid: 4601479920550412303
+      type: {class: ExitAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
       data:
-        transform: {fileID: 0}
-        positions: []
-        speed: 0
-        distanceThreshold: 0
+        status: 3
 --- !u!1 &1298338776
 GameObject:
   m_ObjectHideFlags: 0
@@ -482,7 +477,7 @@ MonoBehaviour:
     - rid: 4601479920550412301
       type: {class: LoopUntilNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
-        TargetStatus: 2
+        TargetStatus: 3
         MaxIterations: -1
 --- !u!114 &1939026353
 MonoBehaviour:
@@ -525,7 +520,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479886830567424
-  position: {x: 305, y: 599}
+  position: {x: 314, y: 615}
   parents:
   - {fileID: 1918632516}
   childs: []

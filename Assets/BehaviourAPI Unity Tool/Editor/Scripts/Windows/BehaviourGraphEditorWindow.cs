@@ -26,8 +26,6 @@ namespace BehaviourAPI.Unity.Editor
         NodeInspectorView _nodeInspector;
         IHidable _currentInspector;
         BehaviourGraphInspectorView _graphInspector;
-        ActionInspectorView _actionInspector;
-        PerceptionInspectorView _perceptionInspector;
 
         ToolbarMenu _selectGraphToolbarMenu;
         ToolbarToggle _autosaveToolbarToggle;
@@ -74,8 +72,6 @@ namespace BehaviourAPI.Unity.Editor
             _graphView = AddGraphView();
             _nodeInspector = AddNodeInspectorView();
             _graphInspector = AddGraphInspectorView();
-            _actionInspector = AddActionInspectorView();
-            _perceptionInspector = AddPerceptionInspectorView();
 
             _graphView.NodeSelected += _nodeInspector.UpdateInspector;
             _graphView.NodeAdded += OnAddAsset;
@@ -113,26 +109,6 @@ namespace BehaviourAPI.Unity.Editor
             return nodeInspector;
         }
 
-        ActionInspectorView AddActionInspectorView()
-        {
-            var actionInspector = new ActionInspectorView(SystemAsset);
-            _container.Add(actionInspector);
-            actionInspector.OnCreateElement += OnAddAsset;
-            actionInspector.OnRemoveElement += OnRemoveAsset;
-            actionInspector.Hide();
-            return actionInspector;
-        }
-
-        PerceptionInspectorView AddPerceptionInspectorView()
-        {
-            var perceptionInspector = new PerceptionInspectorView(SystemAsset);
-            _container.Add(perceptionInspector);
-            perceptionInspector.OnCreateElement += OnAddAsset;
-            perceptionInspector.OnRemoveElement += OnRemoveAsset;
-            perceptionInspector.Hide();
-            return perceptionInspector;
-        }
-
         BehaviourGraphInspectorView AddGraphInspectorView()
         {
             var graphInspector = new BehaviourGraphInspectorView();
@@ -143,8 +119,6 @@ namespace BehaviourAPI.Unity.Editor
         private void SetUpInspectorMenu()
         {
             rootVisualElement.Q<Button>("im-graph-btn").clicked += () => ChangeInspector(_graphInspector);
-            rootVisualElement.Q<Button>("im-actions-btn").clicked += () => ChangeInspector(_actionInspector);
-            rootVisualElement.Q<Button>("im-perceptions-btn").clicked += () => ChangeInspector(_perceptionInspector);
         }
 
         void SetUpToolbar()
