@@ -6,16 +6,15 @@ using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    public class UnityActionView : ActionView<UnityAction>
+    public class StatusPerceptionView : PerceptionView<StatusPerception>
     {
-        public UnityActionView(UnityAction unityAction) : 
-            base(unityAction, BehaviourAPISettings.instance.UnityTaskLayout)
+        public StatusPerceptionView(StatusPerception perception) : base(perception, BehaviourAPISettings.instance.StatusPerceptionLayout)
         {
         }
 
         protected override void AddLayout()
         {
-            this.Q<Label>("uac-label").text = _action.DisplayInfo;
+
         }
     }
 }

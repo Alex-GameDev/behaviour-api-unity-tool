@@ -39,10 +39,10 @@ namespace BehaviourAPI.Unity.Editor
             var inspectorFromUXML = visualTree.Instantiate();
             Add(inspectorFromUXML);
 
-            _emptyDiv = this.Q("ac-empty-div");
-            _assignedDiv = this.Q("ac-assigned-div");
+            _emptyDiv = this.Q("tc-empty-div");
+            _assignedDiv = this.Q("tc-assigned-div");
 
-            this.Q<Button>("ac-assign-button").clicked += OnAssignAction;
+            this.Q<Button>("tc-assign-button").clicked += OnAssignAction;
         }
 
         private void SetUpContextualMenu()
@@ -52,58 +52,12 @@ namespace BehaviourAPI.Unity.Editor
                 menuEvt.menu.AppendAction("Clear action", dd => ClearAction(),
                     (_) => _actionProperty.managedReferenceValue != null ?
                     DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
-                menuEvt.menu.AppendAction("Set subgraph action", dd => SetSubgraphAction(),
-                    (_) => _actionProperty.managedReferenceValue == null ?
-                    DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
-                menuEvt.menu.AppendAction("Set exit action", dd => SetExitAction(),
-                    (_) => _actionProperty.managedReferenceValue == null ?
-                    DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
-                menuEvt.menu.AppendAction("Set patrol action", dd => SetFleeAction(),
-                    (_) => _actionProperty.managedReferenceValue == null ?
-                    DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
             }));
         }
 
         void OnAssignAction()
         {
-            if(_nodeView == null)
-            {
-                Debug.Log("Node");
-            }
-            else
-            {
-                if(_nodeView.GraphView == null)
-                {
-                    Debug.Log("Graph");
-                }
-                else
-                {
-                    if (_nodeView.GraphView.ActionSearchWindow == null) Debug.Log("Action");
-                    else
-                        _nodeView.GraphView.ActionSearchWindow.Open(SetActionType);
-                }
-            }
-        }
-
-        private void SetFleeAction()
-        {
-            _actionProperty.managedReferenceValue = new PatrolAction();
-            _actionProperty.serializedObject.ApplyModifiedProperties();
-            UpdateView();
-        }
-
-        private void SetExitAction()
-        {
-            _actionProperty.managedReferenceValue = new ExitAction();
-            _actionProperty.serializedObject.ApplyModifiedProperties();
-            UpdateView();
-        }
-
-        private void SetSubgraphAction()
-        {
-            _actionProperty.managedReferenceValue = new SubgraphAction();
-            _actionProperty.serializedObject.ApplyModifiedProperties();
-            UpdateView();
+            _nodeView.GraphView.ActionSearchWindow.Open(SetActionType);
         }
 
         private void ClearAction()

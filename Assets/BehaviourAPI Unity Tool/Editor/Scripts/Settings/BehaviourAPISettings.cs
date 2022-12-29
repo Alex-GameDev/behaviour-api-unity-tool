@@ -28,10 +28,14 @@ namespace BehaviourAPI.Unity.Editor
         public VisualTreeAsset ListItemLayout;
 
         [Header("Containers")]
-        public VisualTreeAsset UnityActionLayout;
-        public VisualTreeAsset CustomActionLayout;
+        public VisualTreeAsset UnityTaskLayout;
+        public VisualTreeAsset CustomTaskLayout;
+
         public VisualTreeAsset SubgraphActionLayout;
         public VisualTreeAsset ExitActionLayout;
+
+        public VisualTreeAsset StatusPerceptionLayout;
+        public VisualTreeAsset CompoundPerceptionLayout;
 
 
         [Header("Style")]

@@ -367,6 +367,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SystemAsset: {fileID: 421060230}
+--- !u!114 &1667524919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 4601479922308874240
+  position: {x: 849, y: 335}
+  parents: []
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 4601479922308874240
+      type: {class: ConditionNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        Perception:
+          rid: 4601479922547163139
+    - rid: 4601479922547163139
+      type: {class: CompoundPerception, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        logicOperation: 0
 --- !u!1 &1882890571
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,6 +530,7 @@ MonoBehaviour:
   - {fileID: 516873224}
   - {fileID: 1918632516}
   - {fileID: 433694650}
+  - {fileID: 1667524919}
   references:
     version: 2
     RefIds:
@@ -520,7 +551,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479886830567424
-  position: {x: 314, y: 615}
+  position: {x: 328, y: 628}
   parents:
   - {fileID: 1918632516}
   childs: []

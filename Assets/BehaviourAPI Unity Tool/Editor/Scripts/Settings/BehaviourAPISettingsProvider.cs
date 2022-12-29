@@ -22,10 +22,12 @@ namespace BehaviourAPI.Unity.Editor
             public static GUIContent InspectorLayout = new GUIContent("InspectorLayout");
             public static GUIContent EmptyGraphPanel = new GUIContent("EmptyGraphPanel");
 
-            public static GUIContent CustomActionLayout = new GUIContent("Custom Action Layout File");
-            public static GUIContent UnityActionLayout = new GUIContent("Unity Action Layout File");
+            public static GUIContent CustomActionLayout = new GUIContent("Custom Task Layout File");
+            public static GUIContent UnityActionLayout = new GUIContent("Unity Task Layout File");
             public static GUIContent SubgraphActionLayout = new GUIContent("Subgraph Action Layout File");
             public static GUIContent ExitActionLayout = new GUIContent("Exit Action Layout File");
+            public static GUIContent StatusPerceptionLayout = new GUIContent("Status Perception Layout File");
+            public static GUIContent CompoundPerceptionLayout = new GUIContent("Compound Perception Layout File");
 
             public static GUIContent Assemblies = new GUIContent("Assemblies");
         }
@@ -60,18 +62,21 @@ namespace BehaviourAPI.Unity.Editor
                 LayoutProperty(m_SerializedObject.FindProperty("AlertWindowLayout"), Styles.AlertWindowLayout, typeof(VisualTreeAsset));
                 EditorGUILayout.Space(5);
 
-                EditorGUILayout.LabelField("Action container layouts", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField("Graph elements layouts", EditorStyles.boldLabel);
                 LayoutProperty(m_SerializedObject.FindProperty("NodeLayout"), Styles.NodeLayout, typeof(VisualTreeAsset));
                 LayoutProperty(m_SerializedObject.FindProperty("ContainerLayout"), Styles.ContainerLayout, typeof(VisualTreeAsset));
                 LayoutProperty(m_SerializedObject.FindProperty("InspectorLayout"), Styles.InspectorLayout, typeof(VisualTreeAsset));
                 LayoutProperty(m_SerializedObject.FindProperty("EmptyGraphPanel"), Styles.EmptyGraphPanel, typeof(VisualTreeAsset));
                 EditorGUILayout.Space(10);
 
-                EditorGUILayout.LabelField("Action container layouts", EditorStyles.boldLabel);
-                LayoutProperty(m_SerializedObject.FindProperty("UnityActionLayout"), Styles.UnityActionLayout, typeof(VisualTreeAsset));
-                LayoutProperty(m_SerializedObject.FindProperty("CustomActionLayout"), Styles.CustomActionLayout, typeof(VisualTreeAsset));
+                EditorGUILayout.LabelField("Task container layouts", EditorStyles.boldLabel);
+                LayoutProperty(m_SerializedObject.FindProperty("UnityTaskLayout"), Styles.UnityActionLayout, typeof(VisualTreeAsset));
+                LayoutProperty(m_SerializedObject.FindProperty("CustomTaskLayout"), Styles.CustomActionLayout, typeof(VisualTreeAsset));
                 LayoutProperty(m_SerializedObject.FindProperty("SubgraphActionLayout"), Styles.SubgraphActionLayout, typeof(VisualTreeAsset));
                 LayoutProperty(m_SerializedObject.FindProperty("ExitActionLayout"), Styles.ExitActionLayout, typeof(VisualTreeAsset));
+                LayoutProperty(m_SerializedObject.FindProperty("StatusPerceptionLayout"), Styles.StatusPerceptionLayout, typeof(VisualTreeAsset));
+                LayoutProperty(m_SerializedObject.FindProperty("CompoundPerceptionLayout"), Styles.CompoundPerceptionLayout, typeof(VisualTreeAsset));
+
                 EditorGUILayout.Space(10);
 
                 EditorGUILayout.LabelField("Assemblies", EditorStyles.boldLabel);

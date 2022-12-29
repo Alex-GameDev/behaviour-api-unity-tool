@@ -35,7 +35,7 @@ namespace BehaviourAPI.Unity.Editor
         #region -------------------------------- Properties --------------------------------
 
         public ActionSearchWindow ActionSearchWindow => _actionSearchWindow;
-        public PerceptionSearchWindow PerceptionSearchWindow => PerceptionSearchWindow;
+        public PerceptionSearchWindow PerceptionSearchWindow => _perceptionSearchWindow;
 
         #endregion
 

@@ -6,7 +6,7 @@ namespace BehaviourAPI.Unity.Editor
     public class CustomActionView : ActionView<CustomAction>
     {
         public CustomActionView(CustomAction customAction) :
-            base(customAction, BehaviourAPISettings.instance.CustomActionLayout)
+            base(customAction, BehaviourAPISettings.instance.CustomTaskLayout)
         {
         }
 

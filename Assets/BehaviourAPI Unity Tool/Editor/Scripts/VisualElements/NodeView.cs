@@ -90,7 +90,7 @@ namespace BehaviourAPI.Unity.Editor
 
                     if (typeName == typeof(Perception).FullName)
                     {
-                        var containerView = new ActionContainerView(Node, prop.Copy(), this);
+                        var containerView = new PerceptionContainerView(Node, prop.Copy(), this);
                         extensionContainer.Add(containerView);
                     }
                 }

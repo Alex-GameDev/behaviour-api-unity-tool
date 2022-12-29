@@ -1,4 +1,5 @@
 using BehaviourAPI.Core;
+using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using System;
 using System.Collections;
@@ -7,11 +8,9 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
 {
-    /// <summary>
-    /// Stores a perception as an unity object.
-    /// </summary>
     public abstract class UnityPerception : Perception
     {
-        public string Name;
+        public virtual string DisplayInfo => "Unity Perception";
+        public Perception Build() => new ConditionPerception(Initialize, Check, Reset);
     }
 }
