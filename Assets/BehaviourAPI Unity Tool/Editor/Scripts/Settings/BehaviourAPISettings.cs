@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -40,6 +42,21 @@ namespace BehaviourAPI.Unity.Editor
 
         public string Assemblies;
 
+        public readonly string[] DefaultAssemblies = new[]
+        {
+            "Assembly-CSharp",
+            "BehaviourAPI.Unity.Runtime",
+            "BehaviourAPI.Core",
+            "BehaviourAPI.StateMachines",
+            "BehaviourAPI.BehaviourTrees",
+            "BehaviourAPI.UtilitySystems"
+        };
+
         public void Save() => Save(true);
+
+        public List<Assembly> GetAssemblies()
+        {
+            return DefaultAssemblies.Select(assemblyName => Assembly.Load(assemblyName)).ToList();
+        }
     }
 }

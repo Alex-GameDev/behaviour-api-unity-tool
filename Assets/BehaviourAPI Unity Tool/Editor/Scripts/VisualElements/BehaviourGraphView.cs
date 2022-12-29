@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Unity.Runtime;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -15,19 +14,41 @@ namespace BehaviourAPI.Unity.Editor
     /// </summary>
     public class BehaviourGraphView : GraphView
     {
+        #region ---------------------------------- Fields ----------------------------------
+
         GraphAsset GraphAsset;
-        NodeCreationSearchWindow searchWindow;
+
+        ActionSearchWindow _actionSearchWindow;
+        TypeHierarchySearchWindow  _perceptionSearchWindow;
+        NodeCreationSearchWindow _nodeSearchWindow;
         BehaviourGraphEditorWindow editorWindow;
+
+        #endregion
+
+        #region ---------------------------------- Events ----------------------------------
 
         public Action<NodeAsset> NodeSelected, NodeAdded, NodeRemoved;
         public Action<IEnumerable<NodeAsset>> NodesAdded, NodesRemoved; //Bulk actions
+
+        #endregion
+
+        #region -------------------------------- Properties --------------------------------
+
+        public ActionSearchWindow ActionSearchWindow => _actionSearchWindow;
+        public TypeHierarchySearchWindow PerceptionSearchWindow => PerceptionSearchWindow;
+
+        #endregion
 
         public BehaviourGraphView(BehaviourGraphEditorWindow parentWindow)
         {
             editorWindow = parentWindow;
             AddGridBackground();
             AddManipulators();
-            AddCreateNodeWindow();
+
+            _nodeSearchWindow = AddCreateNodeWindow();
+            _actionSearchWindow = AddActionSearchWindow();
+            _perceptionSearchWindow = AddPerceptionSearchWindow();
+            
             AddStyles();
             graphViewChanged = OnGraphViewChanged;
         }
@@ -35,7 +56,7 @@ namespace BehaviourAPI.Unity.Editor
         public void SetGraph(GraphAsset graph)
         {
             GraphAsset = graph;
-            searchWindow.SetRootType(graph.Graph.NodeType);
+            _nodeSearchWindow.SetRootType(graph.Graph.NodeType);
             DrawGraph();
         }
 
@@ -112,23 +133,36 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        void AddCreateNodeWindow()
+        #region ---------------- Search windows ----------------
+
+        NodeCreationSearchWindow AddCreateNodeWindow()
         {
-            if (searchWindow == null)
-            {
-                searchWindow = ScriptableObject.CreateInstance<NodeCreationSearchWindow>();
-                searchWindow.SetRootType(typeof(BTNode));
-                searchWindow.SetOnSelectEntryCallback(CreateNode);
-            }
+            var nodeWindow = ScriptableObject.CreateInstance<NodeCreationSearchWindow>();
+            nodeWindow.SetOnSelectEntryCallback(CreateNode);
 
             nodeCreationRequest = context =>
             {
                 if (GraphAsset == null) return;
 
                 var searchContext = new SearchWindowContext(context.screenMousePosition);
-                SearchWindow.Open(searchContext, searchWindow);
+                SearchWindow.Open(searchContext, nodeWindow);
             };
+            return nodeWindow;
         }
+
+        ActionSearchWindow AddActionSearchWindow()
+        {
+            var searchWindow = ScriptableObject.CreateInstance<ActionSearchWindow>();
+            return searchWindow;
+        }
+
+        TypeHierarchySearchWindow AddPerceptionSearchWindow()
+        {
+            var searchWindow = ScriptableObject.CreateInstance<TypeHierarchySearchWindow>();
+            return searchWindow;
+        }
+
+        #endregion
 
         void AddStyles()
         {
@@ -148,6 +182,14 @@ namespace BehaviourAPI.Unity.Editor
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
+
+            this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
+            {
+                menuEvt.menu.AppendAction("Action search window", (dd) =>
+                {
+                    _actionSearchWindow.Open((t) => Debug.Log(t.Name));
+                });
+            }));
         }
 
         Vector2 GetLocalMousePosition(Vector2 mousePosition)
@@ -174,7 +216,7 @@ namespace BehaviourAPI.Unity.Editor
 
         NodeView DrawNodeView(NodeAsset asset)
         {
-            NodeView nodeView = new NodeView(asset);
+            NodeView nodeView = new NodeView(asset, this);
             nodeView.Selected = (asset) => NodeSelected?.Invoke(asset);
             AddElement(nodeView);
             return nodeView;

@@ -1,9 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/Styles/node.uss?fileID=7433441132597879392&amp;guid=81512d53a4bea9b4494135dc1f99b76f&amp;type=3#node" />
+    <Style src="project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/uss/node.uss?fileID=7433441132597879392&amp;guid=81512d53a4bea9b4494135dc1f99b76f&amp;type=3#node" />
     <ui:VisualElement name="ac-border">
         <ui:VisualElement name="ac-contents">
             <ui:VisualElement name="ac-empty-div">
-                <ui:Button text="Assign action" display-tooltip-when-elided="true" name="container-assign-button" />
+                <ui:Button text="Assign action" display-tooltip-when-elided="true" name="ac-assign-button" />
             </ui:VisualElement>
             <ui:VisualElement name="ac-assigned-div" />
         </ui:VisualElement>

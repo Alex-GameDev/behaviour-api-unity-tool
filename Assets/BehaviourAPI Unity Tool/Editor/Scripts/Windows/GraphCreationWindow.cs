@@ -1,10 +1,11 @@
+using BehaviourAPI.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static PlasticGui.WorkspaceWindow.CodeReview.Summary.CommentSummaryData;
+using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -35,7 +36,7 @@ namespace BehaviourAPI.Unity.Editor
             var graphNameInputText = rootVisualElement.Q<TextField>("cgw-name-textfield");
             var createGraphList = rootVisualElement.Q<ScrollView>("cgw-graphs-scrollview");
 
-            TypeUtilities.GetAllGraphTypes().ForEach(gType => createGraphList
+            typeof(BehaviourGraph).GetSubClasses().ForEach(gType => createGraphList
                 .Add(new Button(() => { 
                     OnPressCreate?.Invoke(graphNameInputText.value, gType); 
                     Close(); 

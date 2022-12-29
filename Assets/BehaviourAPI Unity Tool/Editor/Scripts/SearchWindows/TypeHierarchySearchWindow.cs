@@ -14,6 +14,9 @@ namespace BehaviourAPI.Unity.Editor
         public int MaxLevel = 3;
 
         Action<Type> OnSelectEntryTemporaryAction;
+
+        HierarchicalTypeNode rootTypeNode;
+
         public void Open(Action<Type> temporaryAction = null)
         {
             OnSelectEntryTemporaryAction = temporaryAction;
@@ -31,7 +34,10 @@ namespace BehaviourAPI.Unity.Editor
             return true;
         }
 
-
-        
+        public void SetRootType(Type rootType)
+        {
+            var types = rootType.GetSubClasses();
+            rootTypeNode = new HierarchicalTypeNode(rootType, types);
+        }        
     }
 }

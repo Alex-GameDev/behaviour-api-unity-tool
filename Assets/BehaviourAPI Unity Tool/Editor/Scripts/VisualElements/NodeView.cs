@@ -23,12 +23,17 @@ namespace BehaviourAPI.Unity.Editor
 
         public Action<NodeAsset> Selected = delegate { };
 
+        BehaviourGraphView _graphView;
+
+        public BehaviourGraphView GraphView => _graphView;
+
         public static string NODE_LAYOUT => AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().NodeLayout);
 
-        public NodeView(NodeAsset node) : base(NODE_LAYOUT)
+        public NodeView(NodeAsset node, BehaviourGraphView graphView) : base(NODE_LAYOUT)
         {
             Node = node;
-            SetPosition(new UnityEngine.Rect(node.Position, Vector2.zero));
+            _graphView = graphView;
+            SetPosition(new Rect(node.Position, Vector2.zero));
             DrawPorts();
             DrawExtensionContainer();
             styleSheets.Add(VisualSettings.GetOrCreateSettings().NodeStylesheet);
@@ -38,15 +43,6 @@ namespace BehaviourAPI.Unity.Editor
 
         private void SetUpContextualMenu()
         {
-            this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
-            {
-                menuEvt.menu.AppendAction("Test", dd => TestAction());
-            }));
-        }
-
-        private void TestAction()
-        {
-           
         }
 
         void DrawPorts()
@@ -88,13 +84,13 @@ namespace BehaviourAPI.Unity.Editor
 
                     if (typeName == typeof(Action).FullName)
                     {
-                        var containerView = new ActionContainerView(Node, prop.Copy());
+                        var containerView = new ActionContainerView(Node, prop.Copy(), this);
                         extensionContainer.Add(containerView);
                     }
 
                     if (typeName == typeof(Perception).FullName)
                     {
-                        var containerView = new ActionContainerView(Node, prop.Copy());
+                        var containerView = new ActionContainerView(Node, prop.Copy(), this);
                         extensionContainer.Add(containerView);
                     }
                 }

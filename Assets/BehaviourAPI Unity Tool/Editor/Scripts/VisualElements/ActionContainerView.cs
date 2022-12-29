@@ -18,13 +18,16 @@ namespace BehaviourAPI.Unity.Editor
     {
         NodeAsset nodeAsset;
         SerializedProperty _actionProperty;
+
+        NodeView _nodeView;
         VisualElement _emptyDiv, _assignedDiv;
   
-        public ActionContainerView(NodeAsset asset, SerializedProperty actionProperty)
+        public ActionContainerView(NodeAsset asset, SerializedProperty actionProperty, NodeView nodeView)
         {
             nodeAsset = asset;
             _actionProperty = actionProperty;
 
+            _nodeView = nodeView;
             AddLayout();
             SetUpContextualMenu();
             UpdateView();
@@ -38,6 +41,8 @@ namespace BehaviourAPI.Unity.Editor
 
             _emptyDiv = this.Q("ac-empty-div");
             _assignedDiv = this.Q("ac-assigned-div");
+
+            this.Q<Button>("ac-assign-button").clicked += OnAssignAction;
         }
 
         private void SetUpContextualMenu()
@@ -57,6 +62,27 @@ namespace BehaviourAPI.Unity.Editor
                     (_) => _actionProperty.managedReferenceValue == null ?
                     DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
             }));
+        }
+
+        void OnAssignAction()
+        {
+            if(_nodeView == null)
+            {
+                Debug.Log("Node");
+            }
+            else
+            {
+                if(_nodeView.GraphView == null)
+                {
+                    Debug.Log("Graph");
+                }
+                else
+                {
+                    if (_nodeView.GraphView.ActionSearchWindow == null) Debug.Log("Action");
+                    else
+                        _nodeView.GraphView.ActionSearchWindow.Open(SetActionType);
+                }
+            }
         }
 
         private void SetFleeAction()
@@ -92,6 +118,7 @@ namespace BehaviourAPI.Unity.Editor
             if (!actionType.IsSubclassOf(typeof(Action))) return;
 
             _actionProperty.managedReferenceValue = Activator.CreateInstance(actionType);
+            _actionProperty.serializedObject.ApplyModifiedProperties();
             UpdateView();
         }
 

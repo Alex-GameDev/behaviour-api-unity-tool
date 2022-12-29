@@ -7,6 +7,6 @@ namespace BehaviourAPI.Unity.Runtime
 {
     public class LeafNode : BehaviourTrees.LeafNode
     {
-        [SerializeReference] new Action Action = new PatrolAction();
+        [SerializeReference] new Action Action;
     }
 }
