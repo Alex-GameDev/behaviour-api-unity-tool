@@ -20,6 +20,12 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if(GUILayout.Button("Bind new BehaviourSystem"))
                 {
+                    if (Application.isPlaying)
+                    {
+                        EditorWindow.GetWindow<SceneView>().ShowNotification(new GUIContent("Cannot bind behaviour system on runtime"));
+                        return;
+                    }
+
                     Undo.RecordObject(runner, "Bind new Behaviour System");
                     runner.SystemAsset = CreateInstance<BehaviourSystemAsset>();
                     EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
@@ -41,6 +47,12 @@ namespace BehaviourAPI.Unity.Editor
 
                 if (GUILayout.Button("Remove System"))
                 {
+                    if (Application.isPlaying)
+                    {
+                        EditorWindow.GetWindow<SceneView>().ShowNotification(new GUIContent("Cannot delete behaviour system on runtime"));
+                        return;
+                    }
+
                     Undo.RecordObject(runner, "Remove Behaviour System");
                     runner.SystemAsset = null;
                     EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());

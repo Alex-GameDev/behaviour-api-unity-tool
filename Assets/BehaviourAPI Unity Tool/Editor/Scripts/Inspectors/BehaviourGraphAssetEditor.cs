@@ -26,6 +26,12 @@ namespace BehaviourAPI.Unity.Editor
 
             if (GUILayout.Button($"Edit graph"))
             {
+                if (Application.isPlaying && !AssetDatabase.Contains(asset))
+                {
+                    EditorWindow.GetWindow<SceneView>().ShowNotification(new GUIContent("Cannot edit binded behaviour system on runtime"));
+                    return;
+                }
+
                 BehaviourGraphEditorWindow.OpenGraph(asset);
             }
         }
