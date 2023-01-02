@@ -123,6 +123,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &394432837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 2511130683035615233
+  position: {x: 471, y: 452}
+  parents:
+  - {fileID: 433694650}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511130683035615233
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        Action:
+          rid: 2511130683035615235
+    - rid: 2511130683035615235
+      type: {class: DelayAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        DelayTime: 3
 --- !u!114 &421060230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,12 +184,13 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479920550412302
-  position: {x: 481, y: 151}
-  parents: []
+  position: {x: 485, y: 241}
+  parents:
+  - {fileID: 706239328}
   childs:
-  - {fileID: 1918632516}
-  - {fileID: 516873224}
-  - {fileID: 623046075}
+  - {fileID: 2015062776}
+  - {fileID: 394432837}
+  - {fileID: 860441668}
   references:
     version: 2
     RefIds:
@@ -166,7 +198,7 @@ MonoBehaviour:
       type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
         IsRandomized: 0
---- !u!114 &516873224
+--- !u!114 &706239328
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -180,24 +212,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: 
   node:
-    rid: 4601479920550412295
-  position: {x: 468, y: 395}
-  parents:
+    rid: 2511130683035615232
+  position: {x: 484, y: 52}
+  parents: []
+  childs:
   - {fileID: 433694650}
-  childs: []
   references:
     version: 2
     RefIds:
-    - rid: 4601479920550412295
-      type: {class: LeafNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+    - rid: 2511130683035615232
+      type: {class: IteratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
-        Action:
-          rid: 4601479920550412296
-    - rid: 4601479920550412296
-      type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        subgraph: {fileID: 0}
---- !u!114 &623046075
+        Iterations: 3
+--- !u!114 &860441668
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -211,23 +238,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: 
   node:
-    rid: 4601479886830567427
-  position: {x: 656, y: 396}
-  parents:
-  - {fileID: 433694650}
+    rid: 2511130683035615236
+  position: {x: 721, y: 494}
+  parents: []
   childs: []
   references:
     version: 2
     RefIds:
-    - rid: 4601479886830567427
+    - rid: 2511130683035615236
       type: {class: LeafNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
       data:
         Action:
-          rid: 4601479920550412303
-    - rid: 4601479920550412303
-      type: {class: ExitAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+          rid: 2511130683035615237
+    - rid: 2511130683035615237
+      type: {class: DebugAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
       data:
-        status: 3
+        Message: Loop completed
 --- !u!1 &1298338776
 GameObject:
   m_ObjectHideFlags: 0
@@ -367,36 +393,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SystemAsset: {fileID: 421060230}
---- !u!114 &1667524919
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  node:
-    rid: 4601479922308874240
-  position: {x: 849, y: 335}
-  parents: []
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 4601479922308874240
-      type: {class: ConditionNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        Perception:
-          rid: 4601479922547163139
-    - rid: 4601479922547163139
-      type: {class: CompoundPerception, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        logicOperation: 0
 --- !u!1 &1882890571
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,34 +477,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1918632516
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  node:
-    rid: 4601479920550412301
-  position: {x: 312, y: 385}
-  parents:
-  - {fileID: 433694650}
-  childs:
-  - {fileID: 2015062776}
-  references:
-    version: 2
-    RefIds:
-    - rid: 4601479920550412301
-      type: {class: LoopUntilNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        TargetStatus: 3
-        MaxIterations: -1
 --- !u!114 &1939026353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -526,11 +494,10 @@ MonoBehaviour:
     rid: 4601479694237827089
   nodes:
   - {fileID: 2015062776}
-  - {fileID: 623046075}
-  - {fileID: 516873224}
-  - {fileID: 1918632516}
   - {fileID: 433694650}
-  - {fileID: 1667524919}
+  - {fileID: 706239328}
+  - {fileID: 394432837}
+  - {fileID: 860441668}
   references:
     version: 2
     RefIds:
@@ -551,9 +518,9 @@ MonoBehaviour:
   Name: 
   node:
     rid: 4601479886830567424
-  position: {x: 328, y: 628}
+  position: {x: 322, y: 444}
   parents:
-  - {fileID: 1918632516}
+  - {fileID: 433694650}
   childs: []
   references:
     version: 2
