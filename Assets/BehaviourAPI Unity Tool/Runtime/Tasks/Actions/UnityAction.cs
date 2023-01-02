@@ -11,26 +11,18 @@ namespace BehaviourAPI.Unity.Runtime
     {
         public virtual string DisplayInfo => "Unity Action";
         public Status ExecutionStatus { get; private set; }
-        public Action Build() => new FunctionalAction(
-            () =>
-            {
-                ExecutionStatus = Status.Running;
-                Start();
-            }, 
-            () =>
-            {
-                Update();
-                return ExecutionStatus;
-            }, 
-            () =>
-            {
-                ExecutionStatus = Status.None;
-                Stop();
-            });
 
-        public override void Start() => OnStart();
+        public override void Start()
+        {
+            ExecutionStatus = Status.Running;
+            OnStart();
+        }
 
-        public override void Stop() => OnStop();
+        public override void Stop()
+        {
+            ExecutionStatus = Status.None;
+            OnStop();
+        }
 
         public override Status Update()
         {

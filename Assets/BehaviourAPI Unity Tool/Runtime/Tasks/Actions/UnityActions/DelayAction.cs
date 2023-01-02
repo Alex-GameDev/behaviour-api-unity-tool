@@ -21,7 +21,7 @@ namespace BehaviourAPI.Unity.Runtime
         protected override void OnUpdate()
         {
             _currentTime += Time.deltaTime;
-            if(_currentTime > DelayTime)
+            if (_currentTime > DelayTime)
             {
                 Success();
             }

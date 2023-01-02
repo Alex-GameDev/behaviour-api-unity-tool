@@ -43,7 +43,7 @@ namespace BehaviourAPI.Unity.Runtime
 
         protected virtual void OnUpdate()
         {
-            _rootGraph.Stop();
+            _rootGraph.Update();
         }
     }
 }

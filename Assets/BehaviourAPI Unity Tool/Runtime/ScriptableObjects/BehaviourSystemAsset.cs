@@ -69,7 +69,7 @@ namespace BehaviourAPI.Unity.Runtime
 
         public BehaviourGraph Build()
         {
-            return null;
+            return RootGraph.Build();
         }
     }
 }

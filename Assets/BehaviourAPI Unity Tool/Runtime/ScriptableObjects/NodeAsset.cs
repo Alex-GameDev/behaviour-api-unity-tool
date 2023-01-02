@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BehaviourAPI.Core;
+using BehaviourAPI.Core.Serialization;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 
@@ -33,6 +34,11 @@ namespace BehaviourAPI.Unity.Runtime
             nodeAsset.Position = pos;
             nodeAsset.Node = (Node)Activator.CreateInstance(type);
             return nodeAsset;
+        }
+
+        internal NodeData Build()
+        {
+            return new NodeData(Node, parents.Select(p => p.Node).ToList(), childs.Select(c => c.Node).ToList());
         }
     }
 }
