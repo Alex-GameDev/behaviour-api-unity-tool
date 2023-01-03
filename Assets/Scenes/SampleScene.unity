@@ -183,7 +183,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511130683035615256
-  position: {x: 458, y: 225}
+  position: {x: 449, y: 234}
   parents: []
   childs:
   - {fileID: 1995416124}
@@ -209,7 +209,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511130683035615262
-  position: {x: 693, y: 628}
+  position: {x: 632, y: 649}
   parents: []
   childs: []
   references:
@@ -339,7 +339,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511130683035615259
-  position: {x: 459, y: 620}
+  position: {x: 465, y: 644}
   parents: []
   childs: []
   references:
@@ -465,6 +465,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _logGraphStatusChanged: 0
+  _logNodeStatusChanged: 0
+  _openDebuggerOnPlay: 0
 --- !u!1 &1882890571
 GameObject:
   m_ObjectHideFlags: 0
