@@ -123,6 +123,38 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &48715677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 2511130710523248654
+  position: {x: 793, y: 675}
+  parents:
+  - {fileID: 1995416124}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511130710523248654
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        SerializedAction:
+          rid: 2511130710523248655
+    - rid: 2511130710523248655
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        component: {fileID: 1499889792}
+        methodName: Test
 --- !u!114 &261775712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,7 +216,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511130683035615258
-  position: {x: 190, y: 636}
+  position: {x: -10, y: 631}
   parents: []
   childs: []
   references:
@@ -240,7 +272,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511130683035615262
-  position: {x: 723, y: 640}
+  position: {x: 547, y: 659}
   parents:
   - {fileID: 1995416124}
   childs: []
@@ -371,7 +403,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511130683035615259
-  position: {x: 374, y: 647}
+  position: {x: 174, y: 642}
   parents: []
   childs: []
   references:
@@ -606,6 +638,7 @@ MonoBehaviour:
   - {fileID: 1422996826}
   - {fileID: 1178507626}
   - {fileID: 2102853617}
+  - {fileID: 48715677}
   references:
     version: 2
     RefIds:
@@ -634,6 +667,7 @@ MonoBehaviour:
   - {fileID: 1422996826}
   - {fileID: 2102853617}
   - {fileID: 1178507626}
+  - {fileID: 48715677}
   references:
     version: 2
     RefIds:
@@ -678,7 +712,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511130710523248648
-  position: {x: 546, y: 646}
+  position: {x: 359, y: 658}
   parents:
   - {fileID: 1995416124}
   childs: []

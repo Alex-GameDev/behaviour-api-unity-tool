@@ -1,27 +1,57 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
+using System;
+using System.Linq.Expressions;
 using UnityEngine;
+using Action = BehaviourAPI.Core.Actions.Action;
 
 namespace BehaviourAPI.Unity.Runtime
 {
-    public class CustomAction : Action
+    public class CustomAction : Action, ISerializationCallbackReceiver
     {
         public Component component;
-        public string MethodName;
+        public string methodName;
+
+        Func<Status> updateFunc;
+
+        public void OnAfterDeserialize()
+        {
+            Debug.Log("Deserializing");
+            if (component == null) return;
+
+            if (component.GetType().GetMethod(methodName) == null)
+            {
+                methodName = "";
+            }
+            else if(updateFunc == null)
+            {
+                var method = component.GetType().GetMethod(methodName);
+                updateFunc = Expression.Lambda<Func<Status>>(Expression.Call(Expression.Constant(component), method)).Compile();
+            }
+        }
+
+        public void OnBeforeSerialize()
+        {
+            return;
+        }
 
         public override void Start()
         {
-            throw new System.NotImplementedException();
+           if(updateFunc == null)
+           {
+               
+           }
         }
 
         public override void Stop()
         {
-            throw new System.NotImplementedException();
+           
         }
 
         public override Status Update()
         {
-            throw new System.NotImplementedException();
+            if(updateFunc == null) throw new MissingMethodException();
+            return updateFunc.Invoke();
         }
     }
 }

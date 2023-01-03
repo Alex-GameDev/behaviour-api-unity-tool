@@ -45,5 +45,11 @@ namespace BehaviourAPI.Unity.Runtime
         {
             _rootGraph.Update();
         }
+
+        public Status Test()
+        {
+            Debug.Log("Trying custom action");
+            return Status.Success;
+        }
     }
 }
