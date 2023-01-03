@@ -1,7 +1,7 @@
 :root 
 {
-    --node-metrics-width-min: 100px;
-    --node-metrics-width-max: 300px;
+    --node-metrics-width-min: 150px;
+    --node-metrics-width-max: 200px;
 }
 
 .port-container {

@@ -10,6 +10,7 @@ namespace BehaviourAPI.Unity.Runtime
 {
     public class PatrolAction : UnityAction
     {
+
         public Transform transform;
 
         public List<Vector3> positions;
@@ -17,6 +18,8 @@ namespace BehaviourAPI.Unity.Runtime
         public float distanceThreshold;
 
         int currentTargetPosId;
+
+        public override string DisplayInfo => "Move between the elements in $positions at $speed";
 
         protected override void OnStart()
         {

@@ -8,6 +8,7 @@ namespace BehaviourAPI.Unity.Runtime
 
         float _currentTime;
 
+        public override string DisplayInfo => "Wait $DelayTime seconds";
         protected override void OnStart()
         {
             _currentTime = 0;
