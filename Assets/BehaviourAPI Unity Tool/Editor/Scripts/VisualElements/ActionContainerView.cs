@@ -100,7 +100,7 @@ namespace BehaviourAPI.Unity.Editor
                 }
                 else if (action is SubgraphAction subgraphAction)
                 {
-                    _assignedDiv.Add(new SubgraphActionView(subgraphAction));
+                    _assignedDiv.Add(new SubgraphActionView(subgraphAction, _nodeView));
                 }
                 else if (action is ExitAction exitAction)
                 {

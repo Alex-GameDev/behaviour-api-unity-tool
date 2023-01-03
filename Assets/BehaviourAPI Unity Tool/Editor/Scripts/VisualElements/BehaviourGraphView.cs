@@ -16,10 +16,13 @@ namespace BehaviourAPI.Unity.Editor
     {
         #region ---------------------------------- Fields ----------------------------------
 
-        GraphAsset GraphAsset;
+        BehaviourSystemAsset _systemAsset;
+        GraphAsset _graphAsset;
 
         ActionSearchWindow _actionSearchWindow;
         PerceptionSearchWindow  _perceptionSearchWindow;
+        SubgraphSearchWindow _subgraphSearchWindow;
+
         NodeCreationSearchWindow _nodeSearchWindow;
         BehaviourGraphEditorWindow editorWindow;
 
@@ -36,26 +39,32 @@ namespace BehaviourAPI.Unity.Editor
 
         public ActionSearchWindow ActionSearchWindow => _actionSearchWindow;
         public PerceptionSearchWindow PerceptionSearchWindow => _perceptionSearchWindow;
+        public SubgraphSearchWindow SubgraphSearchWindow => _subgraphSearchWindow;
+
+        public GraphAsset GraphAsset { get => _graphAsset; set => _graphAsset = value; }
 
         #endregion
 
-        public BehaviourGraphView(BehaviourGraphEditorWindow parentWindow)
+
+        public BehaviourGraphView(BehaviourGraphEditorWindow parentWindow, BehaviourSystemAsset systemAsset)
         {
             editorWindow = parentWindow;
+            _systemAsset = systemAsset;
             AddGridBackground();
             AddManipulators();
 
             _nodeSearchWindow = AddCreateNodeWindow();
             _actionSearchWindow = AddActionSearchWindow();
             _perceptionSearchWindow = AddPerceptionSearchWindow();
+
+            _subgraphSearchWindow = AddSubgraphSearchWindow();
             
             AddStyles();
             graphViewChanged = OnGraphViewChanged;
         }
-
         public void SetGraph(GraphAsset graph)
         {
-            GraphAsset = graph;
+            _graphAsset = graph;
             _nodeSearchWindow.SetRootType(graph.Graph.NodeType);
             DrawGraph();
         }
@@ -121,7 +130,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (element is NodeView nodeView)
             {
-                GraphAsset.RemoveNode(nodeView.Node);
+                _graphAsset.RemoveNode(nodeView.Node);
                 NodeRemoved?.Invoke(nodeView.Node);
             }
             if(element is Edge edge)
@@ -142,7 +151,7 @@ namespace BehaviourAPI.Unity.Editor
 
             nodeCreationRequest = context =>
             {
-                if (GraphAsset == null) return;
+                if (_graphAsset == null) return;
 
                 var searchContext = new SearchWindowContext(context.screenMousePosition);
                 SearchWindow.Open(searchContext, nodeWindow);
@@ -159,6 +168,13 @@ namespace BehaviourAPI.Unity.Editor
         PerceptionSearchWindow AddPerceptionSearchWindow()
         {
             var searchWindow = ScriptableObject.CreateInstance<PerceptionSearchWindow>();
+            return searchWindow;
+        }
+
+
+        SubgraphSearchWindow AddSubgraphSearchWindow()
+        {
+            var searchWindow = SubgraphSearchWindow.Create(_systemAsset);
             return searchWindow;
         }
 
@@ -200,7 +216,7 @@ namespace BehaviourAPI.Unity.Editor
         void CreateNode(Type type, Vector2 position) 
         {
             Vector2 pos = GetLocalMousePosition(position - editorWindow.position.position);
-            NodeAsset asset = GraphAsset.CreateNode(type, pos);
+            NodeAsset asset = _graphAsset.CreateNode(type, pos);
 
             if(asset != null)
             {
@@ -225,9 +241,9 @@ namespace BehaviourAPI.Unity.Editor
         void DrawGraph()
         {
             ClearGraph();
-            if (GraphAsset == null) return;
+            if (_graphAsset == null) return;
 
-            var nodeViews = GraphAsset.Nodes.Select(DrawNodeView).ToList();
+            var nodeViews = _graphAsset.Nodes.Select(DrawNodeView).ToList();
 
             nodeViews.ForEach(nodeView =>
             {
@@ -235,7 +251,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     Edge edge = new Edge();
                     var child = nodeView.Node.Childs[i];
-                    var childIdx = GraphAsset.Nodes.IndexOf(child);
+                    var childIdx = _graphAsset.Nodes.IndexOf(child);
                     var other = nodeViews[childIdx];
                     AddElement(edge);
                     Port source = (Port)nodeView.outputContainer[0];

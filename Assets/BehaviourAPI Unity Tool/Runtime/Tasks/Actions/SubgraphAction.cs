@@ -9,7 +9,7 @@ namespace BehaviourAPI.Unity.Runtime
     /// </summary>
     public class SubgraphAction : Action
     {
-        [SerializeField] GraphAsset subgraph;
+        [HideInInspector][SerializeField] GraphAsset subgraph;
 
 
         public GraphAsset Subgraph { get => subgraph; set => subgraph = value; }

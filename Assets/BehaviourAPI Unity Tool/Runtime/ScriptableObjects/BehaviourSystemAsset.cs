@@ -69,7 +69,8 @@ namespace BehaviourAPI.Unity.Runtime
 
         public BehaviourGraph Build()
         {
-            return RootGraph.Build();
+            graphs.ForEach(g => g.Build());
+            return RootGraph.Graph;
         }
     }
 }

@@ -13,9 +13,12 @@ namespace BehaviourAPI.Unity.Editor
         VisualElement _emptyDiv, _assignedDiv;
         Label _subgraphLabel;
 
-        public SubgraphActionView(SubgraphAction subgraphAction) :
+        NodeView _nodeView;
+
+        public SubgraphActionView(SubgraphAction subgraphAction, NodeView nodeView) :
             base(subgraphAction, BehaviourAPISettings.instance.SubgraphActionLayout)
         {
+            _nodeView = nodeView;
             UpdateLayout();
         }
         protected override void AddLayout()
@@ -33,6 +36,7 @@ namespace BehaviourAPI.Unity.Editor
         void OpenGraphSelectionMenu()
         {
             // TODO: Añadir menú para elegir subgrafo y llamar al método SetSubgraph
+            _nodeView.GraphView.SubgraphSearchWindow.Open(_nodeView.GraphView.GraphAsset, SetSubgraph);
         }
 
         void SetSubgraph(GraphAsset graphAsset)

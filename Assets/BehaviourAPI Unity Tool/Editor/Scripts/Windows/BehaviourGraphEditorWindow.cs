@@ -96,7 +96,7 @@ namespace BehaviourAPI.Unity.Editor
 
         BehaviourGraphView AddGraphView()
         {
-            var graphView = new BehaviourGraphView(this);
+            var graphView = new BehaviourGraphView(this, SystemAsset);
             graphView.StretchToParentSize();
             rootVisualElement.Insert(0, graphView);
             return graphView;
@@ -216,7 +216,11 @@ namespace BehaviourAPI.Unity.Editor
             if (IsAsset)
                 AssetDatabase.RemoveObjectFromAsset(asset);
             else
+            {
+                DestroyImmediate(asset);
                 EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+            }
+               
 
             if (autoSave) SaveSystemData();                
         }
