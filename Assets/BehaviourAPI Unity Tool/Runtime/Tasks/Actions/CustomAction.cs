@@ -16,17 +16,19 @@ namespace BehaviourAPI.Unity.Runtime
 
         public void OnAfterDeserialize()
         {
-            Debug.Log("Deserializing");
-            if (component == null) return;
+            if (component != null)
+            {
 
-            if (component.GetType().GetMethod(methodName) == null)
-            {
-                methodName = "";
-            }
-            else if(updateFunc == null)
-            {
-                var method = component.GetType().GetMethod(methodName);
-                updateFunc = Expression.Lambda<Func<Status>>(Expression.Call(Expression.Constant(component), method)).Compile();
+                if (component.GetType().GetMethod(methodName) == null)
+                {
+                    methodName = "";
+                    updateFunc = null;
+                }
+                else if (updateFunc == null)
+                {
+                    var method = component.GetType().GetMethod(methodName);
+                    updateFunc = Expression.Lambda<Func<Status>>(Expression.Call(Expression.Constant(component), method)).Compile();
+                }
             }
         }
 
