@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using BehaviourAPI.Core;
 using UnityEngine;
 using BehaviourAPI.Core.Actions;
+using BehaviourAPI.Core.Perceptions;
 
 namespace BehaviourAPI.Unity.Demo
 {
@@ -16,22 +17,22 @@ namespace BehaviourAPI.Unity.Demo
             var bt = CreateFindKeySubBT();
 
             var doorState = fsm.CreateState("Go to home");
-            var keyState = fsm.CreateState("Search key", new EnterSystemAction(bt));
+            var keyState = fsm.CreateState("Search key", new SubsystemAction(bt));
             var houseState = fsm.CreateState("Enter the house");
             var runState = fsm.CreateState("Runaway");
 
             // Si ya tiene la llave, consigue entrar a la casa.
-            fsm.CreateFinishStateTransition("Success to enter", doorState, houseState, true, false);
+            fsm.CreateTransition("Success to enter", doorState, houseState, new ExecutionStatusPerception(doorState, StatusFlags.Success));
 
             // Si todavía no tiene la llave, no consigue entrar y va a buscarla.
-            fsm.CreateFinishStateTransition("Fail to enter", doorState, keyState, false, true);
+            fsm.CreateTransition("Fail to enter", doorState, keyState, new ExecutionStatusPerception(doorState, StatusFlags.Failure));
 
             // Las acciones se interrumpen si el enemigo está cerca.
             fsm.CreateTransition("Interrupt key", keyState, runState);
             fsm.CreateTransition("Interrupt to door", doorState, runState);
 
             // Cuando consigue la llave, vuelve al estado de abrir la puerta
-            fsm.CreateFinishStateTransition("Finish key search", keyState, doorState, true, false);
+            fsm.CreateTransition("Finish key search", keyState, doorState, new ExecutionStatusPerception(keyState, StatusFlags.Success));
 
             return fsm;
         }

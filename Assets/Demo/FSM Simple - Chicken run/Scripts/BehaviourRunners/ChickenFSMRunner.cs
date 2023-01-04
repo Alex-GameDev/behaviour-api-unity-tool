@@ -38,8 +38,8 @@ public class ChickenFSMRunner : BehaviourGraphRunner
         var idleToMoving = fsm.CreateTransition("idle to moving", idle, moving, timeToStartMoving);
 
         // Las transiciones que pasan al estado "idle" se lanzan cuando la acción "moving" o "chase" termine.
-        fsm.CreateFinishStateTransition("moving to idle", moving, idle, true, true);
-        fsm.CreateFinishStateTransition("runaway to idle", chasing, idle, true, true);
+        fsm.CreateTransition("moving to idle", moving, idle, new ExecutionStatusPerception(moving, StatusFlags.Finished));
+        fsm.CreateTransition("runaway to idle", chasing, idle, new ExecutionStatusPerception(moving, StatusFlags.Finished));
 
         // Las transiciones que pasan al estado "chasing" se activan con la percepción "watchPlayer".
         fsm.CreateTransition("idle to runaway", idle, chasing, chickenNear);

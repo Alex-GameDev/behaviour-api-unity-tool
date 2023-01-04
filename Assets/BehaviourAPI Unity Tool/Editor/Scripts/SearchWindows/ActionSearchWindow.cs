@@ -26,7 +26,6 @@ namespace BehaviourAPI.Unity.Editor
             unityActionTypes.ForEach(t => list.Add(CreateEntry(t, 2)));
 
             list.Add(CreateEntry(typeof(SubgraphAction), 1));
-            list.Add(CreateEntry(typeof(ExitAction), 1));
             return list;
         }
 

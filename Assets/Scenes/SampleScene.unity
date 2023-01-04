@@ -155,36 +155,6 @@ MonoBehaviour:
       data:
         component: {fileID: 1499889792}
         methodName: Test
---- !u!114 &261775712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  node:
-    rid: 2511130710523248652
-  position: {x: 470.81, y: 530.3225}
-  parents: []
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 2511130710523248652
-      type: {class: LeafNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        SerializedAction:
-          rid: 2511130710523248653
-    - rid: 2511130710523248653
-      type: {class: DebugAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        Message: SUBGRAPH
 --- !u!114 &421060230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,6 +171,37 @@ MonoBehaviour:
   - {fileID: 1939026353}
   - {fileID: 2040279466}
   pushPerceptions: []
+--- !u!114 &664204248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 2511130724823203842
+  position: {x: 537, y: 676}
+  parents:
+  - {fileID: 896363575}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511130724823203842
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        SerializedAction:
+          rid: 2511130724823203844
+    - rid: 2511130724823203844
+      type: {class: DebugAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        Message: NO!
 --- !u!114 &860041676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,6 +232,33 @@ MonoBehaviour:
       type: {class: DelayAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
       data:
         DelayTime: 2
+--- !u!114 &896363575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 2511130724823203840
+  position: {x: 434, y: 473}
+  parents: []
+  childs:
+  - {fileID: 664204248}
+  - {fileID: 1359195684}
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511130724823203840
+      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
 --- !u!114 &1143504962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -388,6 +416,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &1359195684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 2511130724823203847
+  position: {x: 311, y: 671}
+  parents:
+  - {fileID: 896363575}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2511130724823203847
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        SerializedAction:
+          rid: -2
 --- !u!114 &1422996826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -687,11 +744,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: subgraph
+  Name: sub-graph
   graph:
     rid: 2511130710523248651
   nodes:
-  - {fileID: 261775712}
+  - {fileID: 896363575}
+  - {fileID: 664204248}
+  - {fileID: 1359195684}
   references:
     version: 2
     RefIds:

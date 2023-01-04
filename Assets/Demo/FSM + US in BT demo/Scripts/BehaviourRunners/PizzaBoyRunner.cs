@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
+using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.UtilitySystems;
 using UnityEngine;
 using UnityEngine.AI;
@@ -43,8 +44,8 @@ public class PizzaBoyRunner : BehaviourGraphRunner
         var us = CreateLookRecipeUtilitySystem();
         var fsm = CreateMakePizzaFSM();
 
-        var recipeAction = bt.CreateLeafNode("recipe action", new EnterSystemAction(us));
-        var makePizzaAction = bt.CreateLeafNode("make pizza action", new EnterSystemAction(fsm));
+        var recipeAction = bt.CreateLeafNode("recipe action", new SubsystemAction(us));
+        var makePizzaAction = bt.CreateLeafNode("make pizza action", new SubsystemAction(fsm));
         var bakeAction = bt.CreateLeafNode("bake pizza", new FunctionalAction(BakePizza, pizzaBaked, BakedActionCompleted));
 
         var seq = bt.CreateComposite<SequencerNode>("pizza seq", false, recipeAction, makePizzaAction, bakeAction);
@@ -61,12 +62,11 @@ public class PizzaBoyRunner : BehaviourGraphRunner
         var massState = fsm.CreateState("mass", new FunctionalAction(() => PutIngredient(_pizzaMass), WaitToPutIngredient));
         var tomatoState = fsm.CreateState("tomato", new FunctionalAction(() => PutIngredient(_tomato), WaitToPutIngredient));
         var toppingState = fsm.CreateState("topping", new FunctionalAction(PutNextTopping, CheckToppings));
-        var completeState = fsm.CreateState("completed", new ExitSystemAction(fsm, Status.Success));
 
-        fsm.CreateFinishStateTransition("mass putted", massState, tomatoState, true, true);
-        fsm.CreateFinishStateTransition("tommato putted", tomatoState, toppingState, true, true);
-        fsm.CreateFinishStateTransition("next topping", toppingState, toppingState, false, true);
-        fsm.CreateFinishStateTransition("pizza completed", toppingState, completeState, true, false);
+        fsm.CreateTransition("mass putted", massState, tomatoState, new ExecutionStatusPerception(massState, StatusFlags.Success | StatusFlags.Failure));
+        fsm.CreateTransition("tommato putted", tomatoState, toppingState, new ExecutionStatusPerception(tomatoState, StatusFlags.Success | StatusFlags.Failure));
+        fsm.CreateTransition("next topping", toppingState, toppingState, new ExecutionStatusPerception(toppingState, StatusFlags.Failure));
+        fsm.CreateExitTransition("pizza completed", toppingState, Status.Success, new ExecutionStatusPerception(toppingState, StatusFlags.Success));
         _fsm = fsm;
         return fsm;
     }
