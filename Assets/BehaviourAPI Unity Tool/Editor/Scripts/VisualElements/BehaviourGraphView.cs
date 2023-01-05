@@ -30,6 +30,8 @@ namespace BehaviourAPI.Unity.Editor
 
         NodeView rootNodeView;
 
+        GraphRenderer _renderer;
+
         #endregion
 
         #region ---------------------------------- Events ----------------------------------
@@ -69,7 +71,10 @@ namespace BehaviourAPI.Unity.Editor
 
         public void SetGraph(GraphAsset graph)
         {
+
+            ClearGraph();
             _graphAsset = graph;
+            _renderer = GraphRenderer.FindRenderer(graph.Graph);
             _nodeSearchWindow.SetRootType(graph.Graph.NodeType);
             DrawGraph();
         }
@@ -120,6 +125,17 @@ namespace BehaviourAPI.Unity.Editor
             graphViewChange.movedElements?.ForEach(OnElementMoved);
             graphViewChange.elementsToRemove?.ForEach(OnElementRemoved);
             graphViewChange.edgesToCreate?.ForEach(OnEdgeCreated);
+
+            if (graphViewChange.elementsToRemove?.Contains(rootNodeView) ?? false && GraphAsset.Nodes.Count > 0)
+            {
+                NodeAsset firstNode = GraphAsset.Nodes.First();
+                if (graphElements.Count() > 0)
+                {
+                    NodeView view = graphElements.ToList().Find(t => t is NodeView nodeView && nodeView.Node == firstNode) as NodeView;
+                    SetRootNode(view);
+                }
+            }
+
             return graphViewChange;
         }
 
@@ -253,7 +269,6 @@ namespace BehaviourAPI.Unity.Editor
 
         void DrawGraph()
         {
-            ClearGraph();
             if (_graphAsset == null) return;
 
             var nodeViews = _graphAsset.Nodes.Select(DrawNodeView).ToList();

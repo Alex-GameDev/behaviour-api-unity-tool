@@ -25,8 +25,9 @@ namespace BehaviourAPI.Unity.Editor
         public Action<NodeAsset> Selected = delegate { };
 
         BehaviourGraphView _graphView;
-
         public BehaviourGraphView GraphView => _graphView;
+
+        VisualElement _rootElement;
 
         public static string NODE_LAYOUT => AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().NodeLayout);
 
@@ -34,6 +35,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             Node = node;
             _graphView = graphView;
+            _rootElement = this.Q("node-root");
             SetPosition(new Rect(node.Position, Vector2.zero));
             DrawPorts();
             DrawExtensionContainer();
@@ -142,12 +144,14 @@ namespace BehaviourAPI.Unity.Editor
         public void SetAsStartNode()
         {
             DisconnectPorts(inputContainer); // Solo en BehaviourTrees
-            inputContainer.style.visibility = Visibility.Hidden;
+            inputContainer.style.display = DisplayStyle.None;
+            _rootElement.style.display = DisplayStyle.Flex;
         }
 
         public void QuitAsStartNode()
         {
-            inputContainer.style.visibility = Visibility.Visible;
+            inputContainer.style.display = DisplayStyle.Flex;
+            _rootElement.style.display = DisplayStyle.None;
         }
 
 
