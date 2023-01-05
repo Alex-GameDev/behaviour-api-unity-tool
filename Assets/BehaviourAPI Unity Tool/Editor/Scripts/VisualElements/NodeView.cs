@@ -13,6 +13,7 @@ namespace BehaviourAPI.Unity.Editor
     using Vector2 = UnityEngine.Vector2;
     using Action = Core.Actions.Action;
     using System.Linq;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Visual element that represents a node in a behaviour graph
@@ -43,6 +44,12 @@ namespace BehaviourAPI.Unity.Editor
 
         private void SetUpContextualMenu()
         {
+            this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
+            {
+                menuEvt.menu.AppendAction("SetAsRootNode", _ => _graphView.SetRootNode(this), _ => DropdownMenuAction.Status.Normal);
+                menuEvt.menu.AppendAction("Disconnect input ports", _ => DisconnectPorts(inputContainer), _ => Node.Node.MaxInputConnections != 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+                menuEvt.menu.AppendAction("Disconnect output ports", _ => DisconnectPorts(outputContainer), _ => Node.Node.MaxOutputConnections != 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+            }));
         }
 
         void DrawPorts()
@@ -130,6 +137,34 @@ namespace BehaviourAPI.Unity.Editor
             var titleInputField = this.Q<TextField>(name: "title-input-field");
             titleInputField.bindingPath = "Name";
             titleInputField.Bind(new SerializedObject(Node));
+        }
+
+        public void SetAsStartNode()
+        {
+            DisconnectPorts(inputContainer); // Solo en BehaviourTrees
+            inputContainer.style.visibility = Visibility.Hidden;
+        }
+
+        public void QuitAsStartNode()
+        {
+            inputContainer.style.visibility = Visibility.Visible;
+        }
+
+
+        void DisconnectPorts(VisualElement portContainer)
+        {
+            if(GraphView != null)
+            {
+                var elements = new List<GraphElement>();
+                portContainer.Query<Port>().ForEach(port =>
+                {
+                    if (port.connected)
+                    {
+                        foreach (var c in port.connections) elements.Add(c);
+                    }
+                });
+                GraphView.DeleteElements(elements);
+            }
         }
     }
 }

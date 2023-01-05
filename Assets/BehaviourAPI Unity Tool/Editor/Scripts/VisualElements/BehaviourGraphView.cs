@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BehaviourAPI.Core;
 using BehaviourAPI.Unity.Runtime;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -25,6 +27,8 @@ namespace BehaviourAPI.Unity.Editor
 
         NodeCreationSearchWindow _nodeSearchWindow;
         BehaviourGraphEditorWindow editorWindow;
+
+        NodeView rootNodeView;
 
         #endregion
 
@@ -62,11 +66,20 @@ namespace BehaviourAPI.Unity.Editor
             AddStyles();
             graphViewChanged = OnGraphViewChanged;
         }
+
         public void SetGraph(GraphAsset graph)
         {
             _graphAsset = graph;
             _nodeSearchWindow.SetRootType(graph.Graph.NodeType);
             DrawGraph();
+        }
+
+        public void SetRootNode(NodeView nodeView)
+        {
+            _graphAsset.Nodes.MoveAtFirst(nodeView.Node);
+            rootNodeView?.QuitAsStartNode();
+            rootNodeView = nodeView;
+            rootNodeView.SetAsStartNode();
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -244,6 +257,8 @@ namespace BehaviourAPI.Unity.Editor
             if (_graphAsset == null) return;
 
             var nodeViews = _graphAsset.Nodes.Select(DrawNodeView).ToList();
+
+            if (nodeViews.Count > 0) nodeViews[0].SetAsStartNode();
 
             nodeViews.ForEach(nodeView =>
             {
