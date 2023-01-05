@@ -138,7 +138,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511130710523248654
-  position: {x: 810, y: 695}
+  position: {x: 826, y: 705}
   parents:
   - {fileID: 1995416124}
   childs: []
@@ -218,7 +218,8 @@ MonoBehaviour:
   node:
     rid: 2511130683035615258
   position: {x: -14, y: 662}
-  parents: []
+  parents:
+  - {fileID: 1995416124}
   childs: []
   references:
     version: 2
@@ -274,10 +275,9 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511130683035615256
-  position: {x: 358, y: 250}
+  position: {x: 366, y: 266}
   parents: []
-  childs:
-  - {fileID: 1995416124}
+  childs: []
   references:
     version: 2
     RefIds:
@@ -461,7 +461,8 @@ MonoBehaviour:
   node:
     rid: 2511130683035615259
   position: {x: 170, y: 673}
-  parents: []
+  parents:
+  - {fileID: 1995416124}
   childs: []
   references:
     version: 2
@@ -689,8 +690,8 @@ MonoBehaviour:
   graph:
     rid: 4601479694237827089
   nodes:
-  - {fileID: 1143504962}
   - {fileID: 1995416124}
+  - {fileID: 1143504962}
   - {fileID: 860041676}
   - {fileID: 1422996826}
   - {fileID: 1178507626}
@@ -716,9 +717,8 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511130683035615257
-  position: {x: 358, y: 425}
-  parents:
-  - {fileID: 1143504962}
+  position: {x: 366, y: 452}
+  parents: []
   childs:
   - {fileID: 860041676}
   - {fileID: 1422996826}
@@ -771,7 +771,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511130710523248648
-  position: {x: 359, y: 658}
+  position: {x: 374, y: 676}
   parents:
   - {fileID: 1995416124}
   childs: []

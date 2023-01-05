@@ -79,7 +79,7 @@ namespace BehaviourAPI.Unity.Editor
             _graphAsset.Nodes.MoveAtFirst(nodeView.Node);
             rootNodeView?.QuitAsStartNode();
             rootNodeView = nodeView;
-            rootNodeView.SetAsStartNode();
+            rootNodeView?.SetAsStartNode();
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -258,7 +258,11 @@ namespace BehaviourAPI.Unity.Editor
 
             var nodeViews = _graphAsset.Nodes.Select(DrawNodeView).ToList();
 
-            if (nodeViews.Count > 0) nodeViews[0].SetAsStartNode();
+            if (nodeViews.Count > 0)
+            {
+                rootNodeView = nodeViews[0];
+                nodeViews[0].SetAsStartNode();
+            }
 
             nodeViews.ForEach(nodeView =>
             {
