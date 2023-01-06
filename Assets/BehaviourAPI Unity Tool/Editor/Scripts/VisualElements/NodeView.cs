@@ -48,7 +48,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
             {
-                menuEvt.menu.AppendAction("SetAsRootNode", _ => _graphView.SetRootNode(this), _ => DropdownMenuAction.Status.Normal);
+                menuEvt.menu.AppendAction("SetAsRootNode", _ => { DisconnectPorts(inputContainer); _graphView.SetRootNode(this); }, _ => DropdownMenuAction.Status.Normal);
                 menuEvt.menu.AppendAction("Disconnect input ports", _ => DisconnectPorts(inputContainer), _ => Node.Node.MaxInputConnections != 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
                 menuEvt.menu.AppendAction("Disconnect output ports", _ => DisconnectPorts(outputContainer), _ => Node.Node.MaxOutputConnections != 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
             }));
@@ -143,7 +143,6 @@ namespace BehaviourAPI.Unity.Editor
 
         public void SetAsStartNode()
         {
-            DisconnectPorts(inputContainer); // Solo en BehaviourTrees
             inputContainer.style.display = DisplayStyle.None;
             _rootElement.style.display = DisplayStyle.Flex;
         }

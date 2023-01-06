@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -61,6 +62,22 @@ namespace BehaviourAPI.Unity.Editor
             return validPorts;
         }
 
-        
+        // (!) Ejecutar después de haber borrado los nodos del grafo
+        public override GraphViewChange OnGraphViewChanged(GraphViewChange change)
+        {
+            // Si el nodo raíz ha sido borrado, asignar nodo raíz al primer nodo sin conexiones de entrada.
+
+            var rootNode = graphView.GraphAsset.Nodes.Find(n => n.Parents.Count == 0);
+
+            if(rootNode != null)
+            {
+                var view = (NodeView) graphView.nodes.ToList().Find(n => n is NodeView nodeView && nodeView.Node == rootNode);
+                if (view != null)
+                {
+                    view.SetAsStartNode();
+                }
+            }            
+            return change;
+        }
     }
 }

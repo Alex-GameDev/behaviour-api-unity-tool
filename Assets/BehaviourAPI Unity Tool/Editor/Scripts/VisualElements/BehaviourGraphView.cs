@@ -71,12 +71,14 @@ namespace BehaviourAPI.Unity.Editor
 
         public void SetGraph(GraphAsset graph)
         {
-
             ClearGraph();
             _graphAsset = graph;
+
             _renderer = GraphRenderer.FindRenderer(graph.Graph);
-            _nodeSearchWindow.SetRootType(graph.Graph.NodeType);
+            _renderer.graphView = this;
             DrawGraph();
+
+            _nodeSearchWindow.SetRootType(graph.Graph.NodeType);
         }
 
         public void SetRootNode(NodeView nodeView)
@@ -99,17 +101,7 @@ namespace BehaviourAPI.Unity.Editor
             graphViewChange.elementsToRemove?.ForEach(OnElementRemoved);
             graphViewChange.edgesToCreate?.ForEach(OnEdgeCreated);
 
-            if (graphViewChange.elementsToRemove?.Contains(rootNodeView) ?? false && GraphAsset.Nodes.Count > 0)
-            {
-                NodeAsset firstNode = GraphAsset.Nodes.First();
-                if (graphElements.Count() > 0)
-                {
-                    NodeView view = graphElements.ToList().Find(t => t is NodeView nodeView && nodeView.Node == firstNode) as NodeView;
-                    SetRootNode(view);
-                }
-            }
-
-            return graphViewChange;
+            return _renderer?.OnGraphViewChanged(graphViewChange) ?? graphViewChange;
         }
 
         private void OnEdgeCreated(Edge edge)

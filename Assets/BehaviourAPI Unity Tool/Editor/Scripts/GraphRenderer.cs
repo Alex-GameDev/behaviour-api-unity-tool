@@ -13,7 +13,8 @@ namespace BehaviourAPI.Unity.Editor
 {
     public abstract class GraphRenderer
     {
-        protected Dictionary<NodeAsset, NodeView> assetViewPairs;
+        protected Dictionary<NodeAsset, NodeView> assetViewPairs = new Dictionary<NodeAsset, NodeView>();
+        public BehaviourGraphView graphView;
 
         /// <summary>
         /// Defines actions for the node contextual menu
@@ -44,6 +45,8 @@ namespace BehaviourAPI.Unity.Editor
         /// <param name="startPort"></param>
         /// <returns></returns>
         public abstract List<Port> GetValidPorts(UQueryState<Port> ports, Port startPort);
+
+        public abstract GraphViewChange OnGraphViewChanged(GraphViewChange change);
 
         /// <summary>
         /// Find a renderer
