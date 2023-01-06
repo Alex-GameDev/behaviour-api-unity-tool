@@ -89,35 +89,8 @@ namespace BehaviourAPI.Unity.Editor
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
-            List<Port> compatiblePorts = new List<Port>();
-            var startPortNodeView = (NodeView)startPort.node;
-
-            ports.ForEach(port =>
-            {
-                if (startPort.direction == port.direction) return;
-
-                if(startPort.node == port.node) return;
-
-                var portNodeView = (NodeView)port.node;
-
-                if(portNodeView != null)
-                {
-                    if (startPort.direction == Direction.Input)
-                    {
-                        if (!port.portType.IsAssignableFrom(startPort.portType)) return;
-                        if (startPortNodeView.Node.Parents.Contains(portNodeView.Node)) return;
-                    }
-                    else
-                    {
-                        if (!startPort.portType.IsAssignableFrom(port.portType)) return;
-                        if (portNodeView.Node.Parents.Contains(startPortNodeView.Node)) return;
-                    }
-                }
-
-                compatiblePorts.Add(port);
-            });
-
-            return compatiblePorts;
+            if (_renderer == null) return new List<Port>();
+            return _renderer.GetValidPorts(ports, startPort);
         }
 
         GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)

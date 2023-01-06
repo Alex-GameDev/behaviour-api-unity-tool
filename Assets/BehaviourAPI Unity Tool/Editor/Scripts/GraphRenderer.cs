@@ -38,6 +38,14 @@ namespace BehaviourAPI.Unity.Editor
         public abstract Edge DrawEdge(NodeAsset src, NodeAsset tgt);
 
         /// <summary>
+        /// Get compatible ports
+        /// </summary>
+        /// <param name="ports"></param>
+        /// <param name="startPort"></param>
+        /// <returns></returns>
+        public abstract List<Port> GetValidPorts(UQueryState<Port> ports, Port startPort);
+
+        /// <summary>
         /// Find a renderer
         /// </summary>
         /// <param name="graph"></param>
@@ -51,5 +59,7 @@ namespace BehaviourAPI.Unity.Editor
             if(types.Count() > 0) return Activator.CreateInstance(types[0]) as GraphRenderer;
             else return null;
         }
+
+
     }
 }

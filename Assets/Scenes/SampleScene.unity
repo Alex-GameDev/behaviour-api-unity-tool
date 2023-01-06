@@ -155,6 +155,32 @@ MonoBehaviour:
       data:
         component: {fileID: 1499889792}
         methodName: Test
+--- !u!114 &158355871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 2511130771672793090
+  position: {x: 769, y: 568}
+  parents:
+  - {fileID: 460027645}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511130771672793090
+      type: {class: TimerDecoratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        Time: 0
 --- !u!114 &421060230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,6 +197,32 @@ MonoBehaviour:
   - {fileID: 1939026353}
   - {fileID: 2040279466}
   pushPerceptions: []
+--- !u!114 &460027645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: problem
+  node:
+    rid: 2511130771672793091
+  position: {x: 857, y: 272}
+  parents: []
+  childs:
+  - {fileID: 158355871}
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511130771672793091
+      type: {class: TimerDecoratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        Time: 0
 --- !u!114 &664204248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,31 +312,6 @@ MonoBehaviour:
       type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
         IsRandomized: 0
---- !u!114 &1143504962
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  node:
-    rid: 2511130683035615256
-  position: {x: 366, y: 266}
-  parents: []
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 2511130683035615256
-      type: {class: IteratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        Iterations: -1
 --- !u!114 &1178507626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -691,7 +718,6 @@ MonoBehaviour:
     rid: 4601479694237827089
   nodes:
   - {fileID: 1995416124}
-  - {fileID: 1143504962}
   - {fileID: 860041676}
   - {fileID: 1422996826}
   - {fileID: 1178507626}
@@ -751,6 +777,8 @@ MonoBehaviour:
   - {fileID: 896363575}
   - {fileID: 664204248}
   - {fileID: 1359195684}
+  - {fileID: 158355871}
+  - {fileID: 460027645}
   references:
     version: 2
     RefIds:
