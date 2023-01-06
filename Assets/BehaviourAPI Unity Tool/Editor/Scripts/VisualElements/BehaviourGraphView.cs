@@ -18,19 +18,11 @@ namespace BehaviourAPI.Unity.Editor
     {
         #region ---------------------------------- Fields ----------------------------------
 
-        BehaviourSystemAsset _systemAsset;
-        GraphAsset _graphAsset;
-
-        ActionSearchWindow _actionSearchWindow;
-        PerceptionSearchWindow  _perceptionSearchWindow;
-        SubgraphSearchWindow _subgraphSearchWindow;
-
         NodeCreationSearchWindow _nodeSearchWindow;
+
         BehaviourGraphEditorWindow editorWindow;
 
         NodeView rootNodeView;
-
-        GraphRenderer _renderer;
 
         #endregion
 
@@ -43,11 +35,14 @@ namespace BehaviourAPI.Unity.Editor
 
         #region -------------------------------- Properties --------------------------------
 
-        public ActionSearchWindow ActionSearchWindow => _actionSearchWindow;
-        public PerceptionSearchWindow PerceptionSearchWindow => _perceptionSearchWindow;
-        public SubgraphSearchWindow SubgraphSearchWindow => _subgraphSearchWindow;
+        public ActionSearchWindow ActionSearchWindow { get; private set; }
+        public PerceptionSearchWindow PerceptionSearchWindow { get; private set; }
+        public SubgraphSearchWindow SubgraphSearchWindow { get; private set; }
+        
+        public GraphAsset GraphAsset { get; private set ; }
 
-        public GraphAsset GraphAsset { get => _graphAsset; set => _graphAsset = value; }
+        public GraphRenderer Renderer { get; private set; }
+
 
         #endregion
 
@@ -55,16 +50,10 @@ namespace BehaviourAPI.Unity.Editor
         public BehaviourGraphView(BehaviourGraphEditorWindow parentWindow, BehaviourSystemAsset systemAsset)
         {
             editorWindow = parentWindow;
-            _systemAsset = systemAsset;
             AddGridBackground();
             AddManipulators();
-
-            _nodeSearchWindow = AddCreateNodeWindow();
-            _actionSearchWindow = AddActionSearchWindow();
-            _perceptionSearchWindow = AddPerceptionSearchWindow();
-
-            _subgraphSearchWindow = AddSubgraphSearchWindow();
-            
+            AddSearchWindows();
+        
             AddStyles();
             graphViewChanged = OnGraphViewChanged;
         }
@@ -72,10 +61,10 @@ namespace BehaviourAPI.Unity.Editor
         public void SetGraph(GraphAsset graph)
         {
             ClearGraph();
-            _graphAsset = graph;
+            GraphAsset = graph;
 
-            _renderer = GraphRenderer.FindRenderer(graph.Graph);
-            _renderer.graphView = this;
+            Renderer = GraphRenderer.FindRenderer(graph.Graph);
+            Renderer.graphView = this;
             DrawGraph();
 
             _nodeSearchWindow.SetRootType(graph.Graph.NodeType);
@@ -83,7 +72,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public void SetRootNode(NodeView nodeView)
         {
-            _graphAsset.Nodes.MoveAtFirst(nodeView.Node);
+            GraphAsset.Nodes.MoveAtFirst(nodeView.Node);
             rootNodeView?.QuitAsStartNode();
             rootNodeView = nodeView;
             rootNodeView?.SetAsStartNode();
@@ -91,8 +80,8 @@ namespace BehaviourAPI.Unity.Editor
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
-            if (_renderer == null) return new List<Port>();
-            return _renderer.GetValidPorts(ports, startPort);
+            if (Renderer == null) return new List<Port>();
+            return Renderer.GetValidPorts(ports, startPort);
         }
 
         GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
@@ -101,7 +90,7 @@ namespace BehaviourAPI.Unity.Editor
             graphViewChange.elementsToRemove?.ForEach(OnElementRemoved);
             graphViewChange.edgesToCreate?.ForEach(OnEdgeCreated);
 
-            return _renderer?.OnGraphViewChanged(graphViewChange) ?? graphViewChange;
+            return Renderer?.OnGraphViewChanged(graphViewChange) ?? graphViewChange;
         }
 
         private void OnEdgeCreated(Edge edge)
@@ -124,7 +113,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (element is NodeView nodeView)
             {
-                _graphAsset.RemoveNode(nodeView.Node);
+                GraphAsset.RemoveNode(nodeView.Node);
                 NodeRemoved?.Invoke(nodeView.Node);
             }
             if(element is Edge edge)
@@ -138,38 +127,21 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ---------------- Search windows ----------------
 
-        NodeCreationSearchWindow AddCreateNodeWindow()
+        void AddSearchWindows()
         {
-            var nodeWindow = ScriptableObject.CreateInstance<NodeCreationSearchWindow>();
-            nodeWindow.SetOnSelectEntryCallback(CreateNode);
+            _nodeSearchWindow = NodeCreationSearchWindow.Create(CreateNode);
+
+            ActionSearchWindow = ActionSearchWindow.Create();
+            PerceptionSearchWindow = PerceptionSearchWindow.Create();
+            SubgraphSearchWindow = SubgraphSearchWindow.Create(BehaviourGraphEditorWindow.SystemAsset);
 
             nodeCreationRequest = context =>
             {
-                if (_graphAsset == null) return;
+                if (GraphAsset == null) return;
 
                 var searchContext = new SearchWindowContext(context.screenMousePosition);
-                SearchWindow.Open(searchContext, nodeWindow);
+                SearchWindow.Open(searchContext, _nodeSearchWindow);
             };
-            return nodeWindow;
-        }
-
-        ActionSearchWindow AddActionSearchWindow()
-        {
-            var searchWindow = ScriptableObject.CreateInstance<ActionSearchWindow>();
-            return searchWindow;
-        }
-
-        PerceptionSearchWindow AddPerceptionSearchWindow()
-        {
-            var searchWindow = ScriptableObject.CreateInstance<PerceptionSearchWindow>();
-            return searchWindow;
-        }
-
-
-        SubgraphSearchWindow AddSubgraphSearchWindow()
-        {
-            var searchWindow = SubgraphSearchWindow.Create(_systemAsset);
-            return searchWindow;
         }
 
         #endregion
@@ -192,14 +164,6 @@ namespace BehaviourAPI.Unity.Editor
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
-
-            this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
-            {
-                menuEvt.menu.AppendAction("Action search window", (dd) =>
-                {
-                    _actionSearchWindow.Open((t) => Debug.Log(t.Name));
-                });
-            }));
         }
 
         Vector2 GetLocalMousePosition(Vector2 mousePosition)
@@ -210,7 +174,7 @@ namespace BehaviourAPI.Unity.Editor
         void CreateNode(Type type, Vector2 position) 
         {
             Vector2 pos = GetLocalMousePosition(position - editorWindow.position.position);
-            NodeAsset asset = _graphAsset.CreateNode(type, pos);
+            NodeAsset asset = GraphAsset.CreateNode(type, pos);
 
             if(asset != null)
             {
@@ -234,9 +198,9 @@ namespace BehaviourAPI.Unity.Editor
 
         void DrawGraph()
         {
-            if (_graphAsset == null) return;
+            if (GraphAsset == null) return;
 
-            var nodeViews = _graphAsset.Nodes.Select(DrawNodeView).ToList();
+            var nodeViews = GraphAsset.Nodes.Select(DrawNodeView).ToList();
 
             if (nodeViews.Count > 0)
             {
@@ -250,7 +214,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     Edge edge = new Edge();
                     var child = nodeView.Node.Childs[i];
-                    var childIdx = _graphAsset.Nodes.IndexOf(child);
+                    var childIdx = GraphAsset.Nodes.IndexOf(child);
                     var other = nodeViews[childIdx];
                     AddElement(edge);
                     Port source = (Port)nodeView.outputContainer[0];

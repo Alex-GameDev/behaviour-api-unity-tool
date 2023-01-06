@@ -138,7 +138,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511130710523248654
-  position: {x: 826, y: 705}
+  position: {x: 808, y: 697}
   parents:
   - {fileID: 1995416124}
   childs: []
@@ -149,38 +149,12 @@ MonoBehaviour:
       type: {class: LeafNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
       data:
         SerializedAction:
-          rid: 2511130710523248655
-    - rid: 2511130710523248655
+          rid: 2511130777208225800
+    - rid: 2511130777208225800
       type: {class: CustomAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
       data:
         component: {fileID: 1499889792}
         methodName: Test
---- !u!114 &158355871
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  node:
-    rid: 2511130771672793090
-  position: {x: 769, y: 568}
-  parents:
-  - {fileID: 460027645}
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 2511130771672793090
-      type: {class: TimerDecoratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        Time: 0
 --- !u!114 &421060230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,32 +171,6 @@ MonoBehaviour:
   - {fileID: 1939026353}
   - {fileID: 2040279466}
   pushPerceptions: []
---- !u!114 &460027645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: problem
-  node:
-    rid: 2511130771672793091
-  position: {x: 857, y: 272}
-  parents: []
-  childs:
-  - {fileID: 158355871}
-  references:
-    version: 2
-    RefIds:
-    - rid: 2511130771672793091
-      type: {class: TimerDecoratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        Time: 0
 --- !u!114 &664204248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -777,8 +725,6 @@ MonoBehaviour:
   - {fileID: 896363575}
   - {fileID: 664204248}
   - {fileID: 1359195684}
-  - {fileID: 158355871}
-  - {fileID: 460027645}
   references:
     version: 2
     RefIds:

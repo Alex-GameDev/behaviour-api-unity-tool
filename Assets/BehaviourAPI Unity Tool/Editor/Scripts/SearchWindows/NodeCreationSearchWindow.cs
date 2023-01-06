@@ -12,7 +12,7 @@ namespace BehaviourAPI.Unity.Editor
     public class NodeCreationSearchWindow : ScriptableObject, ISearchWindowProvider
     {
         HierarchicalTypeNode rootTypeNode;
-        Action<Type, Vector2> OnSelectEntryAction;
+        public Action<Type, Vector2> TreeEntrySelected;
 
         public void SetRootType(Type rootType)
         {
@@ -20,8 +20,6 @@ namespace BehaviourAPI.Unity.Editor
             var types = rootType.GetSubClasses();
             rootTypeNode = new HierarchicalTypeNode(rootType, types);
         }
-
-        public void SetOnSelectEntryCallback(Action<Type, Vector2> callback) => OnSelectEntryAction = callback;
 
         public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
         {
@@ -56,8 +54,15 @@ namespace BehaviourAPI.Unity.Editor
         {
             var pos = context.screenMousePosition;
             var type = (Type)SearchTreeEntry.userData;
-            OnSelectEntryAction?.Invoke(type, pos);
+            TreeEntrySelected?.Invoke(type, pos);
             return true;
+        }
+
+        public static NodeCreationSearchWindow Create(Action<Type, Vector2> createNode)
+        {
+            var searchWindow = CreateInstance<NodeCreationSearchWindow>();
+            searchWindow.TreeEntrySelected += createNode;
+            return searchWindow;
         }
     }
 }
