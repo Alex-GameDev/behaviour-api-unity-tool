@@ -19,9 +19,7 @@ namespace BehaviourAPI.Unity.Editor
         #region ---------------------------------- Fields ----------------------------------
 
         NodeCreationSearchWindow _nodeSearchWindow;
-
         BehaviourGraphEditorWindow editorWindow;
-
         NodeView rootNodeView;
 
         #endregion
@@ -38,11 +36,11 @@ namespace BehaviourAPI.Unity.Editor
         public ActionSearchWindow ActionSearchWindow { get; private set; }
         public PerceptionSearchWindow PerceptionSearchWindow { get; private set; }
         public SubgraphSearchWindow SubgraphSearchWindow { get; private set; }
+
+        public NodeSearchWindow NodeSearchWindow { get; private set; }
         
         public GraphAsset GraphAsset { get; private set ; }
-
         public GraphRenderer Renderer { get; private set; }
-
 
         #endregion
 
@@ -134,6 +132,7 @@ namespace BehaviourAPI.Unity.Editor
             ActionSearchWindow = ActionSearchWindow.Create();
             PerceptionSearchWindow = PerceptionSearchWindow.Create();
             SubgraphSearchWindow = SubgraphSearchWindow.Create(BehaviourGraphEditorWindow.SystemAsset);
+            NodeSearchWindow = NodeSearchWindow.Create(BehaviourGraphEditorWindow.SystemAsset);
 
             nodeCreationRequest = context =>
             {

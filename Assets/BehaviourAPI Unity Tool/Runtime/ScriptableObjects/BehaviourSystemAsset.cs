@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BehaviourAPI.Core;
+using BehaviourAPI.Core.Perceptions;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -16,6 +18,8 @@ namespace BehaviourAPI.Unity.Runtime
     {
         [SerializeField] List<GraphAsset> graphs = new List<GraphAsset>();
         [SerializeField] List<PushPerceptionAsset> pushPerceptions = new List<PushPerceptionAsset>();
+
+        Dictionary<string, PushPerception> buildedPushPerceptions;
 
         public GraphAsset RootGraph
         {
@@ -70,7 +74,14 @@ namespace BehaviourAPI.Unity.Runtime
         public BehaviourGraph Build()
         {
             graphs.ForEach(g => g.Build());
+
+            buildedPushPerceptions = pushPerceptions.ToDictionary(p => p.Name, p => p.Build());
             return RootGraph.Graph;
+        }
+
+        public PushPerception GetPushPerception(string name)
+        {
+            return buildedPushPerceptions.GetValueOrDefault(name);
         }
     }
 }

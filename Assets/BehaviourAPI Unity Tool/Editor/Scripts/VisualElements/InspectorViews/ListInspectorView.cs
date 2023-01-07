@@ -34,10 +34,14 @@ namespace BehaviourAPI.Unity.Editor
             listView.style.maxHeight = new StyleLength(150);
             listView.style.marginTop = new StyleLength(5);
             listView.style.marginBottom = new StyleLength(5);
+            listView.reorderable = true;
 
             _mainContainer.Add(listView);
+            _mainContainer.Add(new Button(AddElement) { text = "Add element" });
             return listView;
         }
+
+        public abstract void AddElement();
 
         VisualElement MakeItem()
         {

@@ -138,7 +138,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511130710523248654
-  position: {x: 808, y: 697}
+  position: {x: 793, y: 678}
   parents:
   - {fileID: 1995416124}
   childs: []
@@ -170,7 +170,10 @@ MonoBehaviour:
   graphs:
   - {fileID: 1939026353}
   - {fileID: 2040279466}
-  pushPerceptions: []
+  - {fileID: 1477072107}
+  pushPerceptions:
+  - {fileID: 2141142371}
+  - {fileID: 1146538659}
 --- !u!114 &664204248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,7 +189,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511130724823203842
-  position: {x: 537, y: 676}
+  position: {x: 699, y: 711}
   parents:
   - {fileID: 896363575}
   childs: []
@@ -251,8 +254,8 @@ MonoBehaviour:
   position: {x: 434, y: 473}
   parents: []
   childs:
-  - {fileID: 664204248}
   - {fileID: 1359195684}
+  - {fileID: 664204248}
   references:
     version: 2
     RefIds:
@@ -260,6 +263,20 @@ MonoBehaviour:
       type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
         IsRandomized: 0
+--- !u!114 &1146538659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 212d5be0b64d9d143980afbe174ecdab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: new pushperception
+  targets: []
 --- !u!114 &1178507626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,20 +423,22 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511130724823203847
-  position: {x: 311, y: 671}
+  position: {x: 277, y: 703}
   parents:
   - {fileID: 896363575}
   childs: []
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
     - rid: 2511130724823203847
       type: {class: LeafNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
       data:
         SerializedAction:
-          rid: -2
+          rid: 2511130777208225801
+    - rid: 2511130777208225801
+      type: {class: DelayAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        DelayTime: 4
 --- !u!114 &1422996826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -451,6 +470,27 @@ MonoBehaviour:
       type: {class: DebugAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
       data:
         Message: Loop
+--- !u!114 &1477072107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  graph:
+    rid: 2511130780867231744
+  nodes: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511130780867231744
+      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
 --- !u!1 &1499889789
 GameObject:
   m_ObjectHideFlags: 0
@@ -760,4 +800,19 @@ MonoBehaviour:
     - rid: 2511130710523248649
       type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
       data:
-        subgraph: {fileID: 2040279466}
+        subgraph: {fileID: 0}
+--- !u!114 &2141142371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 212d5be0b64d9d143980afbe174ecdab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: new pushperception
+  targets:
+  - {fileID: 1995416124}

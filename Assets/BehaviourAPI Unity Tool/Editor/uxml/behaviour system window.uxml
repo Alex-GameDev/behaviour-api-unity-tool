@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/Styles/editor%20window.uss?fileID=7433441132597879392&amp;guid=fd4790495fdc36a4c8007fe53ea5ed24&amp;type=3#editor window" />
+    <Style src="project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/uss/editor%20window.uss?fileID=7433441132597879392&amp;guid=fd4790495fdc36a4c8007fe53ea5ed24&amp;type=3#editor window" />
     <uie:Toolbar name="bw-toolbar" class="bw-toolbar">
         <ui:VisualElement style="flex-direction: row;">
             <uie:ToolbarMenu display-tooltip-when-elided="true" name="bw-toolbar-graph-menu" text="graph" />
@@ -16,8 +16,6 @@
         <ui:VisualElement style="position: absolute; right: 0; top: 0;">
             <ui:VisualElement name="im-menu-container" style="flex-direction: row; margin-right: 10px;">
                 <ui:Button text="G" display-tooltip-when-elided="true" name="im-graph-btn" />
-                <ui:Button text="A" display-tooltip-when-elided="true" name="im-actions-btn" style="flex-direction: row;" />
-                <ui:Button text="P" display-tooltip-when-elided="true" name="im-perceptions-btn" />
                 <ui:Button text="PP" display-tooltip-when-elided="true" name="im-pushperceptions-btn" />
             </ui:VisualElement>
         </ui:VisualElement>
