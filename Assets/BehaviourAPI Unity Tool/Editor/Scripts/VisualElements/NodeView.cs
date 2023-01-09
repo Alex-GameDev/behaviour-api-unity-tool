@@ -14,6 +14,7 @@ namespace BehaviourAPI.Unity.Editor
     using Action = Core.Actions.Action;
     using System.Linq;
     using System.Collections.Generic;
+    using GluonGui.WorkspaceWindow.Views.WorkspaceExplorer.Explorer;
 
     /// <summary>
     /// Visual element that represents a node in a behaviour graph
@@ -42,6 +43,38 @@ namespace BehaviourAPI.Unity.Editor
             styleSheets.Add(VisualSettings.GetOrCreateSettings().NodeStylesheet);
             SetUpContextualMenu();
             SetUpDataBinding();
+
+            if (graphView.Runtime) AddRuntimeLayout();
+        }
+
+        private void AddRuntimeLayout()
+        {
+            if(Node.Node is IStatusHandler statusHandler)
+            {
+                var statusBorder = this.Q("node-status");
+                statusHandler.StatusChanged += status => UpdateStatusBorder(statusBorder, status);
+
+                UpdateStatusBorder(statusBorder, statusHandler.Status);              
+            }
+        }
+
+        void UpdateStatusBorder(VisualElement statusBorder, Status status)
+        {
+            if(status != Status.None)
+            {
+                statusBorder.style.borderBottomColor = StatusToColor(status);
+                statusBorder.style.borderTopColor = StatusToColor(status);
+                statusBorder.style.borderLeftColor = StatusToColor(status);
+                statusBorder.style.borderRightColor = StatusToColor(status);
+            }
+        }
+
+        Color StatusToColor(Status status)
+        {
+            if (status == Status.Success) return Color.green;
+            if (status == Status.Failure) return Color.red;
+            if (status == Status.Running) return Color.yellow;
+            return Color.gray;
         }
 
         private void SetUpContextualMenu()

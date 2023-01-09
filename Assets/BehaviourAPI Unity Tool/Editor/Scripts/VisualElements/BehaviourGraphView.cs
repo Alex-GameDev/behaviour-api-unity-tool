@@ -44,7 +44,7 @@ namespace BehaviourAPI.Unity.Editor
 
         #endregion
 
-        bool runtime => BehaviourGraphEditorWindow.IsRuntime;
+        public bool Runtime => BehaviourGraphEditorWindow.IsRuntime;
 
 
         public BehaviourGraphView(BehaviourGraphEditorWindow parentWindow)
@@ -86,8 +86,6 @@ namespace BehaviourAPI.Unity.Editor
 
         GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
-            if (BehaviourGraphEditorWindow.IsRuntime) Debug.Log("BAD :(");
-
             graphViewChange.movedElements?.ForEach(OnElementMoved);
             graphViewChange.elementsToRemove?.ForEach(OnElementRemoved);
             graphViewChange.edgesToCreate?.ForEach(OnEdgeCreated);
@@ -200,7 +198,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             NodeView nodeView = new NodeView(asset, this);
 
-            if(runtime)
+            if(Runtime)
             {
                 nodeView.capabilities -= Capabilities.Deletable;
                 nodeView.capabilities -= Capabilities.Movable;
@@ -240,7 +238,7 @@ namespace BehaviourAPI.Unity.Editor
                     target.Connect(edge);
                     edge.MarkDirtyRepaint();
 
-                    if (runtime)
+                    if (Runtime)
                     {
                         edge.capabilities -= Capabilities.Selectable;
                         edge.capabilities -= Capabilities.Deletable;
