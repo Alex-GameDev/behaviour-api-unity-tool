@@ -15,9 +15,6 @@ namespace BehaviourAPI.Unity.Editor
             base.OnInspectorGUI();
 
             var editor = (BSRuntimeDebugger)target;
-            var runner = editor.GetComponent<BehaviourGraphVisualRunner>();
-
-            if(runner == null) return;
 
             if (GUILayout.Button("Open debugger"))
             {
@@ -27,7 +24,7 @@ namespace BehaviourAPI.Unity.Editor
                 }
                 else
                 {
-                    BehaviourGraphEditorWindow.OpenGraph(runner.SystemAsset, runtime: true);
+                    BehaviourGraphEditorWindow.OpenGraph(editor.systemAsset, runtime: true);
                 }
             }
         }

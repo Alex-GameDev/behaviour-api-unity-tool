@@ -9,13 +9,13 @@ using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    [CustomEditor(typeof(BehaviourGraphVisualRunner))]
+    [CustomEditor(typeof(VisualBehaviourRunner))]
     public class BehaviourSystemVisualRunnerEditor : UnityEditor.Editor
     {
         private UnityEditor.Editor editor;
         public override void OnInspectorGUI()
         {
-            var runner = (BehaviourGraphVisualRunner)target;
+            var runner = (VisualBehaviourRunner)target;
             if(runner.SystemAsset == null)
             {
                 if(GUILayout.Button("Bind new BehaviourSystem"))
