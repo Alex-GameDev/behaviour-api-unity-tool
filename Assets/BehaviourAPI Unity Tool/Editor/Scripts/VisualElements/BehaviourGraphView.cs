@@ -44,8 +44,10 @@ namespace BehaviourAPI.Unity.Editor
 
         #endregion
 
+        bool runtime => BehaviourGraphEditorWindow.IsRuntime;
 
-        public BehaviourGraphView(BehaviourGraphEditorWindow parentWindow, BehaviourSystemAsset systemAsset)
+
+        public BehaviourGraphView(BehaviourGraphEditorWindow parentWindow)
         {
             editorWindow = parentWindow;
             AddGridBackground();
@@ -84,6 +86,8 @@ namespace BehaviourAPI.Unity.Editor
 
         GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
+            if (BehaviourGraphEditorWindow.IsRuntime) Debug.Log("BAD :(");
+
             graphViewChange.movedElements?.ForEach(OnElementMoved);
             graphViewChange.elementsToRemove?.ForEach(OnElementRemoved);
             graphViewChange.edgesToCreate?.ForEach(OnEdgeCreated);
@@ -127,6 +131,7 @@ namespace BehaviourAPI.Unity.Editor
 
         void AddSearchWindows()
         {
+
             _nodeSearchWindow = NodeCreationSearchWindow.Create(CreateNode);
 
             ActionSearchWindow = ActionSearchWindow.Create();
@@ -161,8 +166,12 @@ namespace BehaviourAPI.Unity.Editor
         {
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
             this.AddManipulator(new ContentDragger());
-            this.AddManipulator(new SelectionDragger());
-            this.AddManipulator(new RectangleSelector());
+
+            if (!BehaviourGraphEditorWindow.IsRuntime)
+            {                
+                this.AddManipulator(new SelectionDragger());
+                this.AddManipulator(new RectangleSelector());
+            }
         }
 
         Vector2 GetLocalMousePosition(Vector2 mousePosition)
@@ -190,6 +199,13 @@ namespace BehaviourAPI.Unity.Editor
         NodeView DrawNodeView(NodeAsset asset)
         {
             NodeView nodeView = new NodeView(asset, this);
+
+            if(runtime)
+            {
+                nodeView.capabilities -= Capabilities.Deletable;
+                nodeView.capabilities -= Capabilities.Movable;
+            }
+
             nodeView.Selected = (asset) => NodeSelected?.Invoke(asset);
             AddElement(nodeView);
             return nodeView;
@@ -223,6 +239,13 @@ namespace BehaviourAPI.Unity.Editor
                     source.Connect(edge);
                     target.Connect(edge);
                     edge.MarkDirtyRepaint();
+
+                    if (runtime)
+                    {
+                        edge.capabilities -= Capabilities.Selectable;
+                        edge.capabilities -= Capabilities.Deletable;
+                        edge.capabilities -= Capabilities.Movable;
+                    }
                 }
             });
         }

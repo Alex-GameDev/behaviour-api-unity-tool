@@ -14,6 +14,7 @@ namespace BehaviourAPI.Unity.Editor
     {
         public static BehaviourSystemAsset SystemAsset;
         public static bool IsAsset;
+        public static bool IsRuntime;
 
         VisualElement _container, _emptyGraphPanel;
         BehaviourGraphView _graphView;
@@ -32,10 +33,12 @@ namespace BehaviourAPI.Unity.Editor
        
         bool autoSave = false;
 
-        public static void OpenGraph(BehaviourSystemAsset systemAsset)
+        public static void OpenGraph(BehaviourSystemAsset systemAsset, bool runtime = false)
         {
             SystemAsset = systemAsset;
             IsAsset = AssetDatabase.Contains(systemAsset);
+            IsRuntime = runtime;
+
             BehaviourGraphEditorWindow window = GetWindow<BehaviourGraphEditorWindow>();
             window.minSize = new Vector2(550, 250);
             window.titleContent = new GUIContent($"Behaviour graph editor");
@@ -93,7 +96,7 @@ namespace BehaviourAPI.Unity.Editor
 
         BehaviourGraphView AddGraphView()
         {
-            var graphView = new BehaviourGraphView(this, SystemAsset);
+            var graphView = new BehaviourGraphView(this);
             graphView.StretchToParentSize();
             rootVisualElement.Insert(0, graphView);
             return graphView;
@@ -129,26 +132,34 @@ namespace BehaviourAPI.Unity.Editor
 
         void SetUpToolbar()
         {
-            _selectGraphToolbarMenu = rootVisualElement.Q<ToolbarMenu>("bw-toolbar-graph-menu");
-            _addGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-add-btn");
-            _autosaveToolbarToggle = rootVisualElement.Q<ToolbarToggle>("bw-toolbar-autosave-toggle");
-            _saveToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-save-btn");
-            _deleteGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-delete-btn");
-            _setRootGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-setroot-btn");
+            if(IsRuntime)
+            {
+                var toolbar = rootVisualElement.Q<Toolbar>("bw-toolbar");
+                toolbar.style.display = DisplayStyle.None;
+            }
+            else
+            {
+                _selectGraphToolbarMenu = rootVisualElement.Q<ToolbarMenu>("bw-toolbar-graph-menu");
+                _addGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-add-btn");
+                _autosaveToolbarToggle = rootVisualElement.Q<ToolbarToggle>("bw-toolbar-autosave-toggle");
+                _saveToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-save-btn");
+                _deleteGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-delete-btn");
+                _setRootGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-setroot-btn");
 
-            _addGraphToolbarButton.clicked += ShowGraphCreationPanel;
-            _deleteGraphToolbarButton.clicked += DisplayDeleteGraphAlertWindow;
-            _saveToolbarButton.clicked += SaveSystemData;
-            _autosaveToolbarToggle.RegisterValueChangedCallback((evt) => autoSave = evt.newValue);
-            _setRootGraphToolbarButton.clicked += ChangeRootGraph;
+                _addGraphToolbarButton.clicked += ShowGraphCreationPanel;
+                _deleteGraphToolbarButton.clicked += DisplayDeleteGraphAlertWindow;
+                _saveToolbarButton.clicked += SaveSystemData;
+                _autosaveToolbarToggle.RegisterValueChangedCallback((evt) => autoSave = evt.newValue);
+                _setRootGraphToolbarButton.clicked += ChangeRootGraph;
 
-            UpdateGraphSelectionToolbar();
-
-            if (SystemAsset == null || SystemAsset.Graphs.Count == 0) return;            
+                UpdateGraphSelectionToolbar();
+            } 
         }
 
         void UpdateGraphSelectionToolbar()
         {
+            if (IsRuntime) return;
+
             _selectGraphToolbarMenu.menu.MenuItems().Clear();
 
             if (SystemAsset == null) return;

@@ -2,6 +2,7 @@ using BehaviourAPI.Unity.Runtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
@@ -13,11 +14,20 @@ namespace BehaviourAPI.Unity.Editor
         {
             base.OnInspectorGUI();
 
-            if(GUILayout.Button("Open debugger"))
+            var editor = (BSRuntimeDebugger)target;
+            var runner = editor.GetComponent<BehaviourGraphVisualRunner>();
+
+            if(runner == null) return;
+
+            if (GUILayout.Button("Open debugger"))
             {
                 if(!Application.isPlaying)
                 {
                     EditorWindow.GetWindow<SceneView>().ShowNotification(new GUIContent("Runtime debugger must be opened in play mode"));
+                }
+                else
+                {
+                    BehaviourGraphEditorWindow.OpenGraph(runner.SystemAsset, runtime: true);
                 }
             }
         }
