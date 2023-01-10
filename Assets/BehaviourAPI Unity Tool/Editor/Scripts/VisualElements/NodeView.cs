@@ -15,6 +15,9 @@ namespace BehaviourAPI.Unity.Editor
     using System.Linq;
     using System.Collections.Generic;
     using GluonGui.WorkspaceWindow.Views.WorkspaceExplorer.Explorer;
+    using static UnityEditor.Experimental.GraphView.Port;
+    using static UnityEngine.Tilemaps.Tilemap;
+    using Orientation = UnityEditor.Experimental.GraphView.Orientation;
 
     /// <summary>
     /// Visual element that represents a node in a behaviour graph
@@ -92,20 +95,34 @@ namespace BehaviourAPI.Unity.Editor
             if (Node.Node.MaxInputConnections != 0)
             {
                 var capacity = Node.Node.MaxInputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
-                var port = InstantiatePort(Orientation.Vertical, Direction.Input, capacity, Node.Node.GetType());
+                var port = CreatePort(Orientation.Vertical, Direction.Input, capacity, Node.Node.GetType());
                 port.portName = "";
                 port.style.flexDirection = FlexDirection.Column;
+                port.style.top = new StyleLength(7);
                 inputContainer.Add(port);
+                port.style.marginBottom = 0;
+                port.style.marginTop = 0;
+                port.style.paddingBottom = 0;
+                port.style.paddingTop = 0;
             }
+            else
+                inputContainer.style.display = DisplayStyle.None;
 
             if (Node.Node.MaxOutputConnections != 0)
             {
                 var capacity = Node.Node.MaxOutputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
-                var port = InstantiatePort(Orientation.Vertical, Direction.Output, capacity, Node.Node.ChildType);
+                var port = CreatePort(Orientation.Vertical, Direction.Output, capacity, Node.Node.ChildType);
                 port.portName = "";
-                port.style.flexDirection = FlexDirection.ColumnReverse;
+                port.style.flexDirection = FlexDirection.Column;
+                port.style.top = new StyleLength(7);
                 outputContainer.Add(port);
+                port.style.marginBottom = 0;
+                port.style.marginTop = 0;
+                port.style.paddingBottom = 0;
+                port.style.paddingTop = 0;
             }
+            else
+                outputContainer.style.display = DisplayStyle.None;
         }
 
         /// <summary>
@@ -201,6 +218,13 @@ namespace BehaviourAPI.Unity.Editor
                 });
                 GraphView.DeleteElements(elements);
             }
+        }
+
+        public static PortView CreatePort(Orientation orientation, Direction direction, Capacity capacity, Type type)
+        {
+            DefaultEdgeConnectorListener listener = new DefaultEdgeConnectorListener();
+            PortView port = new PortView(orientation, direction, capacity, type);
+            return port;
         }
     }
 }

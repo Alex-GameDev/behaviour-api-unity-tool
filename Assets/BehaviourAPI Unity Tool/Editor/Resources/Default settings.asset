@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a64cb58aab7be7848b88eab8be55573d, type: 3}
   m_Name: Default settings
   m_EditorClassIdentifier: 
+  m_firstProperty: 
   BehaviourGraphEditorWindowLayout: {fileID: 9197481963319205126, guid: 318c3fa672ee7f646ba015538107d92d, type: 3}
   AlertWindowLayout: {fileID: 9197481963319205126, guid: 1719b4f5842a6fd489b43787651390af, type: 3}
   GraphCreationWindowLayout: {fileID: 9197481963319205126, guid: f93f89ef3728b2b4bb2f9e033f201bb9, type: 3}
