@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -16,22 +16,37 @@ namespace BehaviourAPI.Unity.Editor
     {
         string btLayout => AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().NodeLayout);
 
-        public NodeView RootView;
+        NodeView _rootView;
 
-        public override void BuildContextualMenu(NodeView nodeView, ContextualMenuPopulateEvent menuEvt)
+        public override void DrawGraph(GraphAsset graphAsset)
         {
-            menuEvt.menu.AppendAction("SetAsRootNode", _ => nodeView.GraphView.SetRootNode(nodeView), _ => DropdownMenuAction.Status.Normal);
+            graphAsset.Nodes.ForEach(node => DrawNode(node));
+            graphAsset.Nodes.ForEach(node => DrawConnections(node));
+
+            var firstNode = graphAsset.Nodes.First();
+            if(firstNode != null) ChangeRootNode(assetViewPairs[firstNode]);
         }
 
-        public override Edge DrawEdge(NodeAsset src, NodeAsset tgt)
+        public override void DrawConnections(NodeAsset asset)
         {
-            throw new System.NotImplementedException();
+            foreach(NodeAsset child in asset.Childs)
+            {
+                Port srcPort = assetViewPairs[asset].OutputPort;
+                Port tgtPort = assetViewPairs[child].InputPort;
+                Edge edge = srcPort.ConnectTo(tgtPort);
+
+                graphView.AddConnectionView(edge);
+                srcPort.node.RefreshPorts();
+                tgtPort.node.RefreshPorts();
+            }
         }
 
         public override NodeView DrawNode(NodeAsset asset)
         {
+            // Crear nodo
             var nodeView = new NodeView(asset, graphView, btLayout);
 
+            // Crear puertos
             if (nodeView.Node.Node.MaxInputConnections != 0)
             {
                 var capacity = nodeView.Node.Node.MaxInputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
@@ -54,6 +69,24 @@ namespace BehaviourAPI.Unity.Editor
             else
                 nodeView.outputContainer.style.display = DisplayStyle.None;
 
+            // Crear menú
+            nodeView.AddManipulator(new ContextualMenuManipulator(menuEvt =>
+            {
+                menuEvt.menu.AppendAction("Set Root Node", _ => { 
+                    nodeView.DisconnectPorts(nodeView.inputContainer); 
+                    ChangeRootNode(nodeView); 
+                }, _ => DropdownMenuAction.Status.Normal);
+            }));
+
+            if (graphView.Runtime)
+            {
+                nodeView.capabilities -= Capabilities.Deletable;
+                nodeView.capabilities -= Capabilities.Movable;
+            }
+
+
+            assetViewPairs.Add(asset, nodeView);
+            graphView.AddNodeView(nodeView);
             return nodeView;
         }
 
@@ -89,22 +122,37 @@ namespace BehaviourAPI.Unity.Editor
             return validPorts;
         }
 
-        // (!) Ejecutar después de haber borrado los nodos del grafo
         public override GraphViewChange OnGraphViewChanged(GraphViewChange change)
         {
-            // Si el nodo raíz ha sido borrado, asignar nodo raíz al primer nodo sin conexiones de entrada.
-
             var rootNode = graphView.GraphAsset.Nodes.Find(n => n.Parents.Count == 0);
 
             if(rootNode != null)
             {
-                var view = (NodeView) graphView.nodes.ToList().Find(n => n is NodeView nodeView && nodeView.Node == rootNode);
-                if (view != null)
-                {
-                    view.SetAsStartNode();
-                }
+                graphView.GraphAsset.Nodes.MoveAtFirst(rootNode);
+                var view = assetViewPairs[rootNode];
+                ChangeRootNode(view);
             }            
             return change;
+        }
+
+        void ChangeRootNode(NodeView newStartNode)
+        {   
+            if(newStartNode == null || newStartNode.Node.Parents.Count > 0) return;
+
+            if(_rootView != null)
+            {
+                _rootView.inputContainer.Enable();
+                _rootView.RootElement.Disable();
+            }
+
+            _rootView = newStartNode;
+            if (_rootView != null)
+            {
+                graphView.GraphAsset.Nodes.MoveAtFirst(_rootView.Node);
+
+                _rootView.inputContainer.Disable();
+                _rootView.RootElement.Enable();
+            }
         }
     }
 }

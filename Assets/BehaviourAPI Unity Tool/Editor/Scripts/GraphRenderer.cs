@@ -17,13 +17,6 @@ namespace BehaviourAPI.Unity.Editor
         public BehaviourGraphView graphView;
 
         /// <summary>
-        /// Defines actions for the node contextual menu
-        /// </summary>
-        /// <param name="nodeView"></param>
-        /// <param name="menuEvt"></param>
-        public abstract void BuildContextualMenu(NodeView nodeView, ContextualMenuPopulateEvent menuEvt);
-
-        /// <summary>
         /// Draws a node in the graphView
         /// </summary>
         /// <param name="asset"></param>
@@ -36,7 +29,7 @@ namespace BehaviourAPI.Unity.Editor
         /// <param name="src"></param>
         /// <param name="tgt"></param>
         /// <returns></returns>
-        public abstract Edge DrawEdge(NodeAsset src, NodeAsset tgt);
+        public abstract void DrawConnections(NodeAsset asset);
 
         /// <summary>
         /// Get compatible ports
@@ -46,6 +39,7 @@ namespace BehaviourAPI.Unity.Editor
         /// <returns></returns>
         public abstract List<Port> GetValidPorts(UQueryState<Port> ports, Port startPort);
 
+        // (!) Ejecutar después de haber borrado los nodos del grafo
         public abstract GraphViewChange OnGraphViewChanged(GraphViewChange change);
 
         /// <summary>
@@ -62,6 +56,8 @@ namespace BehaviourAPI.Unity.Editor
             if(types.Count() > 0) return Activator.CreateInstance(types[0]) as GraphRenderer;
             else return null;
         }
+
+        public abstract void DrawGraph(GraphAsset graphAsset);
 
 
     }

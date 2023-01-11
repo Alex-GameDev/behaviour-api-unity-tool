@@ -20,14 +20,12 @@ namespace BehaviourAPI.Unity.Editor
 
         NodeCreationSearchWindow _nodeSearchWindow;
         BehaviourGraphEditorWindow editorWindow;
-        NodeView rootNodeView;
 
         #endregion
 
         #region ---------------------------------- Events ----------------------------------
 
         public Action<NodeAsset> NodeSelected, NodeAdded, NodeRemoved;
-        public Action<IEnumerable<NodeAsset>> NodesAdded, NodesRemoved; //Bulk actions
 
         #endregion
 
@@ -42,47 +40,75 @@ namespace BehaviourAPI.Unity.Editor
         public GraphAsset GraphAsset { get; private set ; }
         public GraphRenderer Renderer { get; private set; }
 
-        #endregion
-
         public bool Runtime => BehaviourGraphEditorWindow.IsRuntime;
 
+        #endregion
 
         public BehaviourGraphView(BehaviourGraphEditorWindow parentWindow)
         {
             editorWindow = parentWindow;
-            AddGridBackground();
+            AddDecorators();
             AddManipulators();
             AddSearchWindows();
-        
+
             AddStyles();
             graphViewChanged = OnGraphViewChanged;
         }
 
-        public void SetGraph(GraphAsset graph)
+
+        #region ---------------------- ADD GRAPH ELEMENTS ---------------------------
+        public void AddNodeView(NodeView nodeView)
         {
-            ClearGraph();
-            GraphAsset = graph;
+            nodeView.Selected = (asset) => NodeSelected?.Invoke(asset);
 
-            Renderer = GraphRenderer.FindRenderer(graph.Graph);
-            Renderer.graphView = this;
-            DrawGraph();
-
-            _nodeSearchWindow.SetRootType(graph.Graph.NodeType);
+            if (Runtime)
+            {
+                nodeView.capabilities -= Capabilities.Deletable;
+                nodeView.capabilities -= Capabilities.Movable;
+            }
+            AddElement(nodeView);
         }
 
-        public void SetRootNode(NodeView nodeView)
+        public void AddConnectionView(Edge edge)
         {
-            GraphAsset.Nodes.MoveAtFirst(nodeView.Node);
-            rootNodeView?.QuitAsStartNode();
-            rootNodeView = nodeView;
-            rootNodeView?.SetAsStartNode();
+            if (Runtime)
+            {
+                edge.capabilities -= Capabilities.Selectable;
+                edge.capabilities -= Capabilities.Deletable;
+                edge.capabilities -= Capabilities.Movable;
+            }
+            AddElement(edge);
+        }
+        #endregion ------------------------------------------------------------------
+
+        #region -------------------------- SET UP -------------------------------
+
+        void AddDecorators()
+        {
+            GridBackground gridBackground = new GridBackground();
+            Insert(0, gridBackground);
         }
 
-        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+        void AddStyles()
         {
-            if (Renderer == null) return new List<Port>();
-            return Renderer.GetValidPorts(ports, startPort);
+            StyleSheet styleSheet = VisualSettings.GetOrCreateSettings().GraphStylesheet;
+            styleSheets.Add(styleSheet);
         }
+
+        void AddManipulators()
+        {
+            SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
+            this.AddManipulator(new ContentDragger());
+
+            if (!Runtime)
+            {
+                this.AddManipulator(new SelectionDragger());
+                this.AddManipulator(new RectangleSelector());
+            }
+        }
+        #endregion ------------------------------------------------------------------
+
+        #region --------------------------- CHANGE EVENTS ---------------------------
 
         GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
@@ -103,9 +129,9 @@ namespace BehaviourAPI.Unity.Editor
 
         void OnElementMoved(GraphElement element)
         {
-            if(element is NodeView nodeView)
+            if (element is NodeView nodeView)
             {
-                nodeView.OnMoved(element.GetPosition().position);                
+                nodeView.OnMoved(element.GetPosition().position);
             }
         }
 
@@ -116,16 +142,40 @@ namespace BehaviourAPI.Unity.Editor
                 GraphAsset.RemoveNode(nodeView.Node);
                 NodeRemoved?.Invoke(nodeView.Node);
             }
-            if(element is Edge edge)
+            if (element is Edge edge)
             {
                 var source = (NodeView)edge.output.node;
                 var target = (NodeView)edge.input.node;
-                source.OnDisconnected(Direction.Output,target);
+                source.OnDisconnected(Direction.Output, target);
                 target.OnDisconnected(Direction.Input, source);
             }
         }
 
-        #region ---------------- Search windows ----------------
+        #endregion ------------------------------------------------------------------
+
+        #region --------------------------- CHANGE GRAPH ----------------------------
+
+        public void SetGraph(GraphAsset graph)
+        {
+            ClearGraph();
+            GraphAsset = graph;
+
+            Renderer = GraphRenderer.FindRenderer(graph.Graph);
+            Renderer.graphView = this;
+            Renderer.DrawGraph(graph);
+
+            _nodeSearchWindow.SetRootType(graph.Graph.NodeType);
+        }
+
+        #endregion ------------------------------------------------------------------
+
+        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+        {
+            if (Renderer == null) return new List<Port>();
+            return Renderer.GetValidPorts(ports, startPort);
+        }
+
+        #region -------------------------- SEARCH WINDOWS ---------------------------
 
         void AddSearchWindows()
         {
@@ -146,32 +196,9 @@ namespace BehaviourAPI.Unity.Editor
             };
         }
 
-        #endregion
+        #endregion ------------------------------------------------------------------
 
-        void AddStyles()
-        {
-            StyleSheet styleSheet = VisualSettings.GetOrCreateSettings().GraphStylesheet;
-            styleSheets.Add(styleSheet);
-        }
-
-        void AddGridBackground()
-        {
-            GridBackground gridBackground = new GridBackground();
-            Insert(0, gridBackground);
-        }
-
-        void AddManipulators()
-        {
-            SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
-            this.AddManipulator(new ContentDragger());
-
-            if (!BehaviourGraphEditorWindow.IsRuntime)
-            {                
-                this.AddManipulator(new SelectionDragger());
-                this.AddManipulator(new RectangleSelector());
-            }
-        }
-
+       
         Vector2 GetLocalMousePosition(Vector2 mousePosition)
         {
             return contentViewContainer.WorldToLocal(mousePosition);
@@ -184,7 +211,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if(asset != null)
             {
-                DrawNodeView(asset);
+                Renderer.DrawNode(asset);
             }
             else
             {
@@ -194,60 +221,7 @@ namespace BehaviourAPI.Unity.Editor
             NodeAdded?.Invoke(asset);
         }
 
-        NodeView DrawNodeView(NodeAsset asset)
-        {
-            //NodeView nodeView = new NodeView(asset, this);
-            NodeView nodeView = Renderer.DrawNode(asset);
-
-            if(Runtime)
-            {
-                nodeView.capabilities -= Capabilities.Deletable;
-                nodeView.capabilities -= Capabilities.Movable;
-            }
-
-            nodeView.Selected = (asset) => NodeSelected?.Invoke(asset);
-            AddElement(nodeView);
-            return nodeView;
-        }
-
-        void DrawGraph()
-        {
-            if (GraphAsset == null) return;
-
-            var nodeViews = GraphAsset.Nodes.Select(DrawNodeView).ToList();
-
-            if (nodeViews.Count > 0)
-            {
-                rootNodeView = nodeViews[0];
-                nodeViews[0].SetAsStartNode();
-            }
-
-            nodeViews.ForEach(nodeView =>
-            {
-                for(int i = 0; i < nodeView.Node.Childs.Count; i++)
-                {
-                    Edge edge = new Edge();
-                    var child = nodeView.Node.Childs[i];
-                    var childIdx = GraphAsset.Nodes.IndexOf(child);
-                    var other = nodeViews[childIdx];
-                    AddElement(edge);
-                    Port source = (Port)nodeView.outputContainer[0];
-                    Port target = (Port)other.inputContainer[0];
-                    edge.input = target;
-                    edge.output = source;
-                    source.Connect(edge);
-                    target.Connect(edge);
-                    edge.MarkDirtyRepaint();
-
-                    if (Runtime)
-                    {
-                        edge.capabilities -= Capabilities.Selectable;
-                        edge.capabilities -= Capabilities.Deletable;
-                        edge.capabilities -= Capabilities.Movable;
-                    }
-                }
-            });
-        }
+        
 
         void ClearGraph()
         {

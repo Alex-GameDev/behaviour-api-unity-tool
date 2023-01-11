@@ -1,6 +1,5 @@
 namespace BehaviourAPI.Unity.Editor
 {
-    using BehaviourAPI.Core.Actions;
     using BehaviourAPI.Core.Perceptions;
     using BehaviourAPI.Unity.Runtime;
     using Core;
@@ -14,9 +13,7 @@ namespace BehaviourAPI.Unity.Editor
     using Action = Core.Actions.Action;
     using System.Linq;
     using System.Collections.Generic;
-    using GluonGui.WorkspaceWindow.Views.WorkspaceExplorer.Explorer;
     using static UnityEditor.Experimental.GraphView.Port;
-    using static UnityEngine.Tilemaps.Tilemap;
     using Orientation = UnityEditor.Experimental.GraphView.Orientation;
 
     /// <summary>
@@ -31,7 +28,10 @@ namespace BehaviourAPI.Unity.Editor
         BehaviourGraphView _graphView;
         public BehaviourGraphView GraphView => _graphView;
 
-        VisualElement _rootElement;
+        public VisualElement RootElement { get; private set; }
+        public Port InputPort => inputContainer.Children().First() as Port;
+        public Port OutputPort => outputContainer.Children().First() as Port;
+
 
         public static readonly string NODE_LAYOUT = AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().NodeLayout);
 
@@ -39,9 +39,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             Node = node;
             _graphView = graphView;
-            _rootElement = this.Q("node-root");
+            RootElement = this.Q("node-root");
             SetPosition(new Rect(node.Position, Vector2.zero));
-            DrawPorts();
             DrawExtensionContainer();
             styleSheets.Add(VisualSettings.GetOrCreateSettings().NodeStylesheet);
             SetUpContextualMenu();
@@ -82,41 +81,14 @@ namespace BehaviourAPI.Unity.Editor
 
         private void SetUpContextualMenu()
         {
+            var manipulator = new ContextualMenuManipulator(menuEvt => { });
             this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
-            {
-                menuEvt.menu.AppendAction("SetAsRootNode", _ => { DisconnectPorts(inputContainer); _graphView.SetRootNode(this); }, _ => DropdownMenuAction.Status.Normal);
+            {               
                 menuEvt.menu.AppendAction("Disconnect input ports", _ => DisconnectPorts(inputContainer), _ => Node.Node.MaxInputConnections != 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
                 menuEvt.menu.AppendAction("Disconnect output ports", _ => DisconnectPorts(outputContainer), _ => Node.Node.MaxOutputConnections != 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
             }));
         }
 
-        void DrawPorts()
-        {
-            //if (Node.Node.MaxInputConnections != 0)
-            //{
-            //    var capacity = Node.Node.MaxInputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
-            //    var port = CreatePort(Orientation.Vertical, Direction.Input, capacity, Node.Node.GetType());
-            //    port.portName = "IN";
-            //    port.style.flexDirection = FlexDirection.Column;
-            //    //port.style.top = new StyleLength(7);
-            //    inputContainer.Add(port);
-            //}
-            //else
-            //    inputContainer.style.display = DisplayStyle.None;
-
-            //if (Node.Node.MaxOutputConnections != 0)
-            //{
-            //    var capacity = Node.Node.MaxOutputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
-            //    var port = CreatePort(Orientation.Vertical, Direction.Output, capacity, Node.Node.ChildType);
-            //    port.portName = "OUT";
-            //    port.style.flexDirection = FlexDirection.ColumnReverse;
-            //    //port.style.top = new StyleLength(7);
-            //    outputContainer.Add(port);
-
-            //}
-            //else
-            //    outputContainer.style.display = DisplayStyle.None;
-        }
 
         /// <summary>
         /// Draws the visual elements to assign actions and perceptions
@@ -182,18 +154,6 @@ namespace BehaviourAPI.Unity.Editor
             var titleInputField = this.Q<TextField>(name: "title-input-field");
             titleInputField.bindingPath = "Name";
             titleInputField.Bind(new SerializedObject(Node));
-        }
-
-        public void SetAsStartNode()
-        {
-            inputContainer.style.display = DisplayStyle.None;
-            _rootElement.style.display = DisplayStyle.Flex;
-        }
-
-        public void QuitAsStartNode()
-        {
-            inputContainer.style.display = DisplayStyle.Flex;
-            _rootElement.style.display = DisplayStyle.None;
         }
 
         public void DisconnectPorts(VisualElement portContainer)

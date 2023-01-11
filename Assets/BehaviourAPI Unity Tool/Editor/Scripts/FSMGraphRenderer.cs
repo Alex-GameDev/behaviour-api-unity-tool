@@ -1,11 +1,11 @@
+using BehaviourAPI.Core;
 using BehaviourAPI.StateMachines;
 using BehaviourAPI.Unity.Editor.Assets.BehaviourAPI_Unity_Tool.Editor.Scripts.Utils;
 using BehaviourAPI.Unity.Runtime;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
@@ -16,26 +16,16 @@ namespace BehaviourAPI.Unity.Editor
         string stateLayout => AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().StateLayout);
         string transitionLayout => AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().TransitionLayout);
 
-        public NodeView StartNodeView;
+        NodeView _entryStateView;
 
-        public override void BuildContextualMenu(NodeView nodeView, ContextualMenuPopulateEvent menuEvt)
+
+        public override void DrawGraph(GraphAsset graphAsset)
         {
-            menuEvt.menu.AppendAction("Set Entry State", 
-                _ => SetStartNode(nodeView), 
-                _ =>
-                {
-                    if(nodeView.Node.Node is State)
-                    {
-                        return nodeView == StartNodeView ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal;
-                    }
-                    return DropdownMenuAction.Status.Hidden;
+            graphAsset.Nodes.ForEach(node => DrawNode(node));
+            graphAsset.Nodes.ForEach(node => DrawConnections(node));
 
-                } );
-        }
-
-        public override Edge DrawEdge(NodeAsset src, NodeAsset tgt)
-        {
-            throw new System.NotImplementedException();
+            var firstState = graphAsset.Nodes.FirstOrDefault(n => n.Node is State);
+            if(firstState != null) ChangeEntryState(assetViewPairs[firstState]);
         }
 
         public override NodeView DrawNode(NodeAsset asset)
@@ -66,7 +56,34 @@ namespace BehaviourAPI.Unity.Editor
             else
                 nodeView.outputContainer.style.display = DisplayStyle.None;
 
+            // Crear menú
+            nodeView.AddManipulator(new ContextualMenuManipulator(menuEvt =>
+            {
+                menuEvt.menu.AppendAction("Set Entry State",
+                    _ => ChangeEntryState(nodeView),
+                    _ => (nodeView.Node != null && nodeView.Node.Node is State) ?
+                         (nodeView == _entryStateView) ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Hidden
+
+                );
+            }));
+
+            assetViewPairs.Add(asset, nodeView);
+            graphView.AddNodeView(nodeView);
             return nodeView;
+        }
+
+        public override void DrawConnections(NodeAsset asset)
+        {
+            foreach (NodeAsset child in asset.Childs)
+            {
+                Port srcPort = assetViewPairs[asset].OutputPort;
+                Port tgtPort = assetViewPairs[child].InputPort;
+                Edge edge = srcPort.ConnectTo(tgtPort);
+
+                graphView.AddConnectionView(edge);
+                srcPort.node.RefreshPorts();
+                tgtPort.node.RefreshPorts();
+            }
         }
 
         public override List<Port> GetValidPorts(UQueryState<Port> ports, Port startPort)
@@ -103,12 +120,32 @@ namespace BehaviourAPI.Unity.Editor
 
         public override GraphViewChange OnGraphViewChanged(GraphViewChange change)
         {
+            var rootNode = graphView.GraphAsset.Nodes.FirstOrDefault(n => n.Node is State);
+
+            if (rootNode != null)
+            {
+                graphView.GraphAsset.Nodes.MoveAtFirst(rootNode);
+                var view = assetViewPairs[rootNode];
+                ChangeEntryState(view);
+            }
             return change;
         }
 
-        public void SetStartNode(NodeView nodeView)
+        void ChangeEntryState(NodeView newStartNode)
         {
+            if (newStartNode == null || newStartNode.Node.Node is not State) return;
 
+            if (_entryStateView != null)
+            {
+                _entryStateView.RootElement.Disable();
+            }
+
+            _entryStateView = newStartNode;
+            if (_entryStateView != null)
+            {
+                graphView.GraphAsset.Nodes.MoveAtFirst(_entryStateView.Node);
+                _entryStateView.RootElement.Enable();
+            }
         }
     }
 }
