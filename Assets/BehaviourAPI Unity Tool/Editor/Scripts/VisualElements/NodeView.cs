@@ -211,12 +211,5 @@ namespace BehaviourAPI.Unity.Editor
                 GraphView.DeleteElements(elements);
             }
         }
-
-        public static PortView CreatePort(Orientation orientation, Direction direction, Capacity capacity, Type type)
-        {
-            DefaultEdgeConnectorListener listener = new DefaultEdgeConnectorListener();
-            PortView port = new PortView(orientation, direction, capacity, type);
-            return port;
-        }
     }
 }

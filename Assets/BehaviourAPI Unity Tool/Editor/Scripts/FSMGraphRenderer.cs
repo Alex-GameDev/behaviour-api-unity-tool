@@ -45,7 +45,7 @@ namespace BehaviourAPI.Unity.Editor
             if (nodeView.Node.Node.MaxInputConnections != 0)
             {
                 var capacity = nodeView.Node.Node.MaxInputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
-                var port = NodeView.CreatePort(Orientation.Vertical, Direction.Input, capacity, nodeView.Node.Node.GetType());
+                var port = nodeView.InstantiatePort(Orientation.Vertical, Direction.Input, capacity, nodeView.Node.Node.GetType());
                 port.portName = "IN";
                 port.style.flexDirection = FlexDirection.Column;
                 //port.style.top = new StyleLength(7);
@@ -57,7 +57,7 @@ namespace BehaviourAPI.Unity.Editor
             if (nodeView.Node.Node.MaxOutputConnections != 0)
             {
                 var capacity = nodeView.Node.Node.MaxOutputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
-                var port = NodeView.CreatePort(Orientation.Vertical, Direction.Output, capacity, nodeView.Node.Node.ChildType);
+                var port = nodeView.InstantiatePort(Orientation.Vertical, Direction.Output, capacity, nodeView.Node.Node.ChildType);
                 port.portName = "OUT";
                 port.style.flexDirection = FlexDirection.Column;
                 //port.style.top = new StyleLength(7);

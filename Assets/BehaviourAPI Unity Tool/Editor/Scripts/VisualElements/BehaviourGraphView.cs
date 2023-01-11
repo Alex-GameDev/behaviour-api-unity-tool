@@ -226,7 +226,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 for(int i = 0; i < nodeView.Node.Childs.Count; i++)
                 {
-                    Edge edge = new CustomEdge();
+                    Edge edge = new Edge();
                     var child = nodeView.Node.Childs[i];
                     var childIdx = GraphAsset.Nodes.IndexOf(child);
                     var other = nodeViews[childIdx];
