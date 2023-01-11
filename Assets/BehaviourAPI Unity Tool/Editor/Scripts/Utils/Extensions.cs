@@ -4,11 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine.UIElements;
+using UnityEngine.VFX;
 
 namespace BehaviourAPI.Unity.Editor.Assets.BehaviourAPI_Unity_Tool.Editor.Scripts.Utils
 {
     public static class Extensions
     {
+        public static void Disable(this VisualElement visualElement) => visualElement.style.display = DisplayStyle.None;
+        public static void Enable(this VisualElement visualElement) => visualElement.style.display = DisplayStyle.Flex;
+        public static void Hide(this VisualElement visualElement) => visualElement.style.visibility = Visibility.Hidden;
+        public static void Show(this VisualElement visualElement) => visualElement.style.visibility = Visibility.Visible;
+
+
         public static HashSet<NodeAsset> GetPathFromRoot(this NodeAsset asset)
         {
             HashSet<NodeAsset> visitedNodes = new HashSet<NodeAsset>();
