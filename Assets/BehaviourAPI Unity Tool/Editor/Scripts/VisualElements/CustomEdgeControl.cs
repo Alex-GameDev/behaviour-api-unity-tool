@@ -11,8 +11,8 @@ namespace BehaviourAPI.Unity.Editor
         protected override void ComputeControlPoints()
         {
             base.ComputeControlPoints();
-            controlPoints[1] = Vector2.LerpUnclamped(controlPoints[0], controlPoints[1], .1f);
-            controlPoints[2] = Vector2.LerpUnclamped(controlPoints[3], controlPoints[2], .1f);
+            controlPoints[1] = Vector2.LerpUnclamped(controlPoints[0], controlPoints[1], 1f);
+            controlPoints[2] = Vector2.LerpUnclamped(controlPoints[3], controlPoints[2], 1f);
         }
     }
 }

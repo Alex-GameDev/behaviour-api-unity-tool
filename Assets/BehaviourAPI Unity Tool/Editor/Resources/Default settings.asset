@@ -16,7 +16,9 @@ MonoBehaviour:
   BehaviourGraphEditorWindowLayout: {fileID: 9197481963319205126, guid: 318c3fa672ee7f646ba015538107d92d, type: 3}
   AlertWindowLayout: {fileID: 9197481963319205126, guid: 1719b4f5842a6fd489b43787651390af, type: 3}
   GraphCreationWindowLayout: {fileID: 9197481963319205126, guid: f93f89ef3728b2b4bb2f9e033f201bb9, type: 3}
-  NodeLayout: {fileID: 9197481963319205126, guid: 740771a82fa776540b6c8fcedcc0bf44, type: 3}
+  NodeLayout: {fileID: 9197481963319205126, guid: e6340df82f16de74eb739ab7d32163e0, type: 3}
+  StateLayout: {fileID: 9197481963319205126, guid: 740771a82fa776540b6c8fcedcc0bf44, type: 3}
+  TransitionLayout: {fileID: 9197481963319205126, guid: b9e965eeb91b0434793819b1bb1835b9, type: 3}
   ContainerLayout: {fileID: 9197481963319205126, guid: 737f70af6609c0a449de562edf0d2ba0, type: 3}
   InspectorLayout: {fileID: 9197481963319205126, guid: 1627405eb2ab9804e97b0fca98d7f5b1, type: 3}
   EmptyGraphPanel: {fileID: 9197481963319205126, guid: fbc6536e21fda5e4bb0550d2fa26f36b, type: 3}

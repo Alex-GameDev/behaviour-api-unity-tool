@@ -13,6 +13,12 @@ namespace BehaviourAPI.Unity.Editor
         {
             this.AddManipulator(new EdgeConnector<CustomEdge>(new DefaultEdgeConnectorListener()));
         }
+
+        public override bool ContainsPoint(Vector2 localPoint)
+        {
+            //return base.ContainsPoint(localPoint);
+            return true;
+        }
     }
 
     public class DefaultEdgeConnectorListener : IEdgeConnectorListener

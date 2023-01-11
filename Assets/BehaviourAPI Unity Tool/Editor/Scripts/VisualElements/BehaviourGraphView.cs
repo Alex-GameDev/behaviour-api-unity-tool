@@ -196,7 +196,8 @@ namespace BehaviourAPI.Unity.Editor
 
         NodeView DrawNodeView(NodeAsset asset)
         {
-            NodeView nodeView = new NodeView(asset, this);
+            //NodeView nodeView = new NodeView(asset, this);
+            NodeView nodeView = Renderer.DrawNode(asset);
 
             if(Runtime)
             {

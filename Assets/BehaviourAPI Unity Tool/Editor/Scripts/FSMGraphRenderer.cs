@@ -1,26 +1,36 @@
-using BehaviourAPI.BehaviourTrees;
-using BehaviourAPI.Core;
+using BehaviourAPI.StateMachines;
 using BehaviourAPI.Unity.Editor.Assets.BehaviourAPI_Unity_Tool.Editor.Scripts.Utils;
 using BehaviourAPI.Unity.Runtime;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    [CustomRenderer(typeof(BehaviourTree))]
-    public class BehaviourTreeGraphRenderer : GraphRenderer
+    [CustomRenderer(typeof(FSM))]
+    public class FSMGraphRenderer : GraphRenderer
     {
-        string btLayout => AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().NodeLayout);
+        string stateLayout => AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().StateLayout);
+        string transitionLayout => AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().TransitionLayout);
 
-        public NodeView RootView;
+        public NodeView StartNodeView;
 
         public override void BuildContextualMenu(NodeView nodeView, ContextualMenuPopulateEvent menuEvt)
         {
-            menuEvt.menu.AppendAction("SetAsRootNode", _ => nodeView.GraphView.SetRootNode(nodeView), _ => DropdownMenuAction.Status.Normal);
+            menuEvt.menu.AppendAction("Set Entry State", 
+                _ => SetStartNode(nodeView), 
+                _ =>
+                {
+                    if(nodeView.Node.Node is State)
+                    {
+                        return nodeView == StartNodeView ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal;
+                    }
+                    return DropdownMenuAction.Status.Hidden;
+
+                } );
         }
 
         public override Edge DrawEdge(NodeAsset src, NodeAsset tgt)
@@ -30,14 +40,15 @@ namespace BehaviourAPI.Unity.Editor
 
         public override NodeView DrawNode(NodeAsset asset)
         {
-            var nodeView = new NodeView(asset, graphView, btLayout);
+            var nodeView = new NodeView(asset, graphView, asset.Node is State ? stateLayout : transitionLayout);
 
             if (nodeView.Node.Node.MaxInputConnections != 0)
             {
                 var capacity = nodeView.Node.Node.MaxInputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
                 var port = NodeView.CreatePort(Orientation.Vertical, Direction.Input, capacity, nodeView.Node.Node.GetType());
-                port.portName = "";
+                port.portName = "IN";
                 port.style.flexDirection = FlexDirection.Column;
+                //port.style.top = new StyleLength(7);
                 nodeView.inputContainer.Add(port);
             }
             else
@@ -47,8 +58,9 @@ namespace BehaviourAPI.Unity.Editor
             {
                 var capacity = nodeView.Node.Node.MaxOutputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
                 var port = NodeView.CreatePort(Orientation.Vertical, Direction.Output, capacity, nodeView.Node.Node.ChildType);
-                port.portName = "";
-                port.style.flexDirection = FlexDirection.ColumnReverse;
+                port.portName = "OUT";
+                port.style.flexDirection = FlexDirection.Column;
+                //port.style.top = new StyleLength(7);
                 nodeView.outputContainer.Add(port);
             }
             else
@@ -89,22 +101,14 @@ namespace BehaviourAPI.Unity.Editor
             return validPorts;
         }
 
-        // (!) Ejecutar después de haber borrado los nodos del grafo
         public override GraphViewChange OnGraphViewChanged(GraphViewChange change)
         {
-            // Si el nodo raíz ha sido borrado, asignar nodo raíz al primer nodo sin conexiones de entrada.
-
-            var rootNode = graphView.GraphAsset.Nodes.Find(n => n.Parents.Count == 0);
-
-            if(rootNode != null)
-            {
-                var view = (NodeView) graphView.nodes.ToList().Find(n => n is NodeView nodeView && nodeView.Node == rootNode);
-                if (view != null)
-                {
-                    view.SetAsStartNode();
-                }
-            }            
             return change;
+        }
+
+        public void SetStartNode(NodeView nodeView)
+        {
+
         }
     }
 }

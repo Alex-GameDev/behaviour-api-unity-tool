@@ -33,9 +33,9 @@ namespace BehaviourAPI.Unity.Editor
 
         VisualElement _rootElement;
 
-        public static string NODE_LAYOUT => AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().NodeLayout);
+        public static readonly string NODE_LAYOUT = AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().NodeLayout);
 
-        public NodeView(NodeAsset node, BehaviourGraphView graphView) : base(NODE_LAYOUT)
+        public NodeView(NodeAsset node, BehaviourGraphView graphView, string layoutPath = null) : base(layoutPath ?? NODE_LAYOUT)
         {
             Node = node;
             _graphView = graphView;
@@ -92,37 +92,30 @@ namespace BehaviourAPI.Unity.Editor
 
         void DrawPorts()
         {
-            if (Node.Node.MaxInputConnections != 0)
-            {
-                var capacity = Node.Node.MaxInputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
-                var port = CreatePort(Orientation.Vertical, Direction.Input, capacity, Node.Node.GetType());
-                port.portName = "";
-                port.style.flexDirection = FlexDirection.Column;
-                port.style.top = new StyleLength(7);
-                inputContainer.Add(port);
-                port.style.marginBottom = 0;
-                port.style.marginTop = 0;
-                port.style.paddingBottom = 0;
-                port.style.paddingTop = 0;
-            }
-            else
-                inputContainer.style.display = DisplayStyle.None;
+            //if (Node.Node.MaxInputConnections != 0)
+            //{
+            //    var capacity = Node.Node.MaxInputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
+            //    var port = CreatePort(Orientation.Vertical, Direction.Input, capacity, Node.Node.GetType());
+            //    port.portName = "IN";
+            //    port.style.flexDirection = FlexDirection.Column;
+            //    //port.style.top = new StyleLength(7);
+            //    inputContainer.Add(port);
+            //}
+            //else
+            //    inputContainer.style.display = DisplayStyle.None;
 
-            if (Node.Node.MaxOutputConnections != 0)
-            {
-                var capacity = Node.Node.MaxOutputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
-                var port = CreatePort(Orientation.Vertical, Direction.Output, capacity, Node.Node.ChildType);
-                port.portName = "";
-                port.style.flexDirection = FlexDirection.Column;
-                port.style.top = new StyleLength(7);
-                outputContainer.Add(port);
-                port.style.marginBottom = 0;
-                port.style.marginTop = 0;
-                port.style.paddingBottom = 0;
-                port.style.paddingTop = 0;
-            }
-            else
-                outputContainer.style.display = DisplayStyle.None;
+            //if (Node.Node.MaxOutputConnections != 0)
+            //{
+            //    var capacity = Node.Node.MaxOutputConnections == 1 ? Port.Capacity.Single : Port.Capacity.Multi;
+            //    var port = CreatePort(Orientation.Vertical, Direction.Output, capacity, Node.Node.ChildType);
+            //    port.portName = "OUT";
+            //    port.style.flexDirection = FlexDirection.ColumnReverse;
+            //    //port.style.top = new StyleLength(7);
+            //    outputContainer.Add(port);
+
+            //}
+            //else
+            //    outputContainer.style.display = DisplayStyle.None;
         }
 
         /// <summary>
@@ -203,8 +196,7 @@ namespace BehaviourAPI.Unity.Editor
             _rootElement.style.display = DisplayStyle.None;
         }
 
-
-        void DisconnectPorts(VisualElement portContainer)
+        public void DisconnectPorts(VisualElement portContainer)
         {
             if(GraphView != null)
             {
