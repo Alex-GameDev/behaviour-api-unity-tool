@@ -5,8 +5,9 @@ namespace BehaviourAPI.Unity.Runtime
 {
     public class CustomPerception : Perception
     {
-        public Component component;
-        public string MethodName;
+        [SerializeField] SerializedAction init;
+        [SerializeField] SerializedBoolFunction check;
+        [SerializeField] SerializedAction reset;
 
         public override void Initialize()
         {

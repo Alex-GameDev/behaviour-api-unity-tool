@@ -7,42 +7,15 @@ using Action = BehaviourAPI.Core.Actions.Action;
 
 namespace BehaviourAPI.Unity.Runtime
 {
-    public class CustomAction : Action, ISerializationCallbackReceiver
+    public class CustomAction : Action
     {
-        public Component component;
-        public string methodName;
-
-        Func<Status> updateFunc;
-
-        public void OnAfterDeserialize()
-        {
-            if (component != null)
-            {
-
-                if (component.GetType().GetMethod(methodName) == null)
-                {
-                    methodName = "";
-                    updateFunc = null;
-                }
-                else if (updateFunc == null)
-                {
-                    var method = component.GetType().GetMethod(methodName);
-                    updateFunc = Expression.Lambda<Func<Status>>(Expression.Call(Expression.Constant(component), method)).Compile();
-                }
-            }
-        }
-
-        public void OnBeforeSerialize()
-        {
-            return;
-        }
+        [SerializeField] SerializedAction start;
+        [SerializeField] SerializedStatusFunction update;
+        [SerializeField] SerializedAction stop;
 
         public override void Start()
         {
-           if(updateFunc == null)
-           {
-               
-           }
+           
         }
 
         public override void Stop()
@@ -52,8 +25,7 @@ namespace BehaviourAPI.Unity.Runtime
 
         public override Status Update()
         {
-            if(updateFunc == null) throw new MissingMethodException();
-            return updateFunc.Invoke();
+            return Status.Success;
         }
     }
 }
