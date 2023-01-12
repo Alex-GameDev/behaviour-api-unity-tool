@@ -72,10 +72,16 @@ namespace BehaviourAPI.Unity.Editor
             // Crear menú
             nodeView.AddManipulator(new ContextualMenuManipulator(menuEvt =>
             {
+                menuEvt.menu.AppendSeparator();
                 menuEvt.menu.AppendAction("Set Root Node", _ => { 
                     nodeView.DisconnectPorts(nodeView.inputContainer); 
                     ChangeRootNode(nodeView); 
                 }, _ => DropdownMenuAction.Status.Normal);
+
+                menuEvt.menu.AppendAction("Order childs by position", _ => {
+                    nodeView.Node.OrderChilds(n => n.Position.x);
+                }, _ => nodeView.Node.Childs.Count > 1 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+
             }));
 
             if (graphView.Runtime)

@@ -36,6 +36,11 @@ namespace BehaviourAPI.Unity.Runtime
             return nodeAsset;
         }
 
+        public void OrderChilds(Func<NodeAsset, float> shortFunction)
+        {
+            childs = childs.OrderBy(shortFunction).ToList();
+        }
+
         internal NodeData Build()
         {
             return new NodeData(Node, parents.Select(p => p.Node).ToList(), childs.Select(c => c.Node).ToList());
