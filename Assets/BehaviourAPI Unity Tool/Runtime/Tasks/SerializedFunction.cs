@@ -16,6 +16,8 @@ namespace BehaviourAPI.Unity.Runtime
 
         T _function;
 
+        public T GetFunction() => _function;
+
         public void OnAfterDeserialize()
         {
             if (component != null && !string.IsNullOrEmpty(methodName))
