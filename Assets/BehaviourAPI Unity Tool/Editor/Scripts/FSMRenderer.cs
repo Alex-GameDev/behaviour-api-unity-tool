@@ -11,13 +11,12 @@ using UnityEngine.UIElements;
 namespace BehaviourAPI.Unity.Editor
 {
     [CustomRenderer(typeof(FSM))]
-    public class FSMGraphRenderer : GraphRenderer
+    public class FSMRenderer : GraphRenderer
     {
         string stateLayout => AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().StateLayout);
         string transitionLayout => AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().TransitionLayout);
 
         NodeView _entryStateView;
-
 
         public override void DrawGraph(GraphAsset graphAsset)
         {

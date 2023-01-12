@@ -12,7 +12,7 @@ using UnityEngine.UIElements;
 namespace BehaviourAPI.Unity.Editor
 {
     [CustomRenderer(typeof(BehaviourTree))]
-    public class BehaviourTreeGraphRenderer : GraphRenderer
+    public class BehaviourTreeRenderer : GraphRenderer
     {
         string btLayout => AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().NodeLayout);
 
@@ -23,7 +23,7 @@ namespace BehaviourAPI.Unity.Editor
             graphAsset.Nodes.ForEach(node => DrawNode(node));
             graphAsset.Nodes.ForEach(node => DrawConnections(node));
 
-            var firstNode = graphAsset.Nodes.First();
+            var firstNode = graphAsset.Nodes.FirstOrDefault();
             if(firstNode != null) ChangeRootNode(assetViewPairs[firstNode]);
         }
 
