@@ -164,6 +164,37 @@ MonoBehaviour:
       data:
         isPulled: 1
         ExitStatus: 0
+--- !u!114 &-6384761219751871670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
+  m_Name: GraphAsset
+  m_EditorClassIdentifier: 
+  Name: 
+  graph:
+    rid: 8010495545050660874
+  nodes:
+  - {fileID: -1199778941731665306}
+  - {fileID: 589788187788054516}
+  - {fileID: -240547844799465592}
+  - {fileID: -3404982431193846039}
+  - {fileID: 887806554012863957}
+  - {fileID: 760495808359770468}
+  - {fileID: 5802258042295567436}
+  references:
+    version: 2
+    RefIds:
+    - rid: 8010495545050660874
+      type: {class: UtilitySystem, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        UtilityThreshold: 0
+        Inertia: 1.3
 --- !u!114 &-5516044310946271278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -276,6 +307,34 @@ MonoBehaviour:
     RefIds:
     - rid: 8010495545050660870
       type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+--- !u!114 &-3404982431193846039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: NodeAsset
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 8010495545050660878
+  position: {x: 580, y: 453}
+  parents:
+  - {fileID: -240547844799465592}
+  childs:
+  - {fileID: 887806554012863957}
+  references:
+    version: 2
+    RefIds:
+    - rid: 8010495545050660878
+      type: {class: UtilityExitNode, ns: BehaviourAPI.UtilitySystems.UtilityElements, asm: BehaviourAPI.UtilitySystems}
+      data:
+        IsRoot: 0
+        ExitStatus: 2
 --- !u!114 &-2756856989652014087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -426,6 +485,64 @@ MonoBehaviour:
       data:
         IsRandomized: 0
         TriggerStatus: 4
+--- !u!114 &-1199778941731665306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: NodeAsset
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 8010495545050660875
+  position: {x: 260, y: 459}
+  parents:
+  - {fileID: -240547844799465592}
+  childs:
+  - {fileID: 589788187788054516}
+  references:
+    version: 2
+    RefIds:
+    - rid: 8010495545050660875
+      type: {class: UtilityExitNode, ns: BehaviourAPI.UtilitySystems.UtilityElements, asm: BehaviourAPI.UtilitySystems}
+      data:
+        IsRoot: 0
+        ExitStatus: 0
+--- !u!114 &-240547844799465592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: NodeAsset
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 8010495545050660877
+  position: {x: 483, y: 250}
+  parents: []
+  childs:
+  - {fileID: -1199778941731665306}
+  - {fileID: -3404982431193846039}
+  references:
+    version: 2
+    RefIds:
+    - rid: 8010495545050660877
+      type: {class: UtilityBucket, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        IsRoot: 0
+        UtilityThreshold: 0
+        Inertia: 1.3
+        BucketThreshold: 0.3
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -439,10 +556,7 @@ MonoBehaviour:
   m_Name: Graph
   m_EditorClassIdentifier: 
   graphs:
-  - {fileID: -5516044310946271278}
-  - {fileID: 4967423420448829638}
-  - {fileID: -3517202458394881263}
-  - {fileID: 3157377928218323367}
+  - {fileID: -6384761219751871670}
   pushPerceptions: []
 --- !u!114 &139936388447147224
 MonoBehaviour:
@@ -469,6 +583,91 @@ MonoBehaviour:
     RefIds:
     - rid: 2511130849131102208
       type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+--- !u!114 &589788187788054516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: NodeAsset
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 8010495545050660876
+  position: {x: 255, y: 664}
+  parents:
+  - {fileID: -1199778941731665306}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8010495545050660876
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        min: 0
+        max: 1
+--- !u!114 &760495808359770468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: NodeAsset
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 8010495545050660880
+  position: {x: 490, y: 969}
+  parents:
+  - {fileID: 887806554012863957}
+  - {fileID: 5802258042295567436}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8010495545050660880
+      type: {class: VariableFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        min: 0
+        max: 1
+--- !u!114 &887806554012863957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: NodeAsset
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 8010495545050660879
+  position: {x: 522, y: 652}
+  parents:
+  - {fileID: -3404982431193846039}
+  childs:
+  - {fileID: 760495808359770468}
+  - {fileID: 5802258042295567436}
+  references:
+    version: 2
+    RefIds:
+    - rid: 8010495545050660879
+      type: {class: WeightedFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        Weights:
+        - 0
+        - 0
 --- !u!114 &1944036875414768408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -667,6 +866,35 @@ MonoBehaviour:
     RefIds:
     - rid: 8010495545050660869
       type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+--- !u!114 &5802258042295567436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: NodeAsset
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 8010495545050660881
+  position: {x: 373, y: 800}
+  parents:
+  - {fileID: 887806554012863957}
+  childs:
+  - {fileID: 760495808359770468}
+  references:
+    version: 2
+    RefIds:
+    - rid: 8010495545050660881
+      type: {class: ExponentialFunction, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        Exp: 0
+        DespX: 0
+        DespY: 0
 --- !u!114 &7290713015452359445
 MonoBehaviour:
   m_ObjectHideFlags: 0
