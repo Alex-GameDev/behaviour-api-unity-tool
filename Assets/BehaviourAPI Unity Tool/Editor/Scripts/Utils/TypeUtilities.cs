@@ -15,9 +15,13 @@ namespace BehaviourAPI.Unity.Editor
             return BehaviourAPISettings.instance.GetAssemblies().SelectMany(a => a.GetTypes()).ToList();
         }
 
-        public static List<Type> GetSubClasses(this Type type, bool includeSelf = false)
+        public static List<Type> GetSubClasses(this Type type, bool includeSelf = false, bool excludeAbstract = false)
         {
-            return GetAllTypes().FindAll(t => t.IsSubclassOf(type) || (includeSelf && t == type));
+            var types = GetAllTypes().FindAll(t => t.IsSubclassOf(type) || (includeSelf && t == type));
+
+            if (excludeAbstract) types = types.FindAll(t => !t.IsAbstract);
+
+            return types;
         }
     }
 }

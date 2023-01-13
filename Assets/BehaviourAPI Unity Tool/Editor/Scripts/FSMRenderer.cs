@@ -1,3 +1,5 @@
+using BehaviourAPI.BehaviourTrees.Decorators;
+using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
 using BehaviourAPI.StateMachines;
 using BehaviourAPI.Unity.Editor.Assets.BehaviourAPI_Unity_Tool.Editor.Scripts.Utils;
@@ -6,7 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
+using System;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -145,6 +149,25 @@ namespace BehaviourAPI.Unity.Editor
                 graphView.GraphAsset.Nodes.MoveAtFirst(_entryStateView.Node);
                 _entryStateView.RootElement.Enable();
             }
+        }
+
+        public override List<SearchTreeEntry> GetNodeHierarchyEntries()
+        {
+            Type[] excludedTypes = new Type[] { typeof(State), typeof(ExitTransition), typeof(StateTransition), typeof(ProbabilisticState) };
+
+            List<SearchTreeEntry> entries = new List<SearchTreeEntry>();
+
+            entries.Add(new SearchTreeGroupEntry(new GUIContent("FSM nodes")));
+
+            entries.Add(new SearchTreeGroupEntry(new GUIContent("States"), 1));
+            var stateTypes = TypeUtilities.GetSubClasses(typeof(State), excludeAbstract: true).Except(excludedTypes).ToList();
+            stateTypes.ForEach(type => entries.Add(GetTypeEntry(type, 2)));
+
+            entries.Add(new SearchTreeGroupEntry(new GUIContent("Transitions"), 1));
+            var transitionTypes = TypeUtilities.GetSubClasses(typeof(Transition), excludeAbstract: true).Except(excludedTypes).ToList();
+            transitionTypes.ForEach(type => entries.Add(GetTypeEntry(type, 2)));
+
+            return entries;
         }
     }
 }

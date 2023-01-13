@@ -1,10 +1,12 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Unity.Runtime;
+using log4net.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -39,6 +41,12 @@ namespace BehaviourAPI.Unity.Editor
         /// <returns></returns>
         public abstract List<Port> GetValidPorts(UQueryState<Port> ports, Port startPort);
 
+        /// <summary>
+        /// Get the hierarchy entries to the node create search window.
+        /// </summary>
+        /// <returns></returns>
+        public abstract List<SearchTreeEntry> GetNodeHierarchyEntries();
+
         // (!) Ejecutar después de haber borrado los nodos del grafo
         public abstract GraphViewChange OnGraphViewChanged(GraphViewChange change);
 
@@ -59,6 +67,12 @@ namespace BehaviourAPI.Unity.Editor
 
         public abstract void DrawGraph(GraphAsset graphAsset);
 
-
+        protected SearchTreeEntry GetTypeEntry(Type type, int level)
+        {
+            return new SearchTreeEntry(new GUIContent("     " + Regex.Replace(type.Name, "([A-Z])", " $1").Trim())) 
+            { 
+                userData = type, level = level 
+            };
+        }
     }
 }

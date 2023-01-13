@@ -164,6 +164,8 @@ namespace BehaviourAPI.Unity.Editor
             Renderer.graphView = this;
             Renderer.DrawGraph(graph);
 
+            _nodeSearchWindow.SetEntryHierarchy(Renderer.GetNodeHierarchyEntries());
+
             _nodeSearchWindow.SetRootType(graph.Graph.NodeType);
         }
 

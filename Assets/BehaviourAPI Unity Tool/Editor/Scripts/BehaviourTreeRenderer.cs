@@ -1,13 +1,17 @@
 using BehaviourAPI.BehaviourTrees;
+using BehaviourAPI.BehaviourTrees.Decorators;
 using BehaviourAPI.Core;
 using BehaviourAPI.Unity.Editor.Assets.BehaviourAPI_Unity_Tool.Editor.Scripts.Utils;
 using BehaviourAPI.Unity.Runtime;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
+using LeafNode = BehaviourAPI.Unity.Runtime.LeafNode;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -159,6 +163,28 @@ namespace BehaviourAPI.Unity.Editor
                 _rootView.inputContainer.Disable();
                 _rootView.RootElement.Enable();
             }
+        }
+
+        public override List<SearchTreeEntry> GetNodeHierarchyEntries()
+        {
+            Type[] excludedTypes = new Type[] { typeof(ConditionDecoratorNode), typeof(SwitchDecoratorNode) };
+
+            List<SearchTreeEntry> entries = new List<SearchTreeEntry>();
+
+            entries.Add(new SearchTreeGroupEntry(new GUIContent("BT Nodes")));
+
+            entries.Add(new SearchTreeGroupEntry(new GUIContent("Composite nodes"), 1));
+            var compositeTypes = TypeUtilities.GetSubClasses(typeof(CompositeNode), excludeAbstract: true).Except(excludedTypes).ToList();
+            compositeTypes.ForEach(type => entries.Add(GetTypeEntry(type, 2)));
+
+            entries.Add(new SearchTreeGroupEntry(new GUIContent("Decorator nodes"), 1));
+            var decoratorTypes = TypeUtilities.GetSubClasses(typeof(DecoratorNode), excludeAbstract: true).Except(excludedTypes).ToList();
+            decoratorTypes.ForEach(type => entries.Add(GetTypeEntry(type, 2)));
+
+            entries.Add(GetTypeEntry(typeof(LeafNode), 1));
+
+            return entries;
+
         }
     }
 }

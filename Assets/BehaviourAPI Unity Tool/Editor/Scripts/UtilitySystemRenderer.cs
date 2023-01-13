@@ -1,11 +1,19 @@
+using BehaviourAPI.BehaviourTrees;
+using BehaviourAPI.BehaviourTrees.Decorators;
 using BehaviourAPI.Unity.Editor.Assets.BehaviourAPI_Unity_Tool.Editor.Scripts.Utils;
 using BehaviourAPI.Unity.Runtime;
 using BehaviourAPI.UtilitySystems;
+using BehaviourAPI.UtilitySystems.UtilityElements;
+using BehaviourAPIUnityTool.UtilitySystems;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UtilityAction = BehaviourAPIUnityTool.UtilitySystems.UtilityAction;
+using VariableFactor = BehaviourAPI.Unity.Runtime.VariableFactor;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -109,6 +117,33 @@ namespace BehaviourAPI.Unity.Editor
         public override GraphViewChange OnGraphViewChanged(GraphViewChange change)
         {
             return change;
+        }
+
+        public override List<SearchTreeEntry> GetNodeHierarchyEntries()
+        {
+            Type[] excludedTypes = new Type[] { typeof(CustomFunctionFactor) };
+
+            List<SearchTreeEntry> entries = new List<SearchTreeEntry>();
+
+            entries.Add(new SearchTreeGroupEntry(new GUIContent("US nodes")));
+
+            entries.Add(GetTypeEntry(typeof(UtilityAction), 1));
+
+            entries.Add(GetTypeEntry(typeof(UtilityBucket), 1));
+
+            entries.Add(GetTypeEntry(typeof(UtilityExitNode), 1));
+
+            entries.Add(new SearchTreeGroupEntry(new GUIContent("Fusion factor"), 1));
+            var fusionTypes = TypeUtilities.GetSubClasses(typeof(FusionFactor), excludeAbstract: true).Except(excludedTypes).ToList();
+            fusionTypes.ForEach(type => entries.Add(GetTypeEntry(type, 2)));
+
+            entries.Add(new SearchTreeGroupEntry(new GUIContent("Function factor"), 1));
+            var functionTypes = TypeUtilities.GetSubClasses(typeof(FunctionFactor), excludeAbstract: true).Except(excludedTypes).ToList();
+            functionTypes.ForEach(type => entries.Add(GetTypeEntry(type, 2)));
+
+            entries.Add(GetTypeEntry(typeof(VariableFactor), 1));
+
+            return entries;
         }
     }
 }
