@@ -1,7 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BehaviourAPI.Core;
+using BehaviourAPI.Core.Perceptions;
+using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEngine;
+using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Runtime
 {
@@ -12,10 +17,9 @@ namespace BehaviourAPI.Unity.Runtime
     public class BehaviourSystemAsset : ScriptableObject
     {
         [SerializeField] List<GraphAsset> graphs = new List<GraphAsset>();
-
-        [SerializeField] List<PerceptionAsset> perceptions = new List<PerceptionAsset>();
-        [SerializeField] List<ActionAsset> actions = new List<ActionAsset>();
         [SerializeField] List<PushPerceptionAsset> pushPerceptions = new List<PushPerceptionAsset>();
+
+        Dictionary<string, PushPerception> buildedPushPerceptions;
 
         public GraphAsset RootGraph
         {
@@ -32,8 +36,6 @@ namespace BehaviourAPI.Unity.Runtime
         }
 
         public List<GraphAsset> Graphs => graphs;
-        public List<PerceptionAsset> Perceptions => perceptions;
-        public List<ActionAsset> Actions => actions;
         public List<PushPerceptionAsset> PushPerceptions => pushPerceptions;
 
 
@@ -46,28 +48,6 @@ namespace BehaviourAPI.Unity.Runtime
                 Graphs.Add(graphAsset);
             }
             return graphAsset;
-        }
-
-        public ActionAsset CreateAction(string name, Type type)
-        {
-            var actionAsset = ActionAsset.Create(name, type);
-
-            if (actionAsset != null)
-            {
-                Actions.Add(actionAsset);
-            }
-            return actionAsset;
-        }
-
-        public PerceptionAsset CreatePerception(string name, Type type)
-        {
-            var perceptionAsset = PerceptionAsset.Create(name, type);
-
-            if (perceptionAsset != null)
-            {
-                Perceptions.Add(perceptionAsset);
-            }
-            return perceptionAsset;
         }
 
         public PushPerceptionAsset CreatePushPerception(string name)
@@ -86,19 +66,22 @@ namespace BehaviourAPI.Unity.Runtime
             Graphs.Remove(graph);
         }
 
-        public void RemoveAction(ActionAsset action)
-        {
-            Actions.Remove(action);
-        }
-
-        public void RemovePerception(PerceptionAsset perception)
-        {
-            Perceptions.Remove(perception);
-        }
-
         public void RemovePushPerception(PushPerceptionAsset pushPerception)
         {
             PushPerceptions.Remove(pushPerception);
+        }
+
+        public BehaviourGraph Build()
+        {
+            graphs.ForEach(g => g.Build());
+
+            //buildedPushPerceptions = pushPerceptions.ToDictionary(p => p.Name, p => p.Build());
+            return RootGraph.Graph;
+        }
+
+        public PushPerception GetPushPerception(string name)
+        {
+            return buildedPushPerceptions.GetValueOrDefault(name);
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
+using BehaviourAPI.Core.Perceptions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,7 +22,7 @@ public class RadarFSMRunner : BehaviourGraphRunner
         var @break = new UnityTimePerception(20f);
 
         var subFSM = CreateLightSubFSM();
-        var workingState = radarFSM.CreateState("working state", new EnterSystemAction(subFSM));
+        var workingState = radarFSM.CreateState("working state", new SubsystemAction(subFSM));
         var brokenState = radarFSM.CreateState("broken state", new BlinkAction(radarLight, speedText, Color.yellow));
 
         // La FSM cambia de un estado a otro con el paso del tiempo:
@@ -49,8 +50,10 @@ public class RadarFSMRunner : BehaviourGraphRunner
         lightSubFSM.CreateTransition("car under speed", waitingState, underSpeedState, underSpeedPerception);
 
         // Vuelve al estado de espera al acabar la acción
-        lightSubFSM.CreateFinishStateTransition("over speed to waiting", overSpeedState, waitingState, true, true);
-        lightSubFSM.CreateFinishStateTransition("under speed to waiting", underSpeedState, waitingState, true, true);
+        lightSubFSM.CreateTransition("over speed to waiting", overSpeedState, waitingState, 
+            new ExecutionStatusPerception(overSpeedState, StatusFlags.Finished));
+        lightSubFSM.CreateTransition("under speed to waiting", underSpeedState, waitingState, 
+            new ExecutionStatusPerception(overSpeedState, StatusFlags.Finished));
 
         return lightSubFSM;
     }

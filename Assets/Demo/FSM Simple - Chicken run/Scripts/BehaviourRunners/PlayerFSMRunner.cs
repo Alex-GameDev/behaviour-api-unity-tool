@@ -39,8 +39,8 @@ public class PlayerFSMRunner : BehaviourGraphRunner
         _click = new BehaviourAPI.Core.Perceptions.PushPerception(idleToMoving, movingToMoving);
 
         // La transición que pasan al estado "idle" se lanzan cuando la acción de "moving" o "flee" termine.
-        fsm.CreateFinishStateTransition("moving to idle", moving, idle, true, true);
-        fsm.CreateFinishStateTransition("runaway to idle", flee, idle, true, true);
+        fsm.CreateTransition("moving to idle", moving, idle, new ExecutionStatusPerception(moving, StatusFlags.Finished));
+        fsm.CreateTransition("runaway to idle", flee, idle, new ExecutionStatusPerception(flee, StatusFlags.Finished));
 
         // Las transiciones que pasan al estado "flee" se activan con la percepción "chicken near"
         fsm.CreateTransition("idle to runaway", idle, flee, chickenNear);
