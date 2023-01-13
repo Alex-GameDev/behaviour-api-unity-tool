@@ -20,7 +20,7 @@ namespace BehaviourAPI.Unity.Runtime
 
         public void OnAfterDeserialize()
         {
-            if (component != null && !string.IsNullOrEmpty(methodName))
+            if (!string.IsNullOrEmpty(methodName))
             {
                 if (component.GetType().GetMethod(methodName) == null)
                 {

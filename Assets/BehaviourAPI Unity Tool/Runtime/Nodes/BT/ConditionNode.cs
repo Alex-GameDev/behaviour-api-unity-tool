@@ -8,6 +8,12 @@ namespace BehaviourAPI.Unity.Runtime
 {
     public class ConditionNode : ConditionDecoratorNode
     {
-        [SerializeReference] new Perception Perception;
+        [SerializeReference] Perception _perception;
+
+        public override void Start()
+        {
+            if(Perception == null) Perception = _perception;
+            base.Start();
+        }
     }
 }

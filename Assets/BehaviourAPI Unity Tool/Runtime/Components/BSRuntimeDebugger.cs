@@ -13,7 +13,7 @@ namespace BehaviourAPI.Unity.Runtime
     [RequireComponent(typeof(VisualBehaviourRunner))]
     public class BSRuntimeDebugger : MonoBehaviour
     {
-        public BehaviourSystemAsset systemAsset;
+        [HideInInspector] public BehaviourSystemAsset systemAsset;
 
 
         [SerializeField] bool _logGraphStatusChanged;

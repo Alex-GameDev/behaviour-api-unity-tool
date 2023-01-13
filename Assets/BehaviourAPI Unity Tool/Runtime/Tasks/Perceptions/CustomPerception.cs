@@ -9,19 +9,10 @@ namespace BehaviourAPI.Unity.Runtime
         [SerializeField] SerializedBoolFunction check;
         [SerializeField] SerializedAction reset;
 
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
+        public override void Initialize() => init.GetFunction()?.Invoke();
 
-        public override void Reset()
-        {
-            base.Reset();
-        }
-        public override bool Check()
-        {
-            throw new System.NotImplementedException();
-        }
+        public override void Reset() => reset.GetFunction()?.Invoke();
+        public override bool Check() => check.GetFunction()?.Invoke() ?? false;
 
     }
 }

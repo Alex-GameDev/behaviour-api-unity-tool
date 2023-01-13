@@ -1,7 +1,4 @@
 using BehaviourAPI.Core;
-using BehaviourAPI.Core.Actions;
-using System;
-using System.Linq.Expressions;
 using UnityEngine;
 using Action = BehaviourAPI.Core.Actions.Action;
 
@@ -13,19 +10,10 @@ namespace BehaviourAPI.Unity.Runtime
         [SerializeField] SerializedStatusFunction update;
         [SerializeField] SerializedAction stop;
 
-        public override void Start()
-        {
-           
-        }
+        public override void Start() => start.GetFunction()?.Invoke();
 
-        public override void Stop()
-        {
-           
-        }
+        public override void Stop() => stop.GetFunction()?.Invoke();
 
-        public override Status Update()
-        {
-            return Status.Success;
-        }
+        public override Status Update() => update.GetFunction()?.Invoke() ?? Status.Running;
     }
 }
