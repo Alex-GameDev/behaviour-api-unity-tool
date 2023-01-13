@@ -279,7 +279,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 8010495545050660894
-  position: {x: 403, y: 469}
+  position: {x: 321, y: 516}
   parents: []
   childs:
   - {fileID: 5714444899809599246}
@@ -461,7 +461,7 @@ MonoBehaviour:
   Name: Action 2
   node:
     rid: 8010495545050660878
-  position: {x: 673, y: 433}
+  position: {x: 754, y: 406}
   parents:
   - {fileID: -240547844799465592}
   - {fileID: -6264777373815996434}
@@ -725,7 +725,7 @@ MonoBehaviour:
   Name: Bucket
   node:
     rid: 8010495545050660877
-  position: {x: 548, y: 214}
+  position: {x: 505, y: 218}
   parents: []
   childs:
   - {fileID: -3404982431193846039}
@@ -755,6 +755,7 @@ MonoBehaviour:
   graphs:
   - {fileID: -6384761219751871670}
   - {fileID: 5758552596208899235}
+  - {fileID: 6083402784390494825}
   pushPerceptions: []
 --- !u!114 &139936388447147224
 MonoBehaviour:
@@ -796,7 +797,7 @@ MonoBehaviour:
   Name: Weighted
   node:
     rid: 8010495545050660879
-  position: {x: 675, y: 582}
+  position: {x: 750, y: 545}
   parents:
   - {fileID: -3404982431193846039}
   childs:
@@ -1065,6 +1066,29 @@ MonoBehaviour:
     RefIds:
     - rid: 8010495545050660882
       type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+--- !u!114 &6083402784390494825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
+  m_Name: GraphAsset
+  m_EditorClassIdentifier: 
+  Name: 
+  graph:
+    rid: 2511130931543146496
+  nodes:
+  - {fileID: 8266763378152669397}
+  - {fileID: 7986801993401933525}
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511130931543146496
+      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
 --- !u!114 &7290713015452359445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1089,6 +1113,65 @@ MonoBehaviour:
     RefIds:
     - rid: 2511130886614810632
       type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+--- !u!114 &7986801993401933525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 2511130931543146498
+  position: {x: 704, y: 466}
+  parents: []
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2511130931543146498
+      type: {class: ExitTransition, ns: BehaviourAPI.Unity.Runtime.StateMachines, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        isPulled: 1
+        ExitStatus: 0
+        perception:
+          rid: -2
+--- !u!114 &8266763378152669397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: NodeAsset
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 2511130931543146497
+  position: {x: 386, y: 382}
+  parents: []
+  childs:
+  - {fileID: 7986801993401933525}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2511130931543146497
+      type: {class: State, ns: BehaviourAPI.Unity.Runtime.StateMachines, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        _action:
+          rid: -2
 --- !u!114 &8764346191952106072
 MonoBehaviour:
   m_ObjectHideFlags: 0
