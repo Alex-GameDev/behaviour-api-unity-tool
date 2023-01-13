@@ -34,6 +34,7 @@ namespace BehaviourAPI.Unity.Editor
         public override NodeView DrawNode(NodeAsset asset)
         {
             var nodeView = new NodeView(asset, graphView, asset.Node is State ? stateLayout : transitionLayout);
+            nodeView.Q("node-icon").Add(new Label(nodeView.Node.Node.GetType().Name.CamelCaseToSpaced().ToUpper()));
 
             if (nodeView.Node.Node.MaxInputConnections != 0)
             {
@@ -58,6 +59,8 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
                 nodeView.outputContainer.style.display = DisplayStyle.None;
+
+            
 
             // Crear menú
             nodeView.AddManipulator(new ContextualMenuManipulator(menuEvt =>

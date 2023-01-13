@@ -14,6 +14,7 @@
                                     </ui:VisualElement>
                                 </ui:VisualElement>
                             </ui:VisualElement>
+                            <ui:VisualElement name="node-icon" style="justify-content: center; align-items: center;" />
                             <ui:VisualElement name="node-ports" style="justify-content: flex-start;">
                                 <ui:VisualElement name="node-root" style="padding-left: 20px; padding-right: 20px; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; display: none; top: -5px;">
                                     <ui:VisualElement name="node-root-tag" style="background-color: rgb(101, 101, 101); border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; display: flex;">

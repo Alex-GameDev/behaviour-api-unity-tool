@@ -23,6 +23,7 @@
                                     </ui:VisualElement>
                                 </ui:VisualElement>
                             </ui:VisualElement>
+                            <ui:VisualElement name="node-icon" style="justify-content: center; align-items: center;" />
                             <ui:VisualElement name="extension" />
                         </ui:VisualElement>
                     </ui:VisualElement>

@@ -49,6 +49,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             // Crear nodo
             var nodeView = new NodeView(asset, graphView, btLayout);
+            nodeView.Q("node-icon").Add(new Label(nodeView.Node.Node.GetType().Name.CamelCaseToSpaced().ToUpper()));
 
             // Crear puertos
             if (nodeView.Node.Node.MaxInputConnections != 0)

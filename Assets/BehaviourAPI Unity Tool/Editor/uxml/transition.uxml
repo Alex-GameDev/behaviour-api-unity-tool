@@ -14,6 +14,7 @@
                                     </ui:VisualElement>
                                 </ui:VisualElement>
                             </ui:VisualElement>
+                            <ui:VisualElement name="node-icon" style="justify-content: center; align-items: center;" />
                             <ui:VisualElement name="node-root" style="padding-left: 20px; padding-right: 20px; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; display: none; top: -5px;">
                                 <ui:VisualElement name="node-root-tag" style="background-color: rgb(101, 101, 101); border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; display: flex;">
                                     <ui:Label text="ROOT" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; font-size: 8px; -unity-font-style: bold; -unity-font: url(&apos;project://database/Library/unity%20default%20resources?fileID=10102&amp;guid=0000000000000000e000000000000000&amp;type=0#Arial&apos;);" />

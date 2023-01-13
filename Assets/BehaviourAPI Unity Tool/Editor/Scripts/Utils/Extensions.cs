@@ -1,11 +1,11 @@
 ﻿using BehaviourAPI.Unity.Runtime;
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using System.Text.RegularExpressions;
 using UnityEngine.UIElements;
-using UnityEngine.VFX;
+
 
 namespace BehaviourAPI.Unity.Editor.Assets.BehaviourAPI_Unity_Tool.Editor.Scripts.Utils
 {
@@ -60,6 +60,11 @@ namespace BehaviourAPI.Unity.Editor.Assets.BehaviourAPI_Unity_Tool.Editor.Script
                 });
             }
             return visitedNodes;           
+        }
+
+        public static string CamelCaseToSpaced(this string input)
+        {
+              return Regex.Replace(input, "([A-Z])", " $1").Trim();
         }
     }
 }
