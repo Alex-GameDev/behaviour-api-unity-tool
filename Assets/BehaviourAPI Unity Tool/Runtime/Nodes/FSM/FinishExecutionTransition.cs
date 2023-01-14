@@ -7,9 +7,24 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime.StateMachines
 {
-    public class FinishExecutionTransition : BehaviourAPI.StateMachines.StateTransition
+    public class FinishExecutionTransition : BehaviourAPI.StateMachines.StateTransition, ISerializationCallbackReceiver
     {
         [SerializeField] StatusFlags _statusFlags;
         [SerializeReference] Action _action;
+
+        public void OnAfterDeserialize()
+        {
+            Action = _action;
+        }
+
+        public void OnBeforeSerialize()
+        {
+            return;
+        }
+
+        public override bool Check()
+        {
+            return ((uint)_sourceState.Status & (uint)_statusFlags) != 0;
+        }
     }
 }

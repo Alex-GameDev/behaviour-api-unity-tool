@@ -6,14 +6,18 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
 {
-    public class ConditionNode : ConditionDecoratorNode
+    public class ConditionNode : ConditionDecoratorNode, ISerializationCallbackReceiver
     {
         [SerializeReference] Perception _perception;
 
-        public override void Start()
+        public void OnAfterDeserialize()
         {
-            if(Perception == null) Perception = _perception;
-            base.Start();
+            Perception = _perception;
+        }
+
+        public void OnBeforeSerialize()
+        {
+            return;
         }
     }
 }

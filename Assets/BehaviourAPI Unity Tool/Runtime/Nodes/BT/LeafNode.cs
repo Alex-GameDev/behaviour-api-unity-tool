@@ -6,14 +6,18 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
 {
-    public class LeafNode : BehaviourTrees.LeafNode
+    public class LeafNode : BehaviourTrees.LeafNode, ISerializationCallbackReceiver
     {
         [SerializeReference] Action SerializedAction;
 
-        public override void Start()
+        public void OnAfterDeserialize()
         {
             Action = SerializedAction;
-            base.Start();
+        }
+
+        public void OnBeforeSerialize()
+        {
+            return;
         }
     }
 }

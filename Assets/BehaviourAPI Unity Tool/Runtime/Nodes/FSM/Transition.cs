@@ -6,9 +6,20 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime.StateMachines
 {
-    public class Transition : BehaviourAPI.StateMachines.StateTransition
+    public class Transition : BehaviourAPI.StateMachines.StateTransition, ISerializationCallbackReceiver
     {
         [SerializeReference] Action _action;
         [SerializeReference] Perception perception;
+
+        public void OnAfterDeserialize()
+        {
+            Action = _action;
+            Perception = perception;
+        }
+
+        public void OnBeforeSerialize()
+        {
+            return;
+        }
     }
 }
