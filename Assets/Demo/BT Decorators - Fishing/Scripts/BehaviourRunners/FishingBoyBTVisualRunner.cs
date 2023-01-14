@@ -19,7 +19,6 @@ public class FishingBoyBTVisualRunner : VisualBehaviourRunner
     [CustomMethod]
     public void StartCatch()
     {
-        Debug.Log("Catching");
         _rod.PickUp();
 
         var catchId = Random.Range(0, 2);
@@ -32,7 +31,7 @@ public class FishingBoyBTVisualRunner : VisualBehaviourRunner
     }
 
     [CustomMethod]
-    public void StartThrow(){ Debug.Log("Start throw"); _rod.Throw(); }
+    public void StartThrow() =>  _rod.Throw();
 
     [CustomMethod]
     public bool IsFishCatched() => _fishCatched;

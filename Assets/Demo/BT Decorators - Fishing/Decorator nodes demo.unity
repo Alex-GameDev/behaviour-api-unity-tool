@@ -951,7 +951,7 @@ MonoBehaviour:
     - rid: 2511130937897517069
       type: {class: UnityTimerDecorator, ns: BehaviourAPI.Unity.Runtime, asm: Assembly-CSharp}
       data:
-        TotalTime: 5
+        TotalTime: 3
 --- !u!1 &1013018738
 GameObject:
   m_ObjectHideFlags: 0
