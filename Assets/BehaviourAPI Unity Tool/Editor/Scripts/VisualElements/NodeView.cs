@@ -62,13 +62,11 @@ namespace BehaviourAPI.Unity.Editor
 
         void UpdateStatusBorder(VisualElement statusBorder, Status status)
         {
-            if(status != Status.None)
-            {
-                statusBorder.style.borderBottomColor = StatusToColor(status);
-                statusBorder.style.borderTopColor = StatusToColor(status);
-                statusBorder.style.borderLeftColor = StatusToColor(status);
-                statusBorder.style.borderRightColor = StatusToColor(status);
-            }
+            var color = StatusToColor(status);
+            statusBorder.style.borderBottomColor = color;
+            statusBorder.style.borderTopColor = color;
+            statusBorder.style.borderLeftColor = color;
+            statusBorder.style.borderRightColor = color;            
         }
 
         Color StatusToColor(Status status)

@@ -6,7 +6,7 @@ using System;
 using BehaviourAPI.Unity.Runtime;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
-
+using BehaviourAPI.Unity.Editor.Assets.BehaviourAPI_Unity_Tool.Editor.Scripts.Utils;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -135,7 +135,11 @@ namespace BehaviourAPI.Unity.Editor
             if(IsRuntime)
             {
                 var toolbar = rootVisualElement.Q<Toolbar>("bw-toolbar");
-                toolbar.style.display = DisplayStyle.None;
+                var runtimeToolbar = rootVisualElement.Q<Toolbar>("bw-runtime-toolbar");
+                toolbar.Disable();
+                runtimeToolbar.Enable();
+
+                _selectGraphToolbarMenu = rootVisualElement.Q<ToolbarMenu>("bw-runtime-toolbar-graph-menu");
             }
             else
             {
@@ -152,14 +156,12 @@ namespace BehaviourAPI.Unity.Editor
                 _autosaveToolbarToggle.RegisterValueChangedCallback((evt) => autoSave = evt.newValue);
                 _setRootGraphToolbarButton.clicked += ChangeRootGraph;
 
-                UpdateGraphSelectionToolbar();
-            } 
+            }
+            UpdateGraphSelectionToolbar();
         }
 
         void UpdateGraphSelectionToolbar()
         {
-            if (IsRuntime) return;
-
             _selectGraphToolbarMenu.menu.MenuItems().Clear();
 
             if (SystemAsset == null) return;
