@@ -137,10 +137,10 @@ public class PizzaBoyVisualRunner : VisualBehaviourRunner
     }
 
     [CustomMethod]
-    public float PizzaFactor() => _pizzasCreated;
+    public float PizzaFactor() => _pizzasCreated % 10;
 
     [CustomMethod]
-    public float PeperoniFactor() => _peperoniUsed;
+    public float PeperoniFactor() => _peperoniUsed % 4;
 
 
 }

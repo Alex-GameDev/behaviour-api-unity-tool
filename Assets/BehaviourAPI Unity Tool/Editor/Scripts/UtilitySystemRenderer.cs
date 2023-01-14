@@ -80,7 +80,25 @@ namespace BehaviourAPI.Unity.Editor
 
             assetViewPairs.Add(asset, nodeView);
             graphView.AddNodeView(nodeView);
+
+            if (graphView.Runtime)
+            {
+                var extension = nodeView.Q("extension");
+                var utilityBar = new ProgressBar()
+                {
+                    title = " ",
+                    lowValue = 0,
+                    highValue = 1,
+                };
+
+                var utilityNode = nodeView.Node.Node as UtilityNode;
+                utilityNode.UtilityChanged += (value) => utilityBar.value = value;
+                extension.Add(utilityBar);
+            }
+
             return nodeView;
+
+
         }
 
         public override List<Port> GetValidPorts(UQueryState<Port> ports, Port startPort)

@@ -187,7 +187,7 @@ MonoBehaviour:
       data:
         start:
           component: {fileID: 1401791156}
-          methodName: CreateRecipe_2
+          methodName: CreateRecipe_0
         update:
           component: {fileID: 1401791156}
           methodName: RecipeCreated
@@ -359,7 +359,7 @@ MonoBehaviour:
   Name: PIZZA
   node:
     rid: 2511130952777334808
-  position: {x: 398, y: 642}
+  position: {x: 418, y: 658}
   parents:
   - {fileID: 1922955158}
   - {fileID: 715141466}
@@ -372,7 +372,7 @@ MonoBehaviour:
       type: {class: VariableFactor, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
       data:
         min: 0
-        max: 1
+        max: 10
         variableFunction:
           component: {fileID: 1401791156}
           methodName: PizzaFactor
@@ -589,7 +589,7 @@ MonoBehaviour:
   Name: VEGETARIAN
   node:
     rid: 2511130952777334812
-  position: {x: 495, y: 430}
+  position: {x: 503, y: 450}
   parents:
   - {fileID: 2119484974}
   childs:
@@ -602,7 +602,61 @@ MonoBehaviour:
       data:
         curve:
           serializedVersion: 2
-          m_Curve: []
+          m_Curve:
+          - serializedVersion: 3
+            time: -0.0017452477
+            value: 0.9999939
+            inSlope: -2.4912987
+            outSlope: -2.4912987
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.19895287
+            value: 0.49999493
+            inSlope: -2.3875694
+            outSlope: -1.8977318
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.3652173
+            outWeight: 0.99696577
+          - serializedVersion: 3
+            time: 0.40376276
+            value: 0.10041037
+            inSlope: -1.906238
+            outSlope: 1.587546
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.991479
+            outWeight: 1
+          - serializedVersion: 3
+            time: 0.5991752
+            value: 0.40107659
+            inSlope: 1.9528962
+            outSlope: -1.0178996
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.39588198
+            outWeight: 0.99780065
+          - serializedVersion: 3
+            time: 0.7909977
+            value: 0.20891514
+            inSlope: -1.1350316
+            outSlope: -0.9803699
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 1
+            outWeight: 1
+          - serializedVersion: 3
+            time: 1.0035152
+            value: -0.0000015497208
+            inSlope: -0.9830561
+            outSlope: -0.9830561
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
@@ -1729,7 +1783,7 @@ MonoBehaviour:
     - rid: 2511130952777334813
       type: {class: ExponentialFunction, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
       data:
-        Exp: 0
+        Exp: 7
         DespX: 0
         DespY: 0
 --- !u!114 &1801412346
@@ -2209,7 +2263,7 @@ MonoBehaviour:
       type: {class: VariableFactor, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
       data:
         min: 0
-        max: 1
+        max: 4
         variableFunction:
           component: {fileID: 1401791156}
           methodName: PeperoniFactor
@@ -2313,7 +2367,7 @@ MonoBehaviour:
   Name: HAWAIIAN PIZZA
   node:
     rid: 2511130952777334814
-  position: {x: 317, y: 227}
+  position: {x: 333, y: 242}
   parents: []
   childs:
   - {fileID: 1772216813}
@@ -2332,7 +2386,7 @@ MonoBehaviour:
       data:
         start:
           component: {fileID: 1401791156}
-          methodName: CreateRecipe_0
+          methodName: CreateRecipe_2
         update:
           component: {fileID: 1401791156}
           methodName: RecipeCreated
