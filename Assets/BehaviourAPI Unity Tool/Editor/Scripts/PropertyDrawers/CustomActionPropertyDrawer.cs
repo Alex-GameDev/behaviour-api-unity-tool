@@ -78,5 +78,5 @@ namespace BehaviourAPI.Unity.Editor
             return methodInfo.ReturnParameter.ParameterType == typeof(bool) &&
                 methodInfo.GetParameters().Length == 0;
         }
-    }
+    }   
 }
