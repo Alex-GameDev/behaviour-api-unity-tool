@@ -97,9 +97,6 @@ namespace BehaviourAPI.Unity.Editor
             List<Port> validPorts = new List<Port>();
             var startPortNodeView = (NodeView)startPort.node;
 
-            var childs = startPortNodeView.Node.GetPathToLeaves();
-            var parents = startPortNodeView.Node.GetPathFromRoot();
-
             ports.ForEach(port =>
             {
                 if (startPort.direction == port.direction) return; // Same port direction
@@ -111,12 +108,10 @@ namespace BehaviourAPI.Unity.Editor
                 if (startPort.direction == Direction.Input)
                 {
                     if (!port.portType.IsAssignableFrom(startPort.portType)) return;
-                    if (childs.Contains(portNodeView.Node)) return;
                 }
                 else
                 {
                     if (!startPort.portType.IsAssignableFrom(port.portType)) return;
-                    if (parents.Contains(portNodeView.Node)) return;
                 }
 
                 validPorts.Add(port);
