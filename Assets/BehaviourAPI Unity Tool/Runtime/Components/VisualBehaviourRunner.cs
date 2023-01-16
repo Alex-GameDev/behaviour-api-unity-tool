@@ -1,12 +1,10 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
 {
-    public class BehaviourGraphVisualRunner : MonoBehaviour
+    public abstract class VisualBehaviourRunner : BehaviourRunner
     {
         public BehaviourSystemAsset SystemAsset;
 
@@ -18,7 +16,7 @@ namespace BehaviourAPI.Unity.Runtime
 
         private void Update() => OnUpdate();
 
-        protected virtual void OnAwake()
+        protected override void OnAwake()
         {
             if(SystemAsset == null )
             {
@@ -30,6 +28,7 @@ namespace BehaviourAPI.Unity.Runtime
                 _rootGraph = SystemAsset.Build();
 
                 if (_rootGraph == null)
+
                 {
                     Debug.LogError("Behaviour system is empty. Component is removed.");
                     Destroy(this);
@@ -37,14 +36,19 @@ namespace BehaviourAPI.Unity.Runtime
             }
         }
 
-        protected virtual void OnStart()
+        protected override void OnStart()
         {
             _rootGraph.Start();
         }
 
-        protected virtual void OnUpdate()
+        protected override void OnUpdate()
         {
             _rootGraph.Update();
+        }
+
+        public override BehaviourSystemAsset GetBehaviourSystemAsset()
+        {
+            return SystemAsset;
         }
 
         public Status Test()

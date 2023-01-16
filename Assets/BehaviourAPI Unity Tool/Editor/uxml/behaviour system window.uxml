@@ -20,4 +20,9 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
+    <uie:Toolbar name="bw-runtime-toolbar" class="bw-toolbar" style="display: none;">
+        <ui:VisualElement style="flex-direction: row;">
+            <uie:ToolbarMenu display-tooltip-when-elided="true" name="bw-runtime-toolbar-graph-menu" text="graph" />
+        </ui:VisualElement>
+    </uie:Toolbar>
 </ui:UXML>

@@ -5,11 +5,13 @@ using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
+using BehaviourAPI.StateMachines;
+using BehaviourAPI.Unity.Runtime;
 using BehaviourAPI.UtilitySystems;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PizzaBoyRunner : BehaviourGraphRunner
+public class PizzaBoyRunner : CodeBehaviourRunner
 {
     [SerializeField] Ingredient _pizzaMass;
     [SerializeField] Ingredient _tomato;
@@ -26,8 +28,6 @@ public class PizzaBoyRunner : BehaviourGraphRunner
     int _pizzasCreated = 0;
     int _peperoniUsed = 0;
 
-    BehaviourGraph _fsm, _bt, _us;
-
     Recipe _currentRecipe;
     int _currentIngredient = 0;
     float _lastIngredientAddedTime = 0f;
@@ -40,7 +40,7 @@ public class PizzaBoyRunner : BehaviourGraphRunner
 
     protected override BehaviourGraph CreateGraph()
     {
-        var bt = new BehaviourAPI.BehaviourTrees.BehaviourTree();
+        var bt = new BehaviourTree();
         var us = CreateLookRecipeUtilitySystem();
         var fsm = CreateMakePizzaFSM();
 
@@ -51,13 +51,12 @@ public class PizzaBoyRunner : BehaviourGraphRunner
         var seq = bt.CreateComposite<SequencerNode>("pizza seq", false, recipeAction, makePizzaAction, bakeAction);
         var root = bt.CreateDecorator<IteratorNode>("loop", seq).SetIterations(-1);
         bt.SetRootNode(root);
-        _bt = bt;
         return bt;
     }
 
-    private BehaviourAPI.StateMachines.FSM CreateMakePizzaFSM()
+    private FSM CreateMakePizzaFSM()
     {
-        var fsm = new BehaviourAPI.StateMachines.FSM();
+        var fsm = new FSM();
 
         var massState = fsm.CreateState("mass", new FunctionalAction(() => PutIngredient(_pizzaMass), WaitToPutIngredient));
         var tomatoState = fsm.CreateState("tomato", new FunctionalAction(() => PutIngredient(_tomato), WaitToPutIngredient));
@@ -67,16 +66,15 @@ public class PizzaBoyRunner : BehaviourGraphRunner
         fsm.CreateTransition("tommato putted", tomatoState, toppingState, new ExecutionStatusPerception(tomatoState, StatusFlags.Success | StatusFlags.Failure));
         fsm.CreateTransition("next topping", toppingState, toppingState, new ExecutionStatusPerception(toppingState, StatusFlags.Failure));
         fsm.CreateExitTransition("pizza completed", toppingState, Status.Success, new ExecutionStatusPerception(toppingState, StatusFlags.Success));
-        _fsm = fsm;
         return fsm;
     }
 
-    BehaviourAPI.UtilitySystems.UtilitySystem CreateLookRecipeUtilitySystem()
+    UtilitySystem CreateLookRecipeUtilitySystem()
     {
-        var us = new BehaviourAPI.UtilitySystems.UtilitySystem();
+        var us = new UtilitySystem();
 
         var pizzafactor = us.CreateVariableFactor("pizzas", () => _pizzasCreated, 10, 0);
-        var pepperoniFactor = us.CreateVariableFactor("peperoni", () => _pizzasCreated, 4, 0);
+        var pepperoniFactor = us.CreateVariableFactor("peperoni", () => _peperoniUsed, 4, 0);
 
         var peperoniSumFactor = us.CreateFusionFactor<WeightedFusionFactor>("a", pizzafactor, pepperoniFactor)
             .SetWeights(0.6f, 0.4f);
@@ -98,7 +96,6 @@ public class PizzaBoyRunner : BehaviourGraphRunner
             new FunctionalAction(() => CreateRecipe(1), RecipeCreated, CreateRecipeCompleted), finishOnComplete: true);
         var hawaiianAction = us.CreateUtilityAction("choose hawaiian", hawaiianFactor,
             new FunctionalAction(() => CreateRecipe(2), RecipeCreated, CreateRecipeCompleted), finishOnComplete: true);
-        _us = us;
         return us;
     }
 

@@ -10,8 +10,6 @@ namespace BehaviourAPI.Unity.Runtime
     public class SubgraphAction : Action
     {
         [HideInInspector][SerializeField] GraphAsset subgraph;
-
-
         public GraphAsset Subgraph { get => subgraph; set => subgraph = value; }
 
         public override void Start()

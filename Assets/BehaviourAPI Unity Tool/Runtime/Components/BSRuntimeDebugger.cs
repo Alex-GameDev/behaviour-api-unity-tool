@@ -10,10 +10,11 @@ namespace BehaviourAPI.Unity.Runtime
     /// Component used for display the status of
     /// </summary>
     
-    [RequireComponent(typeof(BehaviourGraphVisualRunner))]
+    [RequireComponent(typeof(VisualBehaviourRunner))]
     public class BSRuntimeDebugger : MonoBehaviour
     {
-        BehaviourGraphVisualRunner _runner;
+        [HideInInspector] public BehaviourSystemAsset systemAsset;
+
 
         [SerializeField] bool _logGraphStatusChanged;
         [SerializeField] bool _logNodeStatusChanged;
@@ -21,17 +22,7 @@ namespace BehaviourAPI.Unity.Runtime
 
         void Awake()
         {
-            _runner = GetComponent<BehaviourGraphVisualRunner>();
-        }
-
-        private void Start()
-        {
-            _runner.SystemAsset.RootGraph.Graph.StatusChanged += RootGraphStatusChanged;
-        }
-
-        void RootGraphStatusChanged(Status status)
-        {
-            Debug.Log(status);
+            systemAsset = GetComponent<BehaviourRunner>().GetBehaviourSystemAsset();
         }
     }
 }

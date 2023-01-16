@@ -1,14 +1,22 @@
 ﻿using BehaviourAPI.Unity.Runtime;
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using System.Text.RegularExpressions;
+using UnityEngine.UIElements;
+
 
 namespace BehaviourAPI.Unity.Editor.Assets.BehaviourAPI_Unity_Tool.Editor.Scripts.Utils
 {
     public static class Extensions
     {
+        public static void Disable(this VisualElement visualElement) => visualElement.style.display = DisplayStyle.None;
+        public static void Enable(this VisualElement visualElement) => visualElement.style.display = DisplayStyle.Flex;
+        public static void Hide(this VisualElement visualElement) => visualElement.style.visibility = Visibility.Hidden;
+        public static void Show(this VisualElement visualElement) => visualElement.style.visibility = Visibility.Visible;
+
+
         public static HashSet<NodeAsset> GetPathFromRoot(this NodeAsset asset)
         {
             HashSet<NodeAsset> visitedNodes = new HashSet<NodeAsset>();
@@ -52,6 +60,11 @@ namespace BehaviourAPI.Unity.Editor.Assets.BehaviourAPI_Unity_Tool.Editor.Script
                 });
             }
             return visitedNodes;           
+        }
+
+        public static string CamelCaseToSpaced(this string input)
+        {
+              return Regex.Replace(input, "([A-Z])", " $1").Trim();
         }
     }
 }

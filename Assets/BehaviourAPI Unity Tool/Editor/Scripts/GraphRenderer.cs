@@ -1,10 +1,12 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Unity.Runtime;
+using log4net.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -15,13 +17,6 @@ namespace BehaviourAPI.Unity.Editor
     {
         protected Dictionary<NodeAsset, NodeView> assetViewPairs = new Dictionary<NodeAsset, NodeView>();
         public BehaviourGraphView graphView;
-
-        /// <summary>
-        /// Defines actions for the node contextual menu
-        /// </summary>
-        /// <param name="nodeView"></param>
-        /// <param name="menuEvt"></param>
-        public abstract void BuildContextualMenu(NodeView nodeView, ContextualMenuPopulateEvent menuEvt);
 
         /// <summary>
         /// Draws a node in the graphView
@@ -36,7 +31,7 @@ namespace BehaviourAPI.Unity.Editor
         /// <param name="src"></param>
         /// <param name="tgt"></param>
         /// <returns></returns>
-        public abstract Edge DrawEdge(NodeAsset src, NodeAsset tgt);
+        public abstract void DrawConnections(NodeAsset asset);
 
         /// <summary>
         /// Get compatible ports
@@ -46,6 +41,13 @@ namespace BehaviourAPI.Unity.Editor
         /// <returns></returns>
         public abstract List<Port> GetValidPorts(UQueryState<Port> ports, Port startPort);
 
+        /// <summary>
+        /// Get the hierarchy entries to the node create search window.
+        /// </summary>
+        /// <returns></returns>
+        public abstract List<SearchTreeEntry> GetNodeHierarchyEntries();
+
+        // (!) Ejecutar después de haber borrado los nodos del grafo
         public abstract GraphViewChange OnGraphViewChanged(GraphViewChange change);
 
         /// <summary>
@@ -63,6 +65,14 @@ namespace BehaviourAPI.Unity.Editor
             else return null;
         }
 
+        public abstract void DrawGraph(GraphAsset graphAsset);
 
+        protected SearchTreeEntry GetTypeEntry(Type type, int level)
+        {
+            return new SearchTreeEntry(new GUIContent("     " + Regex.Replace(type.Name, "([A-Z])", " $1").Trim())) 
+            { 
+                userData = type, level = level 
+            };
+        }
     }
 }

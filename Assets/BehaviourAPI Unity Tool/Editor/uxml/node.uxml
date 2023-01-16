@@ -11,18 +11,21 @@
             <ui:VisualElement name="output" />
         </ui:VisualElement>
         <ui:VisualElement name="node-border" class="node-border">
-            <ui:VisualElement name="contents" class="node-rect">
-                <ui:VisualElement name="top" style="min-height: auto; min-width: auto; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px;">
-                    <ui:VisualElement name="node-content">
-                        <ui:VisualElement name="title" style="height: auto; flex-direction: column;">
-                            <ui:TextField max-length="30" name="title-input-field" tooltip="Node name" />
-                            <ui:VisualElement name="title-button-container">
-                                <ui:VisualElement name="collapse-button">
-                                    <ui:VisualElement name="icon" />
+            <ui:VisualElement name="node-status" style="border-left-color: rgb(183, 183, 183); border-right-color: rgb(183, 183, 183); border-top-color: rgb(183, 183, 183); border-bottom-color: rgb(183, 183, 183); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px;">
+                <ui:VisualElement name="contents" class="node-rect">
+                    <ui:VisualElement name="top" style="min-height: auto; min-width: auto; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px;">
+                        <ui:VisualElement name="node-content">
+                            <ui:VisualElement name="title" style="height: auto; flex-direction: column;">
+                                <ui:TextField max-length="30" name="title-input-field" tooltip="Node name" />
+                                <ui:VisualElement name="title-button-container">
+                                    <ui:VisualElement name="collapse-button">
+                                        <ui:VisualElement name="icon" />
+                                    </ui:VisualElement>
                                 </ui:VisualElement>
                             </ui:VisualElement>
+                            <ui:VisualElement name="node-icon" style="justify-content: center; align-items: center;" />
+                            <ui:VisualElement name="extension" />
                         </ui:VisualElement>
-                        <ui:VisualElement name="extension" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

@@ -20,6 +20,8 @@ namespace BehaviourAPI.Unity.Editor
         public VisualTreeAsset GraphCreationWindowLayout;
 
         public VisualTreeAsset NodeLayout;
+        public VisualTreeAsset StateLayout;
+        public VisualTreeAsset TransitionLayout;
         public VisualTreeAsset ContainerLayout;
         public VisualTreeAsset InspectorLayout;
         public VisualTreeAsset EmptyGraphPanel;
