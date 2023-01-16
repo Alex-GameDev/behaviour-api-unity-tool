@@ -3,8 +3,7 @@ using BehaviourAPI.Core.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.Graphs;
+using System.Linq;
 using UnityEngine;
 using static UnityEditor.PlayerSettings;
 using Vector2 = UnityEngine.Vector2;
@@ -56,12 +55,41 @@ namespace BehaviourAPI.Unity.Runtime
             return graphAsset;
         }
 
-        public BehaviourGraph Build()
+        public BehaviourGraph Build() => graph;
+
+        //public void OnBeforeSerialize()
+        //{
+        //    return;
+        //}
+
+        //public void OnAfterDeserialize()
+        //{
+        //    var graphBuilder = new BehaviourGraphBuilder(graph);
+        //    nodes.ForEach(n => graphBuilder.AddNode(n.Build()));
+        //    graphBuilder.Build();
+        //}
+
+        public GraphAsset Clone()
         {
-            var graphBuilder = new BehaviourGraphBuilder(graph);
-            nodes.ForEach(n => graphBuilder.AddNode(n.Build()));
-            graphBuilder.Build();
-            return graph;
+            GraphAsset graphAsset = CreateInstance<GraphAsset>();
+            graphAsset.graph = (BehaviourGraph) Activator.CreateInstance(graph.GetType());
+
+            var map = new Dictionary<NodeAsset, NodeAsset>();
+
+            for(int i = 0; i < Nodes.Count; i++)
+            {
+                NodeAsset nodeCopy = Nodes[i].Clone();
+                graphAsset.Nodes.Add(nodeCopy);
+                map.Add(Nodes[i], nodeCopy);
+            }
+
+            for (int i = 0; i < Nodes.Count; i++)
+            {
+                graphAsset.Nodes[i].Parents = nodes[i].Parents.Select(p => map.GetValueOrDefault(p)).ToList();
+                graphAsset.Nodes[i].Childs = nodes[i].Childs.Select(p => map.GetValueOrDefault(p)).ToList();
+            }
+
+            return graphAsset;
         }
     }
 }
