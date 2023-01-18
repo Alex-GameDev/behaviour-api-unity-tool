@@ -9,7 +9,7 @@ namespace BehaviourAPI.Unity.Editor
         TextField scriptNameTextField, pathTextField;
         public static void Create()
         {
-            ScriptCreationWindow wnd = new ScriptCreationWindow();
+            ScriptCreationWindow wnd = CreateInstance<ScriptCreationWindow>();
             wnd.titleContent = new GUIContent("Create script");
 
             wnd.minSize = new Vector2(300, 300);
@@ -35,7 +35,7 @@ namespace BehaviourAPI.Unity.Editor
             string path = pathTextField.text;
             string scriptName = scriptNameTextField.text;
 
-            Debug.Log($"CreateScript: {path}{scriptName}");
+            ScriptGeneration.GenerateScript(path, scriptName, BehaviourGraphEditorWindow.SystemAsset);
             Close();
         }
     }

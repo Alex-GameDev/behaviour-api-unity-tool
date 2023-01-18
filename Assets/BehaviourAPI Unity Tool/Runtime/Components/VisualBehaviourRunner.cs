@@ -1,5 +1,7 @@
 using BehaviourAPI.Core;
-using BehaviourAPI.Core.Perceptions;
+using System.CodeDom.Compiler;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
@@ -55,11 +57,6 @@ namespace BehaviourAPI.Unity.Runtime
         {
             Debug.Log("Trying custom action");
             return Status.Success;
-        }
-
-        public PushPerception FindPerception(string name)
-        {
-            return SystemAsset.GetPushPerception(name);
         }
     }
 }
