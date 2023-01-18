@@ -68,5 +68,7 @@ namespace BehaviourAPI.Unity.Editor
             _entrySelected = callback;
             SearchWindow.Open(searchContext, this);
         }
+
+        public static ActionSearchWindow Create() => CreateInstance<ActionSearchWindow>();
     }
 }

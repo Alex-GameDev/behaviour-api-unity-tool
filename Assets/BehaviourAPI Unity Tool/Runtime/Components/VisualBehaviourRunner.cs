@@ -1,13 +1,12 @@
 using BehaviourAPI.Core;
-using System.Collections;
-using System.Collections.Generic;
+using BehaviourAPI.Core.Perceptions;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
 {
-    public class BehaviourGraphVisualRunner : MonoBehaviour
+    public abstract class VisualBehaviourRunner : BehaviourRunner
     {
-        public BehaviourSystemAsset SystemAsset;
+        [HideInInspector] public BehaviourSystemAsset SystemAsset;
 
         BehaviourGraph _rootGraph;
 
@@ -17,7 +16,7 @@ namespace BehaviourAPI.Unity.Runtime
 
         private void Update() => OnUpdate();
 
-        protected virtual void OnAwake()
+        protected override void OnAwake()
         {
             if(SystemAsset == null )
             {
@@ -29,6 +28,7 @@ namespace BehaviourAPI.Unity.Runtime
                 _rootGraph = SystemAsset.Build();
 
                 if (_rootGraph == null)
+
                 {
                     Debug.LogError("Behaviour system is empty. Component is removed.");
                     Destroy(this);
@@ -36,20 +36,30 @@ namespace BehaviourAPI.Unity.Runtime
             }
         }
 
-        protected virtual void OnStart()
+        protected override void OnStart()
         {
             _rootGraph.Start();
         }
 
-        protected virtual void OnUpdate()
+        protected override void OnUpdate()
         {
             _rootGraph.Update();
+        }
+
+        public override BehaviourSystemAsset GetBehaviourSystemAsset()
+        {
+            return SystemAsset;
         }
 
         public Status Test()
         {
             Debug.Log("Trying custom action");
             return Status.Success;
+        }
+
+        public PushPerception FindPerception(string name)
+        {
+            return SystemAsset.GetPushPerception(name);
         }
     }
 }

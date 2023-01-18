@@ -8,7 +8,7 @@ public class Pizza : MonoBehaviour
 
     public void AddIngredient(Ingredient ingredient)
     {
-        Debug.Log($"Adding ingredient: {ingredient.Name}");
+        //Debug.Log($"Adding ingredient: {ingredient.Name}");
         var ingredientItem = Instantiate(ingredient.prefab, transform);
         ingredientItem.transform.Translate(Vector3.up * _height);
         _height += ingredient.height;

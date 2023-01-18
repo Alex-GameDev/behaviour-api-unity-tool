@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -54,6 +55,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             "Assembly-CSharp",
             "BehaviourAPI.Unity.Runtime",
+            "BehaviourAPI.Unity.Editor",
             "BehaviourAPI.Core",
             "BehaviourAPI.StateMachines",
             "BehaviourAPI.BehaviourTrees",
@@ -65,6 +67,11 @@ namespace BehaviourAPI.Unity.Editor
         public List<Assembly> GetAssemblies()
         {
             return DefaultAssemblies.Select(assemblyName => Assembly.Load(assemblyName)).ToList();
+        }
+
+        public List<Type> GetTypes()
+        {
+            return DefaultAssemblies.Select(assemblyName => Assembly.Load(assemblyName)).SelectMany(a => a.GetTypes()).ToList();
         }
     }
 }

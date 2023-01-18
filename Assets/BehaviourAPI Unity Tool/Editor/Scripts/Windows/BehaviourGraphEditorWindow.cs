@@ -4,15 +4,9 @@ using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using System;
 using BehaviourAPI.Unity.Runtime;
-using UnityEditor.Experimental.GraphView;
 using UnityEditor.SceneManagement;
-using UnityEditor.VersionControl;
 using UnityEngine.SceneManagement;
-using UnityEngine.Assertions.Must;
-using UnityEditor.Graphs;
-using System.Collections.Generic;
-using BehaviourAPI.Core.Perceptions;
-using System.Runtime.InteropServices;
+using BehaviourAPI.Unity.Editor.Assets.BehaviourAPI_Unity_Tool.Editor.Scripts.Utils;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -20,12 +14,15 @@ namespace BehaviourAPI.Unity.Editor
     {
         public static BehaviourSystemAsset SystemAsset;
         public static bool IsAsset;
+        public static bool IsRuntime;
 
         VisualElement _container, _emptyGraphPanel;
         BehaviourGraphView _graphView;
         NodeInspectorView _nodeInspector;
         IHidable _currentInspector;
+
         BehaviourGraphInspectorView _graphInspector;
+        PushPerceptionInspectorView _pushPerceptionInspector;
 
         ToolbarMenu _selectGraphToolbarMenu;
         ToolbarToggle _autosaveToolbarToggle;
@@ -36,10 +33,12 @@ namespace BehaviourAPI.Unity.Editor
        
         bool autoSave = false;
 
-        public static void OpenGraph(BehaviourSystemAsset systemAsset)
+        public static void OpenGraph(BehaviourSystemAsset systemAsset, bool runtime = false)
         {
             SystemAsset = systemAsset;
             IsAsset = AssetDatabase.Contains(systemAsset);
+            IsRuntime = runtime;
+
             BehaviourGraphEditorWindow window = GetWindow<BehaviourGraphEditorWindow>();
             window.minSize = new Vector2(550, 250);
             window.titleContent = new GUIContent($"Behaviour graph editor");
@@ -72,6 +71,7 @@ namespace BehaviourAPI.Unity.Editor
             _graphView = AddGraphView();
             _nodeInspector = AddNodeInspectorView();
             _graphInspector = AddGraphInspectorView();
+            _pushPerceptionInspector = AddPushPerceptionInspectorView();
 
             _graphView.NodeSelected += _nodeInspector.UpdateInspector;
             _graphView.NodeAdded += OnAddAsset;
@@ -96,7 +96,7 @@ namespace BehaviourAPI.Unity.Editor
 
         BehaviourGraphView AddGraphView()
         {
-            var graphView = new BehaviourGraphView(this, SystemAsset);
+            var graphView = new BehaviourGraphView(this);
             graphView.StretchToParentSize();
             rootVisualElement.Insert(0, graphView);
             return graphView;
@@ -116,18 +116,28 @@ namespace BehaviourAPI.Unity.Editor
             return graphInspector;
         }
 
+        PushPerceptionInspectorView AddPushPerceptionInspectorView()
+        {
+            var pushPerceptionInspector = new PushPerceptionInspectorView(SystemAsset, _graphView.NodeSearchWindow);
+            _container.Add(pushPerceptionInspector);
+            pushPerceptionInspector.style.display = DisplayStyle.None;
+            return pushPerceptionInspector;
+        }
+
         private void SetUpInspectorMenu()
         {
             rootVisualElement.Q<Button>("im-graph-btn").clicked += () => ChangeInspector(_graphInspector);
+            rootVisualElement.Q<Button>("im-pushperceptions-btn").clicked += () => ChangeInspector(_pushPerceptionInspector);
         }
 
         void SetUpToolbar()
         {
-            _selectGraphToolbarMenu = rootVisualElement.Q<ToolbarMenu>("bw-toolbar-graph-menu");
-            _addGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-add-btn");
-            _autosaveToolbarToggle = rootVisualElement.Q<ToolbarToggle>("bw-toolbar-autosave-toggle");
-            _saveToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-save-btn");
-            _deleteGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-delete-btn");
+            if(IsRuntime)
+            {
+                var toolbar = rootVisualElement.Q<Toolbar>("bw-toolbar");
+                var runtimeToolbar = rootVisualElement.Q<Toolbar>("bw-runtime-toolbar");
+                toolbar.Disable();
+                runtimeToolbar.Enable();
 
             if(Runtime)
             {
@@ -150,9 +160,14 @@ namespace BehaviourAPI.Unity.Editor
                 _setRootGraphToolbarButton.clicked += ChangeRootGraph;
                 _generateScriptToolbarButton.clicked += OpenGenerateScriptWindow;
 
-            UpdateGraphSelectionToolbar();
+                _addGraphToolbarButton.clicked += ShowGraphCreationPanel;
+                _deleteGraphToolbarButton.clicked += DisplayDeleteGraphAlertWindow;
+                _saveToolbarButton.clicked += SaveSystemData;
+                _autosaveToolbarToggle.RegisterValueChangedCallback((evt) => autoSave = evt.newValue);
+                _setRootGraphToolbarButton.clicked += ChangeRootGraph;
 
-            if (SystemAsset == null || SystemAsset.Graphs.Count == 0) return;            
+            }
+            UpdateGraphSelectionToolbar();
         }
 
         void UpdateGraphSelectionToolbar()
@@ -209,6 +224,13 @@ namespace BehaviourAPI.Unity.Editor
         {
             if(SystemAsset == null || SystemAsset.Graphs.Count == 0) return;
             AlertWindow.CreateAlertWindow("Are you sure to delete the current graph?", DeleteCurrentGraph);
+        }
+
+        void ChangeRootGraph()
+        {
+            if (_currentGraphAsset == SystemAsset.RootGraph) return;
+            SystemAsset.RootGraph = _currentGraphAsset;
+            UpdateGraphSelectionToolbar();
         }
 
         void SaveSystemData()

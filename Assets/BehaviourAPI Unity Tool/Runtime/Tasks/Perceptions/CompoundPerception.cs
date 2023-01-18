@@ -7,7 +7,8 @@ namespace BehaviourAPI.Unity.Runtime
 {
     public class CompoundPerception : Perception
     {
-        [SerializeField] List<Perception> perceptions;
+        [SerializeReference] Perception perceptionA;
+        [SerializeReference] Perception perceptionB;
         [SerializeField] LogicOperation logicOperation;
         public override bool Check()
         {
