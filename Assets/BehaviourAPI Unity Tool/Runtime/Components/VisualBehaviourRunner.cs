@@ -6,7 +6,7 @@ namespace BehaviourAPI.Unity.Runtime
 {
     public abstract class VisualBehaviourRunner : BehaviourRunner
     {
-        public BehaviourSystemAsset SystemAsset;
+        [HideInInspector] public BehaviourSystemAsset SystemAsset;
 
         BehaviourGraph _rootGraph;
 
