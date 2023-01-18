@@ -29,7 +29,7 @@ namespace BehaviourAPI.Unity.Editor
 
         ToolbarMenu _selectGraphToolbarMenu;
         ToolbarToggle _autosaveToolbarToggle;
-        ToolbarButton _saveToolbarButton, _deleteGraphToolbarButton, _addGraphToolbarButton;
+        ToolbarButton _saveToolbarButton, _deleteGraphToolbarButton, _addGraphToolbarButton, _setRootGraphToolbarButton, _generateScriptToolbarButton; 
 
         GraphAsset _currentGraphAsset;
 
@@ -90,7 +90,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             var visualElement = VisualSettings.GetOrCreateSettings().EmptyGraphPanel.Instantiate();
             rootVisualElement.Add(visualElement);
-            visualElement.Q<Button>("egp-add-btn").clicked += ShowGraphCreationPanel;
+            visualElement.Q<Button>("egp-add-btn").clicked += OpenGraphCreationWindow;
             return visualElement;
         }
 
@@ -129,10 +129,26 @@ namespace BehaviourAPI.Unity.Editor
             _saveToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-save-btn");
             _deleteGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-delete-btn");
 
-            _addGraphToolbarButton.clicked += ShowGraphCreationPanel;
-            _deleteGraphToolbarButton.clicked += DisplayDeleteGraphAlertWindow;
-            _saveToolbarButton.clicked += SaveSystemData;
-            _autosaveToolbarToggle.RegisterValueChangedCallback((evt) => autoSave = evt.newValue);
+            if(Runtime)
+            {
+                _selectGraphToolbarMenu = rootVisualElement.Q<ToolbarMenu>("bw-runtime-toolbar-graph-menu");
+            }
+            else
+            {
+                _selectGraphToolbarMenu = rootVisualElement.Q<ToolbarMenu>("bw-toolbar-graph-menu");
+                _addGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-add-btn");
+                _autosaveToolbarToggle = rootVisualElement.Q<ToolbarToggle>("bw-toolbar-autosave-toggle");
+                _saveToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-save-btn");
+                _deleteGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-delete-btn");
+                _setRootGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-setroot-btn");
+                _generateScriptToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-generatescript-btn");
+
+                _addGraphToolbarButton.clicked += OpenGraphCreationWindow;
+                _deleteGraphToolbarButton.clicked += OpenDeleteCreationWindow;
+                _saveToolbarButton.clicked += SaveSystemData;
+                _autosaveToolbarToggle.RegisterValueChangedCallback((evt) => autoSave = evt.newValue);
+                _setRootGraphToolbarButton.clicked += ChangeRootGraph;
+                _generateScriptToolbarButton.clicked += OpenGenerateScriptWindow;
 
             UpdateGraphSelectionToolbar();
 
@@ -169,9 +185,14 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ----------------------- Layout event callbacks -----------------------
 
-        void ShowGraphCreationPanel()
+        void OpenGraphCreationWindow()
         {
-            GraphCreationWindow.CreateGraphCreationWindow(CreateGraph);
+            GraphCreationWindow.Create(CreateGraph);
+        }
+
+        private void OpenGenerateScriptWindow()
+        {
+            ScriptCreationWindow.Create();
         }
 
         void DisplayGraph(GraphAsset graphAsset)
@@ -184,7 +205,7 @@ namespace BehaviourAPI.Unity.Editor
             UpdateGraphSelectionToolbar();
         }
 
-        void DisplayDeleteGraphAlertWindow()
+        void OpenDeleteCreationWindow()
         {
             if(SystemAsset == null || SystemAsset.Graphs.Count == 0) return;
             AlertWindow.CreateAlertWindow("Are you sure to delete the current graph?", DeleteCurrentGraph);

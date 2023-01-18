@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/uss/editor%20window.uss?fileID=7433441132597879392&amp;guid=fd4790495fdc36a4c8007fe53ea5ed24&amp;type=3#editor window" />
+    <ui:Label text="Create Script" display-tooltip-when-elided="true" name="csw-title" class="bw-rootgraph-title" />
+    <ui:VisualElement name="csw-divider" class="bw-divider" />
+    <ui:TextField picking-mode="Ignore" label="script name" name="csw-name-textfield" style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px;" />
+    <ui:TextField picking-mode="Ignore" label="path" name="csw-path-textfield" style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px;" />
+    <ui:Button text="Create" display-tooltip-when-elided="true" name="csw-create-button" />
+</ui:UXML>

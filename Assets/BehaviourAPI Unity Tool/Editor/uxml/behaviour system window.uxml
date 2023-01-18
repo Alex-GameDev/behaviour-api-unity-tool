@@ -9,6 +9,8 @@
             <uie:ToolbarSpacer name="bw-toolbar-spacer" />
             <uie:ToolbarButton text="save&#10;" display-tooltip-when-elided="true" name="bw-toolbar-save-btn" />
             <uie:ToolbarButton text="clear" display-tooltip-when-elided="true" name="bw-toolbar-clear-btn" tooltip="remove all nodes from the current graph" />
+            <uie:ToolbarSpacer name="bw-toolbar-spacer" />
+            <uie:ToolbarButton text="generate script" display-tooltip-when-elided="true" name="bw-toolbar-generatescript-btn" tooltip="remove all nodes from the current graph" />
         </ui:VisualElement>
         <uie:ToolbarToggle label="auto save" name="bw-toolbar-autosave-toggle" />
     </uie:Toolbar>

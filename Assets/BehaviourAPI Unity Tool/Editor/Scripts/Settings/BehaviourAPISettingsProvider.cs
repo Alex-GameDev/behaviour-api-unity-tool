@@ -16,6 +16,7 @@ namespace BehaviourAPI.Unity.Editor
 
             public static GUIContent AlertWindowLayout = new GUIContent("AlertWindowLayout");
             public static GUIContent GraphCreationWindowLayout = new GUIContent("GraphCreationWindowLayout");
+            public static GUIContent ScriptCreationWindowLayout = new GUIContent("ScriptCreationWindowLayout");
 
             public static GUIContent NodeLayout = new GUIContent("NodeLayout");
             public static GUIContent ContainerLayout = new GUIContent("ContainerLayout");
@@ -59,6 +60,7 @@ namespace BehaviourAPI.Unity.Editor
 
                 EditorGUILayout.LabelField("Other window layouts", EditorStyles.boldLabel);
                 LayoutProperty(m_SerializedObject.FindProperty("GraphCreationWindowLayout"), Styles.GraphCreationWindowLayout, typeof(VisualTreeAsset));
+                LayoutProperty(m_SerializedObject.FindProperty("ScriptCreationWindowLayout"), Styles.ScriptCreationWindowLayout, typeof(VisualTreeAsset));
                 LayoutProperty(m_SerializedObject.FindProperty("AlertWindowLayout"), Styles.AlertWindowLayout, typeof(VisualTreeAsset));
                 EditorGUILayout.Space(5);
 

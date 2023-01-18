@@ -13,11 +13,15 @@ namespace BehaviourAPI.Unity.Editor
     [FilePath("Config/StateFile.foo", FilePathAttribute.Location.PreferencesFolder)]
     public class BehaviourAPISettings : ScriptableSingleton<BehaviourAPISettings>
     {
+        public string GenerateScript_DefaultPath = "Assets/Scripts/";
+        public string GenerateScript_DefaultName = "NewBehaviourRunner";
+
         [Header("Layout")]
         public VisualTreeAsset BehaviourGraphEditorWindowLayout;
 
         public VisualTreeAsset AlertWindowLayout;
         public VisualTreeAsset GraphCreationWindowLayout;
+        public VisualTreeAsset ScriptCreationWindowLayout;
 
 
         public VisualTreeAsset NodeLayout;

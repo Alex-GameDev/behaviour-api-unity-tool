@@ -13,7 +13,7 @@ namespace BehaviourAPI.Unity.Editor
     {
         public static Action<string, Type> OnPressCreate;
 
-        public static void CreateGraphCreationWindow(Action<string, Type> onPressCreate)
+        public static void Create(Action<string, Type> onPressCreate)
         {
             OnPressCreate = onPressCreate;
 
