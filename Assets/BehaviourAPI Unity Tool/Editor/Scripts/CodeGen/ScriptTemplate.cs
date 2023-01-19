@@ -76,6 +76,10 @@ namespace BehaviourAPI.Unity.Editor
 
         public void AddUsingDirective(string namespaceName) => includes.Add(namespaceName);
 
+        public void AddVariableDeclaration(string className, string varName, params string[] args)
+        {
+            AddLine($"{className} {varName} = new {className}({string.Join(", ", args)});");
+        }
     }
 
 }

@@ -43,10 +43,11 @@ namespace BehaviourAPI.Unity.Editor
             var rootName = "";
             asset.Graphs.ForEach(graph =>
             {
-                var graphtype = graph.Graph.GetType().Name;
-                var graphName = !string.IsNullOrEmpty(graph.Name) ? graph.Name : $"{graphtype.ToLower()}_{asset.Graphs.IndexOf(graph)}";
-                if (asset.RootGraph == graph) rootName = graphName;
-                scriptTemplate.AddLine($"var {graphName} = new {graphtype}();");
+                var converter = GraphConverter.FindRenderer(graph.Graph);
+                converter.ConvertAssetToCode(graph, scriptTemplate);
+
+                if(asset.RootGraph == graph) rootName = graph.Name;
+
             });
             if(asset.RootGraph != null) scriptTemplate.AddLine($"return {rootName};");
 

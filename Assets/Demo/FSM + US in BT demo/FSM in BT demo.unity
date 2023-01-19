@@ -921,7 +921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
+  Name: Root
   graph:
     rid: 2511130952777334784
   nodes:
