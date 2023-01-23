@@ -1,85 +1,207 @@
+using BehaviourAPI.Unity.Runtime;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static Codice.CM.WorkspaceServer.WorkspaceTreeDataStore;
 
 namespace BehaviourAPI.Unity.Editor
 {
     public class ScriptTemplate
     {
-        List<string> includes = new List<string>();
-        List<string> lines = new List<string>();
+        List<string> includes = new List<string>();    
+        List<string> properties = new List<string>();
+        List<string> graphDeclarations = new List<string>();
+        List<string> code = new List<string>();
 
-        int identationLevel = 0;
+        string currentCodeLine;
+        bool lastElementWasAParameter;
 
-        const string identationChar = "\t";
+        string m_currentGraphName;
+        string m_className;
+        string[] m_inheritedClassNames;
 
-        public void AddInclude(string include)
+        Dictionary<object, string> m_variableNamingMap = new Dictionary<object, string>();
+        HashSet<string> m_variableNames = new HashSet<string>();
+
+        int identation = 0;
+
+        public ScriptTemplate(string className, params string[] inheritedClassNames)
         {
-            if (!lines.Contains(include)) lines.Add(include);
+            m_className = className;
+            m_inheritedClassNames = inheritedClassNames;
         }
 
-        public string GetContent()
+        public string FindVariableName(object obj) => m_variableNamingMap.GetValueOrDefault(obj);
+
+        /// <summary>
+        /// Returns the structured content of the template
+        /// </summary>
+        public override string ToString()
         {
             var includeLines = string.Join("\n", includes.Select(l => $"using {l};"));
-            var codeLines = string.Join("\n", lines);
-            return includeLines + '\n' + codeLines;
+            var propertyLines = string.Join("\n\t", properties);
+            var codeLines = string.Join("\n\t", code);
+
+            var codeText = $"{includeLines}\n\npublic class {m_className}";
+            if (m_inheritedClassNames.Length > 0) codeText += $" : {string.Join(", ", m_inheritedClassNames)}";
+            codeText += $"\n{{\n\t{propertyLines}\n\n\t{codeLines}\n}}";
+            return codeText;
         }
 
-        public void AddEmptyLine() => AddLine("");
-
-        public void AddCommentLine(string comment) => AddLine($"//{comment}");
-
-        public void AddClassBegin(string className, string modifiers = "public",
-            params string[] inheritedClassNames)
+        /// <summary>
+        /// Add an include line with the given namespace
+        /// </summary>
+        public void AddUsingDirective(string include)
         {
-            var st = $"{modifiers} class {className}";
-            if (inheritedClassNames.Length > 0)
+            if (!includes.Contains(include))
             {
-                st += $" : {string.Join(", ", inheritedClassNames)}";
+                includes.Add(include);
             }
-            AddLine(st);
-            AddOpenBrackedLine();
         }
 
+        /// <summary>
+        /// Add a custom line after commit the last line.
+        /// </summary>
+        /// <param name="line"></param>
         public void AddLine(string line)
         {
-            lines.Add($"{string.Concat(Enumerable.Repeat(identationChar, identationLevel))}{line}");
+            if (!string.IsNullOrEmpty(currentCodeLine))
+            {
+                CommitCurrentLine();
+            }
+            code.Add(string.Concat(Enumerable.Repeat("\t", identation)) + line);
         }
 
-        private void AddOpenBrackedLine()
+        /// <summary>
+        /// Add a variable to the variable map and change its name to a valid unique identificator.
+        /// Returns true if the variable didn't exist yet.
+        private bool AddVariable(object obj, ref string varName)
+        {
+            varName = varName.ToValidIdentificatorName();
+
+            if(m_variableNamingMap.TryGetValue(obj, out string existingName))
+            {
+                varName = existingName;
+                return false;
+            }
+
+            if(m_variableNames.Contains(varName))
+            {
+                var i = 0;
+                var fixedName = $"{varName}_{i}";
+                while(m_variableNames.Contains(fixedName))
+                {
+                    i++;
+                    fixedName = $"{varName}_{i}";
+                }
+                varName = fixedName;
+            }
+            
+            return true;
+        }
+
+        #region -------------------------- Instructions --------------------------
+
+        /// <summary>
+        /// Add a line in the property declaration section. If the property exists yet, add a reassignation.
+        /// </summary>
+        public string AddPropertyLine(string typeName, string varName, object obj, bool isPublic = false, bool isSerialized = true, params string[] args)
+        {
+            string line = "";
+            if (AddVariable(obj, ref varName))
+            {
+                line = $"{(isSerialized ? "[SerializeField] " : "")} {(isPublic ? "public " : "private ")} {typeName} {varName}";               
+            }
+            else
+            {
+                line = $"{varName}";
+            }
+
+            if (args.Length > 0)
+            {
+                line += $" = new {typeName}({string.Join(", ", args)})";
+            }
+            line += ";";
+
+            properties.Add(line);
+            return varName;            
+        }
+
+        /// <summary>
+        /// Add a line in the code section, inside a method. If the property exists yet, add a reassignation.
+        /// </summary>
+        public string AddVariableInstantiationLine(string typeName, string varName, object obj, params string[] args)
+        {
+            string line = "";
+            if (AddVariable(obj, ref varName))
+            {
+                line = $"{typeName} {varName}";                
+            }
+            else
+            {
+                line = $"{varName}";            }
+
+            line += $" = new {typeName}({string.Join(", ", args)});";
+
+            AddLine(line);
+            return varName;
+        }
+
+        public void OpenMethodDeclaration(string methodName, string returnType = "void", string modifiers = "public", params string[] parameters)
+        {
+            AddLine($"{modifiers} {returnType} {methodName}({string.Join(", ", parameters)})");
+            OpenBrackets();
+        }
+
+        public void CloseMethodDeclaration()
+        {
+            CloseBrackets();
+        }
+
+        public void OpenCreateNodeLine(string variableName, string method)
+        {
+            if (currentCodeLine.Length > 0) CommitCurrentLine();
+
+            currentCodeLine = $"var {variableName} = {m_currentGraphName}.{method}(";
+        }
+
+        public void AddParameter(string parameter)
+        {
+            if (lastElementWasAParameter) currentCodeLine += ", ";
+            currentCodeLine += parameter;
+            lastElementWasAParameter = true;
+        }
+
+        public void CloseCreateNodeLine(bool finishInstruction = true)
+        {
+            currentCodeLine += ")";
+            if(finishInstruction)
+            {
+                currentCodeLine += ";";
+                CommitCurrentLine();
+            }
+        }     
+
+        #endregion             
+         
+
+        private void OpenBrackets()
         {
             AddLine("{");
-            identationLevel++;
+            identation++;
         }
 
-        private void AddClosedBrackedLine()
+        private void CloseBrackets()
         {
-            identationLevel--;
+            identation--;
             AddLine("}");
         }
 
-        public void AddClassEnd() => AddClosedBrackedLine();
-
-        public void AddMethodBegin(string methodName,
-            string modifiers = "public",
-            string returnType = "void")
+        private void CommitCurrentLine()
         {
-            var st = $"{modifiers} {returnType} {methodName}()";
-            AddLine(st);
-            AddOpenBrackedLine();
-        }
-
-        public void AddMethodClose() => AddClosedBrackedLine();
-
-        public void AddUsingDirective(string namespaceName) => includes.Add(namespaceName);
-
-        public void AddVariableDeclaration(string className, string varName, params string[] args)
-        {
-            AddLine($"{className} {varName} = new {className}({string.Join(", ", args)});");
+            code.Add(currentCodeLine);
+            currentCodeLine = "";
         }
     }
-
 }

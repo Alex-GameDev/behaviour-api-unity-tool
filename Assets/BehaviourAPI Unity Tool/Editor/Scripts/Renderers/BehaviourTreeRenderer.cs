@@ -1,7 +1,6 @@
 using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.BehaviourTrees.Decorators;
 using BehaviourAPI.Core;
-using BehaviourAPI.Unity.Editor.Assets.BehaviourAPI_Unity_Tool.Editor.Scripts.Utils;
 using BehaviourAPI.Unity.Runtime;
 using System;
 using System.Collections.Generic;

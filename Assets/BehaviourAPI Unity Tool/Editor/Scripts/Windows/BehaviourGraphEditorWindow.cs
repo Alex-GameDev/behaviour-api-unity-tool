@@ -6,7 +6,6 @@ using System;
 using BehaviourAPI.Unity.Runtime;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
-using BehaviourAPI.Unity.Editor.Assets.BehaviourAPI_Unity_Tool.Editor.Scripts.Utils;
 
 namespace BehaviourAPI.Unity.Editor
 {

@@ -2,16 +2,17 @@ using BehaviourAPI.Core;
 using BehaviourAPI.Unity.Runtime;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEditor;
+using UnityEditor.Graphs;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
-
-
     public static class ScriptGeneration
     {
         public static void GenerateScript(string path, string name, BehaviourSystemAsset asset)
@@ -31,30 +32,57 @@ namespace BehaviourAPI.Unity.Editor
             string folderPath = path.Substring(0, path.LastIndexOf("/") + 1);
             string scriptName = path.Substring(path.LastIndexOf("/") + 1).Replace(".cs", "");
 
-            ScriptTemplate scriptTemplate = new ScriptTemplate();
+            ScriptTemplate scriptTemplate = new ScriptTemplate(scriptName, nameof(CodeBehaviourRunner));
+
+            // Add main using directives
             scriptTemplate.AddUsingDirective("BehaviourAPI.Core");
             scriptTemplate.AddUsingDirective("BehaviourAPI.Unity.Runtime");
             scriptTemplate.AddUsingDirective("BehaviourAPI.StateMachines");
             scriptTemplate.AddUsingDirective("BehaviourAPI.BehaviourTrees");
             scriptTemplate.AddUsingDirective("BehaviourAPI.UtilitySystems");
 
-            scriptTemplate.AddClassBegin(scriptName, "public", nameof(CodeBehaviourRunner));
-            scriptTemplate.AddMethodBegin("CreateGraph", "protected override", returnType: nameof(BehaviourGraph));
+            scriptTemplate.OpenMethodDeclaration("CreateGraph", nameof(BehaviourGraph), "protected override");
+
+            // Add the class
+
             var rootName = "";
-            asset.Graphs.ForEach(graph =>
+
+            for(int i = 0; i < asset.Graphs.Count; i++)
             {
-                var converter = GraphConverter.FindRenderer(graph.Graph);
-                converter.ConvertAssetToCode(graph, scriptTemplate);
+                var graph = asset.Graphs[i].Graph;
 
-                if(asset.RootGraph == graph) rootName = graph.Name;
+                if(graph == null)
+                {
+                    Debug.LogWarning($"Graph {i} is empty.");
+                    scriptTemplate.AddLine($"//Graph {i} is empty.");
+                    continue;
+                }
 
-            });
-            if(asset.RootGraph != null) scriptTemplate.AddLine($"return {rootName};");
+                var converter = GraphConverter.FindConverter(graph);
+                var graphName = converter.AddCreateGraphLine(asset.Graphs[i], scriptTemplate);
 
-            scriptTemplate.AddMethodClose();
-            scriptTemplate.AddClassEnd();            
+                if (i == 0)
+                {
+                    rootName = graphName;
+                }
+            }
 
-            var content = scriptTemplate.GetContent();
+            //for (int i = 0; i < asset.Graphs.Count; i++)
+            //{
+            //    var graph = asset.Graphs[i].Graph;
+            //    var converter = GraphConverter.FindConverter(graph);
+            //    converter.ConvertAssetToCode(asset.Graphs[i], scriptTemplate);
+            //}
+
+            if (!string.IsNullOrEmpty(rootName))
+            {
+                scriptTemplate.AddLine("");
+                scriptTemplate.AddLine($"return {rootName};");
+            }
+
+            scriptTemplate.CloseMethodDeclaration();
+
+            var content = scriptTemplate.ToString();
 
             UTF8Encoding encoding = new UTF8Encoding(true, false);
             StreamWriter writer = new StreamWriter(Path.GetFullPath(path), false, encoding);

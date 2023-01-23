@@ -45,5 +45,51 @@ namespace BehaviourAPI.Unity.Runtime
         {
             return new NodeData(Node, parents.Select(p => p.Node).ToList(), childs.Select(c => c.Node).ToList());
         }
+
+        /// <summary>
+        /// Returns all the child nodes above this, including itself.
+        /// </summary>
+        public HashSet<NodeAsset> GetPathFromRoot()
+        {
+            HashSet<NodeAsset> visitedNodes = new HashSet<NodeAsset>();
+            HashSet<NodeAsset> unvisitedNodes = new HashSet<NodeAsset>();
+
+            unvisitedNodes.Add(this);
+            while (unvisitedNodes.Count > 0)
+            {
+                var node = unvisitedNodes.First();
+                unvisitedNodes.Remove(node);
+                visitedNodes.Add(node);
+                node.Parents.ForEach(c =>
+                {
+                    if (!visitedNodes.Contains(c))
+                        unvisitedNodes.Add(c);
+                });
+            }
+            return visitedNodes;
+        }
+
+        /// <summary>
+        /// Returns all the child nodes below this, including itself.
+        /// </summary>
+        public HashSet<NodeAsset> GetPathToLeaves()
+        {
+            HashSet<NodeAsset> visitedNodes = new HashSet<NodeAsset>();
+            HashSet<NodeAsset> unvisitedNodes = new HashSet<NodeAsset>();
+
+            unvisitedNodes.Add(this);
+            while (unvisitedNodes.Count > 0)
+            {
+                var node = unvisitedNodes.First();
+                unvisitedNodes.Remove(node);
+                visitedNodes.Add(node);
+                node.Childs.ForEach(c =>
+                {
+                    if (!visitedNodes.Contains(c))
+                        unvisitedNodes.Add(c);
+                });
+            }
+            return visitedNodes;
+        }
     }
 }
