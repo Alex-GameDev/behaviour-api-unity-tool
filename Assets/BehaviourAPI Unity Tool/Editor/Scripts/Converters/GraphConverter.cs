@@ -8,6 +8,7 @@ using Action = BehaviourAPI.Core.Actions.Action;
 using BehaviourAPI.Core.Perceptions;
 using UnityEngine.Events;
 using UnityAction = BehaviourAPI.Unity.Runtime.UnityAction;
+using System.Collections.Generic;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -16,6 +17,7 @@ namespace BehaviourAPI.Unity.Editor
     /// </summary>
     public abstract class GraphConverter
     {
+        protected string graphName;
         public abstract GraphAsset ConvertCodeToAsset(BehaviourGraph graph);
         public abstract void ConvertAssetToCode(GraphAsset asset, ScriptTemplate scriptTemplate);
 
@@ -34,39 +36,47 @@ namespace BehaviourAPI.Unity.Editor
             return scriptTemplate.AddVariableInstantiationLine(asset.Graph.TypeName(), asset.Name, asset);
         }
 
-        protected void AddAction(Action action, ScriptTemplate scriptTemplate)
+        protected string GetActionCode(Action action, ScriptTemplate scriptTemplate)
         {
-            //if (action is CustomAction customAction)
-            //{
-            //    scriptTemplate.OpenVariableCreation(nameof(FunctionalAction));
-            //    if (customAction.start != null)
-            //    {
-            //        scriptTemplate.AddParameter($"{customAction.start.component.name}.{customAction.start.methodName}");
-            //    }
-            //    if (customAction.update != null)
-            //    {
-            //        scriptTemplate.AddParameter($"{customAction.update.component.name}.{customAction.update.methodName}");
-            //    }
-            //    if (customAction.stop != null)
-            //    {
-            //        scriptTemplate.AddParameter($"{customAction.stop.component.name}.{customAction.stop.methodName}");
-            //    }
+            if (action is CustomAction customAction)
+            {
+                var parameters = new List<string>();
+                if (customAction.start != null)
+                {
+                    var componentName = scriptTemplate.AddPropertyLine(customAction.start.component.TypeName(), customAction.start.component.TypeName().ToLower(), customAction.start.component);
+                    parameters.Add($"{componentName}.{customAction.start.methodName}");
+                }
 
-            //    scriptTemplate.CloseMethodOrVariableAsignation();
-            //}
-            //else if (action is UnityAction unityAction)
-            //{
-            //    scriptTemplate.OpenVariableCreation(unityAction.GetType().Name);
-            //    // Add arguments
-            //    scriptTemplate.CloseMethodOrVariableAsignation();
-            //}
-            //else if (action is SubgraphAction subgraphAction)
-            //{
-            //    scriptTemplate.OpenVariableCreation(nameof(SubsystemAction));
-            //    scriptTemplate.AddParameter(subgraphAction.Subgraph.Name);
-            //    // Add arguments
-            //    scriptTemplate.CloseMethodOrVariableAsignation();
-            //}
+                if (customAction.update != null)
+                {
+                    var componentName = scriptTemplate.AddPropertyLine(customAction.update.component.TypeName(), customAction.update.component.TypeName().ToLower(), customAction.update.component);
+                    parameters.Add($"{componentName}.{customAction.update.methodName}");
+                }
+                else
+                {
+                    parameters.Add("() => Status.Running");                }
+
+                if (customAction.stop != null)
+                {
+                    var componentName = scriptTemplate.AddPropertyLine(customAction.stop.component.TypeName(), customAction.stop.component.TypeName().ToLower(), customAction.stop.component);
+                    parameters.Add($"{componentName}.{customAction.stop.methodName}");
+                }
+
+                return $"new {nameof(FunctionalAction)}({string.Join(", ", parameters)})";
+
+            }
+            else if (action is UnityAction unityAction)
+            {
+                // Add arguments
+                return $"new {unityAction.TypeName()}( )";
+            }
+            else if (action is SubgraphAction subgraphAction)
+            {
+                var graphName = scriptTemplate.FindVariableName(subgraphAction.Subgraph);
+                return $"new {nameof(SubsystemAction)}({graphName ?? "null /*ERROR*/"})";
+            }
+            else 
+                return null;
         }
 
         protected void AddPerception(Perception perception, ScriptTemplate scriptTemplate)

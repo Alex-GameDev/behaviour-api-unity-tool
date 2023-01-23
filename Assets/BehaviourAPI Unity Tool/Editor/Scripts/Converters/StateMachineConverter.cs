@@ -11,13 +11,17 @@ namespace BehaviourAPI.Unity.Editor
     [CustomConverter(typeof(FSM))]
     public class StateMachineConverter : GraphConverter
     {
-        private string graphName;
-
         public override GraphAsset ConvertCodeToAsset(BehaviourGraph graph)
         {
             if (graph.GetType() != typeof(FSM)) return null;
 
             return GraphAsset.Create("new graph", typeof(FSM));
+        }
+
+        public override string AddCreateGraphLine(GraphAsset asset, ScriptTemplate scriptTemplate)
+        {
+            scriptTemplate.AddUsingDirective(typeof(FSM).Namespace);
+            return base.AddCreateGraphLine(asset, scriptTemplate);
         }
 
         public override void ConvertAssetToCode(GraphAsset asset, ScriptTemplate scriptTemplate)

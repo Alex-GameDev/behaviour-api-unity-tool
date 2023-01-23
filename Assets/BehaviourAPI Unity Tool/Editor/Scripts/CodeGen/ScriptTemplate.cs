@@ -86,17 +86,20 @@ namespace BehaviourAPI.Unity.Editor
                 return false;
             }
 
-            if(m_variableNames.Contains(varName))
+            if(!m_variableNames.Add(varName))
             {
-                var i = 0;
+                var i = 2;
                 var fixedName = $"{varName}_{i}";
-                while(m_variableNames.Contains(fixedName))
+                while(!m_variableNames.Add(fixedName))
                 {
                     i++;
                     fixedName = $"{varName}_{i}";
                 }
                 varName = fixedName;
             }
+
+            m_variableNamingMap.Add(obj, varName);
+
             
             return true;
         }
@@ -106,25 +109,15 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Add a line in the property declaration section. If the property exists yet, add a reassignation.
         /// </summary>
-        public string AddPropertyLine(string typeName, string varName, object obj, bool isPublic = false, bool isSerialized = true, params string[] args)
+        public string AddPropertyLine(string typeName, string varName, object obj, bool isPublic = false, bool isSerialized = true)
         {
             string line = "";
             if (AddVariable(obj, ref varName))
             {
-                line = $"{(isSerialized ? "[SerializeField] " : "")} {(isPublic ? "public " : "private ")} {typeName} {varName}";               
+                line = $"{(isSerialized ? "[SerializeField]" : "")} {(isPublic ? "public " : "private")} {typeName} {varName};";
+                properties.Add(line);
             }
-            else
-            {
-                line = $"{varName}";
-            }
-
-            if (args.Length > 0)
-            {
-                line += $" = new {typeName}({string.Join(", ", args)})";
-            }
-            line += ";";
-
-            properties.Add(line);
+         
             return varName;            
         }
 
@@ -133,17 +126,22 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public string AddVariableInstantiationLine(string typeName, string varName, object obj, params string[] args)
         {
-            string line = "";
+            return AddVariableDeclarationLine(typeName, varName, obj, $"new {typeName}({string.Join(", ", args)})");
+        }
+
+        public string AddVariableDeclarationLine(string typeName, string varName, object obj, string methodCall)
+        {
+            string line;
             if (AddVariable(obj, ref varName))
             {
-                line = $"{typeName} {varName}";                
+                line = $"{typeName} {varName}";
             }
             else
             {
-                line = $"{varName}";            }
+                line = $"{varName}";
+            }
 
-            line += $" = new {typeName}({string.Join(", ", args)});";
-
+            line += $" = {methodCall};";
             AddLine(line);
             return varName;
         }

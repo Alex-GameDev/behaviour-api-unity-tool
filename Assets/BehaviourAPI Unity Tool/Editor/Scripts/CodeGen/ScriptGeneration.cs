@@ -35,11 +35,12 @@ namespace BehaviourAPI.Unity.Editor
             ScriptTemplate scriptTemplate = new ScriptTemplate(scriptName, nameof(CodeBehaviourRunner));
 
             // Add main using directives
+            scriptTemplate.AddUsingDirective("UnityEngine");
+            scriptTemplate.AddUsingDirective("System.Collections.Generic");
             scriptTemplate.AddUsingDirective("BehaviourAPI.Core");
             scriptTemplate.AddUsingDirective("BehaviourAPI.Unity.Runtime");
-            scriptTemplate.AddUsingDirective("BehaviourAPI.StateMachines");
-            scriptTemplate.AddUsingDirective("BehaviourAPI.BehaviourTrees");
-            scriptTemplate.AddUsingDirective("BehaviourAPI.UtilitySystems");
+            scriptTemplate.AddUsingDirective("BehaviourAPI.Core.Actions");
+            scriptTemplate.AddUsingDirective("BehaviourAPI.Core.Perceptions");
 
             scriptTemplate.OpenMethodDeclaration("CreateGraph", nameof(BehaviourGraph), "protected override");
 
@@ -67,12 +68,13 @@ namespace BehaviourAPI.Unity.Editor
                 }
             }
 
-            //for (int i = 0; i < asset.Graphs.Count; i++)
-            //{
-            //    var graph = asset.Graphs[i].Graph;
-            //    var converter = GraphConverter.FindConverter(graph);
-            //    converter.ConvertAssetToCode(asset.Graphs[i], scriptTemplate);
-            //}
+            for (int i = 0; i < asset.Graphs.Count; i++)
+            {
+                var graph = asset.Graphs[i].Graph;
+                var converter = GraphConverter.FindConverter(graph);
+                scriptTemplate.AddLine("");
+                converter.ConvertAssetToCode(asset.Graphs[i], scriptTemplate);
+            }
 
             if (!string.IsNullOrEmpty(rootName))
             {

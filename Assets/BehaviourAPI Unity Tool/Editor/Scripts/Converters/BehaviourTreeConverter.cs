@@ -2,6 +2,7 @@ using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Unity.Runtime;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -14,8 +15,6 @@ namespace BehaviourAPI.Unity.Editor
     [CustomConverter(typeof(BehaviourTree))]
     public class BehaviourTreeConverter : GraphConverter
     {
-        private string graphName;
-
         public override GraphAsset ConvertCodeToAsset(BehaviourGraph graph)
         {
             if (graph.GetType() != typeof(BehaviourTree)) return null;
@@ -26,6 +25,8 @@ namespace BehaviourAPI.Unity.Editor
         public override void ConvertAssetToCode(GraphAsset asset, ScriptTemplate scriptTemplate)
         {
             if (asset.Graph.GetType() != typeof(BehaviourTree)) return;
+
+            graphName = scriptTemplate.FindVariableName(asset);
 
             var rootNode = asset.Nodes.FirstOrDefault();
 
@@ -38,39 +39,47 @@ namespace BehaviourAPI.Unity.Editor
 
             scriptTemplate.AddLine("");
         }
-         
+
+        public override string AddCreateGraphLine(GraphAsset asset, ScriptTemplate scriptTemplate)
+        {
+            scriptTemplate.AddUsingDirective(typeof(BehaviourTree).Namespace);
+            scriptTemplate.AddUsingDirective($"{nameof(LeafNode)} = {typeof(LeafNode).FullName}");
+            return base.AddCreateGraphLine(asset, scriptTemplate);
+        }
+
         private string AddNode(NodeAsset node, ScriptTemplate scriptTemplate)
         {
-            var bTNode = node.Node as BTNode;
+            var btNode = node.Node as BTNode;
+            var nodeName = node.Name;
 
-            if(bTNode is CompositeNode composite)
+            if (string.IsNullOrEmpty(nodeName)) nodeName = btNode.TypeName().ToLower();
+
+            if(btNode is CompositeNode composite)
             {
                 var childNames = node.Childs.Select(n => AddNode(n, scriptTemplate)).ToList();
                 childNames.RemoveAll(s => string.IsNullOrWhiteSpace(s));
+                string typeName = composite.TypeName();
 
-                //scriptTemplate.AddVariableDeclarationLine(node.name);
-                //scriptTemplate.BeginMethod($"{graphName}.CreateComposite<{composite.GetType().Name}>");
-                //scriptTemplate.AddParameter(composite.IsRandomized.ToString().ToLower());
-                //scriptTemplate.AddParameters(childNames);
-                //scriptTemplate.CloseMethodOrVariableAsignation();
-                return node.Name;
+                List<string> arguments = new List<string>();
+                arguments.Add(composite.IsRandomized.ToCodeFormat());
+                arguments.AddRange(childNames);
+
+                return scriptTemplate.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.CreateComposite<{typeName}>({string.Join(", ", arguments)})");
             }
-            else if(bTNode is DecoratorNode decorator)
+            else if(btNode is DecoratorNode decorator)
             {            
                 var childName = AddNode(node.Childs.FirstOrDefault(), scriptTemplate);
+                string typeName = decorator.TypeName();
 
-                //scriptTemplate.AddVariableDeclarationLine(node.Name);
-                //scriptTemplate.BeginMethod($"{graphName}.CreateDecorator<{decorator.GetType().Name}>");
-                //scriptTemplate.AddParameter(childName);
-                //scriptTemplate.CloseMethodOrVariableAsignation();
-                return node.Name;
+                if (childName == null) childName = "null /* Error */";
+
+                return scriptTemplate.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.CreateDecorator<{typeName}>({childName})");
             }
-            else if(bTNode is LeafNode leaf)
+            else if(btNode is LeafNode leaf)
             {
-                //scriptTemplate.AddVariableDeclarationLine(node.Name);
-                //scriptTemplate.BeginMethod($"{graphName}.CreateLeafNode");
-                //AddAction(leaf.Action, scriptTemplate);
-                return node.Name;
+                string typeName = leaf.TypeName();
+                var actionCode = GetActionCode(leaf.Action, scriptTemplate);
+                return scriptTemplate.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.CreateLeafNode({actionCode})");
             }
             else
             {
