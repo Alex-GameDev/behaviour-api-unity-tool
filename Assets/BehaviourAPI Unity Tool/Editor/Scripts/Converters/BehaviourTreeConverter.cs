@@ -28,16 +28,17 @@ namespace BehaviourAPI.Unity.Editor
 
             graphName = scriptTemplate.FindVariableName(asset);
 
+            scriptTemplate.AddLine($"// Behaviour tree - {graphName}:");
+
             var rootNode = asset.Nodes.FirstOrDefault();
 
             if (rootNode != null)
             {
-                AddNode(rootNode, scriptTemplate);
+                var rootNodeName = AddNode(rootNode, scriptTemplate);
+                scriptTemplate.AddLine($"{graphName}.SetRootNode({rootNodeName});");
             }
             else
-                Debug.Log("ERROR");
-
-            scriptTemplate.AddLine("");
+                scriptTemplate.AddLine($"//Behaviour tree ({graphName}) is empty;");
         }
 
         public override string AddCreateGraphLine(GraphAsset asset, ScriptTemplate scriptTemplate)

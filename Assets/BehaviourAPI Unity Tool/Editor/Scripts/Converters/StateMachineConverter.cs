@@ -36,6 +36,8 @@ namespace BehaviourAPI.Unity.Editor
 
             graphName = scriptTemplate.FindVariableName(asset);
 
+            scriptTemplate.AddLine($"// FSM - {graphName}:");
+
             var states = asset.Nodes.FindAll(n => n.Node is State);
             var transitions = asset.Nodes.FindAll(n => n.Node is Transition);
 
