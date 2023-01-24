@@ -73,7 +73,8 @@ namespace BehaviourAPI.Unity.Editor
 
                 if (childName == null) childName = "null /* Error */";
 
-                return scriptTemplate.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.CreateDecorator<{typeName}>({childName})");
+                var propertyCode = AddDecoratorProperties(decorator, scriptTemplate);
+                return scriptTemplate.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.CreateDecorator<{typeName}>({childName}){propertyCode}");
             }
             else if(btNode is LeafNode leaf)
             {
@@ -86,6 +87,27 @@ namespace BehaviourAPI.Unity.Editor
                 Debug.Log("NULL");
                 return null;
             }            
-        }       
+        }   
+        
+        private string AddDecoratorProperties(DecoratorNode decorator, ScriptTemplate scriptTemplate)
+        {
+            if(decorator is IteratorNode iterator)
+            {
+                return $".SetIterations({iterator.Iterations})";
+            }
+            else if(decorator is LoopUntilNode loopUntil)
+            {
+                return $".SetTargetStatus({loopUntil.TargetStatus}).SetMaxIterations({loopUntil.MaxIterations})";
+            }
+            else if(decorator is ConditionNode conditionNode)
+            {
+                return $".SetPerception({GetPerceptionCode(conditionNode.Perception, scriptTemplate)})";
+            }
+            else
+            {
+                return "";
+            }
+
+        }
     }
 }

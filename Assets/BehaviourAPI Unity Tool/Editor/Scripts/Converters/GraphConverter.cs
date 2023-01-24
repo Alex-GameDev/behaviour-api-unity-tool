@@ -79,33 +79,42 @@ namespace BehaviourAPI.Unity.Editor
                 return null;
         }
 
-        protected void AddPerception(Perception perception, ScriptTemplate scriptTemplate)
+        protected string GetPerceptionCode(Perception perception, ScriptTemplate scriptTemplate)
         {
-        //    if (perception is CustomPerception customPerception)
-        //    {
-        //        scriptTemplate.OpenVariableCreation(nameof(ConditionPerception));
+            if (perception is CustomPerception customPerception)
+            {
+                var parameters = new List<string>();
+                if (customPerception.init != null)
+                {
+                    var componentName = scriptTemplate.AddPropertyLine(customPerception.init.component.TypeName(), customPerception.init.component.TypeName().ToLower(), customPerception.init.component);
+                    parameters.Add($"{componentName}.{customPerception.init.methodName}");
+                }
 
-        //        if (customPerception.init != null)
-        //        {
-        //            scriptTemplate.AddParameter($"{customPerception.init.component.name}.{customPerception.init.methodName}");
-        //        }
-        //        if (customPerception.check != null)
-        //        {
-        //            scriptTemplate.AddParameter($"{customPerception.check.component.name}.{customPerception.check.methodName}");
-        //        }
-        //        if (customPerception.reset != null)
-        //        {
-        //            scriptTemplate.AddParameter($"{customPerception.reset.component.name}.{customPerception.reset.methodName}");
-        //        }
+                if (customPerception.check != null)
+                {
+                    var componentName = scriptTemplate.AddPropertyLine(customPerception.check.component.TypeName(), customPerception.check.component.TypeName().ToLower(), customPerception.check.component);
+                    parameters.Add($"{componentName}.{customPerception.check.methodName}");
+                }
+                else
+                {
+                    parameters.Add("() => false");
+                }
 
-        //        scriptTemplate.CloseMethodOrVariableAsignation();
-        //    }
-        //    else if (perception is UnityPerception unityPerception)
-        //    {
-        //        scriptTemplate.OpenVariableCreation(unityPerception.GetType().Name);
-        //        // Add arguments
-        //        scriptTemplate.CloseMethodOrVariableAsignation();
-        //    }
+                if (customPerception.reset != null)
+                {
+                    var componentName = scriptTemplate.AddPropertyLine(customPerception.reset.component.TypeName(), customPerception.reset.component.TypeName().ToLower(), customPerception.reset.component);
+                    parameters.Add($"{componentName}.{customPerception.reset.methodName}");
+                }
+
+                return $"new {nameof(ConditionPerception)}({string.Join(", ", parameters)})";
+            }
+            else if (perception is UnityPerception unityPerception)
+            {
+                // Add arguments
+                return $"new {unityPerception.TypeName()}()";
+            }
+            else
+                return null;
         }
     }
 }
