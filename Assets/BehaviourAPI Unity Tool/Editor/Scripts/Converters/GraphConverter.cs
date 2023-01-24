@@ -17,6 +17,7 @@ namespace BehaviourAPI.Unity.Editor
     /// </summary>
     public abstract class GraphConverter
     {
+        //TODO: Combinar converter y renderer en adapter
         protected string graphName;
         public abstract GraphAsset ConvertCodeToAsset(BehaviourGraph graph);
         public abstract void ConvertAssetToCode(GraphAsset asset, ScriptTemplate scriptTemplate);

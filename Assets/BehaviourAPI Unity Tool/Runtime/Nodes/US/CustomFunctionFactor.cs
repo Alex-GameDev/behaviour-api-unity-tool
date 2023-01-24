@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
 {
-    public class CustomFunctionFactor : FunctionFactor
+    public class CustomFunction : FunctionFactor
     {
-        [SerializeField] SerializedFloatFloatFunction function;
+        public SerializedFloatFloatFunction function;
 
         protected override float Evaluate(float childUtility) => function.GetFunction()?.Invoke(childUtility) ?? 0f;
     }

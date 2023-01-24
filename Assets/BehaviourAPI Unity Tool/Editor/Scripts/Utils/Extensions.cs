@@ -66,7 +66,6 @@ namespace BehaviourAPI.Unity.Editor
         }
 
         public static string TypeName(this object obj) => obj.GetType().Name;
-
         public static string ToCodeFormat(this float f) => f.ToString().Replace(',', '.') + "f";
         public static string ToCodeFormat(this bool b) => b.ToString().ToLower();
         public static string ToCodeFormat(this Status s) => "Status." + s.ToString();

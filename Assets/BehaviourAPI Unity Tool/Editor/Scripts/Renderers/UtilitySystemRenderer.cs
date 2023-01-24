@@ -139,7 +139,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public override List<SearchTreeEntry> GetNodeHierarchyEntries()
         {
-            Type[] excludedTypes = new Type[] { typeof(CustomFunctionFactor) };
+            Type[] excludedTypes = new Type[] { typeof(Runtime.CustomFunction) };
 
             List<SearchTreeEntry> entries = new List<SearchTreeEntry>();
 

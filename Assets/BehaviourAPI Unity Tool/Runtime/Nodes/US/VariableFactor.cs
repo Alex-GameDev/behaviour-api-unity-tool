@@ -8,7 +8,7 @@ namespace BehaviourAPI.Unity.Runtime
 {
     public class VariableFactor : UtilitySystems.VariableFactor
     {
-        [SerializeField] SerializedFloatFunction variableFunction;
+        public SerializedFloatFunction variableFunction;
 
         protected override float ComputeUtility()
         {

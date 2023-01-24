@@ -46,7 +46,7 @@ namespace BehaviourAPI.Unity.Editor
                 var state = stateNode.Node as State;
                 scriptTemplate.AddVariableDeclarationLine(nameof(State), stateNode.Name, stateNode, $"{graphName}.CreateState({GetActionCode(state.Action, scriptTemplate)})");
             });
-
+            scriptTemplate.AddLine("");
             transitions.ForEach(trNode =>
             {
                 var transition = trNode.Node as Transition;
