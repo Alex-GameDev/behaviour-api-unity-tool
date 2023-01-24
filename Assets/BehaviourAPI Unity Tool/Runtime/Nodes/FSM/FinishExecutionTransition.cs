@@ -9,7 +9,7 @@ namespace BehaviourAPI.Unity.Runtime.StateMachines
 {
     public class FinishExecutionTransition : BehaviourAPI.StateMachines.StateTransition, ISerializationCallbackReceiver
     {
-        [SerializeField] StatusFlags _statusFlags;
+        public StatusFlags _statusFlags;
         [SerializeReference] Action _action;
 
         public void OnAfterDeserialize()

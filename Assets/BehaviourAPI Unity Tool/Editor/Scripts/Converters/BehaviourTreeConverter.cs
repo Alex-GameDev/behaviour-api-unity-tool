@@ -54,6 +54,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (string.IsNullOrEmpty(nodeName)) nodeName = btNode.TypeName().ToLower();
 
+
             if(btNode is CompositeNode composite)
             {
                 var childNames = node.Childs.Select(n => AddNode(n, scriptTemplate)).ToList();

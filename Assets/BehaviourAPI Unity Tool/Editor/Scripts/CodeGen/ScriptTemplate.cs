@@ -32,7 +32,11 @@ namespace BehaviourAPI.Unity.Editor
             m_inheritedClassNames = inheritedClassNames;
         }
 
-        public string FindVariableName(object obj) => m_variableNamingMap.GetValueOrDefault(obj);
+        public string FindVariableName(object obj)
+        {
+            if(obj == null) return null;
+            else return m_variableNamingMap.GetValueOrDefault(obj);
+        }
 
         /// <summary>
         /// Returns the structured content of the template

@@ -41,22 +41,23 @@ namespace BehaviourAPI.Unity.Editor
             if (action is CustomAction customAction)
             {
                 var parameters = new List<string>();
-                if (customAction.start != null)
+                if (customAction.start != null && customAction.start.component != null && !string.IsNullOrEmpty(customAction.start.methodName))
                 {
                     var componentName = scriptTemplate.AddPropertyLine(customAction.start.component.TypeName(), customAction.start.component.TypeName().ToLower(), customAction.start.component);
                     parameters.Add($"{componentName}.{customAction.start.methodName}");
                 }
 
-                if (customAction.update != null)
+                if (customAction.update != null && customAction.update.component != null && !string.IsNullOrEmpty(customAction.update.methodName))
                 {
                     var componentName = scriptTemplate.AddPropertyLine(customAction.update.component.TypeName(), customAction.update.component.TypeName().ToLower(), customAction.update.component);
                     parameters.Add($"{componentName}.{customAction.update.methodName}");
                 }
                 else
                 {
-                    parameters.Add("() => Status.Running");                }
+                    parameters.Add("() => Status.Running");                
+                }
 
-                if (customAction.stop != null)
+                if (customAction.stop != null && customAction.stop.component != null && !string.IsNullOrEmpty(customAction.stop.methodName))
                 {
                     var componentName = scriptTemplate.AddPropertyLine(customAction.stop.component.TypeName(), customAction.stop.component.TypeName().ToLower(), customAction.stop.component);
                     parameters.Add($"{componentName}.{customAction.stop.methodName}");
@@ -84,13 +85,13 @@ namespace BehaviourAPI.Unity.Editor
             if (perception is CustomPerception customPerception)
             {
                 var parameters = new List<string>();
-                if (customPerception.init != null)
+                if (customPerception.init != null && customPerception.init.component != null && !string.IsNullOrEmpty(customPerception.init.methodName))
                 {
                     var componentName = scriptTemplate.AddPropertyLine(customPerception.init.component.TypeName(), customPerception.init.component.TypeName().ToLower(), customPerception.init.component);
                     parameters.Add($"{componentName}.{customPerception.init.methodName}");
                 }
 
-                if (customPerception.check != null)
+                if (customPerception.check != null && customPerception.check.component != null && !string.IsNullOrEmpty(customPerception.check.methodName))
                 {
                     var componentName = scriptTemplate.AddPropertyLine(customPerception.check.component.TypeName(), customPerception.check.component.TypeName().ToLower(), customPerception.check.component);
                     parameters.Add($"{componentName}.{customPerception.check.methodName}");
@@ -100,7 +101,7 @@ namespace BehaviourAPI.Unity.Editor
                     parameters.Add("() => false");
                 }
 
-                if (customPerception.reset != null)
+                if (customPerception.reset != null && customPerception.reset.component != null && !string.IsNullOrEmpty(customPerception.reset.methodName))
                 {
                     var componentName = scriptTemplate.AddPropertyLine(customPerception.reset.component.TypeName(), customPerception.reset.component.TypeName().ToLower(), customPerception.reset.component);
                     parameters.Add($"{componentName}.{customPerception.reset.methodName}");

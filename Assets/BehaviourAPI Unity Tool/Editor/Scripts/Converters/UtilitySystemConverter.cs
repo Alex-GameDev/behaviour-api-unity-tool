@@ -18,7 +18,14 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (asset.Graph.GetType() != typeof(UtilitySystem)) return;
 
+            graphName = scriptTemplate.FindVariableName(asset);
+
             var graph = asset.Graph;
+
+            var utilityElements = asset.Nodes.FindAll(n => n.Node is UtilitySelectableNode);
+            var factors = asset.Nodes.FindAll(n => n.Node is Factor);
+                       
+            
         }
 
         public override string AddCreateGraphLine(GraphAsset asset, ScriptTemplate scriptTemplate)
