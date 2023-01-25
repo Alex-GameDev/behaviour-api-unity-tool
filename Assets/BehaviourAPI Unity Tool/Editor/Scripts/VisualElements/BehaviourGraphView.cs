@@ -40,7 +40,9 @@ namespace BehaviourAPI.Unity.Editor
         public NodeSearchWindow NodeSearchWindow { get; private set; }
         
         public GraphAsset GraphAsset { get; private set ; }
-        public GraphRenderer Renderer { get; private set; }
+        //public GraphRenderer Renderer { get; private set; }
+
+        public GraphAdapter _adapter;
 
         public bool Runtime => BehaviourGraphEditorWindow.IsRuntime;
 
@@ -118,7 +120,7 @@ namespace BehaviourAPI.Unity.Editor
             graphViewChange.elementsToRemove?.ForEach(OnElementRemoved);
             graphViewChange.edgesToCreate?.ForEach(OnEdgeCreated);
 
-            return Renderer?.OnGraphViewChanged(graphViewChange) ?? graphViewChange;
+            return _adapter?.OnViewChanged(this, graphViewChange) ?? graphViewChange;
         }
 
         private void OnEdgeCreated(Edge edge)
@@ -162,11 +164,13 @@ namespace BehaviourAPI.Unity.Editor
             ClearGraph();
             GraphAsset = graph;
 
-            Renderer = GraphRenderer.FindRenderer(graph.Graph);
-            Renderer.graphView = this;
-            Renderer.DrawGraph(graph);
+            _adapter = GraphAdapter.FindAdapter(graph.Graph);
+            _adapter.DrawGraph(graph, this);
+            //Renderer = GraphRenderer.FindRenderer(graph.Graph);
+            //Renderer.graphView = this;
+            //Renderer.DrawGraph(graph);
 
-            _nodeSearchWindow.SetEntryHierarchy(Renderer.GetNodeHierarchyEntries());
+            _nodeSearchWindow.SetEntryHierarchy(_adapter.GetNodeHierarchyEntries());
 
             _nodeSearchWindow.SetRootType(graph.Graph.NodeType);
         }
@@ -175,8 +179,8 @@ namespace BehaviourAPI.Unity.Editor
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
-            if (Renderer == null) return new List<Port>();
-            return Renderer.GetValidPorts(ports, startPort);
+            if (_adapter == null) return new List<Port>();
+            return _adapter.GetValidPorts(ports, startPort, GraphAsset.Graph.CanCreateLoops);
         }
 
         #region -------------------------- SEARCH WINDOWS ---------------------------
@@ -215,7 +219,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if(asset != null)
             {
-                Renderer.DrawNode(asset);
+                _adapter.DrawNode(asset, this);
             }
             else
             {

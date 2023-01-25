@@ -111,9 +111,10 @@ namespace BehaviourAPI.Unity.Editor
         protected abstract List<Type> MainTypes { get; }
         protected abstract List<Type> ExcludedTypes { get; }
         protected abstract string GetNodeLayoutPath(NodeAsset node);
-        protected abstract void SetUpPorts(NodeView node);
+        protected abstract void SetUpPortsAndDetails(NodeView node);
         protected abstract void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt);
         protected abstract void DrawGraphDetails(GraphAsset graphAsset, BehaviourGraphView graphView, List<NodeView> nodeViews);
+        protected abstract GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change);
 
         /// <summary>
         /// Draw a node view
@@ -121,8 +122,13 @@ namespace BehaviourAPI.Unity.Editor
         public void DrawNode(NodeAsset asset, BehaviourGraphView graphView)
         {
             var nodeView = new NodeView(asset, graphView, GetNodeLayoutPath(asset));
-            SetUpPorts(nodeView);
-            nodeView.AddManipulator(new ContextualMenuManipulator(menuEvt => SetUpNodeContextMenu(nodeView, menuEvt)));
+            SetUpPortsAndDetails(nodeView);
+            nodeView.AddManipulator(new ContextualMenuManipulator(menuEvt =>
+            {
+                menuEvt.menu.AppendAction("[Debug]", _ => DebugNode(asset));
+                SetUpNodeContextMenu(nodeView, menuEvt);
+
+            }));
 
             if (graphView.Runtime)
             {
@@ -133,11 +139,20 @@ namespace BehaviourAPI.Unity.Editor
             graphView.AddNodeView(nodeView);
         }
 
+        private void DebugNode(NodeAsset asset)
+        {
+            Debug.Log($"Name: {asset.Name}\nType: {asset.Node.TypeName()}\n" +
+                $"Parents: {asset.Parents.Count} ({asset.Parents.Select(p => p.Name).Join()})\n" +
+                $"Childs: {asset.Childs.Count} ({asset.Childs.Select(p => p.Name).Join()})");
+        }
+
         /// <summary>
         /// Draw all connections that begins in a node.
         /// </summary>
         public void DrawConnections(NodeAsset asset, BehaviourGraphView graphView, List<NodeView> nodeViews)
         {
+            if (asset.Node.MaxOutputConnections == 0) return;
+
             Port srcPort = nodeViews.Find(n => n.Node == asset).OutputPort;
 
             foreach (NodeAsset child in asset.Childs)
@@ -201,18 +216,23 @@ namespace BehaviourAPI.Unity.Editor
                 var subtypes = TypeUtilities.GetSubClasses(type, includeSelf: true, excludeAbstract: true).Except(ExcludedTypes).ToList();
                 if (subtypes.Count == 1)
                 {
-                    entries.AddEntry(type.Name.CamelCaseToSpaced(), 1, type);
+                    entries.AddEntry(subtypes[0].Name.CamelCaseToSpaced(), 1, subtypes[0]);
                 }
                 else if (subtypes.Count > 1)
                 {
                     entries.AddGroup(type.Name.CamelCaseToSpaced() + "(s)", 1);
                     foreach (var subtype in subtypes)
                     {
-                        entries.AddEntry(subtype.Name.CamelCaseToSpaced(), 2, type);
+                        entries.AddEntry(subtype.Name.CamelCaseToSpaced(), 2, subtype);
                     }
                 }
             }
             return entries;
+        }
+
+        public GraphViewChange OnViewChanged(BehaviourGraphView graphView, GraphViewChange change)
+        {
+            return ViewChanged(graphView, change);
         }
 
         bool ValidatePort(Port startPort, Port port, HashSet<NodeAsset> bannedTargetPorts, HashSet<NodeAsset> bannedSourcePorts)
@@ -226,12 +246,12 @@ namespace BehaviourAPI.Unity.Editor
             if (startPort.direction == Direction.Input)
             {
                 if (!port.portType.IsAssignableFrom(startPort.portType)) return false;      // Type missmatch
-                if (!bannedTargetPorts.Contains(node.Node)) return false;                   // Loop
+                if (bannedTargetPorts.Contains(node.Node)) return false;                   // Loop
             }
             else
             {
                 if (!startPort.portType.IsAssignableFrom(port.portType)) return false;      // Type missmatch
-                if (!bannedSourcePorts.Contains(node.Node)) return false;                   // Loop
+                if (bannedSourcePorts.Contains(node.Node)) return false;                   // Loop
             }
 
             return true;

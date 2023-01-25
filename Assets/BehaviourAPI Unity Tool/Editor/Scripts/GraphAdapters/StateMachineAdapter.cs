@@ -15,6 +15,7 @@ using Transition = BehaviourAPI.StateMachines.Transition;
 
 namespace BehaviourAPI.Unity.Editor
 {
+    [CustomRenderer(typeof(FSM))]
     public class StateMachineAdapter : GraphAdapter
     {
         #region --------------- Assets generation ---------------
@@ -136,6 +137,7 @@ namespace BehaviourAPI.Unity.Editor
                 template.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.{methodName}({args.Join()})");
             }
         }
+
         #endregion
 
         #region ------------------- Rendering -------------------
@@ -173,7 +175,7 @@ namespace BehaviourAPI.Unity.Editor
                 _ => (node.Node != null && node.Node.Node is State) ? (node == _entryStateView).ToMenuStatus() : DropdownMenuAction.Status.Hidden);
         }
 
-        protected override void SetUpPorts(NodeView nodeView)
+        protected override void SetUpPortsAndDetails(NodeView nodeView)
         {
             if (nodeView.Node.Node.MaxInputConnections != 0)
             {
@@ -190,6 +192,19 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
                 nodeView.outputContainer.style.display = DisplayStyle.None;
+        }
+
+        protected override GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change)
+        {
+            var rootNode = graphView.GraphAsset.Nodes.FirstOrDefault(n => n.Node is State);
+
+            if (rootNode != null)
+            {
+                graphView.GraphAsset.Nodes.MoveAtFirst(rootNode);
+                var view = graphView.nodes.Select(n => n as NodeView).ToList().Find(n => n.Node == rootNode);
+                ChangeEntryState(view);
+            }
+            return change;
         }
 
         void CreatePort(NodeView nodeView, int maxConnections, Direction direction, Type type)

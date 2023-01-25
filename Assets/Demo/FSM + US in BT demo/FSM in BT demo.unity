@@ -123,6 +123,61 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: 0c64dbdc7df2616469dc6600b172d8d9, type: 2}
+--- !u!114 &63946539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  graph:
+    rid: 2511131206136102917
+  nodes:
+  - {fileID: 609027543}
+  - {fileID: 283969516}
+  - {fileID: 2106923668}
+  - {fileID: 1455216197}
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511131206136102917
+      type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+--- !u!114 &283969516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: adss
+  node:
+    rid: 2511131206136102929
+  position: {x: 359, y: 664}
+  parents:
+  - {fileID: 609027543}
+  childs:
+  - {fileID: 1455216197}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2511131206136102929
+      type: {class: ConditionNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        _perception:
+          rid: -2
 --- !u!1 &501985588
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,6 +258,33 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1.97
   m_Text: Ham and cheese
+--- !u!114 &609027543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: adasd
+  node:
+    rid: 2511131206136102931
+  position: {x: 517, y: 393}
+  parents: []
+  childs:
+  - {fileID: 283969516}
+  - {fileID: 2106923668}
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511131206136102931
+      type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
 --- !u!1001 &650203211
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -649,6 +731,28 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1193058492}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1364207338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  graph:
+    rid: 2511131206136102912
+  nodes:
+  - {fileID: 1437326423}
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511131206136102912
+      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
 --- !u!1 &1370048889
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,6 +1027,64 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 38.729, y: 0, z: 0}
+--- !u!114 &1437326423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 2511131206136102932
+  position: {x: 252, y: 616}
+  parents: []
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2511131206136102932
+      type: {class: State, ns: BehaviourAPI.Unity.Runtime.StateMachines, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        _action:
+          rid: -2
+--- !u!114 &1455216197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: sdas
+  node:
+    rid: 2511131206136102934
+  position: {x: 350, y: 890}
+  parents: []
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511131206136102934
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        SerializedAction:
+          rid: 2511131206136102936
+    - rid: 2511131206136102936
+      type: {class: DelayAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        DelayTime: 0
 --- !u!4 &1503870394 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1219031990548499839, guid: 933da4993cc93944496c58aa55824825, type: 3}
@@ -1458,8 +1620,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db249917b7c50574eaa600c74aff1437, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  graphs: []
+  graphs:
+  - {fileID: 63946539}
+  - {fileID: 1364207338}
   pushPerceptions: []
+--- !u!114 &2106923668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: asdsa
+  node:
+    rid: 2511131206136102928
+  position: {x: 668, y: 665}
+  parents:
+  - {fileID: 609027543}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511131206136102928
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        SerializedAction:
+          rid: 2511131206136102933
+    - rid: 2511131206136102933
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Runtime, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        start:
+          component: {fileID: 1401791156}
+          methodName: CreateRecipe_0
+        update:
+          component: {fileID: 1401791156}
+          methodName: RecipeCreated
+        stop:
+          component: {fileID: 1401791156}
+          methodName: CreateRecipeCompleted
 --- !u!1 &2113832837
 GameObject:
   m_ObjectHideFlags: 0

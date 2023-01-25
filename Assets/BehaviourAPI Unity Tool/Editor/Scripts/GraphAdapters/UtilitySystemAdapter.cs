@@ -2,17 +2,12 @@ using BehaviourAPI.Core;
 using BehaviourAPI.Unity.Runtime;
 using BehaviourAPI.UtilitySystems;
 using BehaviourAPI.UtilitySystems.UtilityElements;
-using BehaviourAPIUnityTool.UtilitySystems;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.VersionControl;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.UIElements;
 using CustomFunction = BehaviourAPI.Unity.Runtime.CustomFunction;
 using UtilityAction = BehaviourAPIUnityTool.UtilitySystems.UtilityAction;
@@ -20,6 +15,7 @@ using VariableFactor = BehaviourAPI.Unity.Runtime.VariableFactor;
 
 namespace BehaviourAPI.Unity.Editor
 {
+    [CustomRenderer(typeof(UtilitySystem))]
     public class UtilitySystemAdapter : GraphAdapter
     {
         public override void ConvertAssetToCode(GraphAsset graphAsset, ScriptTemplate scriptTemplate)
@@ -231,7 +227,7 @@ namespace BehaviourAPI.Unity.Editor
             nodeView.inputContainer.Add(port);
         }
 
-        protected override void SetUpPorts(NodeView nodeView)
+        protected override void SetUpPortsAndDetails(NodeView nodeView)
         {
             if (nodeView.Node.Node.MaxInputConnections != 0)
             {
@@ -248,6 +244,11 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
                 nodeView.outputContainer.style.display = DisplayStyle.None;
+        }
+
+        protected override GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

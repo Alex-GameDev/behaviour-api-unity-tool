@@ -13,6 +13,7 @@ using LeafNode = BehaviourAPI.Unity.Runtime.LeafNode;
 
 namespace BehaviourAPI.Unity.Editor
 {
+    [CustomRenderer(typeof(BehaviourTree))]
     public class BehaviourTreeAdapter : GraphAdapter
     {
         #region --------------- Assets generation ---------------
@@ -138,12 +139,14 @@ namespace BehaviourAPI.Unity.Editor
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
         {
             menuEvt.menu.AppendSeparator();
-            menuEvt.menu.AppendAction("Set root node", _ => SetRootNode(node), _ => (node == _rootView).ToMenuStatus());
+            menuEvt.menu.AppendAction("Set root node", _ => SetRootNode(node), _ => (node != _rootView).ToMenuStatus());
             menuEvt.menu.AppendAction("Order childs by position (x)", _ => node.Node.OrderChilds(n => n.Position.x), (node.Node.Childs.Count > 1).ToMenuStatus());
         }
 
-        protected override void SetUpPorts(NodeView nodeView)
+        protected override void SetUpPortsAndDetails(NodeView nodeView)
         {
+            nodeView.Q("node-icon").Add(new Label(nodeView.Node.Node.GetType().Name.CamelCaseToSpaced().ToUpper()));
+
             if (nodeView.Node.Node.MaxInputConnections != 0)
             {
                 CreatePort(nodeView, nodeView.Node.Node.MaxInputConnections, Direction.Input, nodeView.Node.Node.GetType());
@@ -158,15 +161,32 @@ namespace BehaviourAPI.Unity.Editor
                 CreatePort(nodeView, nodeView.Node.Node.MaxOutputConnections, Direction.Output, nodeView.Node.Node.ChildType);
             }
             else
+            {
                 nodeView.outputContainer.style.display = DisplayStyle.None;
+            }
+        }                
+
+        // Reload the root node when the old one is removed
+        protected override GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change)
+        {
+            var rootNode = graphView.GraphAsset.Nodes.Find(n => n.Parents.Count == 0);
+
+            if (rootNode != null)
+            {
+                graphView.GraphAsset.Nodes.MoveAtFirst(rootNode);
+                var view = graphView.nodes.Select(n => n as NodeView).ToList().Find(n => n.Node == rootNode);
+                ChangeRootNode(view);
+            }
+            return change;
         }
 
         void CreatePort(NodeView nodeView, int maxConnections, Direction direction, Type type)
         {
-            var port = nodeView.InstantiatePort(Orientation.Vertical, direction, maxConnections > 1 ? Port.Capacity.Multi : Port.Capacity.Single, type);
+            var port = nodeView.InstantiatePort(Orientation.Vertical, direction, maxConnections == -1 ? Port.Capacity.Multi : Port.Capacity.Single, type);
             port.portName = "";
             port.style.flexDirection = direction == Direction.Input ? FlexDirection.Column : FlexDirection.ColumnReverse;
-            nodeView.inputContainer.Add(port);
+            var container = direction == Direction.Input ? nodeView.inputContainer : nodeView.outputContainer;
+            container.Add(port);
         }
 
         void SetRootNode(NodeView nodeView)
