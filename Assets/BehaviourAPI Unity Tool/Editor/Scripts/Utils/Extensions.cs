@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 using System.Text.RegularExpressions;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 
@@ -35,19 +37,34 @@ namespace BehaviourAPI.Unity.Editor
         public static void Hide(this VisualElement visualElement) => visualElement.style.visibility = Visibility.Hidden;
         public static void Show(this VisualElement visualElement) => visualElement.style.visibility = Visibility.Visible;
 
+        public static void AddGroup(this List<SearchTreeEntry> searchTreeEntries, string title, int level)
+        {
+            searchTreeEntries.Add(new SearchTreeGroupEntry(new GUIContent(title), level));
+        }
+
+        public static void AddEntry(this List<SearchTreeEntry> searchTreeEntries, string title, int level, object userData)
+        {
+            searchTreeEntries.Add(new SearchTreeEntry(new GUIContent("     " + title)) { level = level, userData = userData});
+        }
+
+        public static DropdownMenuAction.Status ToMenuStatus(this bool b) => b ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
+
         public static string CamelCaseToSpaced(this string input)
         {
               return Regex.Replace(input, "([A-Z])", " $1").Trim();
-        }
+        }        
 
         public static string RemoveWhitespaces(this string str)
         {
             return k_Whitespace.Replace(str, "");
         }
+
         public static string RemovePunctuationsAndSymbols(this string str)
         {
             return string.Concat(str.Where(c => !char.IsWhiteSpace(c) && !char.IsPunctuation(c) && !char.IsSymbol(c)));
         }
+
+        public static string Join(this IEnumerable<string> strings, string separator = ", ") => string.Join(separator, strings);
 
         public static string ToValidIdentificatorName(this string str)
         {           

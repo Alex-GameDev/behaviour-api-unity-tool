@@ -9,11 +9,15 @@ using UnityEngine;
 namespace BehaviourAPI.Unity.Runtime
 {
     [Serializable]
-    public class SerializedMethod<T> : ISerializationCallbackReceiver where T : Delegate
+    public class SerializedMethod
     {
         public Component component;
         public string methodName;
+    }
 
+    [Serializable]
+    public class SerializedMethod<T> : SerializedMethod, ISerializationCallbackReceiver where T : Delegate
+    {
         T _function;
 
         public T GetFunction() => _function;

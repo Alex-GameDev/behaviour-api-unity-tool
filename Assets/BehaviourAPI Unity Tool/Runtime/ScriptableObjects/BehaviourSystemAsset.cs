@@ -76,7 +76,7 @@ namespace BehaviourAPI.Unity.Runtime
             graphs.ForEach(g => g.Build());
 
             //buildedPushPerceptions = pushPerceptions.ToDictionary(p => p.Name, p => p.Build());
-            return RootGraph.Graph;
+            return RootGraph?.Graph ?? null;
         }
 
         public PushPerception GetPushPerception(string name)

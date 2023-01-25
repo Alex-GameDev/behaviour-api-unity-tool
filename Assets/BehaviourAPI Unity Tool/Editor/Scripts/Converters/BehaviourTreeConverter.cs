@@ -103,7 +103,7 @@ namespace BehaviourAPI.Unity.Editor
             }
             else if(decorator is ConditionNode conditionNode)
             {
-                return $".SetPerception({GetPerceptionCode(conditionNode.Perception, scriptTemplate)})";
+                return $".SetPerception({GetPerceptionCode(conditionNode.Perception, scriptTemplate) ?? "null /* #Perception */"})";
             }
             else
             {

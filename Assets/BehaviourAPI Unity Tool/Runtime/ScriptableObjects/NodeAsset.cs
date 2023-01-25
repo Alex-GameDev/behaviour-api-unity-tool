@@ -57,6 +57,7 @@ namespace BehaviourAPI.Unity.Runtime
             unvisitedNodes.Add(this);
             while (unvisitedNodes.Count > 0)
             {
+
                 var node = unvisitedNodes.First();
                 unvisitedNodes.Remove(node);
                 visitedNodes.Add(node);

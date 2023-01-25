@@ -33,11 +33,13 @@ namespace BehaviourAPI.Unity.Editor
             var utilityElements = asset.Nodes.FindAll(n => n.Node is UtilitySelectableNode);
             var factors = asset.Nodes.FindAll(n => n.Node is Factor);
 
+
             factors.ForEach(factor =>
             {
                 if (scriptTemplate.FindVariableName(factor) == null)
                     AddFactor(factor, scriptTemplate);
             });
+
             scriptTemplate.AddLine("");
             utilityElements.ForEach(utilityElement =>
             {

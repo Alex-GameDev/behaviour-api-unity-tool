@@ -107,7 +107,6 @@ namespace BehaviourAPI.Unity.Editor
                     var componentName = scriptTemplate.AddPropertyLine(customPerception.reset.component.TypeName(), customPerception.reset.component.TypeName().ToLower(), customPerception.reset.component);
                     parameters.Add($"{componentName}.{customPerception.reset.methodName}");
                 }
-
                 return $"new {nameof(ConditionPerception)}({string.Join(", ", parameters)})";
             }
             else if (perception is UnityPerception unityPerception)

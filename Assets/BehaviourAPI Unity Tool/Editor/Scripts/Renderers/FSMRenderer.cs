@@ -57,9 +57,7 @@ namespace BehaviourAPI.Unity.Editor
                 nodeView.outputContainer.Add(port);
             }
             else
-                nodeView.outputContainer.style.display = DisplayStyle.None;
-
-            
+                nodeView.outputContainer.style.display = DisplayStyle.None;           
 
             // Crear menú
             nodeView.AddManipulator(new ContextualMenuManipulator(menuEvt =>

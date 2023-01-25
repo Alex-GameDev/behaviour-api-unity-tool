@@ -32,8 +32,7 @@ namespace BehaviourAPI.Unity.Runtime
                 if (_rootGraph == null)
 
                 {
-                    Debug.LogError("Behaviour system is empty. Component is removed.");
-                    Destroy(this);
+                    Debug.LogError("Behaviour system is empty.");                    
                 }
             }
         }
