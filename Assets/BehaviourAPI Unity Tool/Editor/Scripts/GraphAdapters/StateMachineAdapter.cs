@@ -234,6 +234,10 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
+        protected override void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt)
+        {
+        }
+
         #endregion
     }
 }

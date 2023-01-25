@@ -23,6 +23,8 @@ namespace BehaviourAPI.Unity.Editor
         NodeCreationSearchWindow _nodeSearchWindow;
         BehaviourGraphEditorWindow editorWindow;
 
+        Action<ContextualMenuPopulateEvent> _currentContextualMenuEvent;
+
         #endregion
 
         #region ---------------------------------- Events ----------------------------------
@@ -40,7 +42,6 @@ namespace BehaviourAPI.Unity.Editor
         public NodeSearchWindow NodeSearchWindow { get; private set; }
         
         public GraphAsset GraphAsset { get; private set ; }
-        //public GraphRenderer Renderer { get; private set; }
 
         public GraphAdapter _adapter;
 
@@ -109,6 +110,10 @@ namespace BehaviourAPI.Unity.Editor
                 this.AddManipulator(new SelectionDragger());
                 this.AddManipulator(new RectangleSelector());
             }
+            this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
+            {
+                _currentContextualMenuEvent?.Invoke(menuEvt);
+            }));
         }
         #endregion ------------------------------------------------------------------
 
@@ -166,9 +171,7 @@ namespace BehaviourAPI.Unity.Editor
 
             _adapter = GraphAdapter.FindAdapter(graph.Graph);
             _adapter.DrawGraph(graph, this);
-            //Renderer = GraphRenderer.FindRenderer(graph.Graph);
-            //Renderer.graphView = this;
-            //Renderer.DrawGraph(graph);
+            _currentContextualMenuEvent = (menuEvt) => _adapter.BuildGraphContextualMenu(menuEvt, this);
 
             _nodeSearchWindow.SetEntryHierarchy(_adapter.GetNodeHierarchyEntries());
 

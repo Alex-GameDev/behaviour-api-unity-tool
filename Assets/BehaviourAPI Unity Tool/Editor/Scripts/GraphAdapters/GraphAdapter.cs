@@ -113,6 +113,7 @@ namespace BehaviourAPI.Unity.Editor
         protected abstract string GetNodeLayoutPath(NodeAsset node);
         protected abstract void SetUpPortsAndDetails(NodeView node);
         protected abstract void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt);
+        protected abstract void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt);
         protected abstract void DrawGraphDetails(GraphAsset graphAsset, BehaviourGraphView graphView, List<NodeView> nodeViews);
         protected abstract GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change);
 
@@ -125,8 +126,10 @@ namespace BehaviourAPI.Unity.Editor
             SetUpPortsAndDetails(nodeView);
             nodeView.AddManipulator(new ContextualMenuManipulator(menuEvt =>
             {
-                menuEvt.menu.AppendAction("[Debug]", _ => DebugNode(asset));
+                menuEvt.menu.AppendSeparator();
+                menuEvt.menu.AppendAction("Debug (Node)", _ => DebugNode(asset));
                 SetUpNodeContextMenu(nodeView, menuEvt);
+                menuEvt.StopPropagation();
 
             }));
 
@@ -139,11 +142,17 @@ namespace BehaviourAPI.Unity.Editor
             graphView.AddNodeView(nodeView);
         }
 
-        private void DebugNode(NodeAsset asset)
+        void DebugNode(NodeAsset asset)
         {
             Debug.Log($"Name: {asset.Name}\nType: {asset.Node.TypeName()}\n" +
                 $"Parents: {asset.Parents.Count} ({asset.Parents.Select(p => p.Name).Join()})\n" +
                 $"Childs: {asset.Childs.Count} ({asset.Childs.Select(p => p.Name).Join()})");
+        }
+
+        void DebugGraph(GraphAsset asset)
+        {
+            Debug.Log($"Name: {asset.Name}\nType: {asset.Graph.TypeName()}\n" +
+                $"Nodes: {asset.Nodes.Count} ({asset.Nodes.Select(p => p.Name).Join()})\n");
         }
 
         /// <summary>
@@ -176,7 +185,15 @@ namespace BehaviourAPI.Unity.Editor
 
             graphAsset.Nodes.ForEach(node => DrawConnections(node, graphView, nodeViews));            
 
-            DrawGraphDetails(graphAsset, graphView, nodeViews);
+            DrawGraphDetails(graphAsset, graphView, nodeViews);           
+        }
+
+        public void BuildGraphContextualMenu(ContextualMenuPopulateEvent menuEvt, BehaviourGraphView graphView)
+        {
+            menuEvt.menu.AppendSeparator();
+            menuEvt.menu.AppendAction("Debug (Graph)", _ => DebugGraph(graphView.GraphAsset));
+            SetUpGraphContextMenu(graphView, menuEvt);
+            menuEvt.StopPropagation();
         }
 
         /// <summary>

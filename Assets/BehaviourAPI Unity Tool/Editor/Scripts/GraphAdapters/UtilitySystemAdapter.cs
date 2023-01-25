@@ -248,8 +248,13 @@ namespace BehaviourAPI.Unity.Editor
 
         protected override GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change)
         {
-            throw new NotImplementedException();
+            return change;
         }
+
+        protected override void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt)
+        {
+        }
+
 
         #endregion
     }
