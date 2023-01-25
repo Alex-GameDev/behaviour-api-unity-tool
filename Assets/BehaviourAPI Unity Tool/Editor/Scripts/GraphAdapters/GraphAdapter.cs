@@ -162,11 +162,13 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (asset.Node.MaxOutputConnections == 0) return;
 
-            Port srcPort = nodeViews.Find(n => n.Node == asset).OutputPort;
+            //Port srcPort = nodeViews.Find(n => n.Node == asset).OutputPort;
+            Port srcPort = graphView.GetViewOf(asset).OutputPort;
 
             foreach (NodeAsset child in asset.Childs)
             {
-                Port tgtPort = nodeViews.Find(n => n.Node == child).InputPort;
+                //Port tgtPort = nodeViews.Find(n => n.Node == child).InputPort;
+                Port tgtPort = graphView.GetViewOf(child).InputPort;
                 Edge edge = srcPort.ConnectTo(tgtPort);
                 graphView.AddConnectionView(edge);
                 srcPort.node.RefreshPorts();

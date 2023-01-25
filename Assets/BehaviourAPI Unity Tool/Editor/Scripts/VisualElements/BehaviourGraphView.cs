@@ -25,6 +25,8 @@ namespace BehaviourAPI.Unity.Editor
 
         Action<ContextualMenuPopulateEvent> _currentContextualMenuEvent;
 
+        Dictionary<NodeAsset, NodeView> _assetViewMap = new Dictionary<NodeAsset, NodeView>();
+
         #endregion
 
         #region ---------------------------------- Events ----------------------------------
@@ -72,6 +74,7 @@ namespace BehaviourAPI.Unity.Editor
                 nodeView.capabilities -= Capabilities.Movable;
             }
             AddElement(nodeView);
+            _assetViewMap.Add(nodeView.Node, nodeView);
         }
 
         public void AddConnectionView(Edge edge)
@@ -84,6 +87,9 @@ namespace BehaviourAPI.Unity.Editor
             }
             AddElement(edge);
         }
+
+        public NodeView GetViewOf(NodeAsset nodeAsset) => _assetViewMap[nodeAsset];
+
         #endregion ------------------------------------------------------------------
 
         #region -------------------------- SET UP -------------------------------
@@ -149,6 +155,7 @@ namespace BehaviourAPI.Unity.Editor
             if (element is NodeView nodeView)
             {
                 GraphAsset.RemoveNode(nodeView.Node);
+                _assetViewMap.Remove(nodeView.Node);
                 NodeRemoved?.Invoke(nodeView.Node);
             }
             if (element is Edge edge)
@@ -230,12 +237,11 @@ namespace BehaviourAPI.Unity.Editor
             }
 
             NodeAdded?.Invoke(asset);
-        }
-
-        
+        }        
 
         void ClearGraph()
         {
+            _assetViewMap.Clear();
             graphElements.ForEach(RemoveElement);
         }
 
