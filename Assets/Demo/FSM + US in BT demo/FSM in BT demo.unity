@@ -273,7 +273,7 @@ MonoBehaviour:
   Name: adasd
   node:
     rid: 2511131206136102931
-  position: {x: 517, y: 393}
+  position: {x: 519, y: 409}
   parents: []
   childs:
   - {fileID: 283969516}
@@ -731,28 +731,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1193058492}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1364207338
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  graph:
-    rid: 2511131206136102912
-  nodes:
-  - {fileID: 1437326423}
-  references:
-    version: 2
-    RefIds:
-    - rid: 2511131206136102912
-      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
 --- !u!1 &1370048889
 GameObject:
   m_ObjectHideFlags: 0
@@ -1027,34 +1005,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 38.729, y: 0, z: 0}
---- !u!114 &1437326423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  node:
-    rid: 2511131206136102932
-  position: {x: 252, y: 616}
-  parents: []
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 2511131206136102932
-      type: {class: State, ns: BehaviourAPI.Unity.Runtime.StateMachines, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        _action:
-          rid: -2
 --- !u!114 &1455216197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1622,7 +1572,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   graphs:
   - {fileID: 63946539}
-  - {fileID: 1364207338}
   pushPerceptions: []
 --- !u!114 &2106923668
 MonoBehaviour:
@@ -1639,7 +1588,7 @@ MonoBehaviour:
   Name: asdsa
   node:
     rid: 2511131206136102928
-  position: {x: 582, y: 659}
+  position: {x: 658, y: 689}
   parents:
   - {fileID: 609027543}
   childs: []

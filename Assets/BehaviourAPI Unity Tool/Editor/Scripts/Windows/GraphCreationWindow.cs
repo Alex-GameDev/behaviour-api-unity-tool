@@ -2,6 +2,7 @@ using BehaviourAPI.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -36,15 +37,25 @@ namespace BehaviourAPI.Unity.Editor
             var graphNameInputText = rootVisualElement.Q<TextField>("cgw-name-textfield");
             var createGraphList = rootVisualElement.Q<ScrollView>("cgw-graphs-scrollview");
 
-            typeof(BehaviourGraph).GetSubClasses().ForEach(gType => createGraphList
-                .Add(new Button(() => { 
-                    OnPressCreate?.Invoke(graphNameInputText.value, gType); 
-                    Close(); 
-                }) 
-                { 
-                    text = gType.Name 
-                })
-            );
+            typeof(GraphAdapter).GetSubClasses().ForEach(adapterType =>
+            {
+                var adapterAttribute = adapterType.GetCustomAttribute<CustomRendererAttribute>();
+                if (adapterAttribute != null)
+                {
+                    var graphType = adapterAttribute.type;
+                    if(graphType.IsSubclassOf(typeof(BehaviourGraph)))
+                    {
+                        createGraphList.Add(new Button(() =>
+                        {
+                            OnPressCreate?.Invoke(graphNameInputText.value, graphType);
+                            Close();
+                        })
+                        {
+                            text = graphType.Name
+                        });
+                    }
+                }
+            });
         }
     }
 }
