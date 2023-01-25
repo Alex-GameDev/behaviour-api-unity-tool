@@ -1,8 +1,6 @@
 using BehaviourAPI.Core;
-using BehaviourAPI.Unity.Runtime;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using BehaviourAPI.Unity.Framework;
+using BehaviourAPI.Unity.Framework.Adaptations;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;

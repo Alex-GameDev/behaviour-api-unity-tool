@@ -39,7 +39,7 @@ namespace BehaviourAPI.Unity.Editor
 
             typeof(GraphAdapter).GetSubClasses().ForEach(adapterType =>
             {
-                var adapterAttribute = adapterType.GetCustomAttribute<CustomRendererAttribute>();
+                var adapterAttribute = adapterType.GetCustomAttribute<CustomAdapterAttribute>();
                 if (adapterAttribute != null)
                 {
                     var graphType = adapterAttribute.type;

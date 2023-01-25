@@ -6,11 +6,11 @@ using UnityEngine;
 namespace BehaviourAPI.Unity.Editor
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class CustomRendererAttribute : Attribute
+    public class CustomAdapterAttribute : Attribute
     {
         public Type type;
 
-        public CustomRendererAttribute(Type type)
+        public CustomAdapterAttribute(Type type)
         {
             this.type = type;
         }

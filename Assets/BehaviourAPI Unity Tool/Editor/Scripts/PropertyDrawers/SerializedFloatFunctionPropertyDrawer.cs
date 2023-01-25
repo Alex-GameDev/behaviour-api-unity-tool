@@ -1,3 +1,4 @@
+using BehaviourAPI.Unity.Framework.Adaptations;
 using BehaviourAPI.Unity.Runtime;
 using System.Reflection;
 using UnityEditor;

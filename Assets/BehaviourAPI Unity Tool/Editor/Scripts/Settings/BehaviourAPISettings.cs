@@ -55,6 +55,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             "Assembly-CSharp",
             "BehaviourAPI.Unity.Runtime",
+            "BehaviourAPI.Unity.Framework",
             "BehaviourAPI.Unity.Editor",
             "BehaviourAPI.Core",
             "BehaviourAPI.StateMachines",

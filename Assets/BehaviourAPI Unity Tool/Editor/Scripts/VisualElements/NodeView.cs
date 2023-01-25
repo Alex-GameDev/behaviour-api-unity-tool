@@ -15,6 +15,7 @@ namespace BehaviourAPI.Unity.Editor
     using System.Collections.Generic;
     using static UnityEditor.Experimental.GraphView.Port;
     using Orientation = UnityEditor.Experimental.GraphView.Orientation;
+    using BehaviourAPI.Unity.Framework;
 
     /// <summary>
     /// Visual element that represents a node in a behaviour graph

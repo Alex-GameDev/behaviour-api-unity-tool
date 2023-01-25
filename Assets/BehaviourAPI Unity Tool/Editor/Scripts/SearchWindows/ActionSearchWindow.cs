@@ -1,4 +1,6 @@
+using BehaviourAPI.Unity.Framework.Adaptations;
 using BehaviourAPI.Unity.Runtime;
+using BehaviourAPI.Unity.Runtime.Extensions;
 using log4net.Core;
 using System;
 using System.Collections;

@@ -1,7 +1,7 @@
 using BehaviourAPI.Core;
-using BehaviourAPI.Unity.Runtime;
+using BehaviourAPI.Unity.Framework;
+using BehaviourAPI.Unity.Runtime.Extensions;
 using BehaviourAPI.UtilitySystems;
-using BehaviourAPI.UtilitySystems.UtilityElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +9,13 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
-using CustomFunction = BehaviourAPI.Unity.Runtime.CustomFunction;
-using UtilityAction = BehaviourAPIUnityTool.UtilitySystems.UtilityAction;
-using VariableFactor = BehaviourAPI.Unity.Runtime.VariableFactor;
+
+using CustomFunction = BehaviourAPI.Unity.Framework.Adaptations.CustomFunction;
+using VariableFactor = BehaviourAPI.Unity.Framework.Adaptations.VariableFactor;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    [CustomRenderer(typeof(UtilitySystem))]
+    [CustomAdapter(typeof(UtilitySystem))]
     public class UtilitySystemAdapter : GraphAdapter
     {
         public override void ConvertAssetToCode(GraphAsset graphAsset, ScriptTemplate scriptTemplate)
@@ -113,7 +113,7 @@ namespace BehaviourAPI.Unity.Editor
                 if (action.Action != null) args.Add(GenerateActionCode(action.Action, template));
                 if (action.FinishSystemOnComplete) args.Add("finishOnComplete: true");
                 if (selectableNode.IsRoot) args.Add("root: true");
-                method = $"CreateUtilityAction({args.Join()}";
+                method = $"CreateUtilityAction({args.Join()})";
             }
             else if (selectableNode is UtilityExitNode exitNode)
             {
@@ -141,15 +141,15 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (functionFactor is LinearFunction linear)
             {
-                return $".SetSlope({linear.slope.ToCodeFormat()}).SetYIntercept({linear.yIntercept.ToCodeFormat()})";
+                return $".SetSlope({linear.Slope.ToCodeFormat()}).SetYIntercept({linear.YIntercept.ToCodeFormat()})";
             }
             else if (functionFactor is ExponentialFunction exponential)
             {
-                return $".SetSetExponent({exponential.Exp.ToCodeFormat()}).SetDespX({exponential.DespX.ToCodeFormat()}).SetDespY({exponential.DespY.ToCodeFormat()})";
+                return $".SetSetExponent({exponential.Exponent.ToCodeFormat()}).SetDespX({exponential.DespX.ToCodeFormat()}).SetDespY({exponential.DespY.ToCodeFormat()})";
             }
             else if (functionFactor is SigmoidFunction sigmoid)
             {
-                return $".SetMidpoint({sigmoid.midpoint.ToCodeFormat()}).SetGrownRate({sigmoid.grownRate.ToCodeFormat()})";
+                return $".SetMidpoint({sigmoid.Midpoint.ToCodeFormat()}).SetGrownRate({sigmoid.GrownRate.ToCodeFormat()})";
             }
             else if (functionFactor is CustomFunction custom)
             {
@@ -167,7 +167,7 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        public override string CreateGraphLine(GraphAsset graphAsset, ScriptTemplate scriptTemplate)
+        public override string CreateGraphLine(GraphAsset graphAsset, ScriptTemplate scriptTemplate, string graphName)
         {
             if (graphAsset.Graph is UtilitySystem utilitySystem)
             {
@@ -175,7 +175,7 @@ namespace BehaviourAPI.Unity.Editor
                 scriptTemplate.AddUsingDirective($"{nameof(VariableFactor)} = {typeof(UtilitySystems.VariableFactor).FullName}");
                 scriptTemplate.AddUsingDirective($"{nameof(CustomFunction)} = {typeof(UtilitySystems.CustomFunction).FullName}");
 
-                return scriptTemplate.AddVariableInstantiationLine(utilitySystem.TypeName(), graphAsset.Name, graphAsset,
+                return scriptTemplate.AddVariableInstantiationLine(utilitySystem.TypeName(), graphName, graphAsset,
                     utilitySystem.Inertia.ToCodeFormat(), utilitySystem.UtilityThreshold.ToCodeFormat());
             }
             else
@@ -202,8 +202,8 @@ namespace BehaviourAPI.Unity.Editor
         };
         protected override List<Type> ExcludedTypes => new List<Type>
         {
-            typeof(CustomFunction),
-            typeof(PointedFunction)
+            typeof(UtilitySystems.CustomFunction),
+            typeof(UtilitySystems.VariableFactor)
         };
 
         protected override void DrawGraphDetails(GraphAsset graphAsset, BehaviourGraphView graphView, List<NodeView> nodeViews)
@@ -224,7 +224,8 @@ namespace BehaviourAPI.Unity.Editor
             var port = nodeView.InstantiatePort(Orientation.Vertical, direction, maxConnections > 1 ? Port.Capacity.Multi : Port.Capacity.Single, type);
             port.portName = "";
             port.style.flexDirection = direction == Direction.Input ? FlexDirection.Column : FlexDirection.ColumnReverse;
-            nodeView.inputContainer.Add(port);
+            var container = direction == Direction.Input ? nodeView.inputContainer : nodeView.outputContainer;
+            container.Add(port);
         }
 
         protected override void SetUpPortsAndDetails(NodeView nodeView)

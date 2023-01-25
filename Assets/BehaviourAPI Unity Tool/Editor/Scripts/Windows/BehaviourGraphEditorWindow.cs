@@ -6,6 +6,7 @@ using System;
 using BehaviourAPI.Unity.Runtime;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
+using BehaviourAPI.Unity.Framework;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -195,7 +196,6 @@ namespace BehaviourAPI.Unity.Editor
         {
             GraphCreationWindow.Create(CreateGraph);
         }
-
 
         private void OpenCreateScriptWindow()
         {

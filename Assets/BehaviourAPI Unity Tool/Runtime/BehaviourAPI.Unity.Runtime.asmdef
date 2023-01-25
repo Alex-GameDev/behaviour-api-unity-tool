@@ -1,7 +1,9 @@
 {
     "name": "BehaviourAPI.Unity.Runtime",
     "rootNamespace": "BehaviourAPI.Unity.Runtime",
-    "references": [],
+    "references": [
+        "GUID:b0b149bdb14ac3749bd83b526414b7ab"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

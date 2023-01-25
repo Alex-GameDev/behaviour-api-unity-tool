@@ -1,4 +1,6 @@
+using BehaviourAPI.Unity.Framework.Adaptations;
 using BehaviourAPI.Unity.Runtime;
+using BehaviourAPI.Unity.Runtime.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;

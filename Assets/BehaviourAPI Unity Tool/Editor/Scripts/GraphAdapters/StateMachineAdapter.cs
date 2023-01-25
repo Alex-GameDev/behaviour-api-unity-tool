@@ -1,21 +1,22 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.StateMachines;
-using BehaviourAPI.Unity.Runtime;
-using BehaviourAPI.Unity.Runtime.StateMachines;
+using BehaviourAPI.Unity.Framework;
+using BehaviourAPI.Unity.Framework.Adaptations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
+
 using ExitTransition = BehaviourAPI.StateMachines.ExitTransition;
 using State = BehaviourAPI.StateMachines.State;
 using Transition = BehaviourAPI.StateMachines.Transition;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    [CustomRenderer(typeof(FSM))]
+    [CustomAdapter(typeof(FSM))]
     public class StateMachineAdapter : GraphAdapter
     {
         #region --------------- Assets generation ---------------
@@ -58,12 +59,12 @@ namespace BehaviourAPI.Unity.Editor
         }
 
 
-        public override string CreateGraphLine(GraphAsset graphAsset, ScriptTemplate scriptTemplate)
+        public override string CreateGraphLine(GraphAsset graphAsset, ScriptTemplate scriptTemplate, string graphName)
         {
             if (graphAsset.Graph is FSM fsm)
             {
                 scriptTemplate.AddUsingDirective(typeof(FSM).Namespace);
-                return scriptTemplate.AddVariableInstantiationLine(fsm.TypeName(), graphAsset.Name, graphAsset);
+                return scriptTemplate.AddVariableInstantiationLine(fsm.TypeName(), graphName, graphAsset);
             }
             else
             {
@@ -212,7 +213,8 @@ namespace BehaviourAPI.Unity.Editor
             var port = nodeView.InstantiatePort(Orientation.Vertical, direction, maxConnections > 1 ? Port.Capacity.Multi : Port.Capacity.Single, type);
             port.portName = direction == Direction.Input ? "IN" : "OUT";
             port.style.flexDirection = FlexDirection.Column;
-            nodeView.inputContainer.Add(port);
+            var container = direction == Direction.Input ? nodeView.inputContainer : nodeView.outputContainer;
+            container.Add(port);
         }
 
         void ChangeEntryState(NodeView newStartNode)

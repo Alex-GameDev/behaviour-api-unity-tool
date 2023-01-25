@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using BehaviourAPI.Unity.Runtime;
 using System.Linq;
+using BehaviourAPI.Unity.Framework;
 
 namespace BehaviourAPI.Unity.Editor
 {

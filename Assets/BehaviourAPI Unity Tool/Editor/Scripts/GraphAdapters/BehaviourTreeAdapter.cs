@@ -1,6 +1,6 @@
 using BehaviourAPI.BehaviourTrees;
-using BehaviourAPI.BehaviourTrees.Decorators;
 using BehaviourAPI.Core;
+using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Runtime;
 using System;
 using System.Collections.Generic;
@@ -9,11 +9,13 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 
 using UnityEngine.UIElements;
-using LeafNode = BehaviourAPI.Unity.Runtime.LeafNode;
+
+using LeafNode = BehaviourAPI.Unity.Framework.Adaptations.LeafNode;
+using ConditionNode = BehaviourAPI.Unity.Framework.Adaptations.ConditionNode;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    [CustomRenderer(typeof(BehaviourTree))]
+    [CustomAdapter(typeof(BehaviourTree))]
     public class BehaviourTreeAdapter : GraphAdapter
     {
         #region --------------- Assets generation ---------------
@@ -42,13 +44,12 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        public override string CreateGraphLine(GraphAsset graphAsset, ScriptTemplate scriptTemplate)
+        public override string CreateGraphLine(GraphAsset graphAsset, ScriptTemplate scriptTemplate, string graphName)
         {
             if(graphAsset.Graph is BehaviourTree behaviourTree)
             {
                 scriptTemplate.AddUsingDirective(typeof(BehaviourTree).Namespace);
-                scriptTemplate.AddUsingDirective($"{nameof(LeafNode)} = {typeof(LeafNode).FullName}");
-                return scriptTemplate.AddVariableInstantiationLine(behaviourTree.TypeName(), graphAsset.Name, graphAsset);
+                return scriptTemplate.AddVariableInstantiationLine(behaviourTree.TypeName(), graphName, graphAsset);
             }
             else
             {
@@ -88,7 +89,7 @@ namespace BehaviourAPI.Unity.Editor
                 var actionCode = GenerateActionCode(leaf.Action, template) ?? "null /* Missing action */";
                 method = $"CreateLeafNode({actionCode})";                
             }
-            return template.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.{method})");
+            return template.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.{method}");
         }
 
         string AddDecoratorProperties(DecoratorNode decorator, ScriptTemplate scriptTemplate)
@@ -118,8 +119,9 @@ namespace BehaviourAPI.Unity.Editor
         NodeView _rootView;
 
         protected override List<Type> ExcludedTypes => new List<Type> { 
-            typeof(ConditionDecoratorNode), 
-            typeof(SwitchDecoratorNode) 
+            typeof(BehaviourTrees.ConditionNode), 
+            typeof(BehaviourTrees.LeafNode),
+            typeof(BehaviourTrees.SwitchDecoratorNode) 
         };
 
         protected override List<Type> MainTypes => new List<Type> { 

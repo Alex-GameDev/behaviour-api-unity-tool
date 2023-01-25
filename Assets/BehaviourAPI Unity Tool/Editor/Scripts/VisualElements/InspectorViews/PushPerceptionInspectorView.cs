@@ -7,6 +7,7 @@ using UnityEditor.VersionControl;
 using System;
 using UnityEngine;
 using BehaviourAPI.Core.Perceptions;
+using BehaviourAPI.Unity.Framework;
 
 namespace BehaviourAPI.Unity.Editor
 {

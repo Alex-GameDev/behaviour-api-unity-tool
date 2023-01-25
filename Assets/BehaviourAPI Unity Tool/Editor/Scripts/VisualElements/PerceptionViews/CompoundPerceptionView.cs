@@ -1,9 +1,4 @@
-using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.Unity.Runtime;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using CompoundPerception = BehaviourAPI.Unity.Runtime.CompoundPerception;
+using BehaviourAPI.Unity.Framework.Adaptations;
 
 namespace BehaviourAPI.Unity.Editor
 {

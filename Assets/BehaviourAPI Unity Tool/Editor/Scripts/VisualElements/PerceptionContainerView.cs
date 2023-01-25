@@ -1,13 +1,16 @@
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
+using BehaviourAPI.Unity.Framework;
+using BehaviourAPI.Unity.Framework.Adaptations;
 using BehaviourAPI.Unity.Runtime;
+using BehaviourAPI.Unity.Runtime.Extensions;
 using System;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Action = BehaviourAPI.Core.Actions.Action;
-using CompoundPerception = BehaviourAPI.Unity.Runtime.CompoundPerception;
+using CompoundPerception = BehaviourAPI.Unity.Framework.Adaptations.CompoundPerception;
 
 namespace BehaviourAPI.Unity.Editor
 {

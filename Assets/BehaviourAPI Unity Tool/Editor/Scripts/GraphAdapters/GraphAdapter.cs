@@ -1,13 +1,15 @@
-using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.Unity.Runtime;
+
+using BehaviourAPI.Unity.Framework;
+using BehaviourAPI.Unity.Framework.Adaptations;
+using BehaviourAPI.Unity.Runtime.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
+
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -34,7 +36,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public abstract void ConvertAssetToCode(GraphAsset graphAsset, ScriptTemplate scriptTemplate);
 
-        public abstract string CreateGraphLine(GraphAsset graphAsset, ScriptTemplate scriptTemplate);
+        public abstract string CreateGraphLine(GraphAsset graphAsset, ScriptTemplate scriptTemplate, string graphName);
 
         protected string GenerateActionCode(Action action, ScriptTemplate scriptTemplate)
         {
@@ -284,7 +286,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             var types = BehaviourAPISettings.instance.GetTypes().FindAll(t =>
                t.IsSubclassOf(typeof(GraphAdapter)) &&
-               t.GetCustomAttributes().Any(a => a is CustomRendererAttribute crAttrib && crAttrib.type == graph.GetType()));
+               t.GetCustomAttributes().Any(a => a is CustomAdapterAttribute crAttrib && crAttrib.type == graph.GetType()));
 
             if (types.Count() > 0) return Activator.CreateInstance(types[0]) as GraphAdapter;
             else return null;

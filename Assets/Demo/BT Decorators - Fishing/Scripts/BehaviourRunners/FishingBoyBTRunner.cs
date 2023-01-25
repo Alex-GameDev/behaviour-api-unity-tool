@@ -30,7 +30,7 @@ namespace BehaviourAPI.Unity.Demo
             var storeInBasket = bt.CreateLeafNode("Store in basket", new FunctionalAction(StoreCaptureInBasket, () => Status.Success));
 
             var timer = bt.CreateDecorator<UnityTimerDecorator>("Timer", catchSomething).SetTime(3f);
-            var check = bt.CreateDecorator<BehaviourTrees.Decorators.ConditionDecoratorNode>("Cond", storeInBasket).SetPerception(fishPerception);
+            var check = bt.CreateDecorator<ConditionNode>("Cond", storeInBasket).SetPerception(fishPerception);
             var sel = bt.CreateComposite<SelectorNode>("sel", false, check, returnToWater);
             var seq = bt.CreateComposite<SequencerNode>("seq", false, throwTheRod, timer, sel);
 
