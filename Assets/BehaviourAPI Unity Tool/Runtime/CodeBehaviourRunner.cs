@@ -1,21 +1,29 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Unity.Framework;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
 {
     public abstract class CodeBehaviourRunner : BehaviourRunner
     {
-        BehaviourGraph _graph;
+        BehaviourGraph rootGraph;
 
-        protected abstract BehaviourGraph CreateGraph();
+        HashSet<BehaviourGraph> allgraphs = new HashSet<BehaviourGraph>();
 
-        protected override void OnAwake() => _graph = CreateGraph();
-        protected override void OnStart() => _graph.Start();
-        protected override void OnUpdate() => _graph.Update();
+        protected abstract BehaviourGraph CreateGraph(HashSet<BehaviourGraph> registeredGraphs);
+        protected override void OnAwake()
+        {
+            rootGraph = CreateGraph(allgraphs);
+            Debug.Log(allgraphs.Count);
+        }
+
+        protected override void OnStart() => rootGraph.Start();
+        protected override void OnUpdate() => rootGraph.Update();
 
         public override BehaviourSystemAsset GetBehaviourSystemAsset()
         {
-            throw new System.NotImplementedException();
+            return BehaviourSystemAsset.CreateSystem(allgraphs);
         }
     }
 }

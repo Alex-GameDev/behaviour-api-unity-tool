@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    public abstract class CustomActionPropertyDrawer : PropertyDrawer
+    public abstract class CustomMethodPropertyDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -28,7 +28,6 @@ namespace BehaviourAPI.Unity.Editor
 
         private void DisplayMethodNameProperty(SerializedProperty methodNameProperty, Component component, Rect position)
         {
-
             var methodName = methodNameProperty.stringValue;
             var methods = component.GetType().GetMethods().ToList()
                 .FindAll(x => x.GetCustomAttribute(typeof(CustomMethodAttribute)) != null)
@@ -49,7 +48,7 @@ namespace BehaviourAPI.Unity.Editor
     }
 
     [CustomPropertyDrawer(typeof(SerializedStatusFunction))]
-    public class SerializedStatusFunctionPropertyDrawer : CustomActionPropertyDrawer
+    public class SerializedStatusFunctionPropertyDrawer : CustomMethodPropertyDrawer
     {
         protected override bool ValidateMethod(MethodInfo methodInfo)
         {
@@ -59,7 +58,7 @@ namespace BehaviourAPI.Unity.Editor
     }
 
     [CustomPropertyDrawer(typeof(SerializedAction))]
-    public class SerializedActionPropertyDrawer : CustomActionPropertyDrawer
+    public class SerializedActionPropertyDrawer : CustomMethodPropertyDrawer
     {
         protected override bool ValidateMethod(MethodInfo methodInfo)
         {
@@ -69,7 +68,7 @@ namespace BehaviourAPI.Unity.Editor
     }
 
     [CustomPropertyDrawer(typeof(SerializedBoolFunction))]
-    public class SerializedBoolFunctionPropertyDrawer : CustomActionPropertyDrawer
+    public class SerializedBoolFunctionPropertyDrawer : CustomMethodPropertyDrawer
     {
         protected override bool ValidateMethod(MethodInfo methodInfo)
         {

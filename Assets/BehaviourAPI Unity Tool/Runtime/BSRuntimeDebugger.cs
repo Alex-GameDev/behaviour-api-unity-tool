@@ -1,8 +1,4 @@
-using BehaviourAPI.Core;
 using BehaviourAPI.Unity.Framework;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
@@ -11,19 +7,21 @@ namespace BehaviourAPI.Unity.Runtime
     /// Component used for display the status of
     /// </summary>
     
-    [RequireComponent(typeof(VisualBehaviourRunner))]
+    [RequireComponent(typeof(BehaviourRunner))]
     public class BSRuntimeDebugger : MonoBehaviour
     {
         [HideInInspector] public BehaviourSystemAsset systemAsset;
-
 
         [SerializeField] bool _logGraphStatusChanged;
         [SerializeField] bool _logNodeStatusChanged;
         [SerializeField] bool _openDebuggerOnPlay;
 
-        void Awake()
+        public bool IsDebuggerReady { get; private set; } = false;
+
+        void Start()
         {
             systemAsset = GetComponent<BehaviourRunner>().GetBehaviourSystemAsset();
+            IsDebuggerReady = true;
         }
     }
 }

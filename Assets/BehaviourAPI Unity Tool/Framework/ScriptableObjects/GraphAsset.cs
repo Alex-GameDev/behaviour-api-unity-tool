@@ -1,8 +1,13 @@
+using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using UnityEditor.VersionControl;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Framework
@@ -49,6 +54,38 @@ namespace BehaviourAPI.Unity.Framework
             var graphAsset = CreateInstance<GraphAsset>();
             graphAsset.Graph = (BehaviourGraph)Activator.CreateInstance(graphType);
             graphAsset.Name = name;
+            return graphAsset;
+        }
+
+        public static GraphAsset Create(string name, BehaviourGraph behaviourGraph)
+        {
+            var graphAsset = CreateInstance<GraphAsset>();
+            graphAsset.Graph = behaviourGraph;
+            graphAsset.Name = name;
+
+            var nodeAssetMap = new Dictionary<Node, NodeAsset>();
+
+            foreach (var node in behaviourGraph.NodeList)
+            {
+                var nodeAsset = NodeAsset.Create(node, Vector2.zero);
+                nodeAssetMap[node] = nodeAsset;
+                graphAsset.Nodes.Add(nodeAsset);
+            }
+
+            foreach (var node in graphAsset.Nodes)
+            {
+                for (int i = 0; i < node.Node.ParentCount; i++)
+                {
+                    node.Parents.Add(nodeAssetMap[node.Node.GetParentAt(i)]);
+                }
+
+                for (int i = 0; i < node.Node.ChildCount; i++)
+                {
+                    node.Childs.Add(nodeAssetMap[node.Node.GetChildAt(i)]);
+                }
+            }
+
+            LayoutUtilities.ComputeLayout(graphAsset);
             return graphAsset;
         }
 

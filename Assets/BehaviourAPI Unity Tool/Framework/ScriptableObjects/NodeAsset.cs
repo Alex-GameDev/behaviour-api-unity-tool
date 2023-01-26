@@ -36,6 +36,14 @@ namespace BehaviourAPI.Unity.Framework
             return nodeAsset;
         }
 
+        public static NodeAsset Create(Node node, Vector2 pos)
+        {
+            var nodeAsset = CreateInstance<NodeAsset>();
+            nodeAsset.Position = pos;
+            nodeAsset.Node = node;
+            return nodeAsset;
+        }
+
         public void OrderChilds(Func<NodeAsset, float> shortFunction)
         {
             childs = childs.OrderBy(shortFunction).ToList();

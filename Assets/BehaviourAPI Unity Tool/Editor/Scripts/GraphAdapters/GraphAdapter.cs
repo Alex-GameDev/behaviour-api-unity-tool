@@ -146,7 +146,7 @@ namespace BehaviourAPI.Unity.Editor
 
         void DebugNode(NodeAsset asset)
         {
-            Debug.Log($"Name: {asset.Name}\nType: {asset.Node.TypeName()}\n" +
+            Debug.Log($"Name: {asset.Name}\nType: {asset.Node.TypeName()} / Pos: {asset.Position}\n" +
                 $"Parents: {asset.Parents.Count} ({asset.Parents.Select(p => p.Name).Join()})\n" +
                 $"Childs: {asset.Childs.Count} ({asset.Childs.Select(p => p.Name).Join()})");
         }

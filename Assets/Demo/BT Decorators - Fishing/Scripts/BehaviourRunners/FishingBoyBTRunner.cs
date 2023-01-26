@@ -17,7 +17,7 @@ namespace BehaviourAPI.Unity.Demo
         bool _fishCatched;
         GameObject _currentCapture;
 
-        protected override BehaviourGraph CreateGraph()
+        protected override BehaviourGraph CreateGraph(HashSet<BehaviourGraph> registeredGraphs)
         {
             var fishPerception = new ConditionPerception(() => _fishCatched);
 
@@ -38,6 +38,7 @@ namespace BehaviourAPI.Unity.Demo
 
             bt.SetRootNode(loop);
 
+            registeredGraphs.Add(bt);
             return bt;
         }
 

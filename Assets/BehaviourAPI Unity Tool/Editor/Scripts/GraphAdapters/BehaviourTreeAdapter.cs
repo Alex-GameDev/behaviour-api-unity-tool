@@ -22,7 +22,10 @@ namespace BehaviourAPI.Unity.Editor
 
         public override GraphAsset ConvertCodeToAsset(BehaviourGraph graph)
         {
-            throw new System.NotImplementedException();
+            Dictionary<NodeAsset, int> nodeLevelMap = new Dictionary<NodeAsset, int>();
+
+            var graphAsset = GraphAsset.Create("graph", graph);
+            return null;
         }
 
         #endregion

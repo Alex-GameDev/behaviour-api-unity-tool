@@ -38,7 +38,7 @@ public class PizzaBoyRunner : CodeBehaviourRunner
         base.OnAwake();
     }
 
-    protected override BehaviourGraph CreateGraph()
+    protected override BehaviourGraph CreateGraph(HashSet<BehaviourGraph> registeredGraphs)
     {
         var bt = new BehaviourTree();
         var us = CreateLookRecipeUtilitySystem();

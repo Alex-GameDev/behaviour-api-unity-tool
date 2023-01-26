@@ -83,5 +83,20 @@ namespace BehaviourAPI.Unity.Framework
         {
             return buildedPushPerceptions.GetValueOrDefault(name);
         }
+
+        // ----------------------------------------------
+
+        public static BehaviourSystemAsset CreateSystem(HashSet<BehaviourGraph> behaviourGraphs)
+        {
+            Debug.Log("Creating system");
+            var system = CreateInstance<BehaviourSystemAsset>();
+            foreach(var graph in behaviourGraphs)
+            {
+                var name = graph.GetType().Name;
+                var graphAsset = GraphAsset.Create(name, graph);
+                system.graphs.Add(graphAsset);
+            }
+            return system;
+        }
     }
 }

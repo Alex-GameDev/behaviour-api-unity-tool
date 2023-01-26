@@ -6,7 +6,7 @@ using UnityEditor;
 namespace BehaviourAPI.Unity.Editor
 {
     [CustomPropertyDrawer(typeof(SerializedFloatFunction))]
-    public class SerializedFloatFunctionPropertyDrawer : CustomActionPropertyDrawer
+    public class SerializedFloatFunctionPropertyDrawer : CustomMethodPropertyDrawer
     {
         protected override bool ValidateMethod(MethodInfo methodInfo)
         {
@@ -16,7 +16,7 @@ namespace BehaviourAPI.Unity.Editor
     }
 
     [CustomPropertyDrawer(typeof(SerializedFloatFloatFunction))]
-    public class SerializedFloatFloatFunctionPropertyDrawer : CustomActionPropertyDrawer
+    public class SerializedFloatFloatFunctionPropertyDrawer : CustomMethodPropertyDrawer
     {
         protected override bool ValidateMethod(MethodInfo methodInfo)
         {
