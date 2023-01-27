@@ -85,6 +85,7 @@ namespace BehaviourAPI.Unity.Framework
                 }
             }
 
+            //LayoutUtilities.ComputeLayout(graphAsset);
             LayoutUtilities.ComputeLayout(graphAsset);
             return graphAsset;
         }

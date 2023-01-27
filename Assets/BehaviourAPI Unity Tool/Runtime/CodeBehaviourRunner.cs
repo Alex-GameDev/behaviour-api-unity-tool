@@ -15,7 +15,6 @@ namespace BehaviourAPI.Unity.Runtime
         protected override void OnAwake()
         {
             rootGraph = CreateGraph(allgraphs);
-            Debug.Log(allgraphs.Count);
         }
 
         protected override void OnStart() => rootGraph.Start();

@@ -1,3 +1,5 @@
+using BehaviourAPI.BehaviourTrees;
+using BehaviourAPI.UtilitySystems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +15,16 @@ namespace BehaviourAPI.Unity.Framework
         {
             if(graphAsset == null) return;
 
-            var root = graphAsset.Nodes.FirstOrDefault();
-
-            if (root == null) return;
-
-            ProcessTreeNode(root, new Dictionary<int, float>(), 0, 0f);
+            if(graphAsset.Graph is BehaviourTree)
+            {
+                var root = graphAsset.Nodes.FirstOrDefault();
+                if (root == null) return;
+                ProcessTreeNode(root, new Dictionary<int, float>(), 0, 0f);
+            }
+            else if(graphAsset.Graph is UtilitySystem)
+            {
+                ComputeUSLayout(graphAsset);
+            }
         }
 
         private static float ProcessTreeNode(NodeAsset node, Dictionary<int, float> levelMap, int currentLevel, float targetPos)
@@ -62,6 +69,68 @@ namespace BehaviourAPI.Unity.Framework
             node.Position = new Vector2(x, currentLevel) * nodeOffset;
             levelMap[currentLevel] = x;
             return x;
+        }
+
+        public static void ComputeUSLayout(GraphAsset graphAsset)
+        {
+            Dictionary<NodeAsset, int> nodeLevelMap = new Dictionary<NodeAsset, int>();
+
+            foreach(var node in graphAsset.Nodes)
+            {
+                if(!nodeLevelMap.ContainsKey(node)) CheckLevel(node, nodeLevelMap);
+            }
+
+            var list = nodeLevelMap.ToList();
+
+            var maxLevel = list.Max(kvp => kvp.Value);
+
+            for(int i = 0; i <= maxLevel; i++)
+            {
+                List<NodeAsset> nodes = list.FindAll(kvp => kvp.Value == i).Select(kvp => kvp.Key).ToList();
+                ComputePositions(nodes, maxLevel - i, maxLevel);
+            }
+        }
+
+        static int CheckLevel(NodeAsset asset, Dictionary<NodeAsset, int> nodeLevelMap)
+        {
+            int currentLevel = 0;
+            foreach(var child in asset.Childs)
+            {
+                var childValue = nodeLevelMap.TryGetValue(asset, out int level) ? level : CheckLevel(child, nodeLevelMap);
+                if(childValue + 1 > currentLevel) currentLevel = childValue + 1;
+            }
+            nodeLevelMap[asset] = currentLevel;
+            return currentLevel;
+        }
+
+        static void ComputePositions(List<NodeAsset> nodes, int level, int maxLevel)
+        {
+            Dictionary<NodeAsset, float> targetPositionMap = new Dictionary<NodeAsset, float>();
+
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                if (level == maxLevel)
+                {
+                    nodes[i].Position = new Vector2(i, level) * nodeOffset;
+                }
+                else
+                {
+                    nodes[i].Position = new Vector2(nodes[i].Childs.Average(child => child.Position.x), level);
+                }
+            }
+
+            if (level != maxLevel)
+            {
+                nodes = nodes.OrderBy(n => n.Position.x).ToList();
+                var midPos = nodes.Average(n => n.Position.x);
+                var height = level * nodeOffset.y;
+                var midCount = (nodes.Count - 1) / 2f;
+
+                for (int i = 0; i < nodes.Count; i++)
+                {
+                    nodes[i].Position = new Vector2(midPos, height) + nodeOffset * new Vector2(i - midCount, 0);
+                }
+            }
         }
     }
 }

@@ -88,7 +88,6 @@ namespace BehaviourAPI.Unity.Framework
 
         public static BehaviourSystemAsset CreateSystem(HashSet<BehaviourGraph> behaviourGraphs)
         {
-            Debug.Log("Creating system");
             var system = CreateInstance<BehaviourSystemAsset>();
             foreach(var graph in behaviourGraphs)
             {
