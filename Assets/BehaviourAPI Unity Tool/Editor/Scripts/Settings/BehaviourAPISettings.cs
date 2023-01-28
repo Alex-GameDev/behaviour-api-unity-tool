@@ -17,13 +17,15 @@ namespace BehaviourAPI.Unity.Editor
         public string GenerateScript_DefaultPath = "Assets/Scripts/";
         public string GenerateScript_DefaultName = "NewBehaviourRunner";
 
+        public string RootPath = "Assets/BehaviourAPI Unity Tool";
+        public string EditorElementPath => $"{RootPath}/Editor/uxml/";
+
         [Header("Layout")]
         public VisualTreeAsset BehaviourGraphEditorWindowLayout;
 
         public VisualTreeAsset AlertWindowLayout;
         public VisualTreeAsset GraphCreationWindowLayout;
         public VisualTreeAsset ScriptCreationWindowLayout;
-
 
         public VisualTreeAsset NodeLayout;
         public VisualTreeAsset ContainerLayout;
@@ -41,7 +43,6 @@ namespace BehaviourAPI.Unity.Editor
 
         public VisualTreeAsset StatusPerceptionLayout;
         public VisualTreeAsset CompoundPerceptionLayout;
-
 
         [Header("Style")]
         public StyleSheet BehaviourGraphEditorWindowStylesheet;

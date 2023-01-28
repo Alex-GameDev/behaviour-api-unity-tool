@@ -170,5 +170,10 @@ namespace BehaviourAPI.Unity.Editor
                 GraphView.DeleteElements(elements);
             }
         }
+
+        public PortView InstantiatePort(PortOrientation orientation, Direction direction, Capacity capacity, Type type)
+        {
+            return PortView.Create(orientation, direction, capacity, type);
+        }
     }
 }

@@ -123,7 +123,7 @@ namespace BehaviourAPI.Unity.Editor
         /// Draw a node view
         /// </summary>
         public void DrawNode(NodeAsset asset, BehaviourGraphView graphView)
-        {
+        {            
             var nodeView = new NodeView(asset, graphView, GetNodeLayoutPath(asset));
             SetUpPortsAndDetails(nodeView);
             nodeView.AddManipulator(new ContextualMenuManipulator(menuEvt =>
@@ -171,7 +171,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 //Port tgtPort = nodeViews.Find(n => n.Node == child).InputPort;
                 Port tgtPort = graphView.GetViewOf(child).InputPort;
-                Edge edge = srcPort.ConnectTo(tgtPort);
+                EdgeView edge = srcPort.ConnectTo<EdgeView>(tgtPort);
                 graphView.AddConnectionView(edge);
                 srcPort.node.RefreshPorts();
                 tgtPort.node.RefreshPorts();
@@ -249,6 +249,15 @@ namespace BehaviourAPI.Unity.Editor
                 }
             }
             return entries;
+        }
+
+        protected void CreatePort(NodeView node, int maxConnections, Direction direction, PortOrientation orientation, Type type)
+        {
+            var port = node.InstantiatePort(orientation, direction, maxConnections == -1 ? Port.Capacity.Multi : Port.Capacity.Single, type);
+            port.portName = "";
+            port.style.flexDirection = orientation.ToFlexDirection();
+            var container = direction == Direction.Input ? node.inputContainer : node.outputContainer;
+            container.Add(port);
         }
 
         public GraphViewChange OnViewChanged(BehaviourGraphView graphView, GraphViewChange change)

@@ -153,7 +153,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (nodeView.Node.Node.MaxInputConnections != 0)
             {
-                CreatePort(nodeView, nodeView.Node.Node.MaxInputConnections, Direction.Input, nodeView.Node.Node.GetType());
+                CreatePort(nodeView, nodeView.Node.Node.MaxInputConnections, Direction.Input, PortOrientation.Bottom, nodeView.Node.Node.GetType());
             }
             else
             {
@@ -162,7 +162,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (nodeView.Node.Node.MaxOutputConnections != 0)
             {
-                CreatePort(nodeView, nodeView.Node.Node.MaxOutputConnections, Direction.Output, nodeView.Node.Node.ChildType);
+                CreatePort(nodeView, nodeView.Node.Node.MaxOutputConnections, Direction.Output, PortOrientation.Top, nodeView.Node.Node.ChildType);
             }
             else
             {
@@ -182,15 +182,6 @@ namespace BehaviourAPI.Unity.Editor
                 ChangeRootNode(view);
             }
             return change;
-        }
-
-        void CreatePort(NodeView nodeView, int maxConnections, Direction direction, Type type)
-        {
-            var port = nodeView.InstantiatePort(Orientation.Vertical, direction, maxConnections == -1 ? Port.Capacity.Multi : Port.Capacity.Single, type);
-            port.portName = "";
-            port.style.flexDirection = direction == Direction.Input ? FlexDirection.Column : FlexDirection.ColumnReverse;
-            var container = direction == Direction.Input ? nodeView.inputContainer : nodeView.outputContainer;
-            container.Add(port);
         }
 
         void SetRootNode(NodeView nodeView)

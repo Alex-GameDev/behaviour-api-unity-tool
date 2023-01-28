@@ -1,4 +1,5 @@
 using BehaviourAPI.BehaviourTrees;
+using BehaviourAPI.StateMachines;
 using BehaviourAPI.UtilitySystems;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,10 @@ namespace BehaviourAPI.Unity.Framework
             else if(graphAsset.Graph is UtilitySystem)
             {
                 ComputeUSLayout(graphAsset);
+            }
+            else if(graphAsset.Graph is FSM)
+            {
+
             }
         }
 
