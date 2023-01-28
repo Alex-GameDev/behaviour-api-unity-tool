@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -119,6 +119,14 @@ namespace BehaviourAPI.Unity.Editor
         protected abstract void DrawGraphDetails(GraphAsset graphAsset, BehaviourGraphView graphView, List<NodeView> nodeViews);
         protected abstract GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change);
 
+        protected virtual void DecoratePort(PortView port)
+        {
+            var bg = new VisualElement(); //AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(BehaviourAPISettings.instance.EditorElementPath + "Elements/port decorator.uxml").Instantiate();
+            bg.style.position = Position.Absolute;
+            bg.style.top = 0; bg.style.left = 0; bg.style.bottom = 0; bg.style.right = 0;
+            port.Add(bg);
+        }
+
         /// <summary>
         /// Draw a node view
         /// </summary>
@@ -149,6 +157,22 @@ namespace BehaviourAPI.Unity.Editor
             Debug.Log($"Name: {asset.Name}\nType: {asset.Node.TypeName()} / Pos: {asset.Position}\n" +
                 $"Parents: {asset.Parents.Count} ({asset.Parents.Select(p => p.Name).Join()})\n" +
                 $"Childs: {asset.Childs.Count} ({asset.Childs.Select(p => p.Name).Join()})");
+
+            var tpl = EditorGUIUtility.Load("UXML/GraphView/Port.uxml") as VisualTreeAsset;
+            var elem = tpl.Instantiate();
+
+            Recorrer(elem, 0);
+        }
+
+        void Recorrer(VisualElement element, int level)
+        {
+            if (element.childCount == 0) return;
+
+            foreach(var child in element.Children())
+            {
+                Debug.Log(child.name + " (" + child + ")");
+                Recorrer(child, level + 1);
+            }
         }
 
         void DebugGraph(GraphAsset asset)
@@ -251,13 +275,20 @@ namespace BehaviourAPI.Unity.Editor
             return entries;
         }
 
-        protected void CreatePort(NodeView node, int maxConnections, Direction direction, PortOrientation orientation, Type type)
+        protected PortView CreatePort(NodeView nodeView, Direction direction, PortOrientation orientation)
         {
-            var port = node.InstantiatePort(orientation, direction, maxConnections == -1 ? Port.Capacity.Multi : Port.Capacity.Single, type);
+            var node = nodeView.Node.Node;
+            bool isInput = direction == Direction.Input;
+            var capacity = (isInput ? node.MaxInputConnections == -1 : node.MaxOutputConnections == -1) ? Port.Capacity.Multi : Port.Capacity.Single;
+            var type = isInput ? node.GetType() : node.ChildType;
+
+            var port = nodeView.InstantiatePort(orientation, direction, capacity, type);
             port.portName = "";
             port.style.flexDirection = orientation.ToFlexDirection();
-            var container = direction == Direction.Input ? node.inputContainer : node.outputContainer;
+            var container = isInput ? nodeView.inputContainer : nodeView.outputContainer;
             container.Add(port);
+            DecoratePort(port);
+            return port;
         }
 
         public GraphViewChange OnViewChanged(BehaviourGraphView graphView, GraphViewChange change)

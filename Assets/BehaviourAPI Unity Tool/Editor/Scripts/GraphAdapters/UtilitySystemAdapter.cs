@@ -224,7 +224,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (nodeView.Node.Node.MaxInputConnections != 0)
             {
-                CreatePort(nodeView, nodeView.Node.Node.MaxInputConnections, Direction.Input, PortOrientation.Right, nodeView.Node.Node.GetType());
+                var port = CreatePort(nodeView, Direction.Input, PortOrientation.Right);
             }
             else
             {
@@ -233,10 +233,18 @@ namespace BehaviourAPI.Unity.Editor
 
             if (nodeView.Node.Node.MaxOutputConnections != 0)
             {
-                CreatePort(nodeView, nodeView.Node.Node.MaxOutputConnections, Direction.Output, PortOrientation.Left, nodeView.Node.Node.ChildType);
+                var port = CreatePort(nodeView, Direction.Output, PortOrientation.Left);
             }
             else
                 nodeView.outputContainer.style.display = DisplayStyle.None;
+        }
+
+        protected override void DecoratePort(PortView port)
+        { 
+            var bg = new VisualElement();
+            bg.style.position = Position.Absolute;
+            bg.style.top = 0; bg.style.left = 0; bg.style.bottom = 0; bg.style.right = 0;
+            port.Add(bg);
         }
 
         protected override GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change)

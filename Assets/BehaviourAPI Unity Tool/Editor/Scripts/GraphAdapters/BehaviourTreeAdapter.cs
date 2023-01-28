@@ -157,7 +157,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (nodeView.Node.Node.MaxInputConnections != 0)
             {
-                CreatePort(nodeView, nodeView.Node.Node.MaxInputConnections, Direction.Input, PortOrientation.Bottom, nodeView.Node.Node.GetType());
+                CreatePort(nodeView, Direction.Input, PortOrientation.Bottom);
             }
             else
             {
@@ -166,7 +166,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (nodeView.Node.Node.MaxOutputConnections != 0)
             {
-                CreatePort(nodeView, nodeView.Node.Node.MaxOutputConnections, Direction.Output, PortOrientation.Top, nodeView.Node.Node.ChildType);
+                CreatePort(nodeView, Direction.Output, PortOrientation.Top);
             }
             else
             {

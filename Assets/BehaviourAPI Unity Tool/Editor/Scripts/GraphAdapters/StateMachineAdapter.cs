@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 using ExitTransition = BehaviourAPI.StateMachines.ExitTransition;
@@ -144,7 +145,6 @@ namespace BehaviourAPI.Unity.Editor
         #region ------------------- Rendering -------------------
 
         NodeView _entryStateView;
-
         protected override List<Type> MainTypes => new List<Type>
         {
             typeof(State),
@@ -181,7 +181,21 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (nodeView.Node.Node.MaxInputConnections != 0)
             {
-                CreatePort(nodeView, nodeView.Node.Node.MaxInputConnections, Direction.Input, PortOrientation.None, nodeView.Node.Node.GetType());
+                var port1 = CreatePort(nodeView, Direction.Input, PortOrientation.Bottom);
+                port1.style.position = Position.Absolute;
+                port1.style.top = 0; port1.style.left = new StyleLength(new Length(50, LengthUnit.Percent));
+
+                var port2 = CreatePort(nodeView, Direction.Input, PortOrientation.Right);
+                port2.style.position = Position.Absolute;
+                port2.style.right = 0; port2.style.top = new StyleLength(new Length(50, LengthUnit.Percent));
+
+                var port3 = CreatePort(nodeView, Direction.Input, PortOrientation.Top);
+                port3.style.position = Position.Absolute;
+                port3.style.bottom = 0; port3.style.right = new StyleLength(new Length(50, LengthUnit.Percent));
+
+                var port4 = CreatePort(nodeView, Direction.Input, PortOrientation.Left);
+                port4.style.position = Position.Absolute;
+                port4.style.left = 0; port4.style.bottom = new StyleLength(new Length(50, LengthUnit.Percent));
             }
             else
             {
@@ -190,7 +204,21 @@ namespace BehaviourAPI.Unity.Editor
 
             if (nodeView.Node.Node.MaxOutputConnections != 0)
             {
-                CreatePort(nodeView, nodeView.Node.Node.MaxOutputConnections, Direction.Output, PortOrientation.None, nodeView.Node.Node.ChildType);
+                var port1 = CreatePort(nodeView, Direction.Output, PortOrientation.Bottom);
+                port1.style.position = Position.Absolute;
+                port1.style.top = 0; port1.style.right = new StyleLength(new Length(50, LengthUnit.Percent));
+
+                var port2 = CreatePort(nodeView, Direction.Output, PortOrientation.Right);
+                port2.style.position = Position.Absolute;
+                port2.style.right = 0; port2.style.bottom = new StyleLength(new Length(50, LengthUnit.Percent));
+
+                var port3 = CreatePort(nodeView, Direction.Output, PortOrientation.Top);
+                port3.style.position = Position.Absolute;
+                port3.style.bottom = 0; port3.style.left = new StyleLength(new Length(50, LengthUnit.Percent));
+
+                var port4 = CreatePort(nodeView, Direction.Output, PortOrientation.Left);
+                port4.style.position = Position.Absolute;
+                port4.style.left = 0; port4.style.top = new StyleLength(new Length(50, LengthUnit.Percent));
             }
             else
                 nodeView.outputContainer.style.display = DisplayStyle.None;

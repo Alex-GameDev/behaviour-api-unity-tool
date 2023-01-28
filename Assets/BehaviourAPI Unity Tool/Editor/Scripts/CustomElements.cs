@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -13,6 +14,33 @@ namespace BehaviourAPI.Unity.Editor
         protected PortView(PortOrientation portOrientation, Direction portDirection, Capacity portCapacity, Type type) : base(portOrientation.ToOrientation(), portDirection, portCapacity, type)
         {
             Orientation = portOrientation;
+            Decorate();
+        }
+
+        public void Decorate()
+        {
+            bool isOutput = direction == Direction.Output;
+
+            if (Orientation == PortOrientation.Top && isOutput || Orientation == PortOrientation.Bottom && !isOutput) 
+            { 
+                m_ConnectorBox.style.borderTopLeftRadius = 0f; 
+                m_ConnectorBox.style.borderTopRightRadius = 0f; 
+            }
+            else if (Orientation == PortOrientation.Left && isOutput || Orientation == PortOrientation.Right && !isOutput) 
+            { 
+                m_ConnectorBox.style.borderTopRightRadius = 0f; 
+                m_ConnectorBox.style.borderBottomRightRadius = 0f; 
+            }
+            else if (Orientation == PortOrientation.Right && isOutput || Orientation == PortOrientation.Left && !isOutput) 
+            { 
+                m_ConnectorBox.style.borderTopLeftRadius = 0f; 
+                m_ConnectorBox.style.borderBottomLeftRadius = 0f; 
+            }
+            else if (Orientation == PortOrientation.Bottom && isOutput || Orientation == PortOrientation.Top && !isOutput) 
+            { 
+                m_ConnectorBox.style.borderBottomLeftRadius = 0f;
+                m_ConnectorBox.style.borderBottomRightRadius = 0f; 
+            }
         }
 
         public static PortView Create(PortOrientation portOrientation, Direction portDirection, Capacity portCapacity, Type type)
@@ -173,8 +201,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (portOrientation == PortOrientation.Top) return FlexDirection.ColumnReverse;
             if (portOrientation == PortOrientation.Bottom) return FlexDirection.Column;
-            if (portOrientation == PortOrientation.Left) return FlexDirection.Column;
-            if (portOrientation == PortOrientation.Right) return FlexDirection.Column;
+            if (portOrientation == PortOrientation.Left) return FlexDirection.Row;
+            if (portOrientation == PortOrientation.Right) return FlexDirection.RowReverse;
             else return FlexDirection.Column;
         }
     }
