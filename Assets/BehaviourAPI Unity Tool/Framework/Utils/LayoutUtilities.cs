@@ -116,24 +116,24 @@ namespace BehaviourAPI.Unity.Framework
             {
                 if (level == maxLevel)
                 {
-                    nodes[i].Position = new Vector2(i, level) * nodeOffset;
+                    nodes[i].Position = new Vector2(level, i) * nodeOffset;
                 }
                 else
                 {
-                    nodes[i].Position = new Vector2(nodes[i].Childs.Average(child => child.Position.x), level);
+                    nodes[i].Position = new Vector2(level, nodes[i].Childs.Average(child => child.Position.x));
                 }
             }
 
             if (level != maxLevel)
             {
-                nodes = nodes.OrderBy(n => n.Position.x).ToList();
-                var midPos = nodes.Average(n => n.Position.x);
-                var height = level * nodeOffset.y;
+                nodes = nodes.OrderBy(n => n.Position.y).ToList();
+                var midPos = nodes.Average(n => n.Position.y);
+                var height = level * nodeOffset.x;
                 var midCount = (nodes.Count - 1) / 2f;
 
                 for (int i = 0; i < nodes.Count; i++)
                 {
-                    nodes[i].Position = new Vector2(midPos, height) + nodeOffset * new Vector2(i - midCount, 0);
+                    nodes[i].Position = new Vector2(midPos, height) + nodeOffset * new Vector2(0, i - midCount);
                 }
             }
         }
