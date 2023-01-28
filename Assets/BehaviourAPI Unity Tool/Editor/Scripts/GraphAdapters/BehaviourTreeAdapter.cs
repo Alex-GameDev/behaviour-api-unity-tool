@@ -139,7 +139,11 @@ namespace BehaviourAPI.Unity.Editor
             if (firstNode != null) ChangeRootNode(nodeViews.Find(n => n.Node == firstNode));
         }
 
-        protected override string GetNodeLayoutPath(NodeAsset _) => AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().NodeLayout);
+        protected override string GetNodeLayoutPath(NodeAsset _)
+        {
+            return BehaviourAPISettings.instance.EditorElementPath + "/Nodes/Tree Node.uxml";
+            //AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().NodeLayout);
+        }
 
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
         {

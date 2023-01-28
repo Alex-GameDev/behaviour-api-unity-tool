@@ -171,10 +171,10 @@ namespace BehaviourAPI.Unity.Editor
 
         public static FlexDirection ToFlexDirection(this PortOrientation portOrientation)
         {
-            if (portOrientation == PortOrientation.Top) return FlexDirection.Column;
-            if (portOrientation == PortOrientation.Bottom) return FlexDirection.ColumnReverse;
-            if (portOrientation == PortOrientation.Left) return FlexDirection.Row;
-            if (portOrientation == PortOrientation.Right) return FlexDirection.RowReverse;
+            if (portOrientation == PortOrientation.Top) return FlexDirection.ColumnReverse;
+            if (portOrientation == PortOrientation.Bottom) return FlexDirection.Column;
+            if (portOrientation == PortOrientation.Left) return FlexDirection.Column;
+            if (portOrientation == PortOrientation.Right) return FlexDirection.Column;
             else return FlexDirection.Column;
         }
     }

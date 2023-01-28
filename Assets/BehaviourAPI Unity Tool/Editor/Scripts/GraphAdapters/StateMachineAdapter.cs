@@ -166,8 +166,9 @@ namespace BehaviourAPI.Unity.Editor
 
         protected override string GetNodeLayoutPath(NodeAsset node)
         {
-            if (node.Node is State) return AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().StateLayout);
-            else return AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().TransitionLayout);
+            return BehaviourAPISettings.instance.EditorElementPath + "/Nodes/CG Node.uxml";
+            //if (node.Node is State) return AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().StateLayout);
+            //else return AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().TransitionLayout);
         }
 
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
@@ -180,7 +181,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (nodeView.Node.Node.MaxInputConnections != 0)
             {
-                CreatePort(nodeView, nodeView.Node.Node.MaxInputConnections, Direction.Input, nodeView.Node.Node.GetType());
+                CreatePort(nodeView, nodeView.Node.Node.MaxInputConnections, Direction.Input, PortOrientation.None, nodeView.Node.Node.GetType());
             }
             else
             {
@@ -189,7 +190,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (nodeView.Node.Node.MaxOutputConnections != 0)
             {
-                CreatePort(nodeView, nodeView.Node.Node.MaxOutputConnections, Direction.Output, nodeView.Node.Node.ChildType);
+                CreatePort(nodeView, nodeView.Node.Node.MaxOutputConnections, Direction.Output, PortOrientation.None, nodeView.Node.Node.ChildType);
             }
             else
                 nodeView.outputContainer.style.display = DisplayStyle.None;
@@ -206,15 +207,6 @@ namespace BehaviourAPI.Unity.Editor
                 ChangeEntryState(view);
             }
             return change;
-        }
-
-        void CreatePort(NodeView nodeView, int maxConnections, Direction direction, Type type)
-        {
-            var port = nodeView.InstantiatePort(Orientation.Vertical, direction, maxConnections > 1 ? Port.Capacity.Multi : Port.Capacity.Single, type);
-            port.portName = direction == Direction.Input ? "IN" : "OUT";
-            port.style.flexDirection = FlexDirection.Column;
-            var container = direction == Direction.Input ? nodeView.inputContainer : nodeView.outputContainer;
-            container.Add(port);
         }
 
         void ChangeEntryState(NodeView newStartNode)
