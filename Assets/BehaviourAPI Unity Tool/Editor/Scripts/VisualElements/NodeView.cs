@@ -16,30 +16,45 @@ namespace BehaviourAPI.Unity.Editor
     using static UnityEditor.Experimental.GraphView.Port;
     using Orientation = UnityEditor.Experimental.GraphView.Orientation;
     using BehaviourAPI.Unity.Framework;
+    using UnityEngine.Windows;
 
     /// <summary>
     /// Visual element that represents a node in a behaviour graph
     /// </summary>
     public class NodeView : UnityEditor.Experimental.GraphView.Node
     {
-        public NodeAsset Node { get; set; }
+        public static readonly string NODE_LAYOUT = AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().NodeLayout);
 
-        public Action<NodeAsset> Selected = delegate { };
+        #region --------------------------- Fields ---------------------------
+        
+        public NodeAsset Node;
+
+        public Action<NodeAsset> Selected;
 
         BehaviourGraphView _graphView;
         public BehaviourGraphView GraphView => _graphView;
 
+        List<PortView> inputPorts, outputPorts;
+
+        #endregion
+
+        #region ----------------------- Visual elements -----------------------
         public VisualElement RootElement { get; private set; }
-        public Port InputPort => inputContainer.Children().First() as Port;
-        public Port OutputPort => outputContainer.Children().First() as Port;
+        public Port InputPort => inputPorts.First();
+        public Port OutputPort => OutputPorts.First();
 
+        public List<PortView> InputPorts => inputPorts;
+        public List<PortView> OutputPorts => outputPorts;
 
-        public static readonly string NODE_LAYOUT = AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().NodeLayout);
+        #endregion       
 
+        #region --------------------------- Set up ---------------------------
         public NodeView(NodeAsset node, BehaviourGraphView graphView, string layoutPath = null) : base(layoutPath ?? NODE_LAYOUT)
         {
             Node = node;
             _graphView = graphView;
+            inputPorts = new List<PortView>();
+            outputPorts = new List<PortView>();
             RootElement = this.Q("node-root");
             SetPosition(new Rect(node.Position, Vector2.zero));
             DrawExtensionContainer();
@@ -55,27 +70,10 @@ namespace BehaviourAPI.Unity.Editor
             if(Node.Node is IStatusHandler statusHandler)
             {
                 var statusBorder = this.Q("node-status");
-                statusHandler.StatusChanged += status => UpdateStatusBorder(statusBorder, status);
+                statusHandler.StatusChanged += status => statusBorder.ChangeBorderColor(status.ToColor());
 
-                UpdateStatusBorder(statusBorder, statusHandler.Status);              
+                statusBorder.ChangeBorderColor(statusHandler.Status.ToColor());
             }
-        }
-
-        void UpdateStatusBorder(VisualElement statusBorder, Status status)
-        {
-            var color = StatusToColor(status);
-            statusBorder.style.borderBottomColor = color;
-            statusBorder.style.borderTopColor = color;
-            statusBorder.style.borderLeftColor = color;
-            statusBorder.style.borderRightColor = color;            
-        }
-
-        Color StatusToColor(Status status)
-        {
-            if (status == Status.Success) return Color.green;
-            if (status == Status.Failure) return Color.red;
-            if (status == Status.Running) return Color.yellow;
-            return Color.gray;
         }
 
         private void SetUpContextualMenu()
@@ -121,6 +119,26 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
+        void SetUpDataBinding()
+        {
+            var titleInputField = this.Q<TextField>(name: "title-input-field");
+            titleInputField.bindingPath = "Name";
+            titleInputField.Bind(new SerializedObject(Node));
+        }
+
+        public PortView InstantiatePort(PortOrientation orientation, Direction direction, Capacity capacity, Type type)
+        {
+            var isInput = direction == Direction.Input;
+            var port = PortView.Create(orientation, direction, capacity, type);
+            (isInput ? InputPorts : OutputPorts).Add(port);
+            (isInput ? inputContainer : outputContainer).Add(port);
+            return port;
+        }
+
+        #endregion
+
+        #region --------------------------- Editor events ---------------------------
+
         public override void OnSelected()
         {
             base.OnSelected();
@@ -148,13 +166,6 @@ namespace BehaviourAPI.Unity.Editor
                 Node.Childs.Remove(other.Node);           
         }
 
-        void SetUpDataBinding()
-        {
-            var titleInputField = this.Q<TextField>(name: "title-input-field");
-            titleInputField.bindingPath = "Name";
-            titleInputField.Bind(new SerializedObject(Node));
-        }
-
         public void DisconnectPorts(VisualElement portContainer)
         {
             if(GraphView != null)
@@ -171,9 +182,6 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        public PortView InstantiatePort(PortOrientation orientation, Direction direction, Capacity capacity, Type type)
-        {
-            return PortView.Create(orientation, direction, capacity, type);
-        }
+        #endregion        
     }
 }

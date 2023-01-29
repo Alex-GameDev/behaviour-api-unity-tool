@@ -1,7 +1,6 @@
 ﻿using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Runtime;
-
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,6 +14,8 @@ namespace BehaviourAPI.Unity.Editor
 {
     public static class Extensions
     {
+        #region -------------------------------- Strings and regex --------------------------------
+
         private static readonly Regex k_Whitespace = new Regex(@"\s+");
 
         private static readonly string[] k_Keywords = new[]
@@ -32,27 +33,10 @@ namespace BehaviourAPI.Unity.Editor
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
         };
 
-        public static void Disable(this VisualElement visualElement) => visualElement.style.display = DisplayStyle.None;
-        public static void Enable(this VisualElement visualElement) => visualElement.style.display = DisplayStyle.Flex;
-        public static void Hide(this VisualElement visualElement) => visualElement.style.visibility = Visibility.Hidden;
-        public static void Show(this VisualElement visualElement) => visualElement.style.visibility = Visibility.Visible;
-
-        public static void AddGroup(this List<SearchTreeEntry> searchTreeEntries, string title, int level)
-        {
-            searchTreeEntries.Add(new SearchTreeGroupEntry(new GUIContent(title), level));
-        }
-
-        public static void AddEntry(this List<SearchTreeEntry> searchTreeEntries, string title, int level, object userData)
-        {
-            searchTreeEntries.Add(new SearchTreeEntry(new GUIContent("     " + title)) { level = level, userData = userData});
-        }
-
-        public static DropdownMenuAction.Status ToMenuStatus(this bool b) => b ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
-
         public static string CamelCaseToSpaced(this string input)
         {
-              return Regex.Replace(input, "([A-Z])", " $1").Trim();
-        }        
+            return Regex.Replace(input, "([A-Z])", " $1").Trim();
+        }
 
         public static string RemoveWhitespaces(this string str)
         {
@@ -67,7 +51,7 @@ namespace BehaviourAPI.Unity.Editor
         public static string Join(this IEnumerable<string> strings, string separator = ", ") => string.Join(separator, strings);
 
         public static string ToValidIdentificatorName(this string str)
-        {           
+        {
 
             str = str.RemoveWhitespaces();
             str = str.Replace('-', '_');
@@ -87,5 +71,44 @@ namespace BehaviourAPI.Unity.Editor
         public static string ToCodeFormat(this bool b) => b.ToString().ToLower();
         public static string ToCodeFormat(this Status s) => "Status." + s.ToString();
         public static string ToCodeFormat(this StatusFlags s) => "StatusFlags." + s.ToString();
+
+        #endregion
+
+        #region -------------------------------- Visual elements --------------------------------
+
+        public static void Disable(this VisualElement visualElement) => visualElement.style.display = DisplayStyle.None;
+        public static void Enable(this VisualElement visualElement) => visualElement.style.display = DisplayStyle.Flex;
+        public static void Hide(this VisualElement visualElement) => visualElement.style.visibility = Visibility.Hidden;
+        public static void Show(this VisualElement visualElement) => visualElement.style.visibility = Visibility.Visible;
+
+        public static Color ToColor(this Status status)
+        {
+            if (status == Status.Success) return Color.green;
+            if (status == Status.Failure) return Color.red;
+            if (status == Status.Running) return Color.yellow;
+            return Color.gray;
+        }
+
+        public static void ChangeBorderColor(this VisualElement visualElement, Color color)
+        {
+            visualElement.style.borderBottomColor = color;
+            visualElement.style.borderTopColor = color;
+            visualElement.style.borderLeftColor = color;
+            visualElement.style.borderRightColor = color;
+        }
+
+        public static void AddGroup(this List<SearchTreeEntry> searchTreeEntries, string title, int level)
+        {
+            searchTreeEntries.Add(new SearchTreeGroupEntry(new GUIContent(title), level));
+        }
+
+        public static void AddEntry(this List<SearchTreeEntry> searchTreeEntries, string title, int level, object userData)
+        {
+            searchTreeEntries.Add(new SearchTreeEntry(new GUIContent("     " + title)) { level = level, userData = userData});
+        }
+
+        public static DropdownMenuAction.Status ToMenuStatus(this bool b) => b ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
+
+        #endregion
     }
 }
