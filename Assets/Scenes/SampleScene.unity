@@ -229,7 +229,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511131316819066891
-  position: {x: -228, y: 995}
+  position: {x: -310, y: 1027}
   parents: []
   childs: []
   references:
@@ -257,8 +257,9 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511131248949461003
-  position: {x: 1027, y: 346}
-  parents: []
+  position: {x: 792, y: 389}
+  parents:
+  - {fileID: 1904154289}
   childs: []
   references:
     version: 2
@@ -438,7 +439,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511131316819066893
-  position: {x: -240, y: 790}
+  position: {x: -302, y: 813}
   parents: []
   childs: []
   references:
@@ -1000,7 +1001,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 2511131316819066892
-  position: {x: -248, y: 597}
+  position: {x: -302, y: 611}
   parents: []
   childs: []
   references:
@@ -1320,7 +1321,8 @@ MonoBehaviour:
     rid: 2511131272364949524
   position: {x: 796, y: 121}
   parents: []
-  childs: []
+  childs:
+  - {fileID: 102624972}
   references:
     version: 2
     RefIds:

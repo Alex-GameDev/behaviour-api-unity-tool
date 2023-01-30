@@ -12,6 +12,9 @@ namespace BehaviourAPI.Unity.Editor
 {
     public class BehaviourGraphEditorWindow : EditorWindow
     {
+        private static string path => BehaviourAPISettings.instance.EditorLayoutsPath + "windows/behavioursystemwindow.uxml";
+        private static string emptyPanelPath => BehaviourAPISettings.instance.EditorLayoutsPath + "emptygraphpanel.uxml";
+
         public static BehaviourSystemAsset SystemAsset;
         public static bool IsAsset;
         public static bool IsRuntime;
@@ -64,8 +67,8 @@ namespace BehaviourAPI.Unity.Editor
 
         void AddLayout()
         {
-            var windowLayout = VisualSettings.GetOrCreateSettings().BehaviourGraphEditorWindowLayout.Instantiate();
-            rootVisualElement.Add(windowLayout);
+            var windownFromUXML = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(path).Instantiate();
+            rootVisualElement.Add(windownFromUXML);
 
             _container = rootVisualElement.Q("bw-content");
             _graphView = AddGraphView();
@@ -88,10 +91,10 @@ namespace BehaviourAPI.Unity.Editor
 
         VisualElement AddEmptyGraphPanel()
         {
-            var visualElement = VisualSettings.GetOrCreateSettings().EmptyGraphPanel.Instantiate();
-            rootVisualElement.Add(visualElement);
-            visualElement.Q<Button>("egp-add-btn").clicked += ShowGraphCreationPanel;
-            return visualElement;
+            var emptyPanel = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(emptyPanelPath).Instantiate();
+            rootVisualElement.Add(emptyPanel);
+            emptyPanel.Q<Button>("egp-add-btn").clicked += ShowGraphCreationPanel;
+            return emptyPanel;
         }
 
         BehaviourGraphView AddGraphView()

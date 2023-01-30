@@ -14,41 +14,17 @@ namespace BehaviourAPI.Unity.Editor
     [FilePath("Config/StateFile.foo", FilePathAttribute.Location.PreferencesFolder)]
     public class BehaviourAPISettings : ScriptableSingleton<BehaviourAPISettings>
     {
-        public string GenerateScript_DefaultPath = "Assets/Scripts/";
-        public string GenerateScript_DefaultName = "NewBehaviourRunner";
+        #region ----------------------- Script generation -----------------------
+
+        public string GenerateScriptDefaultPath = "Assets/Scripts/";
+        public string GenerateScriptDefaultName = "NewBehaviourRunner";
+
+        #endregion
 
         public string RootPath = "Assets/BehaviourAPI Unity Tool";
-        public string EditorElementPath => $"{RootPath}/Editor/uxml/";
+        public string EditorLayoutsPath => $"{RootPath}/Editor/uxml/";
+        public string EditorStylesPath => $"{RootPath}/Editor/uss/";
 
-        [Header("Layout")]
-        public VisualTreeAsset BehaviourGraphEditorWindowLayout;
-
-        public VisualTreeAsset AlertWindowLayout;
-        public VisualTreeAsset GraphCreationWindowLayout;
-        public VisualTreeAsset ScriptCreationWindowLayout;
-
-        public VisualTreeAsset NodeLayout;
-        public VisualTreeAsset ContainerLayout;
-        public VisualTreeAsset InspectorLayout;
-        public VisualTreeAsset EmptyGraphPanel;
-
-        public VisualTreeAsset ListItemLayout;
-
-        [Header("Containers")]
-        public VisualTreeAsset UnityTaskLayout;
-        public VisualTreeAsset CustomTaskLayout;
-
-        public VisualTreeAsset SubgraphActionLayout;
-        public VisualTreeAsset ExitActionLayout;
-
-        public VisualTreeAsset StatusPerceptionLayout;
-        public VisualTreeAsset CompoundPerceptionLayout;
-
-        [Header("Style")]
-        public StyleSheet BehaviourGraphEditorWindowStylesheet;
-        public StyleSheet GraphStylesheet;
-        public StyleSheet NodeStylesheet;
-        public StyleSheet InspectorStylesheet;
 
         public string Assemblies;
 

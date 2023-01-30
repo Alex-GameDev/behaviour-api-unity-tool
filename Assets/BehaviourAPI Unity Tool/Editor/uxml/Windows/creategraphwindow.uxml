@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement name="panel" style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px;">
+        <ui:Label text="CREATE GRAPH" display-tooltip-when-elided="true" name="cgw-title" class="bw-rootgraph-title" style="-unity-text-align: upper-center; margin-top: 10px; font-size: 14px; -unity-font-style: bold;" />
+        <ui:VisualElement name="divider" class="divider" style="height: 0; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgba(94, 94, 94, 255); border-right-color: rgba(94, 94, 94, 255); border-top-color: rgba(94, 94, 94, 255); border-bottom-color: rgba(94, 94, 94, 255); margin-top: 5px; margin-bottom: 5px;" />
+        <ui:TextField picking-mode="Ignore" text="new graph" label="name" name="cgw-name-textfield" style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px;" />
+        <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="cgw-graphs-scrollview" class="bw-graphs-scrollview" />
+    </ui:VisualElement>
+</ui:UXML>

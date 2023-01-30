@@ -12,6 +12,7 @@ namespace BehaviourAPI.Unity.Editor
 {
     public abstract class ListInspectorView<T> : InspectorView<T> where T : ScriptableObject
     {
+        protected static string itemPath => BehaviourAPISettings.instance.EditorLayoutsPath + "/list item.uxml";
         protected BehaviourSystemAsset _systemAsset;
         public Action<T> OnCreateElement;
         public Action<T> OnRemoveElement;
@@ -46,7 +47,7 @@ namespace BehaviourAPI.Unity.Editor
 
         VisualElement MakeItem()
         {
-            var element = VisualSettings.GetOrCreateSettings().ListItemLayout.Instantiate();
+            var element = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(itemPath).Instantiate();
             return element;
         }
 

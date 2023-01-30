@@ -9,6 +9,8 @@ namespace BehaviourAPI.Unity.Editor
 {
     public class AlertWindow : EditorWindow
     {
+        private static string path => BehaviourAPISettings.instance.EditorLayoutsPath + "/windows/alertwindow.uxml";
+
         public static string Question;
 
         public static Action OnPressYes, OnPressNo;
@@ -30,9 +32,8 @@ namespace BehaviourAPI.Unity.Editor
 
         public void CreateGUI()
         {
-            var visualTree = VisualSettings.GetOrCreateSettings().AlertWindowLayout;
-            VisualElement labelFromUXML = visualTree.Instantiate();
-            rootVisualElement.Add(labelFromUXML);
+            var windownFromUXML = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(path).Instantiate();
+            rootVisualElement.Add(windownFromUXML);
 
             var label = rootVisualElement.Q<Label>("aw-question-label");
             var yesBtn = rootVisualElement.Q<Button>("aw-yes-btn");

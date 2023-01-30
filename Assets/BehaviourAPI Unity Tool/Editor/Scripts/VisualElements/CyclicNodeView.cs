@@ -9,7 +9,7 @@ namespace BehaviourAPI.Unity.Editor
 {
     public class CyclicNodeView : NodeView
     {
-        public CyclicNodeView(NodeAsset node, BehaviourGraphView graphView) : base(node, graphView, BehaviourAPISettings.instance.EditorElementPath + "/Nodes/CG Node.uxml")
+        public CyclicNodeView(NodeAsset node, BehaviourGraphView graphView) : base(node, graphView, BehaviourAPISettings.instance.EditorLayoutsPath + "/Nodes/CG Node.uxml")
         {
         }
 
@@ -160,7 +160,7 @@ namespace BehaviourAPI.Unity.Editor
 
     public class LayeredNodeView : NodeView
     {
-        public LayeredNodeView(NodeAsset node, BehaviourGraphView graphView) : base(node, graphView, BehaviourAPISettings.instance.EditorElementPath + "/Nodes/DAG Node.uxml")
+        public LayeredNodeView(NodeAsset node, BehaviourGraphView graphView) : base(node, graphView, BehaviourAPISettings.instance.EditorLayoutsPath + "/Nodes/DAG Node.uxml")
         {
         }
 
@@ -188,7 +188,7 @@ namespace BehaviourAPI.Unity.Editor
 
     public class TreeNodeView : NodeView
     {
-        public TreeNodeView(NodeAsset node, BehaviourGraphView graphView) : base(node, graphView, BehaviourAPISettings.instance.EditorElementPath + "/Nodes/Tree Node.uxml")
+        public TreeNodeView(NodeAsset node, BehaviourGraphView graphView) : base(node, graphView, BehaviourAPISettings.instance.EditorLayoutsPath + "/Nodes/Tree Node.uxml")
         {
         }
 

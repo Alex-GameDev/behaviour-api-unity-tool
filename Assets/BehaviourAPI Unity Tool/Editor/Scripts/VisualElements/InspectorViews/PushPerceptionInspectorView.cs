@@ -66,7 +66,7 @@ namespace BehaviourAPI.Unity.Editor
 
         VisualElement MakeItem()
         {
-            var element = VisualSettings.GetOrCreateSettings().ListItemLayout.Instantiate();
+            var element = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(itemPath).Instantiate();
             return element;
         }
 

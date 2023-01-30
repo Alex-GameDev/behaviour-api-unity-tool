@@ -1,6 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/uss/editor%20window.uss?fileID=7433441132597879392&amp;guid=fd4790495fdc36a4c8007fe53ea5ed24&amp;type=3#editor window" />
-    <uie:Toolbar name="bw-toolbar" class="bw-toolbar">
+    <uie:Toolbar name="bw-toolbar" class="bw-toolbar" style="justify-content: space-between;">
         <ui:VisualElement style="flex-direction: row;">
             <uie:ToolbarMenu display-tooltip-when-elided="true" name="bw-toolbar-graph-menu" text="graph" />
             <uie:ToolbarButton text="add" display-tooltip-when-elided="true" name="bw-toolbar-add-btn" tooltip="Adds a new graph to the system" />

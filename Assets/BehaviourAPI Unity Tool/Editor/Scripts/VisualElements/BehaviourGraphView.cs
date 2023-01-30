@@ -19,6 +19,8 @@ namespace BehaviourAPI.Unity.Editor
     /// </summary>
     public class BehaviourGraphView : GraphView
     {
+        private static string stylePath => BehaviourAPISettings.instance.EditorStylesPath + "graph.uss";
+
         #region ---------------------------------- Fields ----------------------------------
 
         NodeCreationSearchWindow _nodeSearchWindow;
@@ -58,8 +60,6 @@ namespace BehaviourAPI.Unity.Editor
             AddDecorators();
             AddManipulators();
             AddSearchWindows();
-
-            AddStyles();
             graphViewChanged = OnGraphViewChanged;
         }
 
@@ -99,12 +99,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             GridBackground gridBackground = new GridBackground();
             Insert(0, gridBackground);
-        }
 
-        void AddStyles()
-        {
-            StyleSheet styleSheet = VisualSettings.GetOrCreateSettings().GraphStylesheet;
-            styleSheets.Add(styleSheet);
+            styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>(stylePath));
         }
 
         void AddManipulators()

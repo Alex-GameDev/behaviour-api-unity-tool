@@ -43,7 +43,7 @@ namespace BehaviourAPI.Unity.Editor
             _container = new VisualElement();
             Add(_container);
 
-            _assignButton = new Button(OnAssignPerception) { text = "Assign action" };
+            _assignButton = new Button(OnAssignPerception) { text = "Assign perception" };
             Add(_assignButton);
         }
 

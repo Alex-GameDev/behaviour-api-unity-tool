@@ -12,6 +12,8 @@ namespace BehaviourAPI.Unity.Editor
 {
     public class GraphCreationWindow : EditorWindow
     {
+        private static string inspectorPath => BehaviourAPISettings.instance.EditorLayoutsPath + "/windows/creategraphwindow.uxml";
+
         public static Action<string, Type> OnPressCreate;
 
         public static void Create(Action<string, Type> onPressCreate)
@@ -29,10 +31,8 @@ namespace BehaviourAPI.Unity.Editor
 
         public void CreateGUI()
         {
-            var visualTree = VisualSettings.GetOrCreateSettings().GraphCreationWindowLayout;
-            rootVisualElement.styleSheets.Add(VisualSettings.GetOrCreateSettings().BehaviourGraphEditorWindowStylesheet);
-            VisualElement labelFromUXML = visualTree.Instantiate();
-            rootVisualElement.Add(labelFromUXML);
+            var windownFromUXML =  AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(inspectorPath).Instantiate();
+            rootVisualElement.Add(windownFromUXML);
 
             var graphNameInputText = rootVisualElement.Q<TextField>("cgw-name-textfield");
             var createGraphList = rootVisualElement.Q<ScrollView>("cgw-graphs-scrollview");

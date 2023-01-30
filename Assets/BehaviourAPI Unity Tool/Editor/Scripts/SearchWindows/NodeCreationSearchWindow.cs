@@ -22,7 +22,6 @@ namespace BehaviourAPI.Unity.Editor
 
         public void SetRootType(Type rootType)
         {
-            var assemblies = VisualSettings.GetOrCreateSettings().assemblies;
             var types = rootType.GetSubClasses();
             rootTypeNode = new HierarchicalTypeNode(rootType, types);
         }

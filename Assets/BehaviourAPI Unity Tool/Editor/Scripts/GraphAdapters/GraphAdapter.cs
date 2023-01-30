@@ -188,9 +188,7 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public void DrawGraph(GraphAsset graphAsset, BehaviourGraphView graphView)
         {
-            var time = DateTime.Now;
             graphAsset.Nodes.ForEach(node => DrawNode(node, graphView));
-            Debug.Log((DateTime.Now - time).TotalMilliseconds);
 
             var nodeViews = graphView.nodes.Select(n => n as NodeView).ToList();
 
