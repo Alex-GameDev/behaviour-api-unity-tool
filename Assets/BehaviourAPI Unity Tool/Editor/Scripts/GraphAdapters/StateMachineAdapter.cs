@@ -174,49 +174,49 @@ namespace BehaviourAPI.Unity.Editor
 
         protected override void SetUpPortsAndDetails(NodeView nodeView)
         {
-            if (nodeView.Node.Node.MaxInputConnections != 0)
-            {
-                var port1 = CreatePort(nodeView, Direction.Input, PortOrientation.Bottom);
-                port1.style.position = Position.Absolute;
-                port1.style.top = 0; port1.style.left = new StyleLength(new Length(50, LengthUnit.Percent));
+            //if (nodeView.Node.Node.MaxInputConnections != 0)
+            //{
+            //    var port1 = CreatePort(nodeView, Direction.Input, PortOrientation.Bottom);
+            //    port1.style.position = Position.Absolute;
+            //    port1.style.top = 0; port1.style.left = new StyleLength(new Length(50, LengthUnit.Percent));
 
-                var port2 = CreatePort(nodeView, Direction.Input, PortOrientation.Right);
-                port2.style.position = Position.Absolute;
-                port2.style.right = 0; port2.style.top = new StyleLength(new Length(50, LengthUnit.Percent));
+            //    var port2 = CreatePort(nodeView, Direction.Input, PortOrientation.Right);
+            //    port2.style.position = Position.Absolute;
+            //    port2.style.right = 0; port2.style.top = new StyleLength(new Length(50, LengthUnit.Percent));
 
-                var port3 = CreatePort(nodeView, Direction.Input, PortOrientation.Top);
-                port3.style.position = Position.Absolute;
-                port3.style.bottom = 0; port3.style.right = new StyleLength(new Length(50, LengthUnit.Percent));
+            //    var port3 = CreatePort(nodeView, Direction.Input, PortOrientation.Top);
+            //    port3.style.position = Position.Absolute;
+            //    port3.style.bottom = 0; port3.style.right = new StyleLength(new Length(50, LengthUnit.Percent));
 
-                var port4 = CreatePort(nodeView, Direction.Input, PortOrientation.Left);
-                port4.style.position = Position.Absolute;
-                port4.style.left = 0; port4.style.bottom = new StyleLength(new Length(50, LengthUnit.Percent));
-            }
-            else
-            {
-                nodeView.inputContainer.style.display = DisplayStyle.None;
-            }
+            //    var port4 = CreatePort(nodeView, Direction.Input, PortOrientation.Left);
+            //    port4.style.position = Position.Absolute;
+            //    port4.style.left = 0; port4.style.bottom = new StyleLength(new Length(50, LengthUnit.Percent));
+            //}
+            //else
+            //{
+            //    nodeView.inputContainer.style.display = DisplayStyle.None;
+            //}
 
-            if (nodeView.Node.Node.MaxOutputConnections != 0)
-            {
-                var port1 = CreatePort(nodeView, Direction.Output, PortOrientation.Bottom);
-                port1.style.position = Position.Absolute;
-                port1.style.top = 0; port1.style.right = new StyleLength(new Length(50, LengthUnit.Percent));
+            //if (nodeView.Node.Node.MaxOutputConnections != 0)
+            //{
+            //    var port1 = CreatePort(nodeView, Direction.Output, PortOrientation.Bottom);
+            //    port1.style.position = Position.Absolute;
+            //    port1.style.top = 0; port1.style.right = new StyleLength(new Length(50, LengthUnit.Percent));
 
-                var port2 = CreatePort(nodeView, Direction.Output, PortOrientation.Right);
-                port2.style.position = Position.Absolute;
-                port2.style.right = 0; port2.style.bottom = new StyleLength(new Length(50, LengthUnit.Percent));
+            //    var port2 = CreatePort(nodeView, Direction.Output, PortOrientation.Right);
+            //    port2.style.position = Position.Absolute;
+            //    port2.style.right = 0; port2.style.bottom = new StyleLength(new Length(50, LengthUnit.Percent));
 
-                var port3 = CreatePort(nodeView, Direction.Output, PortOrientation.Top);
-                port3.style.position = Position.Absolute;
-                port3.style.bottom = 0; port3.style.left = new StyleLength(new Length(50, LengthUnit.Percent));
+            //    var port3 = CreatePort(nodeView, Direction.Output, PortOrientation.Top);
+            //    port3.style.position = Position.Absolute;
+            //    port3.style.bottom = 0; port3.style.left = new StyleLength(new Length(50, LengthUnit.Percent));
 
-                var port4 = CreatePort(nodeView, Direction.Output, PortOrientation.Left);
-                port4.style.position = Position.Absolute;
-                port4.style.left = 0; port4.style.top = new StyleLength(new Length(50, LengthUnit.Percent));
-            }
-            else
-                nodeView.outputContainer.style.display = DisplayStyle.None;
+            //    var port4 = CreatePort(nodeView, Direction.Output, PortOrientation.Left);
+            //    port4.style.position = Position.Absolute;
+            //    port4.style.left = 0; port4.style.top = new StyleLength(new Length(50, LengthUnit.Percent));
+            //}
+            //else
+            //    nodeView.outputContainer.style.display = DisplayStyle.None;
         }
 
         protected override GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change)

@@ -139,8 +139,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             var source = (NodeView)edge.output.node;
             var target = (NodeView)edge.input.node;
-            source.OnConnected(Direction.Output, target);
-            target.OnConnected(Direction.Input, source);
+            source.OnConnected(target, edge.output);
+            target.OnConnected(source, edge.input);
         }
 
         void OnElementMoved(GraphElement element)
@@ -163,8 +163,8 @@ namespace BehaviourAPI.Unity.Editor
             {
                 var source = (NodeView)edge.output.node;
                 var target = (NodeView)edge.input.node;
-                source.OnDisconnected(Direction.Output, target);
-                target.OnDisconnected(Direction.Input, source);
+                source.OnDisconnected(target, edge.output);
+                target.OnDisconnected(source, edge.input);
             }
         }
 

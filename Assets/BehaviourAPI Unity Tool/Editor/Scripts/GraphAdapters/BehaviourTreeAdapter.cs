@@ -150,24 +150,6 @@ namespace BehaviourAPI.Unity.Editor
         protected override void SetUpPortsAndDetails(NodeView nodeView)
         {
             nodeView.Q("node-icon").Add(new Label(nodeView.Node.Node.GetType().Name.CamelCaseToSpaced().ToUpper()));
-
-            if (nodeView.Node.Node.MaxInputConnections != 0)
-            {
-                CreatePort(nodeView, Direction.Input, PortOrientation.Bottom);
-            }
-            else
-            {
-                nodeView.inputContainer.style.display = DisplayStyle.None;
-            }                
-
-            if (nodeView.Node.Node.MaxOutputConnections != 0)
-            {
-                CreatePort(nodeView, Direction.Output, PortOrientation.Top);
-            }
-            else
-            {
-                nodeView.outputContainer.style.display = DisplayStyle.None;
-            }
         }                
 
         // Reload the root node when the old one is removed

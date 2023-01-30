@@ -119,14 +119,6 @@ namespace BehaviourAPI.Unity.Editor
         protected abstract void DrawGraphDetails(GraphAsset graphAsset, BehaviourGraphView graphView, List<NodeView> nodeViews);
         protected abstract GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change);
 
-        protected virtual void DecoratePort(PortView port)
-        {
-            var bg = new VisualElement(); //AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(BehaviourAPISettings.instance.EditorElementPath + "Elements/port decorator.uxml").Instantiate();
-            bg.style.position = Position.Absolute;
-            bg.style.top = 0; bg.style.left = 0; bg.style.bottom = 0; bg.style.right = 0;
-            port.Add(bg);
-        }
-
         /// <summary>
         /// Draw a node view
         /// </summary>
@@ -172,19 +164,19 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (asset.Node.MaxOutputConnections == 0) return;
 
-            //Port srcPort = nodeViews.Find(n => n.Node == asset).OutputPort;
-            Port srcPort = graphView.GetViewOf(asset).OutputPort;
+            var sourceView = graphView.GetViewOf(asset);
+            Port srcPort = sourceView.OutputPort;
 
             foreach (NodeAsset child in asset.Childs)
             {
-                //Port tgtPort = nodeViews.Find(n => n.Node == child).InputPort;
-                Port tgtPort = graphView.GetViewOf(child).InputPort;
+                var targetView = graphView.GetViewOf(child);
+                Port tgtPort = targetView.InputPort;
                 EdgeView edge = srcPort.ConnectTo<EdgeView>(tgtPort);
                 graphView.AddConnectionView(edge);
                 srcPort.node.RefreshPorts();
                 tgtPort.node.RefreshPorts();
-                //graphView.GetViewOf(asset).Refresh();
-                //graphView.GetViewOf(child).Refresh();
+                sourceView.OnConnected(targetView, srcPort, ignoreConnection: true);
+                targetView.OnConnected(sourceView, tgtPort, ignoreConnection: true);
             }
         }
 
@@ -259,22 +251,6 @@ namespace BehaviourAPI.Unity.Editor
                 }
             }
             return entries;
-        }
-
-        protected PortView CreatePort(NodeView nodeView, Direction direction, PortOrientation orientation)
-        {
-            var node = nodeView.Node.Node;
-            bool isInput = direction == Direction.Input;
-            var capacity = (isInput ? node.MaxInputConnections == -1 : node.MaxOutputConnections == -1) ? Port.Capacity.Multi : Port.Capacity.Single;
-            var type = isInput ? node.GetType() : node.ChildType;
-
-            var port = nodeView.InstantiatePort(orientation, direction, capacity, type);
-            port.portName = "";
-            port.style.flexDirection = orientation.ToFlexDirection();
-            var container = isInput ? nodeView.inputContainer : nodeView.outputContainer;
-            container.Add(port);
-            DecoratePort(port);
-            return port;
         }
 
         public GraphViewChange OnViewChanged(BehaviourGraphView graphView, GraphViewChange change)

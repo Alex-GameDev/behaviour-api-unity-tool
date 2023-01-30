@@ -218,29 +218,6 @@ namespace BehaviourAPI.Unity.Editor
 
         protected override void SetUpPortsAndDetails(NodeView nodeView)
         {
-            if (nodeView.Node.Node.MaxInputConnections != 0)
-            {
-                var port = CreatePort(nodeView, Direction.Input, PortOrientation.Right);
-            }
-            else
-            {
-                nodeView.inputContainer.style.display = DisplayStyle.None;
-            }
-
-            if (nodeView.Node.Node.MaxOutputConnections != 0)
-            {
-                var port = CreatePort(nodeView, Direction.Output, PortOrientation.Left);
-            }
-            else
-                nodeView.outputContainer.style.display = DisplayStyle.None;
-        }
-
-        protected override void DecoratePort(PortView port)
-        { 
-            var bg = new VisualElement();
-            bg.style.position = Position.Absolute;
-            bg.style.top = 0; bg.style.left = 0; bg.style.bottom = 0; bg.style.right = 0;
-            port.Add(bg);
         }
 
         protected override GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change)

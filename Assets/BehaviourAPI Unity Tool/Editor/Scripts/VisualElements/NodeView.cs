@@ -60,6 +60,7 @@ namespace BehaviourAPI.Unity.Editor
             outputPorts = new List<PortView>();
             RootElement = this.Q("node-root");
             SetPosition(new Rect(node.Position, Vector2.zero));
+            SetUpPorts();
             DrawExtensionContainer();
             styleSheets.Add(VisualSettings.GetOrCreateSettings().NodeStylesheet);
             SetUpContextualMenu();
@@ -129,14 +130,26 @@ namespace BehaviourAPI.Unity.Editor
             titleInputField.Bind(new SerializedObject(Node));
         }
 
-        public PortView InstantiatePort(PortOrientation orientation, Direction direction, Capacity capacity, Type type)
+        protected PortView InstantiatePort(Direction direction, PortOrientation orientation)
         {
             var isInput = direction == Direction.Input;
+            var capacity = (isInput ? Node.Node.MaxInputConnections == -1 : Node.Node.MaxOutputConnections == -1) ? Port.Capacity.Multi : Port.Capacity.Single;
+            var type = isInput ? Node.Node.GetType() : Node.Node.ChildType;
             var port = PortView.Create(orientation, direction, capacity, type);
             (isInput ? InputPorts : OutputPorts).Add(port);
             (isInput ? inputContainer : outputContainer).Add(port);
+
+            port.portName = "";
+            port.style.flexDirection = orientation.ToFlexDirection();
+
+            var bg = new VisualElement();
+            bg.style.position = Position.Absolute;
+            bg.style.top = 0; bg.style.left = 0; bg.style.bottom = 0; bg.style.right = 0;
+            port.Add(bg);
+
             return port;
         }
+
 
         #endregion
 
@@ -148,9 +161,11 @@ namespace BehaviourAPI.Unity.Editor
             Selected?.Invoke(Node);
         }
 
-        public void OnConnected(Direction direction, NodeView other)
+        public virtual void OnConnected(NodeView other, Port port, bool ignoreConnection = false)
         {
-            if(direction == Direction.Input)
+            if (ignoreConnection) return;
+
+            if (port.direction == Direction.Input)
                 Node.Parents.Add(other.Node);
             else
                 Node.Childs.Add(other.Node);
@@ -161,9 +176,11 @@ namespace BehaviourAPI.Unity.Editor
             Node.Position = pos;
         }
 
-        public void OnDisconnected(Direction direction, NodeView other)
+        public virtual void OnDisconnected(NodeView other, Port port, bool ignoreConnection = false)
         {
-            if (direction == Direction.Input)
+            if (ignoreConnection) return;
+
+            if (port.direction == Direction.Input)
                 Node.Parents.Remove(other.Node);
             else
                 Node.Childs.Remove(other.Node);           
@@ -186,5 +203,7 @@ namespace BehaviourAPI.Unity.Editor
         }
 
         #endregion 
+
+        public abstract void SetUpPorts();
     }
 }
