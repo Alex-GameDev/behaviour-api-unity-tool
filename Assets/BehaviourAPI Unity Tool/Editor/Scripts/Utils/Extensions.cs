@@ -71,6 +71,13 @@ namespace BehaviourAPI.Unity.Editor
         public static string ToCodeFormat(this bool b) => b.ToString().ToLower();
         public static string ToCodeFormat(this Status s) => "Status." + s.ToString();
         public static string ToCodeFormat(this StatusFlags s) => "StatusFlags." + s.ToString();
+        public static string GetPath(this NodeLayout layout)
+        {
+            if (layout == NodeLayout.Cyclic) return BehaviourAPISettings.instance.EditorElementPath + "/Nodes/CG Node.uxml";
+            else if (layout == NodeLayout.Layered) return BehaviourAPISettings.instance.EditorElementPath + "/Nodes/DAG Node.uxml";
+            else return BehaviourAPISettings.instance.EditorElementPath + "/Nodes/Tree Node.uxml";
+        }
+
 
         #endregion
 
@@ -109,6 +116,38 @@ namespace BehaviourAPI.Unity.Editor
 
         public static DropdownMenuAction.Status ToMenuStatus(this bool b) => b ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
 
+
+        public static void Align(this Port port, PortOrientation orientation, Direction dir)
+        {
+            var middleValue = new StyleLength(new Length(50, LengthUnit.Percent));
+            if (orientation == PortOrientation.None) return;
+
+            port.style.position = Position.Absolute;
+            if (orientation == PortOrientation.Top)
+            {
+                port.style.top = 0;
+                if (dir == Direction.Input) port.style.right = middleValue;
+                else port.style.left = middleValue;
+            }
+            else if (orientation == PortOrientation.Right)
+            {
+                port.style.right = 0;
+                if (dir == Direction.Input) port.style.bottom = middleValue;
+                else port.style.top = middleValue;
+            }
+            else if (orientation == PortOrientation.Bottom)
+            {
+                port.style.bottom = 0;
+                if (dir == Direction.Input) port.style.left = middleValue;
+                else port.style.right = middleValue;
+            }
+            else
+            {
+                port.style.left = 0;
+                if (dir == Direction.Input) port.style.top = middleValue;
+                else port.style.bottom = middleValue;
+            }
+        }
         #endregion
     }
 }

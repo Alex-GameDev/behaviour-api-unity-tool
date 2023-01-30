@@ -21,6 +21,10 @@ namespace BehaviourAPI.Unity.Editor
         {
             bool isOutput = direction == Direction.Output;
 
+            var fixer = new VisualElement();
+            fixer.StretchToParentSize();
+            Add(fixer);
+
             if (Orientation == PortOrientation.Top && isOutput || Orientation == PortOrientation.Bottom && !isOutput) 
             { 
                 m_ConnectorBox.style.borderTopLeftRadius = 0f; 
@@ -171,11 +175,11 @@ namespace BehaviourAPI.Unity.Editor
 
     public enum PortOrientation
     {
-        None,
-        Right,
-        Top,
-        Left,
-        Bottom        
+        None = 0,
+        Top = 1,
+        Right = 2,
+        Bottom = 3,
+        Left = 4     
     }
 
     public static class VisualElementExtensions
