@@ -15,6 +15,8 @@ namespace BehaviourAPI.Unity.Editor
 
         public override string LayoutPath => "/Nodes/CG Node.uxml";
 
+        Port inputUniquePort, outputUniquePort;
+
         public override void OnConnected(NodeView other, Port port, bool ignoreConnection = false)
         {
             base.OnConnected(other, port, ignoreConnection);
@@ -25,16 +27,19 @@ namespace BehaviourAPI.Unity.Editor
                 if(Node.Node.MaxInputConnections == 1)
                 {
                     InputPorts.ForEach(p => { if (p != port) p.Disable(); });
+                    inputUniquePort = port;
                 }
+                
             }
             else
             {
                 if (Node.Node.MaxOutputConnections == 1)
                 {
                     OutputPorts.ForEach(p => { if (p != port) p.Disable(); });
+                    outputUniquePort = port;
                 }
+               
             }
-
         }
 
         public override void OnDisconnected(NodeView other, Port port, bool ignoreConnection = false)
@@ -47,14 +52,17 @@ namespace BehaviourAPI.Unity.Editor
                 if (Node.Node.MaxInputConnections == 1)
                 {
                     InputPorts.ForEach(p => { if (p != port) p.Enable(); });
+                    inputUniquePort = null;
                 }
+                
             }
             else
             {
                 if (Node.Node.MaxOutputConnections == 1)
                 {
                     OutputPorts.ForEach(p => { if (p != port) p.Enable(); });
-                }
+                    outputUniquePort = null;
+                }               
             }
         }
 
@@ -103,6 +111,50 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
                 outputContainer.style.display = DisplayStyle.None;
+        }
+
+        public override Port GetBestPort(NodeView other, Direction dir)
+        {
+            if(dir == Direction.Input)
+            {
+                if (inputUniquePort != null) return inputUniquePort;
+                else
+                {
+                    if (InputPorts.Count < 4) return null;
+                    var otherPos = other.Node.Position;
+                    var delta = otherPos - Node.Position;
+                    if(Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
+                    {
+                        if (delta.x > 0) return InputPorts[1];
+                        else return InputPorts[3];
+                    }
+                    else
+                    {
+                        if (delta.y > 0) return InputPorts[2];
+                        else return InputPorts[0];
+                    }
+                }
+            }
+            else
+            {
+                if (outputUniquePort != null) return outputUniquePort;
+                else
+                {
+                    if (OutputPorts.Count < 4) return null;
+                    var otherPos = other.Node.Position;
+                    var delta = otherPos - Node.Position;
+                    if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
+                    {
+                        if (delta.x > 0) return OutputPorts[1];
+                        else return OutputPorts[3];
+                    }
+                    else
+                    {
+                        if (delta.y > 0) return OutputPorts[2];
+                        else return OutputPorts[0];
+                    }
+                }
+            }
         }
     }
 
