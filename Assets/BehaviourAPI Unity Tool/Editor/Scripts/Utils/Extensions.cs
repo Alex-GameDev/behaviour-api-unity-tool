@@ -71,13 +71,6 @@ namespace BehaviourAPI.Unity.Editor
         public static string ToCodeFormat(this bool b) => b.ToString().ToLower();
         public static string ToCodeFormat(this Status s) => "Status." + s.ToString();
         public static string ToCodeFormat(this StatusFlags s) => "StatusFlags." + s.ToString();
-        public static string GetPath(this NodeLayout layout)
-        {
-            if (layout == NodeLayout.Cyclic) return BehaviourAPISettings.instance.EditorElementPath + "/Nodes/CG Node.uxml";
-            else if (layout == NodeLayout.Layered) return BehaviourAPISettings.instance.EditorElementPath + "/Nodes/DAG Node.uxml";
-            else return BehaviourAPISettings.instance.EditorElementPath + "/Nodes/Tree Node.uxml";
-        }
-
 
         #endregion
 
@@ -148,6 +141,8 @@ namespace BehaviourAPI.Unity.Editor
                 else port.style.bottom = middleValue;
             }
         }
+
+
         #endregion
     }
 }
