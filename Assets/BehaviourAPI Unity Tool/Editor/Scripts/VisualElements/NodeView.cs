@@ -62,7 +62,6 @@ namespace BehaviourAPI.Unity.Editor
             SetPosition(new Rect(node.Position, Vector2.zero));
             SetUpPorts();
             DrawExtensionContainer();
-            styleSheets.Add(VisualSettings.GetOrCreateSettings().NodeStylesheet);
             SetUpContextualMenu();
             SetUpDataBinding();
 

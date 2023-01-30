@@ -23,9 +23,9 @@ namespace BehaviourAPI.Unity.Editor
         SerializedProperty _perceptionProperty;
 
         NodeView _nodeView;
-        VisualElement _emptyDiv, _assignedDiv;
 
-        Button _assignBtn;
+        Button _assignButton;
+        VisualElement _container;
 
         public PerceptionContainerView(NodeAsset asset, SerializedProperty perceptionProperty, NodeView nodeView)
         {
@@ -40,16 +40,11 @@ namespace BehaviourAPI.Unity.Editor
 
         void AddLayout()
         {
-            var visualTree = VisualSettings.GetOrCreateSettings().ContainerLayout;
-            var inspectorFromUXML = visualTree.Instantiate();
-            Add(inspectorFromUXML);
+            _container = new VisualElement();
+            Add(_container);
 
-            _emptyDiv = this.Q("tc-empty-div");
-            _assignedDiv = this.Q("tc-assigned-div");
-
-            _assignBtn = this.Q<Button>("tc-assign-button");
-            _assignBtn.text = "Assign perception";
-            _assignBtn.clicked += OnAssignPerception;
+            _assignButton = new Button(OnAssignPerception) { text = "Assign action" };
+            Add(_assignButton);
         }
 
         private void SetUpContextualMenu()
@@ -87,31 +82,36 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (_perceptionProperty.managedReferenceValue == null)
             {
-                _emptyDiv.style.display = DisplayStyle.Flex;
-                _assignedDiv.style.display = DisplayStyle.None;
-                _assignedDiv.Clear();
+                _assignButton.Enable();
+                _container.Clear();
+                _container.Disable();
             }
             else
             {
-                _emptyDiv.style.display = DisplayStyle.None;
-                _assignedDiv.style.display = DisplayStyle.Flex;
+                _assignButton.Disable();
+                _container.Enable();
+
                 Perception perception = _perceptionProperty.managedReferenceValue as Perception;
 
                 if (perception is CustomPerception customAction)
                 {
-                    _assignedDiv.Add(new CustomPerceptionView(customAction));
+                    var label = new Label("Custom Perception");
+                    label.style.unityTextAlign = TextAnchor.MiddleCenter;
+                    _container.Add(label);
                 }
                 else if (perception is UnityPerception unityAction)
                 {
-                    _assignedDiv.Add(new UnityPerceptionView(unityAction));
+                    var label = new Label(unityAction.DisplayInfo);
+                    label.style.unityTextAlign = TextAnchor.MiddleCenter;
+                    _container.Add(label);
                 }
                 else if (perception is CompoundPerception compoundPerception)
                 {
-                    _assignedDiv.Add(new CompoundPerceptionView(compoundPerception));
+                    
                 }
                 else if (perception is StatusPerception statusPerception)
                 {
-                    _assignedDiv.Add(new StatusPerceptionView(statusPerception));
+
                 }
             }
         }
