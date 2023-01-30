@@ -147,7 +147,7 @@ namespace BehaviourAPI.Unity.Editor
             menuEvt.menu.AppendAction("Order childs by position (x)", _ => node.Node.OrderChilds(n => n.Position.x), (node.Node.Childs.Count > 1).ToMenuStatus());
         }
 
-        protected override void SetUpPortsAndDetails(NodeView nodeView)
+        protected override void SetUpDetails(NodeView nodeView)
         {
             nodeView.Q("node-icon").Add(new Label(nodeView.Node.Node.GetType().Name.CamelCaseToSpaced().ToUpper()));
         }                

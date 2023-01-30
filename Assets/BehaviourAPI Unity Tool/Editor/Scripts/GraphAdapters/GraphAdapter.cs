@@ -113,7 +113,7 @@ namespace BehaviourAPI.Unity.Editor
         protected abstract List<Type> MainTypes { get; }
         protected abstract List<Type> ExcludedTypes { get; }
         protected abstract NodeView GetLayout(NodeAsset asset, BehaviourGraphView graphView);
-        protected abstract void SetUpPortsAndDetails(NodeView node);
+        protected abstract void SetUpDetails(NodeView node);
         protected abstract void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt);
         protected abstract void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt);
         protected abstract void DrawGraphDetails(GraphAsset graphAsset, BehaviourGraphView graphView, List<NodeView> nodeViews);
@@ -125,7 +125,7 @@ namespace BehaviourAPI.Unity.Editor
         public void DrawNode(NodeAsset asset, BehaviourGraphView graphView)
         {
             var nodeView = GetLayout(asset, graphView);
-            SetUpPortsAndDetails(nodeView);
+            SetUpDetails(nodeView);
             nodeView.AddManipulator(new ContextualMenuManipulator(menuEvt =>
             {
                 menuEvt.menu.AppendSeparator();
@@ -165,14 +165,17 @@ namespace BehaviourAPI.Unity.Editor
             if (asset.Node.MaxOutputConnections == 0) return;
 
             var sourceView = graphView.GetViewOf(asset);
-            Port srcPort = sourceView.OutputPort;
 
             foreach (NodeAsset child in asset.Childs)
             {
                 var targetView = graphView.GetViewOf(child);
-                Port tgtPort = targetView.InputPort;
+
+                var srcPort = sourceView.GetBestPort(targetView, Direction.Output);
+                var tgtPort = targetView.GetBestPort(sourceView, Direction.Input);
+
                 EdgeView edge = srcPort.ConnectTo<EdgeView>(tgtPort);
                 graphView.AddConnectionView(edge);
+
                 srcPort.node.RefreshPorts();
                 tgtPort.node.RefreshPorts();
                 sourceView.OnConnected(targetView, srcPort, ignoreConnection: true);

@@ -172,7 +172,7 @@ namespace BehaviourAPI.Unity.Editor
                 _ => (node.Node != null && node.Node.Node is State) ? (node == _entryStateView).ToMenuStatus() : DropdownMenuAction.Status.Hidden);
         }
 
-        protected override void SetUpPortsAndDetails(NodeView nodeView)
+        protected override void SetUpDetails(NodeView nodeView)
         {
             //if (nodeView.Node.Node.MaxInputConnections != 0)
             //{

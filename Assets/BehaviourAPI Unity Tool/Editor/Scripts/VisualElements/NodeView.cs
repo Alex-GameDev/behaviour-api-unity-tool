@@ -205,5 +205,11 @@ namespace BehaviourAPI.Unity.Editor
         #endregion 
 
         public abstract void SetUpPorts();
+
+        public virtual PortView GetBestPort(NodeView other, Direction dir)
+        {
+            if (dir == Direction.Input) return InputPort;
+            else return OutputPort;
+        }
     }
 }

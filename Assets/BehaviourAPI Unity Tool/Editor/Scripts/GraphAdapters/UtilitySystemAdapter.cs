@@ -216,7 +216,7 @@ namespace BehaviourAPI.Unity.Editor
         {            
         }
 
-        protected override void SetUpPortsAndDetails(NodeView nodeView)
+        protected override void SetUpDetails(NodeView nodeView)
         {
         }
 
