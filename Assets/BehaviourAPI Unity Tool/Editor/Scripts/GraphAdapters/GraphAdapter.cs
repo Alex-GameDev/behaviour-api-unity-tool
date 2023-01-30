@@ -112,7 +112,7 @@ namespace BehaviourAPI.Unity.Editor
 
         protected abstract List<Type> MainTypes { get; }
         protected abstract List<Type> ExcludedTypes { get; }
-        protected abstract NodeView.Layout NodeLayout { get; }
+        protected abstract NodeView GetLayout(NodeAsset asset, BehaviourGraphView graphView);
         protected abstract void SetUpPortsAndDetails(NodeView node);
         protected abstract void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt);
         protected abstract void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt);
@@ -131,8 +131,8 @@ namespace BehaviourAPI.Unity.Editor
         /// Draw a node view
         /// </summary>
         public void DrawNode(NodeAsset asset, BehaviourGraphView graphView)
-        {            
-            var nodeView = new NodeView(asset, graphView, NodeLayout);
+        {
+            var nodeView = GetLayout(asset, graphView);
             SetUpPortsAndDetails(nodeView);
             nodeView.AddManipulator(new ContextualMenuManipulator(menuEvt =>
             {
@@ -156,9 +156,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             Debug.Log($"Name: {asset.Name}\nType: {asset.Node.TypeName()} / Pos: {asset.Position}\n" +
                 $"Parents: {asset.Parents.Count} ({asset.Parents.Select(p => p.Name).Join()})\n" +
-                $"Childs: {asset.Childs.Count} ({asset.Childs.Select(p => p.Name).Join()})");
-
-            
+                $"Childs: {asset.Childs.Count} ({asset.Childs.Select(p => p.Name).Join()})");            
         }
 
         void DebugGraph(GraphAsset asset)

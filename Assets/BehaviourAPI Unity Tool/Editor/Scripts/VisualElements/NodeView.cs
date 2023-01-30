@@ -22,7 +22,7 @@ namespace BehaviourAPI.Unity.Editor
     /// <summary>
     /// Visual element that represents a node in a behaviour graph
     /// </summary>
-    public class NodeView : UnityEditor.Experimental.GraphView.Node
+    public abstract class NodeView : UnityEditor.Experimental.GraphView.Node
     {
 
         #region --------------------------- Fields ---------------------------
@@ -40,16 +40,19 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ----------------------- Visual elements -----------------------
         public VisualElement RootElement { get; private set; }
-        public Port InputPort => inputPorts.First();
-        public Port OutputPort => OutputPorts.First();
+
+        public PortView InputPort => InputPorts.FirstOrDefault();
+        public PortView OutputPort => OutputPorts.FirstOrDefault();
 
         public List<PortView> InputPorts => inputPorts;
         public List<PortView> OutputPorts => outputPorts;
 
-        #endregion       
+        #endregion
+
+        public abstract string LayoutPath { get; }
 
         #region --------------------------- Set up ---------------------------
-        public NodeView(NodeAsset node, BehaviourGraphView graphView, Layout layout) : base(GetLayoutPath(layout))
+        public NodeView(NodeAsset node, BehaviourGraphView graphView, string path) : base(path)
         {
             Node = node;
             _graphView = graphView;
@@ -182,20 +185,6 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        #endregion   
-
-
-        public static string GetLayoutPath(Layout layout)
-        {
-            if (layout == Layout.Cyclic) return BehaviourAPISettings.instance.EditorElementPath + "/Nodes/CG Node.uxml";
-            else if (layout == Layout.Layered) return BehaviourAPISettings.instance.EditorElementPath + "/Nodes/DAG Node.uxml";
-            else return BehaviourAPISettings.instance.EditorElementPath + "/Nodes/Tree Node.uxml";
-        }
-        public enum Layout
-        {
-            Cyclic,
-            Layered,
-            Tree
-        }
+        #endregion 
     }
 }
