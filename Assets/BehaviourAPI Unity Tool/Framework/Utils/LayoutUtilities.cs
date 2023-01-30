@@ -39,7 +39,7 @@ namespace BehaviourAPI.Unity.Framework
             {                
                 if (levelMap.TryGetValue(currentLevel, out float currentLevelValue))
                 {
-                    x = currentLevelValue + 1;
+                    x = Mathf.Max(currentLevelValue + 1, targetPos);
                     levelMap[currentLevel] = x;
                 }
                 else
@@ -62,7 +62,7 @@ namespace BehaviourAPI.Unity.Framework
                     var childOffset = i - (node.Childs.Count - 1f) / 2f;
                     var childTargetPos = childOffset + targetPos;
                     var realChildPos = ProcessTreeNode(child, levelMap, currentLevel + 1, childTargetPos);
-                    targetPos = realChildPos - childOffset;
+                    targetPos = Mathf.Max(realChildPos - childOffset, targetPos);
                     if (i == 0) firstX = realChildPos;
                     if (i == node.Childs.Count - 1) lastX = realChildPos;
                 }
