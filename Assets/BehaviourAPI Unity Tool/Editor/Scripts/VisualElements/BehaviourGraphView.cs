@@ -243,5 +243,11 @@ namespace BehaviourAPI.Unity.Editor
         }
 
         public void ClearView() => ClearGraph();
+
+        public void RefreshView()
+        {
+            ClearGraph();
+            _adapter.DrawGraph(GraphAsset, this);
+        }
     }
 }

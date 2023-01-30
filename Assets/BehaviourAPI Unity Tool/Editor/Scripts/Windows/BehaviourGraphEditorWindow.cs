@@ -29,7 +29,7 @@ namespace BehaviourAPI.Unity.Editor
 
         ToolbarMenu _selectGraphToolbarMenu;
         ToolbarToggle _autosaveToolbarToggle;
-        ToolbarButton _saveToolbarButton, _deleteGraphToolbarButton, _addGraphToolbarButton, _setRootGraphToolbarButton, _generateScriptToolbarButton;
+        ToolbarButton _saveToolbarButton, _deleteGraphToolbarButton, _addGraphToolbarButton, _setRootGraphToolbarButton, _generateScriptToolbarButton, _clearGraphToolbarButton;
 
         GraphAsset _currentGraphAsset;
 
@@ -153,6 +153,7 @@ namespace BehaviourAPI.Unity.Editor
                 _deleteGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-delete-btn");
                 _setRootGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-setroot-btn");
                 _generateScriptToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-generatescript-btn");
+                _clearGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-clear-btn");
 
                 _addGraphToolbarButton.clicked += ShowGraphCreationPanel;
                 _deleteGraphToolbarButton.clicked += DisplayDeleteGraphAlertWindow;
@@ -160,6 +161,7 @@ namespace BehaviourAPI.Unity.Editor
                 _autosaveToolbarToggle.RegisterValueChangedCallback((evt) => autoSave = evt.newValue);
                 _setRootGraphToolbarButton.clicked += ChangeRootGraph;
                 _generateScriptToolbarButton.clicked += OpenCreateScriptWindow;
+                _clearGraphToolbarButton.clicked += OpenClearGraphWindow;
 
             }
             UpdateGraphSelectionToolbar();
@@ -177,7 +179,6 @@ namespace BehaviourAPI.Unity.Editor
                     (d) => DisplayGraph(g),
                 _currentGraphAsset == g ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal)
             );
-
         }
 
         void ChangeInspector(IHidable inspector)
@@ -203,6 +204,12 @@ namespace BehaviourAPI.Unity.Editor
         private void OpenCreateScriptWindow()
         {
             ScriptCreationWindow.Create();
+        }
+
+        private void OpenClearGraphWindow()
+        {
+            if (_currentGraphAsset == null) return;
+            AlertWindow.CreateAlertWindow("¿Clear current graph?", ClearCurrentGraph);
         }
 
         void DisplayGraph(GraphAsset graphAsset)
@@ -278,14 +285,24 @@ namespace BehaviourAPI.Unity.Editor
             DisplayGraph(graphAsset);
         }
 
+        void ClearCurrentGraph()
+        {
+            if (SystemAsset == null || _currentGraphAsset == null) return;
+
+            _graphView.ClearView();
+
+            if (IsAsset) _currentGraphAsset.Nodes.ForEach(AssetDatabase.RemoveObjectFromAsset);
+
+            _currentGraphAsset.Nodes.Clear();
+        }
+
         void DeleteCurrentGraph()
         {
             if (SystemAsset == null || _currentGraphAsset == null) return;
 
-            SystemAsset.RemoveGraph(_currentGraphAsset);
+            if (IsAsset) _currentGraphAsset.Nodes.ForEach(OnRemoveAsset);
 
-            if (IsAsset)
-                _currentGraphAsset.Nodes.ForEach(AssetDatabase.RemoveObjectFromAsset);
+            SystemAsset.RemoveGraph(_currentGraphAsset);
 
             OnRemoveAsset(_currentGraphAsset);
 

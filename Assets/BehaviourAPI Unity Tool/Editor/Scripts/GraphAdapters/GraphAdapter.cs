@@ -200,9 +200,18 @@ namespace BehaviourAPI.Unity.Editor
         public void BuildGraphContextualMenu(ContextualMenuPopulateEvent menuEvt, BehaviourGraphView graphView)
         {
             menuEvt.menu.AppendSeparator();
+            menuEvt.menu.AppendAction("Refresh", _ => graphView.RefreshView());
+            menuEvt.menu.AppendAction("Auto layout", _ => AutoLayoutGraph(graphView));
             menuEvt.menu.AppendAction("Debug (Graph)", _ => DebugGraph(graphView.GraphAsset));
             SetUpGraphContextMenu(graphView, menuEvt);
             menuEvt.StopPropagation();
+        }
+
+        private void AutoLayoutGraph(BehaviourGraphView graphView)
+        {
+            var asset = graphView.GraphAsset;
+            LayoutUtilities.ComputeLayout(asset);
+            graphView.RefreshView();
         }
 
         /// <summary>
