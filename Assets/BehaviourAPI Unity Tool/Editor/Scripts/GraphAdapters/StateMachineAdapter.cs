@@ -164,12 +164,7 @@ namespace BehaviourAPI.Unity.Editor
             if (firstState != null) ChangeEntryState(nodeViews.Find(n => n.Node == firstState));
         }
 
-        protected override string GetNodeLayoutPath(NodeAsset node)
-        {
-            return BehaviourAPISettings.instance.EditorElementPath + "/Nodes/CG Node.uxml";
-            //if (node.Node is State) return AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().StateLayout);
-            //else return AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().TransitionLayout);
-        }
+        protected override NodeView.Layout NodeLayout => NodeView.Layout.Cyclic;
 
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
         {

@@ -17,13 +17,13 @@ namespace BehaviourAPI.Unity.Editor
     using Orientation = UnityEditor.Experimental.GraphView.Orientation;
     using BehaviourAPI.Unity.Framework;
     using UnityEngine.Windows;
+    using BehaviourAPI.StateMachines;
 
     /// <summary>
     /// Visual element that represents a node in a behaviour graph
     /// </summary>
     public class NodeView : UnityEditor.Experimental.GraphView.Node
     {
-        public static readonly string NODE_LAYOUT = AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().NodeLayout);
 
         #region --------------------------- Fields ---------------------------
         
@@ -49,7 +49,7 @@ namespace BehaviourAPI.Unity.Editor
         #endregion       
 
         #region --------------------------- Set up ---------------------------
-        public NodeView(NodeAsset node, BehaviourGraphView graphView, string layoutPath = null) : base(layoutPath ?? NODE_LAYOUT)
+        public NodeView(NodeAsset node, BehaviourGraphView graphView, Layout layout) : base(GetLayoutPath(layout))
         {
             Node = node;
             _graphView = graphView;
@@ -182,6 +182,20 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        #endregion        
+        #endregion   
+
+
+        public static string GetLayoutPath(Layout layout)
+        {
+            if (layout == Layout.Cyclic) return BehaviourAPISettings.instance.EditorElementPath + "/Nodes/CG Node.uxml";
+            else if (layout == Layout.Layered) return BehaviourAPISettings.instance.EditorElementPath + "/Nodes/DAG Node.uxml";
+            else return BehaviourAPISettings.instance.EditorElementPath + "/Nodes/Tree Node.uxml";
+        }
+        public enum Layout
+        {
+            Cyclic,
+            Layered,
+            Tree
+        }
     }
 }

@@ -112,7 +112,7 @@ namespace BehaviourAPI.Unity.Editor
 
         protected abstract List<Type> MainTypes { get; }
         protected abstract List<Type> ExcludedTypes { get; }
-        protected abstract string GetNodeLayoutPath(NodeAsset node);
+        protected abstract NodeView.Layout NodeLayout { get; }
         protected abstract void SetUpPortsAndDetails(NodeView node);
         protected abstract void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt);
         protected abstract void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt);
@@ -132,7 +132,7 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public void DrawNode(NodeAsset asset, BehaviourGraphView graphView)
         {            
-            var nodeView = new NodeView(asset, graphView, GetNodeLayoutPath(asset));
+            var nodeView = new NodeView(asset, graphView, NodeLayout);
             SetUpPortsAndDetails(nodeView);
             nodeView.AddManipulator(new ContextualMenuManipulator(menuEvt =>
             {
@@ -158,21 +158,7 @@ namespace BehaviourAPI.Unity.Editor
                 $"Parents: {asset.Parents.Count} ({asset.Parents.Select(p => p.Name).Join()})\n" +
                 $"Childs: {asset.Childs.Count} ({asset.Childs.Select(p => p.Name).Join()})");
 
-            var tpl = EditorGUIUtility.Load("UXML/GraphView/Port.uxml") as VisualTreeAsset;
-            var elem = tpl.Instantiate();
-
-            Recorrer(elem, 0);
-        }
-
-        void Recorrer(VisualElement element, int level)
-        {
-            if (element.childCount == 0) return;
-
-            foreach(var child in element.Children())
-            {
-                Debug.Log(child.name + " (" + child + ")");
-                Recorrer(child, level + 1);
-            }
+            
         }
 
         void DebugGraph(GraphAsset asset)
@@ -199,6 +185,8 @@ namespace BehaviourAPI.Unity.Editor
                 graphView.AddConnectionView(edge);
                 srcPort.node.RefreshPorts();
                 tgtPort.node.RefreshPorts();
+                //graphView.GetViewOf(asset).Refresh();
+                //graphView.GetViewOf(child).Refresh();
             }
         }
 

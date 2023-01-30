@@ -210,11 +210,7 @@ namespace BehaviourAPI.Unity.Editor
         {            
         }
 
-        protected override string GetNodeLayoutPath(NodeAsset node)
-        {
-            return BehaviourAPISettings.instance.EditorElementPath + "/Nodes/DAG Node.uxml";
-            //return AssetDatabase.GetAssetPath(VisualSettings.GetOrCreateSettings().NodeLayout);
-        }
+        protected override NodeView.Layout NodeLayout => NodeView.Layout.Layered;
 
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
         {            
