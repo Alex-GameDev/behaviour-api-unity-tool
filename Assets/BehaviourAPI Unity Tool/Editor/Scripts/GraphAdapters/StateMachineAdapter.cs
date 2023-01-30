@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -104,6 +105,7 @@ namespace BehaviourAPI.Unity.Editor
                     args.Add(targetState);
                     if(stateTransition is FinishExecutionTransition finish)
                     {
+                        typeName = typeof(Transition).Name;
                         args.Add($"new {nameof(ExecutionStatusPerception)}({sourceState}, {finish._statusFlags.ToCodeFormat()})");
                     }
                     else
@@ -169,54 +171,41 @@ namespace BehaviourAPI.Unity.Editor
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
         {
             menuEvt.menu.AppendAction("Set entry state", _ => ChangeEntryState(node), 
-                _ => (node.Node != null && node.Node.Node is State) ? (node == _entryStateView).ToMenuStatus() : DropdownMenuAction.Status.Hidden);
+                _ => (node.Node != null && node.Node.Node is State) ? (node != _entryStateView).ToMenuStatus() : DropdownMenuAction.Status.Hidden);
         }
 
         protected override void SetUpDetails(NodeView nodeView)
         {
-            //if (nodeView.Node.Node.MaxInputConnections != 0)
-            //{
-            //    var port1 = CreatePort(nodeView, Direction.Input, PortOrientation.Bottom);
-            //    port1.style.position = Position.Absolute;
-            //    port1.style.top = 0; port1.style.left = new StyleLength(new Length(50, LengthUnit.Percent));
+            var contents = nodeView.Q("contents");
+            if (nodeView.Node.Node is Transition)
+            {               
+                contents.style.width = 125;
+                contents.ChangeBorderColor(new Color(.25f, .25f, .25f, .25f));
+                contents.ChangeBackgroundColor(new Color(.15f, .15f, .15f, .4f));
+            }
+            else
+            {
+                contents.style.width = 200;
+            }
 
-            //    var port2 = CreatePort(nodeView, Direction.Input, PortOrientation.Right);
-            //    port2.style.position = Position.Absolute;
-            //    port2.style.right = 0; port2.style.top = new StyleLength(new Length(50, LengthUnit.Percent));
+            if (nodeView.Node.Node is ExitTransition exitTransition)
+            {
+                var label = nodeView.RootElement.Q<Label>("node-root-label");
+                label.text = "Exit - ";
+                label.style.fontSize = 10;
 
-            //    var port3 = CreatePort(nodeView, Direction.Input, PortOrientation.Top);
-            //    port3.style.position = Position.Absolute;
-            //    port3.style.bottom = 0; port3.style.right = new StyleLength(new Length(50, LengthUnit.Percent));
+                var statusLabel = new Label();
+                statusLabel.Bind(new SerializedObject(nodeView.Node));
+                statusLabel.bindingPath = "node.ExitStatus";
+                statusLabel.style.fontSize = 10;
 
-            //    var port4 = CreatePort(nodeView, Direction.Input, PortOrientation.Left);
-            //    port4.style.position = Position.Absolute;
-            //    port4.style.left = 0; port4.style.bottom = new StyleLength(new Length(50, LengthUnit.Percent));
-            //}
-            //else
-            //{
-            //    nodeView.inputContainer.style.display = DisplayStyle.None;
-            //}
+                var tag = nodeView.RootElement.Q("node-root-tag");
+                tag.style.backgroundColor = new Color(.5f, .25f, .25f);
 
-            //if (nodeView.Node.Node.MaxOutputConnections != 0)
-            //{
-            //    var port1 = CreatePort(nodeView, Direction.Output, PortOrientation.Bottom);
-            //    port1.style.position = Position.Absolute;
-            //    port1.style.top = 0; port1.style.right = new StyleLength(new Length(50, LengthUnit.Percent));
+                tag.Add(statusLabel);
 
-            //    var port2 = CreatePort(nodeView, Direction.Output, PortOrientation.Right);
-            //    port2.style.position = Position.Absolute;
-            //    port2.style.right = 0; port2.style.bottom = new StyleLength(new Length(50, LengthUnit.Percent));
-
-            //    var port3 = CreatePort(nodeView, Direction.Output, PortOrientation.Top);
-            //    port3.style.position = Position.Absolute;
-            //    port3.style.bottom = 0; port3.style.left = new StyleLength(new Length(50, LengthUnit.Percent));
-
-            //    var port4 = CreatePort(nodeView, Direction.Output, PortOrientation.Left);
-            //    port4.style.position = Position.Absolute;
-            //    port4.style.left = 0; port4.style.top = new StyleLength(new Length(50, LengthUnit.Percent));
-            //}
-            //else
-            //    nodeView.outputContainer.style.display = DisplayStyle.None;
+                nodeView.RootElement.Enable();
+            }
         }
 
         protected override GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change)

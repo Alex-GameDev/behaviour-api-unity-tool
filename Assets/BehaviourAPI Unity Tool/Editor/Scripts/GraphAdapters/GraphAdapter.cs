@@ -138,7 +138,7 @@ namespace BehaviourAPI.Unity.Editor
             if (graphView.Runtime)
             {
                 nodeView.capabilities -= Capabilities.Deletable;
-                nodeView.capabilities -= Capabilities.Movable;
+                //nodeView.capabilities -= Capabilities.Movable;
             }
 
             graphView.AddNodeView(nodeView);

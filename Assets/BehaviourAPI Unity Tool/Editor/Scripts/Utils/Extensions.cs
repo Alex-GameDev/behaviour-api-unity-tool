@@ -97,6 +97,11 @@ namespace BehaviourAPI.Unity.Editor
             visualElement.style.borderRightColor = color;
         }
 
+        public static void ChangeBackgroundColor(this VisualElement visualElement, Color color)
+        {
+            visualElement.style.backgroundColor = color;
+        }
+
         public static void AddGroup(this List<SearchTreeEntry> searchTreeEntries, string title, int level)
         {
             searchTreeEntries.Add(new SearchTreeGroupEntry(new GUIContent(title), level));

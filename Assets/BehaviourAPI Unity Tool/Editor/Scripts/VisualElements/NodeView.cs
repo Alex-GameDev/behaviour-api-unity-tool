@@ -146,9 +146,14 @@ namespace BehaviourAPI.Unity.Editor
             bg.style.top = 0; bg.style.left = 0; bg.style.bottom = 0; bg.style.right = 0;
             port.Add(bg);
 
+
+            if(_graphView.Runtime)
+            {
+                port.capabilities -= Capabilities.Selectable;
+                port.capabilities -= Capabilities.Movable;
+            }
             return port;
         }
-
 
         #endregion
 

@@ -84,7 +84,7 @@ namespace BehaviourAPI.Unity.Editor
                     var childName = template.FindVariableName(child) ?? AddFactor(child, template, graphName);
                     if(childName != null) args.Add(childName);
                 }
-                method = $"CreateFusionFactor<{typeName}>({args})";
+                method = $"CreateFusionFactor<{typeName}>({args.Join()})";
 
                 if(fusionFactor is WeightedFusionFactor weightedFusionFactor)
                 {
@@ -103,13 +103,14 @@ namespace BehaviourAPI.Unity.Editor
 
             var method = string.Empty;
 
-            var args = new List<string>();
-            args.Add(template.FindVariableName(node.Childs.FirstOrDefault()) ?? "null /*Error*/");
+            var args = new List<string>();            
 
             if (string.IsNullOrEmpty(nodeName)) nodeName = selectableNode.TypeName().ToLower();
 
             if (selectableNode is UtilityAction action)
             {
+                args.Add(template.FindVariableName(node.Childs.FirstOrDefault()) ?? "null /*Error*/");
+
                 if (action.Action != null) args.Add(GenerateActionCode(action.Action, template));
                 if (action.FinishSystemOnComplete) args.Add("finishOnComplete: true");
                 if (selectableNode.IsRoot) args.Add("root: true");
@@ -117,22 +118,24 @@ namespace BehaviourAPI.Unity.Editor
             }
             else if (selectableNode is UtilityExitNode exitNode)
             {
+                args.Add(template.FindVariableName(node.Childs.FirstOrDefault()) ?? "null /*Error*/");
+
                 if (selectableNode.IsRoot) args.Add("root: true");
                 method = $"CreateUtilityExitNode({args.Join()})";
             }
             else if (selectableNode is UtilityBucket bucket)
             {
-                args.Add($"utilityThreshold: {bucket.UtilityThreshold.ToCodeFormat()}");
-                args.Add($"inertia: {bucket.Inertia.ToCodeFormat()}");
-                args.Add($"bucketThreshold: {bucket.BucketThreshold.ToCodeFormat()}");
-                if (selectableNode.IsRoot) args.Add("root: true");
+                args.Add($"{bucket.IsRoot.ToCodeFormat()}");
+                args.Add($"{bucket.UtilityThreshold.ToCodeFormat()}");
+                args.Add($"{bucket.Inertia.ToCodeFormat()}");
+                args.Add($"{bucket.BucketThreshold.ToCodeFormat()}");                
 
                 node.Childs.ForEach(child =>
                 {
                     string childName = template.FindVariableName(child) ?? AddUtilityElement(child, template, graphName);
                     if (childName != null) args.Add(childName);
                 });
-                method = $"CreateUtilityExitNode({args.Join()})";
+                method = $"CreateUtilityBucket({args.Join()})";
             }
             return template.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.{method}");
         }
@@ -172,8 +175,6 @@ namespace BehaviourAPI.Unity.Editor
             if (graphAsset.Graph is UtilitySystem utilitySystem)
             {
                 scriptTemplate.AddUsingDirective(typeof(UtilitySystem).Namespace);
-                scriptTemplate.AddUsingDirective($"{nameof(VariableFactor)} = {typeof(UtilitySystems.VariableFactor).FullName}");
-                scriptTemplate.AddUsingDirective($"{nameof(CustomFunction)} = {typeof(UtilitySystems.CustomFunction).FullName}");
 
                 return scriptTemplate.AddVariableInstantiationLine(utilitySystem.TypeName(), graphName, graphAsset,
                     utilitySystem.Inertia.ToCodeFormat(), utilitySystem.UtilityThreshold.ToCodeFormat());

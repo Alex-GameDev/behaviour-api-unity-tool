@@ -40,7 +40,7 @@ namespace BehaviourAPI.Unity.Editor
             scriptTemplate.AddUsingDirective("BehaviourAPI.Core.Actions");
             scriptTemplate.AddUsingDirective("BehaviourAPI.Core.Perceptions");
 
-            scriptTemplate.OpenMethodDeclaration("CreateGraph", nameof(BehaviourGraph), "protected override");
+            scriptTemplate.OpenMethodDeclaration("CreateGraph", nameof(BehaviourGraph), "protected override", $"HashSet<{typeof(BehaviourGraph).Name}> registeredGraphs");
 
             // Add the class
 
@@ -67,6 +67,7 @@ namespace BehaviourAPI.Unity.Editor
 
                 var graphName = !string.IsNullOrEmpty(asset.Graphs[i].Name) ? asset.Graphs[i].Name : graph.TypeName().ToLower();
                 graphName = adapter.CreateGraphLine(asset.Graphs[i], scriptTemplate, graphName);
+                scriptTemplate.AddLine($"registeredGraphs.Add({graphName});");
 
                 if (i == 0)
                 {
@@ -80,6 +81,7 @@ namespace BehaviourAPI.Unity.Editor
                 var adapter = graphAdapterMap[graph.GetType()];
                 scriptTemplate.AddLine("");
                 adapter.ConvertAssetToCode(asset.Graphs[i], scriptTemplate);
+
             }
 
             if (!string.IsNullOrEmpty(rootName))
