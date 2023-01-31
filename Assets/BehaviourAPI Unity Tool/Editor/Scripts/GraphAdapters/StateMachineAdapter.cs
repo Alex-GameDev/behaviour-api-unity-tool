@@ -1,6 +1,7 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.StateMachines;
+using BehaviourAPI.StateMachines.StackFSMs;
 using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Framework.Adaptations;
 using System;
@@ -13,6 +14,8 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 using ExitTransition = BehaviourAPI.StateMachines.ExitTransition;
+using PopTransition = BehaviourAPI.StateMachines.StackFSMs.PopTransition;
+using PushTransition = BehaviourAPI.StateMachines.StackFSMs.PushTransition;
 using State = BehaviourAPI.StateMachines.State;
 using Transition = BehaviourAPI.StateMachines.Transition;
 
@@ -86,7 +89,7 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        void AddTransition(NodeAsset node, ScriptTemplate template, string graphName)
+        protected virtual void AddTransition(NodeAsset node, ScriptTemplate template, string graphName)
         {
             if (node.Node is Transition transition)
             {
@@ -150,14 +153,15 @@ namespace BehaviourAPI.Unity.Editor
         protected override List<Type> MainTypes => new List<Type>
         {
             typeof(State),
-            typeof(Transition)
+            typeof(StateTransition),
+            typeof(ExitTransition)
         };
 
         protected override List<Type> ExcludedTypes => new List<Type> { 
             typeof(State), 
             typeof(ExitTransition), 
             typeof(StateTransition), 
-            typeof(ProbabilisticState) 
+            typeof(ProbabilisticState)
         };
 
         protected override void DrawGraphDetails(GraphAsset graphAsset, BehaviourGraphView graphView, List<NodeView> nodeViews)
