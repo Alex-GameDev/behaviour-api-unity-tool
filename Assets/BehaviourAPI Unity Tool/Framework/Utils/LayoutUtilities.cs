@@ -92,7 +92,8 @@ namespace BehaviourAPI.Unity.Framework
             for(int i = 0; i <= maxLevel; i++)
             {
                 List<NodeAsset> nodes = list.FindAll(kvp => kvp.Value == i).Select(kvp => kvp.Key).ToList();
-                ComputePositions(nodes, maxLevel - i, maxLevel);
+                var dist = i;
+                ComputePositions(nodes, dist);
             }
         }
 
@@ -101,40 +102,49 @@ namespace BehaviourAPI.Unity.Framework
             int currentLevel = 0;
             foreach(var child in asset.Childs)
             {
-                var childValue = nodeLevelMap.TryGetValue(asset, out int level) ? level : CheckLevel(child, nodeLevelMap);
+                var childValue = nodeLevelMap.TryGetValue(child, out int level) ? level : CheckLevel(child, nodeLevelMap);
                 if(childValue + 1 > currentLevel) currentLevel = childValue + 1;
             }
             nodeLevelMap[asset] = currentLevel;
             return currentLevel;
         }
 
-        static void ComputePositions(List<NodeAsset> nodes, int level, int maxLevel)
+        static void ComputePositions(List<NodeAsset> nodes, int level)
         {
             Dictionary<NodeAsset, float> targetPositionMap = new Dictionary<NodeAsset, float>();
 
             for (int i = 0; i < nodes.Count; i++)
             {
-                if (level == maxLevel)
+                if (level == 0)
                 {
                     nodes[i].Position = new Vector2(level, i) * nodeOffset;
                 }
                 else
                 {
-                    nodes[i].Position = new Vector2(level, nodes[i].Childs.Average(child => child.Position.x));
+                    nodes[i].Position = new Vector2(level, nodes[i].Childs.Average(child => child.Position.y));
                 }
             }
 
-            if (level != maxLevel)
+            if (level != 0)
             {
-                nodes = nodes.OrderBy(n => n.Position.y).ToList();
                 var midPos = nodes.Average(n => n.Position.y);
-                var height = level * nodeOffset.x;
-                var midCount = (nodes.Count - 1) / 2f;
-
-                for (int i = 0; i < nodes.Count; i++)
+                if (nodes.Count == 1)
                 {
-                    nodes[i].Position = new Vector2(midPos, height) + nodeOffset * new Vector2(0, i - midCount);
+                    var dist = level * nodeOffset.x;
+                    nodes[0].Position = new Vector2(dist, midPos);
                 }
+                else
+                {
+                    nodes = nodes.OrderBy(n => n.Position.y).ToList();
+                    var dist = level * nodeOffset.x;
+                    var midCount = (nodes.Count - 1) / 2f;
+
+                    for (int i = 0; i < nodes.Count; i++)
+                    {
+                        nodes[i].Position = new Vector2(dist, midPos) + nodeOffset * new Vector2(0, i - midCount);
+                    }
+                }
+
             }
         }
     }
