@@ -25,7 +25,7 @@
                                     </ui:VisualElement>
                                 </ui:VisualElement>
                             </ui:VisualElement>
-                            <ui:VisualElement name="node-icon" style="justify-content: center; align-items: center;" />
+                            <ui:VisualElement name="node-icon" style="justify-content: center; align-items: center; min-height: 15px; background-color: rgb(79, 91, 101); border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; display: none; margin-right: 10px; margin-left: 10px; margin-top: 10px; margin-bottom: 10px;" />
                             <ui:VisualElement name="extension" />
                         </ui:VisualElement>
                     </ui:VisualElement>

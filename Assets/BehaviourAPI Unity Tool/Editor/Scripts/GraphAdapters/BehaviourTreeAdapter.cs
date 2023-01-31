@@ -149,7 +149,15 @@ namespace BehaviourAPI.Unity.Editor
 
         protected override void SetUpDetails(NodeView nodeView)
         {
-            nodeView.Q("node-icon").Add(new Label(nodeView.Node.Node.GetType().Name.CamelCaseToSpaced().ToUpper()));
+            var node = nodeView.Node.Node;
+            if (node is LeafNode) return;
+            else
+            {
+                nodeView.IconElement.Enable();
+                if(node is DecoratorNode) nodeView.IconElement.Add(new Label(node.TypeName().CamelCaseToSpaced().ToUpper()));
+                else if(node is SequencerNode) nodeView.IconElement.Add(new Label("-->"));
+                else if(node is SelectorNode) nodeView.IconElement.Add(new Label("?"));
+            }          
         }                
 
         // Reload the root node when the old one is removed

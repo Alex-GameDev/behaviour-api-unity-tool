@@ -96,25 +96,13 @@ namespace BehaviourAPI.Unity.Editor
 
             if(nodeView.Node.Node is PushTransition)
             {
-                var label = nodeView.RootElement.Q<Label>("node-root-label");
-                label.text = "PUSH";
-                label.style.fontSize = 10;
-
-                var tag = nodeView.RootElement.Q("node-root-tag");
-                tag.style.backgroundColor = new Color(.25f, .25f, .25f);
-
-                nodeView.RootElement.Enable();
+                nodeView.IconElement.Add(new Label("PUSH"));
+                nodeView.IconElement.Enable();
             }
             else if (nodeView.Node.Node is PopTransition)
             {
-                var label = nodeView.RootElement.Q<Label>("node-root-label");
-                label.text = "POP";
-                label.style.fontSize = 10;
-
-                var tag = nodeView.RootElement.Q("node-root-tag");
-                tag.style.backgroundColor = new Color(.25f, .25f, .25f);
-
-                nodeView.RootElement.Enable();
+                nodeView.IconElement.Add(new Label("POP"));
+                nodeView.IconElement.Enable();
             }
         }
 

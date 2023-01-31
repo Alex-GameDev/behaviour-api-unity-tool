@@ -40,6 +40,7 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ----------------------- Visual elements -----------------------
         public VisualElement RootElement { get; private set; }
+        public VisualElement IconElement { get; private set; }
 
         public PortView InputPort => InputPorts.FirstOrDefault();
         public PortView OutputPort => OutputPorts.FirstOrDefault();
@@ -59,6 +60,7 @@ namespace BehaviourAPI.Unity.Editor
             inputPorts = new List<PortView>();
             outputPorts = new List<PortView>();
             RootElement = this.Q("node-root");
+            IconElement = this.Q("node-icon");
             SetPosition(new Rect(node.Position, Vector2.zero));
             SetUpPorts();
             DrawExtensionContainer();

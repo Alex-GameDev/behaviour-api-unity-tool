@@ -1,3 +1,4 @@
+using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
 using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Runtime.Extensions;
@@ -10,6 +11,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+using UtilityAction = BehaviourAPI.Unity.Framework.Adaptations.UtilityAction;
 using CustomFunction = BehaviourAPI.Unity.Framework.Adaptations.CustomFunction;
 using VariableFactor = BehaviourAPI.Unity.Framework.Adaptations.VariableFactor;
 
@@ -203,6 +205,8 @@ namespace BehaviourAPI.Unity.Editor
         };
         protected override List<Type> ExcludedTypes => new List<Type>
         {
+            typeof(UtilitySystems.UtilityAction),
+            typeof(UtilitySystems.PointedFunction),
             typeof(UtilitySystems.CustomFunction),
             typeof(UtilitySystems.VariableFactor)
         };
@@ -216,9 +220,16 @@ namespace BehaviourAPI.Unity.Editor
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
         {            
         }
-
         protected override void SetUpDetails(NodeView nodeView)
         {
+            var node = nodeView.Node.Node;
+            if (node is VariableFactor) return;
+            else
+            {
+                nodeView.IconElement.Enable();
+                if(node is Factor) nodeView.IconElement.Add(new Label(node.TypeName().CamelCaseToSpaced().Split().First().ToUpper()));
+                else nodeView.IconElement.Add(new Label(node.TypeName().CamelCaseToSpaced().ToUpper()));
+            }
         }
 
         protected override GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change)

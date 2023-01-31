@@ -10,7 +10,7 @@ namespace BehaviourAPI.Unity.Framework
 {
     public class LayoutUtilities : MonoBehaviour
     {
-        public static readonly Vector2 nodeOffset = new Vector2(250, 150);
+        public static readonly Vector2 nodeOffset = new Vector2(250, 200);
 
         public static void ComputeLayout(GraphAsset graphAsset)
         {
