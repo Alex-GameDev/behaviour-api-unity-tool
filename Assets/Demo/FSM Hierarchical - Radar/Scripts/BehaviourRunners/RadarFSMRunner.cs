@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
+using BehaviourAPI.Unity.Runtime;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RadarFSMRunner : BehaviourGraphRunner
+public class RadarFSMRunner : CodeBehaviourRunner
 {
     [SerializeField] private Vector3 pointToLook;
     [SerializeField] private Text speedText;
@@ -14,7 +15,7 @@ public class RadarFSMRunner : BehaviourGraphRunner
 
     BehaviourAPI.StateMachines.State _brokenState, _workingState;
 
-    protected override BehaviourGraph CreateGraph()
+    protected override BehaviourGraph CreateGraph(HashSet<BehaviourGraph> registeredGraphs)
     {
         var radarFSM = new BehaviourAPI.StateMachines.FSM();
 

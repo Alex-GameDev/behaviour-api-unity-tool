@@ -5,6 +5,7 @@ using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Runtime;
+using BehaviourAPI.Unity.Runtime.Extensions;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Demo

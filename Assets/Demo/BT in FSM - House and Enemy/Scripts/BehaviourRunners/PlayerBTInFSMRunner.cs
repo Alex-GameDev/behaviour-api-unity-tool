@@ -5,12 +5,13 @@ using BehaviourAPI.Core;
 using UnityEngine;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
+using BehaviourAPI.Unity.Runtime;
 
 namespace BehaviourAPI.Unity.Demo
 {
-    public class PlayerBTInFSMRunner : BehaviourGraphRunner
+    public class PlayerBTInFSMRunner : CodeBehaviourRunner
     {
-        protected override BehaviourGraph CreateGraph()
+        protected override BehaviourGraph CreateGraph(HashSet<BehaviourGraph> registeredGraphs)
         {
             var fsm = new StateMachines.FSM();
 
@@ -40,18 +41,6 @@ namespace BehaviourAPI.Unity.Demo
         private BehaviourTrees.BehaviourTree CreateFindKeySubBT()
         {
             return null;
-        }
-
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
         }
     }
 

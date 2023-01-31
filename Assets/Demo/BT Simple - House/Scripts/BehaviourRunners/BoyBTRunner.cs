@@ -5,8 +5,9 @@ using BehaviourAPI.BehaviourTrees;
 using UnityEngine;
 using UnityEngine.AI;
 using BehaviourAPI.Core.Actions;
+using BehaviourAPI.Unity.Runtime;
 
-public class BoyBTRunner : BehaviourGraphRunner
+public class BoyBTRunner : CodeBehaviourRunner
 {
     Door _door;
     [SerializeField] AudioClip doorOpenClip;
@@ -28,7 +29,7 @@ public class BoyBTRunner : BehaviourGraphRunner
         base.OnAwake();
     }
 
-    protected override BehaviourGraph CreateGraph()
+    protected override BehaviourGraph CreateGraph(HashSet<BehaviourGraph> registeredGraphs)
     {
         var bt = new BehaviourAPI.BehaviourTrees.BehaviourTree();
         var doorPos = new Vector3(_door.transform.position.x, transform.position.y, _door.transform.position.z);

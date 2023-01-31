@@ -1,9 +1,11 @@
 ﻿using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
+using BehaviourAPI.Unity.Runtime;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PlayerFSMRunner : BehaviourGraphRunner
+public class PlayerFSMRunner : CodeBehaviourRunner
 {
     #region variables
 
@@ -21,7 +23,7 @@ public class PlayerFSMRunner : BehaviourGraphRunner
         base.OnAwake();
     }
 
-    protected override BehaviourGraph CreateGraph()
+    protected override BehaviourGraph CreateGraph(HashSet<BehaviourGraph> registeredGraphs)
     {
         var fsm = new BehaviourAPI.StateMachines.FSM();
 

@@ -2,9 +2,9 @@ using System;
 using BehaviourAPI.Core;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Runtime
+namespace BehaviourAPI.Unity.Runtime.Extensions
 {
-    public class UnityTimerDecorator : BehaviourAPI.BehaviourTrees.DecoratorNode
+    public class UnityTimerDecorator : BehaviourTrees.DecoratorNode
     {
         public float TotalTime;
 

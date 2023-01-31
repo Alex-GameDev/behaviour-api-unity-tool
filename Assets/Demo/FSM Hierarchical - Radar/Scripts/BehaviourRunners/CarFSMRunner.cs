@@ -2,10 +2,12 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
+using BehaviourAPI.Unity.Runtime;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CarFSMRunner : BehaviourGraphRunner
+public class CarFSMRunner : CodeBehaviourRunner
 {
     Rigidbody _rb;
     RadarFSMRunner _radar;
@@ -19,7 +21,7 @@ public class CarFSMRunner : BehaviourGraphRunner
         base.OnAwake();
     }
 
-    protected override BehaviourGraph CreateGraph()
+    protected override BehaviourGraph CreateGraph(HashSet<BehaviourGraph> registeredGraphs)
     {
         var carFSM = new BehaviourAPI.StateMachines.FSM();
 

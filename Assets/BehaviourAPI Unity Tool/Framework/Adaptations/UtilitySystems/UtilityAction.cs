@@ -1,9 +1,9 @@
 using BehaviourAPI.Core.Actions;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Extensions
+namespace BehaviourAPI.Unity.Framework.Adaptations
 {
-    public class UtilityAction : BehaviourAPI.UtilitySystems.UtilityAction, ISerializationCallbackReceiver
+    public class UtilityAction : UtilitySystems.UtilityAction, ISerializationCallbackReceiver
     {
         [SerializeReference] Action _action;
 
