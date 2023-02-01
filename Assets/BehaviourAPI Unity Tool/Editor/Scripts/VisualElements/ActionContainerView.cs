@@ -21,7 +21,7 @@ namespace BehaviourAPI.Unity.Editor
     public class ActionContainerView : VisualElement
     {
         NodeAsset nodeAsset;
-        SerializedProperty _actionProperty;
+        string propertyPath;
 
         NodeView _nodeView;
 
@@ -34,7 +34,7 @@ namespace BehaviourAPI.Unity.Editor
         public ActionContainerView(NodeAsset asset, SerializedProperty actionProperty, NodeView nodeView)
         {
             nodeAsset = asset;
-            _actionProperty = actionProperty;
+            propertyPath = actionProperty.propertyPath;
 
             _nodeView = nodeView;
             AddLayout();
@@ -56,7 +56,7 @@ namespace BehaviourAPI.Unity.Editor
             this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
             {
                 menuEvt.menu.AppendAction("Clear action", dd => ClearAction(),
-                    (_) => _actionProperty.managedReferenceValue != null ?
+                    (_) => GetSerializedProperty().managedReferenceValue != null ?
                     DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
             }));
         }
@@ -68,8 +68,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private void ClearAction()
         {
-            _actionProperty.managedReferenceValue = null;
-            _actionProperty.serializedObject.ApplyModifiedProperties();
+            UpdateActionValue(null);
             UpdateView();
         }
 
@@ -77,14 +76,28 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (!actionType.IsSubclassOf(typeof(Action))) return;
 
-            _actionProperty.managedReferenceValue = Activator.CreateInstance(actionType);
-            _actionProperty.serializedObject.ApplyModifiedProperties();
+            UpdateActionValue(Activator.CreateInstance(actionType));
             UpdateView();
+        }
+
+        void UpdateActionValue(object action)
+        {
+            var obj = new SerializedObject(nodeAsset);
+            obj.FindProperty(propertyPath).managedReferenceValue = action;
+            obj.ApplyModifiedProperties();
+        }
+
+        SerializedProperty GetSerializedProperty()
+        {
+            var obj = new SerializedObject(nodeAsset);
+            return obj.FindProperty(propertyPath);
         }
 
         void UpdateView()
         {
-            if (_actionProperty.managedReferenceValue == null)
+
+            var actionProperty = GetSerializedProperty();
+            if (actionProperty.managedReferenceValue == null)
             {
                 _assignButton.Enable();
                 _container.Clear();
@@ -95,7 +108,7 @@ namespace BehaviourAPI.Unity.Editor
                 _assignButton.Disable();
                 _container.Enable();
 
-                Action action = _actionProperty.managedReferenceValue as Action;
+                Action action = actionProperty.managedReferenceValue as Action;
 
                 if (action is CustomAction)
                 {

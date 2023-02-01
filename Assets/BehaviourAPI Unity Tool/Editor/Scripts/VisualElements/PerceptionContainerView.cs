@@ -20,7 +20,7 @@ namespace BehaviourAPI.Unity.Editor
     public class PerceptionContainerView : VisualElement
     {
         NodeAsset nodeAsset;
-        SerializedProperty _perceptionProperty;
+        string propertyPath;
 
         NodeView _nodeView;
 
@@ -30,7 +30,7 @@ namespace BehaviourAPI.Unity.Editor
         public PerceptionContainerView(NodeAsset asset, SerializedProperty perceptionProperty, NodeView nodeView)
         {
             nodeAsset = asset;
-            _perceptionProperty = perceptionProperty;
+            propertyPath = perceptionProperty.propertyPath;
 
             _nodeView = nodeView;
             AddLayout();
@@ -52,7 +52,7 @@ namespace BehaviourAPI.Unity.Editor
             this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
             {
                 menuEvt.menu.AppendAction("Clear perception", dd => ClearPerception(),
-                    (_) => _perceptionProperty.managedReferenceValue != null ?
+                    (_) => GetSerializedProperty().managedReferenceValue != null ?
                     DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
             }));
         }
@@ -64,8 +64,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private void ClearPerception()
         {
-            _perceptionProperty.managedReferenceValue = null;
-            _perceptionProperty.serializedObject.ApplyModifiedProperties();
+            UpdatePerceptionValue(null);
             UpdateView();
         }
 
@@ -73,14 +72,27 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (!perceptionType.IsSubclassOf(typeof(Perception))) return;
 
-            _perceptionProperty.managedReferenceValue = Activator.CreateInstance(perceptionType);
-            _perceptionProperty.serializedObject.ApplyModifiedProperties();
+            UpdatePerceptionValue(Activator.CreateInstance(perceptionType));
             UpdateView();
+        }
+
+        void UpdatePerceptionValue(object action)
+        {
+            var obj = new SerializedObject(nodeAsset);
+            obj.FindProperty(propertyPath).managedReferenceValue = action;
+            obj.ApplyModifiedProperties();
+        }
+
+        SerializedProperty GetSerializedProperty()
+        {
+            var obj = new SerializedObject(nodeAsset);
+            return obj.FindProperty(propertyPath);
         }
 
         void UpdateView()
         {
-            if (_perceptionProperty.managedReferenceValue == null)
+            var perceptionProperty = GetSerializedProperty();
+            if (perceptionProperty.managedReferenceValue == null)
             {
                 _assignButton.Enable();
                 _container.Clear();
@@ -91,7 +103,7 @@ namespace BehaviourAPI.Unity.Editor
                 _assignButton.Disable();
                 _container.Enable();
 
-                Perception perception = _perceptionProperty.managedReferenceValue as Perception;
+                Perception perception = perceptionProperty.managedReferenceValue as Perception;
 
                 if (perception is CustomPerception customAction)
                 {
