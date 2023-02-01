@@ -1,7 +1,6 @@
 namespace BehaviourAPI.Unity.Editor
 {
     using BehaviourAPI.Core.Perceptions;
-    using BehaviourAPI.Unity.Runtime;
     using Core;
     using System;
     using UnityEditor;
@@ -13,18 +12,14 @@ namespace BehaviourAPI.Unity.Editor
     using Action = Core.Actions.Action;
     using System.Linq;
     using System.Collections.Generic;
-    using static UnityEditor.Experimental.GraphView.Port;
-    using Orientation = UnityEditor.Experimental.GraphView.Orientation;
     using BehaviourAPI.Unity.Framework;
-    using UnityEngine.Windows;
-    using BehaviourAPI.StateMachines;
+
 
     /// <summary>
     /// Visual element that represents a node in a behaviour graph
     /// </summary>
     public abstract class NodeView : UnityEditor.Experimental.GraphView.Node
     {
-
         #region --------------------------- Fields ---------------------------
         
         public NodeAsset Node;
@@ -50,7 +45,7 @@ namespace BehaviourAPI.Unity.Editor
 
         #endregion
 
-        public abstract string LayoutPath { get; }
+        public abstract string LayoutPath { get; }     
 
         #region --------------------------- Set up ---------------------------
         public NodeView(NodeAsset node, BehaviourGraphView graphView, string path) : base(path)
@@ -126,9 +121,10 @@ namespace BehaviourAPI.Unity.Editor
 
         void SetUpDataBinding()
         {
+            var obj = new SerializedObject(Node);
             var titleInputField = this.Q<TextField>(name: "title-input-field");
             titleInputField.bindingPath = "Name";
-            titleInputField.Bind(new SerializedObject(Node));
+            titleInputField.Bind(obj);
         }
 
         protected PortView InstantiatePort(Direction direction, PortOrientation orientation)
@@ -179,7 +175,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public void OnMoved(Vector2 pos)
         {
-            Node.Position = pos;
+           Node.Position = pos;
         }
 
         public virtual void OnDisconnected(NodeView other, Port port, bool ignoreConnection = false)

@@ -80,7 +80,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             var obj = new SerializedObject(nodeAsset);
             obj.FindProperty(propertyPath).managedReferenceValue = action;
-            obj.ApplyModifiedProperties();
+            obj.ApplyModifiedPropertiesWithoutUndo();
         }
 
         SerializedProperty GetSerializedProperty()
