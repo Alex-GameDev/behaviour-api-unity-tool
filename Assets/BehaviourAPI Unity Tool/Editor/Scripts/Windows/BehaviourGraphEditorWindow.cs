@@ -7,6 +7,9 @@ using BehaviourAPI.Unity.Runtime;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 using BehaviourAPI.Unity.Framework;
+using System.Reflection;
+using BehaviourAPI.Core;
+using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -27,7 +30,7 @@ namespace BehaviourAPI.Unity.Editor
         BehaviourGraphInspectorView _graphInspector;
         PushPerceptionInspectorView _pushPerceptionInspector;
 
-        ToolbarMenu _selectGraphToolbarMenu;
+        ToolbarMenu _selectGraphToolbarMenu, _addGraphMenu;
         ToolbarToggle _autosaveToolbarToggle;
         ToolbarButton _saveToolbarButton, _deleteGraphToolbarButton, _addGraphToolbarButton, _setRootGraphToolbarButton, _generateScriptToolbarButton, _clearGraphToolbarButton;
 
@@ -93,7 +96,6 @@ namespace BehaviourAPI.Unity.Editor
         {
             var emptyPanel = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(emptyPanelPath).Instantiate();
             rootVisualElement.Add(emptyPanel);
-            emptyPanel.Q<Button>("egp-add-btn").clicked += ShowGraphCreationPanel;
             return emptyPanel;
         }
 
@@ -155,7 +157,6 @@ namespace BehaviourAPI.Unity.Editor
                 _generateScriptToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-generatescript-btn");
                 _clearGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-clear-btn");
 
-                _addGraphToolbarButton.clicked += ShowGraphCreationPanel;
                 _deleteGraphToolbarButton.clicked += DisplayDeleteGraphAlertWindow;
                 _saveToolbarButton.clicked += SaveSystemData;
                 _autosaveToolbarToggle.RegisterValueChangedCallback((evt) => autoSave = evt.newValue);
@@ -163,8 +164,27 @@ namespace BehaviourAPI.Unity.Editor
                 _generateScriptToolbarButton.clicked += OpenCreateScriptWindow;
                 _clearGraphToolbarButton.clicked += OpenClearGraphWindow;
 
+                SetUpAddGraphMenu();
+
             }
             UpdateGraphSelectionToolbar();
+        }
+
+        void SetUpAddGraphMenu()
+        {
+            var addGraphMenu = rootVisualElement.Q<ToolbarMenu>("bw-toolbar-add-menu");
+            typeof(GraphAdapter).GetSubClasses().ForEach(adapterType =>
+            {
+                var adapterAttribute = adapterType.GetCustomAttribute<CustomAdapterAttribute>();
+                if (adapterAttribute != null)
+                {
+                    var graphType = adapterAttribute.type;
+                    if (graphType.IsSubclassOf(typeof(BehaviourGraph)))
+                    {
+                        addGraphMenu.menu.AppendAction(graphType.Name, _ => CreateGraph($"new {graphType.Name}", graphType));
+                    }
+                }
+            });
         }
 
         void UpdateGraphSelectionToolbar()
@@ -195,11 +215,6 @@ namespace BehaviourAPI.Unity.Editor
         #endregion
 
         #region ----------------------- Layout event callbacks -----------------------
-
-        void ShowGraphCreationPanel()
-        {
-            GraphCreationWindow.Create(CreateGraph);
-        }
 
         private void OpenCreateScriptWindow()
         {
