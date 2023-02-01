@@ -298,6 +298,8 @@ namespace BehaviourAPI.Unity.Editor
 
             UpdateGraphSelectionToolbar();
             DisplayGraph(graphAsset);
+
+            Toast("Graph created");
         }
 
         void ClearCurrentGraph()
@@ -309,6 +311,8 @@ namespace BehaviourAPI.Unity.Editor
             if (IsAsset) _currentGraphAsset.Nodes.ForEach(AssetDatabase.RemoveObjectFromAsset);
 
             _currentGraphAsset.Nodes.Clear();
+
+            Toast("Graph clean");
         }
 
         void DeleteCurrentGraph()
@@ -330,8 +334,16 @@ namespace BehaviourAPI.Unity.Editor
                 _graphView.ClearView();
                 _emptyGraphPanel.style.display = DisplayStyle.Flex;
             }
+
+
+            Toast("Graph deleted");
         }
 
         #endregion
+
+        private void Toast(string message, float timeout = .5f)
+        {
+            ShowNotification(new GUIContent(message), timeout);
+        }
     }
 }
