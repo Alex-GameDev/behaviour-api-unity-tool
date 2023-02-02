@@ -182,7 +182,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             var contents = nodeView.Q("contents");
             if (nodeView.Node.Node is Transition)
-            {               
+            {
+                nodeView.Q("node-status").ChangeBorderColor(new Color(0,0,0,0));
                 contents.style.width = 125;
                 contents.ChangeBorderColor(new Color(.25f, .25f, .25f, .25f));
                 contents.ChangeBackgroundColor(new Color(.15f, .15f, .15f, .4f));

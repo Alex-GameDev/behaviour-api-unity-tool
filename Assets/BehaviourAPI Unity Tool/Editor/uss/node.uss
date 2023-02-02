@@ -68,3 +68,9 @@
     background-color: rgb(38, 38, 38);
     width: 200px;
 }
+
+.node-text{
+    font-size: 10px;
+    -unity-text-align: middle-center;
+    white-space: normal;
+}

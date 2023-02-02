@@ -113,13 +113,13 @@ namespace BehaviourAPI.Unity.Editor
                 if (action is CustomAction)
                 {
                     var label = new Label("Custom Action");
-                    label.style.unityTextAlign = TextAnchor.MiddleCenter;
+                    label.AddToClassList("node-text");
                     _container.Add(label);
                 }
                 else if (action is UnityAction unityAction)
                 {
                     var label = new Label(unityAction.DisplayInfo);
-                    label.style.unityTextAlign = TextAnchor.MiddleCenter;
+                    label.AddToClassList("node-text");
                     _container.Add(label);
                 }
                 else if (action is SubgraphAction subgraphAction)

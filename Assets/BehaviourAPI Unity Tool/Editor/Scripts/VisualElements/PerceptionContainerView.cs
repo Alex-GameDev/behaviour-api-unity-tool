@@ -108,13 +108,13 @@ namespace BehaviourAPI.Unity.Editor
                 if (perception is CustomPerception customAction)
                 {
                     var label = new Label("Custom Perception");
-                    label.style.unityTextAlign = TextAnchor.MiddleCenter;
+                    label.AddToClassList("node-text");
                     _container.Add(label);
                 }
                 else if (perception is UnityPerception unityAction)
                 {
                     var label = new Label(unityAction.DisplayInfo);
-                    label.style.unityTextAlign = TextAnchor.MiddleCenter;
+                    label.AddToClassList("node-text");
                     _container.Add(label);
                 }
                 else if (perception is CompoundPerception compoundPerception)
