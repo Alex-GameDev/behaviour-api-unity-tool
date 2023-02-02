@@ -1,24 +1,26 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/uss/node.uss?fileID=7433441132597879392&amp;guid=81512d53a4bea9b4494135dc1f99b76f&amp;type=3#node" />
-    <ui:VisualElement name="node-div" style="padding-left: 20px; padding-right: 20px; padding-top: 12px; padding-bottom: 12px;">
+    <ui:VisualElement name="node-div">
         <ui:VisualElement name="node-ports" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; justify-content: space-between; flex-direction: row-reverse;">
             <ui:VisualElement name="input" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;" />
             <ui:VisualElement name="output" style="flex-direction: row; align-items: center; justify-content: space-between;" />
         </ui:VisualElement>
         <ui:VisualElement name="node-border" class="node-border">
-            <ui:VisualElement name="node-status" style="border-left-color: rgb(183, 183, 183); border-right-color: rgb(183, 183, 183); border-top-color: rgb(183, 183, 183); border-bottom-color: rgb(183, 183, 183); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px;">
+            <ui:VisualElement name="node-status" style="border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px;">
                 <ui:VisualElement name="contents" class="node-rect">
-                    <ui:VisualElement name="top" style="min-height: auto; min-width: auto; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px;">
+                    <ui:VisualElement name="top">
                         <ui:VisualElement name="node-content">
                             <ui:VisualElement name="title" style="height: auto; flex-direction: column;">
-                                <ui:TextField max-length="30" name="title-input-field" tooltip="Node name" />
+                                <ui:TextField max-length="30" name="title-input-field" tooltip="Node name" style="-unity-text-align: middle-center; white-space: nowrap; font-size: 10px;" />
                                 <ui:VisualElement name="title-button-container">
                                     <ui:VisualElement name="collapse-button">
                                         <ui:VisualElement name="icon" />
                                     </ui:VisualElement>
                                 </ui:VisualElement>
                             </ui:VisualElement>
-                            <ui:VisualElement name="node-icon" style="justify-content: center; align-items: center; min-height: 15px; background-color: rgb(79, 91, 101); border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; display: none; margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px;" />
+                            <ui:VisualElement name="node-details">
+                                <ui:VisualElement name="node-icon" />
+                            </ui:VisualElement>
                             <ui:VisualElement name="extension" />
                         </ui:VisualElement>
                     </ui:VisualElement>

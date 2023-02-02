@@ -192,21 +192,18 @@ namespace BehaviourAPI.Unity.Editor
                 contents.style.width = 200;
             }
 
-            if (nodeView.Node.Node is ExitTransition exitTransition)
+            if (nodeView.Node.Node is ExitTransition)
             {
                 var label = nodeView.RootElement.Q<Label>("node-root-label");
-                label.text = "Exit - ";
-                label.style.fontSize = 10;
+                label.text = "Exit";
+                nodeView.RootElement.Q("node-root-tag").ChangeBackgroundColor(new Color(.8f, .3f, .3f));
 
                 var statusLabel = new Label();
                 statusLabel.Bind(new SerializedObject(nodeView.Node));
                 statusLabel.bindingPath = "node.ExitStatus";
-                statusLabel.style.fontSize = 10;
 
-                var tag = nodeView.RootElement.Q("node-root-tag");
-                tag.style.backgroundColor = new Color(.5f, .25f, .25f);
-
-                tag.Add(statusLabel);
+                nodeView.IconElement.Add(statusLabel);
+                nodeView.IconElement.Enable();
 
                 nodeView.RootElement.Enable();
             }

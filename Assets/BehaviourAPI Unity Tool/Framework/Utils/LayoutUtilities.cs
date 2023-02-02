@@ -10,13 +10,15 @@ namespace BehaviourAPI.Unity.Framework
 {
     public class LayoutUtilities : MonoBehaviour
     {
-        public static readonly Vector2 nodeOffset = new Vector2(250, 200);
+        public static readonly Vector2 nodeOffset = new Vector2(280, 200);
 
         public static void ComputeLayout(GraphAsset graphAsset)
         {
             if(graphAsset == null) return;
 
-            if(graphAsset.Graph is BehaviourTree)
+            if (graphAsset.Nodes.Count == 0) return;
+
+            if (graphAsset.Graph is BehaviourTree)
             {
                 var root = graphAsset.Nodes.FirstOrDefault();
                 if (root == null) return;
