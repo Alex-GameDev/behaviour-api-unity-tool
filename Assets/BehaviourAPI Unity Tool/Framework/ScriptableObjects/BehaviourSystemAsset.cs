@@ -30,7 +30,7 @@ namespace BehaviourAPI.Unity.Framework
             }
             set
             {
-                if (graphs.Count > 0)
+                if (graphs.Contains(value))
                     graphs.MoveAtFirst(value);
             }
         }
@@ -74,7 +74,6 @@ namespace BehaviourAPI.Unity.Framework
         public BehaviourGraph Build()
         {
             graphs.ForEach(g => g.Build());
-
             //buildedPushPerceptions = pushPerceptions.ToDictionary(p => p.Name, p => p.Build());
             return RootGraph?.Graph ?? null;
         }

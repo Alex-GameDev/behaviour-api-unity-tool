@@ -10,6 +10,7 @@ using BehaviourAPI.Unity.Framework;
 using System.Reflection;
 using BehaviourAPI.Core;
 using Vector2 = UnityEngine.Vector2;
+using System.Linq;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -80,8 +81,8 @@ namespace BehaviourAPI.Unity.Editor
             _pushPerceptionInspector = AddPushPerceptionInspectorView();
 
             _graphView.NodeSelected += _nodeInspector.UpdateInspector;
-            _graphView.NodeAdded += OnAddAsset;
-            _graphView.NodeRemoved += OnRemoveAsset;
+            _graphView.NodeAdded += OnAddNode;
+            _graphView.NodeRemoved += OnRemoveNode;
 
             _emptyGraphPanel = AddEmptyGraphPanel();
             _emptyGraphPanel.style.display = DisplayStyle.None;
@@ -125,7 +126,9 @@ namespace BehaviourAPI.Unity.Editor
         {
             var pushPerceptionInspector = new PushPerceptionInspectorView(SystemAsset, _graphView.NodeSearchWindow);
             _container.Add(pushPerceptionInspector);
-            pushPerceptionInspector.style.display = DisplayStyle.None;
+            pushPerceptionInspector.Disable();
+            pushPerceptionInspector.PushPerceptionCreated += OnAddAsset;
+            pushPerceptionInspector.PushPerceptionRemoved += OnRemoveAsset;
             return pushPerceptionInspector;
         }
 
@@ -256,6 +259,24 @@ namespace BehaviourAPI.Unity.Editor
                 AssetDatabase.SaveAssets();
             else
                 EditorSceneManager.SaveScene(SceneManager.GetActiveScene());
+        }
+
+        void OnAddNode(NodeAsset node)
+        {
+            OnAddAsset(node);
+        }
+
+        void OnRemoveNode(NodeAsset node)
+        {
+            bool isChanged = false;
+            foreach(var pp in SystemAsset.PushPerceptions)
+            {
+                if(pp.Targets.Remove(node)) isChanged = true;
+            }
+
+            if (isChanged) _pushPerceptionInspector.ForceRefresh();
+
+            OnRemoveAsset(node);
         }
 
         void OnAddAsset(ScriptableObject asset)

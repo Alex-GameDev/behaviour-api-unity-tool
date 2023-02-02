@@ -16,6 +16,8 @@ namespace BehaviourAPI.Unity.Editor
         ListView _pushHandlerListView;
         public NodeSearchWindow nodeSearchWindow { get; private set; }
 
+        public Action<PushPerceptionAsset> PushPerceptionCreated, PushPerceptionRemoved;
+
         public PushPerceptionInspectorView(BehaviourSystemAsset systemAsset, NodeSearchWindow searchWindow) : base(systemAsset, "Push Perceptions", Side.Right)
         {
             nodeSearchWindow = searchWindow;
@@ -23,8 +25,11 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void AddElement()
         {
-            _systemAsset.CreatePushPerception("new pushperception");
+            if (_systemAsset == null) return;
+
+            var asset = _systemAsset.CreatePushPerception("new pushperception");
             RefreshList();
+            PushPerceptionCreated?.Invoke(asset);
         }
 
         protected override List<PushPerceptionAsset> GetList()
@@ -35,6 +40,7 @@ namespace BehaviourAPI.Unity.Editor
         protected override void RemoveElement(PushPerceptionAsset asset)
         {
             _systemAsset.RemovePushPerception(asset);
+            PushPerceptionRemoved?.Invoke(asset);
         }
 
         public override void UpdateInspector(PushPerceptionAsset asset)
@@ -53,9 +59,8 @@ namespace BehaviourAPI.Unity.Editor
 
         private void AddPushPerceptionTarget()
         {
-            Debug.Log("Open search window");
             if (nodeSearchWindow == null) Debug.Log("Error");
-            nodeSearchWindow.Open(nodeAsset => !_selectedElement.Targets.Contains(nodeAsset), AddPushHandler);
+            nodeSearchWindow.Open(nodeAsset => nodeAsset.Node is IPushActivable && !_selectedElement.Targets.Contains(nodeAsset), AddPushHandler);
         }
 
         void AddPushHandler(NodeAsset obj)
@@ -84,6 +89,12 @@ namespace BehaviourAPI.Unity.Editor
         {
             _selectedElement.Targets.Remove(asset);
             _pushHandlerListView.RefreshItems();
+        }
+
+        public void ForceRefresh()
+        {
+            RefreshList();
+            UpdateInspector(_selectedElement);
         }
     }
 }

@@ -52,11 +52,5 @@ namespace BehaviourAPI.Unity.Runtime
         {
             return SystemAsset;
         }
-
-        public Status Test()
-        {
-            Debug.Log("Trying custom action");
-            return Status.Success;
-        }
     }
 }
