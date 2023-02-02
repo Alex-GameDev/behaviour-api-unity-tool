@@ -19,7 +19,7 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
 
         int currentTargetPosId;
 
-        public override string DisplayInfo => "Move between the elements in $positions at $speed";
+        public override string DisplayInfo => "Move between $positions at $speed";
 
         protected override void OnStart()
         {
