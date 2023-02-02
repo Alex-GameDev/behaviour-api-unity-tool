@@ -74,7 +74,24 @@ namespace BehaviourAPI.Unity.Framework
         public BehaviourGraph Build()
         {
             graphs.ForEach(g => g.Build());
-            //buildedPushPerceptions = pushPerceptions.ToDictionary(p => p.Name, p => p.Build());
+
+            buildedPushPerceptions = new Dictionary<string, PushPerception>();
+            pushPerceptions.ForEach(pp =>
+            {
+                if(pp.Targets.Count > 0)
+                {
+                    if (!buildedPushPerceptions.TryAdd(pp.Name, pp.Build()))
+                    {
+                        Debug.LogWarning($"Push perception with name \"{pp.Name}\" cannot be added. Another push perception with the same name already exists");
+                    }
+                }
+                else
+                {
+                    Debug.Log($"Push perception with name \"{pp.Name}\" wasn't added because it has no targets.");
+                    return;
+                }
+            });
+
             return RootGraph?.Graph ?? null;
         }
 

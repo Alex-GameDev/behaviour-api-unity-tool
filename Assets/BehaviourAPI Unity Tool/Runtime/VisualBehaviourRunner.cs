@@ -1,5 +1,7 @@
 using BehaviourAPI.Core;
+using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework;
+using Codice.CM.Common.Replication;
 using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
@@ -51,6 +53,11 @@ namespace BehaviourAPI.Unity.Runtime
         public override BehaviourSystemAsset GetBehaviourSystemAsset()
         {
             return SystemAsset;
+        }
+
+        protected PushPerception FindPushPerception(string name)
+        {
+            return SystemAsset.GetPushPerception(name);
         }
     }
 }
