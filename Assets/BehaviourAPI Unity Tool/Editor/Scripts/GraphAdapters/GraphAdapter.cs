@@ -186,7 +186,7 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public void DrawConnections(NodeAsset asset, BehaviourGraphView graphView, List<NodeView> nodeViews)
         {
-            if (asset.Node.MaxOutputConnections == 0) return;
+            if (asset.Node != null && asset.Node.MaxOutputConnections == 0) return;
 
             var sourceView = graphView.GetViewOf(asset);
 

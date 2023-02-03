@@ -56,19 +56,22 @@ namespace BehaviourAPI.Unity.Editor
             outputPorts = new List<PortView>();
             RootElement = this.Q("node-root");
             IconElement = this.Q("node-icon");
+
             SetPosition(new Rect(node.Position, Vector2.zero));
             SetUpPorts();
-            DrawExtensionContainer();
-            SetUpContextualMenu();
             SetUpDataBinding();
 
-            if(node.Node is MissingNode)
+            if(Node.Node != null)
+            {
+                DrawExtensionContainer();
+                SetUpContextualMenu();
+                if (graphView.Runtime) AddRuntimeLayout();
+            }
+            else
             {
                 IconElement.Add(new Label("Missing node"));
                 IconElement.Enable();
-            }
-
-            if (graphView.Runtime) AddRuntimeLayout();
+            }            
         }
 
         private void AddRuntimeLayout()
@@ -84,7 +87,6 @@ namespace BehaviourAPI.Unity.Editor
 
         private void SetUpContextualMenu()
         {
-            var manipulator = new ContextualMenuManipulator(menuEvt => { });
             this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
             {               
                 menuEvt.menu.AppendAction("Disconnect input ports", _ => DisconnectPorts(inputContainer), _ => Node.Node.MaxInputConnections != 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
@@ -136,9 +138,24 @@ namespace BehaviourAPI.Unity.Editor
         protected PortView InstantiatePort(Direction direction, PortOrientation orientation)
         {
             var isInput = direction == Direction.Input;
-            var capacity = (isInput ? Node.Node.MaxInputConnections == -1 : Node.Node.MaxOutputConnections == -1) ? Port.Capacity.Multi : Port.Capacity.Single;
-            var type = isInput ? Node.Node.GetType() : Node.Node.ChildType;
-            var port = PortView.Create(orientation, direction, capacity, type);
+
+            Port.Capacity portCapacity;
+            Type portType;
+
+            if(Node.Node != null)
+            {
+                if (isInput) portCapacity = Node.Node.MaxInputConnections == -1 ? Port.Capacity.Multi : Port.Capacity.Single;
+                else portCapacity = Node.Node.MaxOutputConnections == -1 ? Port.Capacity.Multi : Port.Capacity.Single;
+                portType = isInput ? Node.Node.GetType() : Node.Node.ChildType;
+            }
+            else
+            {
+                portCapacity = Port.Capacity.Multi;
+                portType = typeof(NodeView); // Any invalid type
+            }
+
+            var port = PortView.Create(orientation, direction, portCapacity, portType);
+
             (isInput ? InputPorts : OutputPorts).Add(port);
             (isInput ? inputContainer : outputContainer).Add(port);
 
@@ -149,7 +166,6 @@ namespace BehaviourAPI.Unity.Editor
             bg.style.position = Position.Absolute;
             bg.style.top = 0; bg.style.left = 0; bg.style.bottom = 0; bg.style.right = 0;
             port.Add(bg);
-
 
             if(_graphView.Runtime)
             {

@@ -12,7 +12,7 @@ namespace BehaviourAPI.Unity.Framework
     /// <summary>
     /// Stores a node as an unity object
     /// </summary>
-    public class NodeAsset : ScriptableObject, ISerializationCallbackReceiver
+    public class NodeAsset : ScriptableObject
     {
         public string Name;
 
@@ -99,16 +99,6 @@ namespace BehaviourAPI.Unity.Framework
                 });
             }
             return visitedNodes;
-        }
-
-        public void OnBeforeSerialize()
-        {
-            return;
-        }
-
-        public void OnAfterDeserialize()
-        {
-            if (Node == null) Node = new MissingNode();
         }
     }
 }

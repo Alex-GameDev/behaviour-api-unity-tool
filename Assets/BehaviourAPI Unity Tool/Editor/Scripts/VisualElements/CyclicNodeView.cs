@@ -24,7 +24,7 @@ namespace BehaviourAPI.Unity.Editor
             //Debug.Log("Disabling all ports except the connected one");
             if(port.direction == Direction.Input)
             {
-                if(Node.Node.MaxInputConnections == 1)
+                if(Node.Node != null && Node.Node.MaxInputConnections == 1)
                 {
                     InputPorts.ForEach(p => { if (p != port) p.Disable(); });
                     inputUniquePort = port;
@@ -33,7 +33,7 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
-                if (Node.Node.MaxOutputConnections == 1)
+                if (Node.Node != null && Node.Node.MaxOutputConnections == 1)
                 {
                     OutputPorts.ForEach(p => { if (p != port) p.Disable(); });
                     outputUniquePort = port;
@@ -49,7 +49,7 @@ namespace BehaviourAPI.Unity.Editor
             //Debug.Log("Enabling all ports");
             if (port.direction == Direction.Input)
             {
-                if (Node.Node.MaxInputConnections == 1)
+                if (Node.Node != null && Node.Node.MaxInputConnections == 1)
                 {
                     InputPorts.ForEach(p => { if (p != port) p.Enable(); });
                     inputUniquePort = null;
@@ -58,7 +58,7 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
-                if (Node.Node.MaxOutputConnections == 1)
+                if (Node.Node != null && Node.Node.MaxOutputConnections == 1)
                 {
                     OutputPorts.ForEach(p => { if (p != port) p.Enable(); });
                     outputUniquePort = null;
@@ -68,7 +68,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void SetUpPorts()
         {
-            if (Node.Node.MaxInputConnections != 0)
+            if (Node.Node == null || Node.Node.MaxInputConnections != 0)
             {
                 var port1 = InstantiatePort(Direction.Input, PortOrientation.Bottom);
                 port1.style.position = Position.Absolute;
@@ -91,7 +91,7 @@ namespace BehaviourAPI.Unity.Editor
                 inputContainer.style.display = DisplayStyle.None;
             }
 
-            if (Node.Node.MaxOutputConnections != 0)
+            if (Node.Node == null || Node.Node.MaxOutputConnections != 0)
             {
                 var port1 = InstantiatePort(Direction.Output, PortOrientation.Bottom);
                 port1.style.position = Position.Absolute;
@@ -168,7 +168,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void SetUpPorts()
         {
-            if (Node.Node.MaxInputConnections != 0)
+            if (Node.Node == null || Node.Node.MaxInputConnections != 0)
             {
                 var port = InstantiatePort(Direction.Input, PortOrientation.Right);
             }
@@ -177,7 +177,7 @@ namespace BehaviourAPI.Unity.Editor
                 inputContainer.style.display = DisplayStyle.None;
             }
 
-            if (Node.Node.MaxOutputConnections != 0)
+            if (Node.Node == null || Node.Node.MaxOutputConnections != 0)
             {
                 var port = InstantiatePort(Direction.Output, PortOrientation.Left);
             }
@@ -196,7 +196,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void SetUpPorts()
         {
-            if (Node.Node.MaxInputConnections != 0)
+            if (Node.Node == null || Node.Node.MaxInputConnections != 0)
             {
                 var port = InstantiatePort(Direction.Input, PortOrientation.Bottom);
             }
@@ -205,7 +205,7 @@ namespace BehaviourAPI.Unity.Editor
                 inputContainer.style.display = DisplayStyle.None;
             }
 
-            if (Node.Node.MaxOutputConnections != 0)
+            if (Node.Node == null || Node.Node.MaxOutputConnections != 0)
             {
                 var port = InstantiatePort(Direction.Output, PortOrientation.Top);
             }
