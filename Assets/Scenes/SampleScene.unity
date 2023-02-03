@@ -187,7 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: f3
+  Name: f1
   node:
     rid: 3601717597539926022
   position: {x: 0, y: 0}
@@ -292,7 +292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
+  Name: e
   node:
     rid: 3601717597539926030
   position: {x: 840, y: 220}
@@ -364,15 +364,13 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 3601717574925811755
       type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
         SerializedAction:
-          rid: 3601717597539926016
-    - rid: 3601717597539926016
-      type: {class: DebugAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        Message: 1
+          rid: -2
 --- !u!114 &572655171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -612,7 +610,7 @@ MonoBehaviour:
     - rid: 3601717597539926044
       type: {class: DelayAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
       data:
-        DelayTime: 0
+        delayTime: 0
 --- !u!114 &1258256241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -883,10 +881,9 @@ MonoBehaviour:
     - rid: 3601717597539926095
       type: {class: PatrolAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
       data:
-        transform: {fileID: 0}
-        positions: []
+        agent: {fileID: 0}
         speed: 0
-        distanceThreshold: 0
+        maxDistance: 0
 --- !u!114 &1349853176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1235,11 +1232,13 @@ MonoBehaviour:
       type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
         _action:
-          rid: 3601717597539926094
-    - rid: 3601717597539926094
-      type: {class: DelayAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
+          rid: 3601717597539926097
+    - rid: 3601717597539926097
+      type: {class: PatrolAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
       data:
-        DelayTime: 0
+        agent: {fileID: 0}
+        speed: 0
+        maxDistance: 0
 --- !u!114 &1678525969
 MonoBehaviour:
   m_ObjectHideFlags: 0

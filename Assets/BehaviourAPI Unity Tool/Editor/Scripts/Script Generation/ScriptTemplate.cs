@@ -9,6 +9,7 @@ namespace BehaviourAPI.Unity.Editor
 {
     public class ScriptTemplate
     {
+        bool useFullTypeDeclarationName;
         HashSet<string> namespaces = new HashSet<string>();
 
         List<string> properties = new List<string>();
@@ -26,8 +27,9 @@ namespace BehaviourAPI.Unity.Editor
 
         int identation = 0;
 
-        public ScriptTemplate(string className, params string[] inheritedClassNames)
+        public ScriptTemplate(string className, bool useFullNameVar, params string[] inheritedClassNames)
         {
+            useFullTypeDeclarationName = useFullNameVar;
             m_className = className;
             m_inheritedClassNames = inheritedClassNames;
         }
@@ -163,7 +165,7 @@ namespace BehaviourAPI.Unity.Editor
             var ns = type.Namespace;
             AddUsingDirective(ns);
 
-            var typeName = type.Name;
+            var typeName = useFullTypeDeclarationName ? type.Name : "var";
 
             string line;
             if (AddVariable(obj, ref varName))

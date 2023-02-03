@@ -64,23 +64,29 @@ namespace BehaviourAPI.Unity.Editor
         /// <param name="path">The destination path to the script.</param>
         /// <param name="name">The script class name.</param>
         /// <param name="asset">The system asset.</param>
-        public static void GenerateScript(string path, string name, BehaviourSystemAsset asset)
+        public static void GenerateScript(string path, string name, BehaviourSystemAsset asset, bool useFullNameVar = true, bool includeNodeNames = true)
         {
+            if(asset == null)
+            {
+                Debug.LogWarning("Cant generate code of a null system");
+                return;
+            }
+
             var scriptPath = $"{path}{name}.cs";
             if(!string.IsNullOrEmpty(scriptPath))
             {
-                Object obj = CreateScript(scriptPath, asset);
+                Object obj = CreateScript(scriptPath, asset, useFullNameVar, includeNodeNames);
                 AssetDatabase.Refresh();
                 ProjectWindowUtil.ShowCreatedAsset(obj);
             }
         }
 
-        static Object CreateScript(string path, BehaviourSystemAsset asset)
+        static Object CreateScript(string path, BehaviourSystemAsset asset, bool useFullNameVar, bool includeNodeNames)
         {
             string folderPath = path.Substring(0, path.LastIndexOf("/") + 1);
             string scriptName = path.Substring(path.LastIndexOf("/") + 1).Replace(".cs", "");
 
-            var content = GenerateSystemCode(asset, scriptName);
+            var content = GenerateSystemCode(asset, scriptName, useFullNameVar, includeNodeNames);
 
             UTF8Encoding encoding = new UTF8Encoding(true, false);
             StreamWriter writer = new StreamWriter(Path.GetFullPath(path), false, encoding);
@@ -94,9 +100,9 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Returns all the code to create the <paramref name="asset"/> in runtime.
         /// </summary>
-        static string GenerateSystemCode(BehaviourSystemAsset asset, string scriptName)
+        static string GenerateSystemCode(BehaviourSystemAsset asset, string scriptName, bool useFullNameVar, bool includeNodeNames)
         {
-            ScriptTemplate scriptTemplate = new ScriptTemplate(scriptName, nameof(CodeBehaviourRunner));
+            ScriptTemplate scriptTemplate = new ScriptTemplate(scriptName, useFullNameVar, nameof(CodeBehaviourRunner));
 
             foreach (var ns in k_basicNamespaces)
             {
@@ -106,6 +112,7 @@ namespace BehaviourAPI.Unity.Editor
             scriptTemplate.OpenMethodDeclaration("CreateGraph", nameof(BehaviourGraph), 
                 "protected override", parameters: $"HashSet<{typeof(BehaviourGraph).Name}> registeredGraphs");
 
+            scriptTemplate.AddLine("/* --------------------------- GRAPHS: --------------------------- */");
 
             foreach (var graphAsset in asset.Graphs)
             {
@@ -128,7 +135,7 @@ namespace BehaviourAPI.Unity.Editor
 
             foreach (var graphAsset in asset.Graphs)
             {
-                GenerateCodeForGraph(graphAsset, scriptTemplate);
+                GenerateCodeForGraph(graphAsset, scriptTemplate, includeNodeNames);
                 scriptTemplate.AddLine("");
             }
 
@@ -175,11 +182,13 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Add all the instructions to create the graph nodes and connections in the code.
         /// </summary>
-        static void GenerateCodeForGraph(GraphAsset graphAsset, ScriptTemplate scriptTemplate)
+        static void GenerateCodeForGraph(GraphAsset graphAsset, ScriptTemplate scriptTemplate, bool includeNodeName)
         {
             var graphName = scriptTemplate.FindVariableName(graphAsset);
 
             var graph = graphAsset.Graph;
+
+            scriptTemplate.AddLine($"/* --------------------------- {graphName} --------------------------- */");
             if (graph is FSM fsm)
             {
                 var states = graphAsset.Nodes.FindAll(n => n.Node is State);
@@ -187,13 +196,13 @@ namespace BehaviourAPI.Unity.Editor
 
                 foreach (var state in states)
                 {
-                    GenerateCodeForState(state, scriptTemplate, graphName);
+                    GenerateCodeForState(state, scriptTemplate, graphName, includeNodeName);
                 }
                 scriptTemplate.AddLine("");
 
                 foreach (var transition in transitions)
                 {
-                    GenerateCodeForTransition(transition, scriptTemplate, graphName);
+                    GenerateCodeForTransition(transition, scriptTemplate, graphName, includeNodeName);
                 }
 
                 if(states.Count > 0)
@@ -211,7 +220,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     if(scriptTemplate.FindVariableName(btNodeAsset) == null)
                     {
-                        GenerateCodeForBTNode(btNodeAsset, scriptTemplate, graphName);
+                        GenerateCodeForBTNode(btNodeAsset, scriptTemplate, graphName, includeNodeName);
                     }
                 }
 
@@ -233,7 +242,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     if(scriptTemplate.FindVariableName(factorAsset) == null)
                     {
-                        GenerateCodeForFactor(factorAsset, scriptTemplate, graphName);
+                        GenerateCodeForFactor(factorAsset, scriptTemplate, graphName, includeNodeName);
                     }
                 }
 
@@ -243,7 +252,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     if (scriptTemplate.FindVariableName(selectableAsset) == null)
                     {
-                        GenerateCodeForSelectableNode(selectableAsset, scriptTemplate, graphName);
+                        GenerateCodeForSelectableNode(selectableAsset, scriptTemplate, graphName, includeNodeName);
                     }
                 }
 
@@ -262,7 +271,7 @@ namespace BehaviourAPI.Unity.Editor
         /// Generates code for a utility system's factor. If the factor has childs, the method generates code recursively.
         /// FACTORTYPE VARNAME = USNAME.CreateFACTORTYPE(args).SetVARNAME(VARVALUE)...;
         /// </summary>
-        static string GenerateCodeForFactor(NodeAsset asset, ScriptTemplate template, string graphName)
+        static string GenerateCodeForFactor(NodeAsset asset, ScriptTemplate template, string graphName, bool includeNodeName)
         {
             var factor = asset.Node as Factor;
 
@@ -275,28 +284,34 @@ namespace BehaviourAPI.Unity.Editor
             string typeName = factor.TypeName();
 
             var methodCode = "";
+            var args = new List<string>();
+
+            if (includeNodeName && !string.IsNullOrEmpty(asset.Name)) args.Add($"\"{asset.Name}\"");
 
             // If is a variable factor, generates code for the serialized method.
             if (factor is VariableFactor variableFactor)
             {
                 var functionCode = GenerateSerializedMethodCode(variableFactor.variableFunction, template) ?? "() => 0f /*Missing function*/";
-                methodCode = $"CreateVariableFactor({functionCode}, {variableFactor.min.ToCodeFormat()}, {variableFactor.max.ToCodeFormat()})";
+                args.Add(functionCode);
+                args.Add(variableFactor.min.ToCodeFormat());
+                args.Add(variableFactor.max.ToCodeFormat());
+                methodCode = $"CreateVariableFactor({args.Join()})";
             }
             // If is a function factor, generates also code for the child if wasn't generated yet. The generates code for the setters.
             else if (factor is FunctionFactor functionFactor)
             {
                 var child = asset.Childs.FirstOrDefault();
-                string childName = child != null ? template.FindVariableName(child) ?? GenerateCodeForFactor(child, template, graphName) : k_CodeForMissingNode;
+                string childName = child != null ? template.FindVariableName(child) ?? GenerateCodeForFactor(child, template, graphName, includeNodeName) : k_CodeForMissingNode;
+                args.Add(childName);
                 string setterCode = GenerateSetterCode(functionFactor, template);
-                methodCode = $"CreateFunctionFactor<{typeName}>({childName}){setterCode}";
+                methodCode = $"CreateFunctionFactor<{typeName}>({args.Join()}){setterCode}";
             }
             // If is a fusion factor, generates also code for all its children if wasn't generated yet. Also generates code for the weights if necessary.
             else if (factor is FusionFactor fusionFactor)
             {
-                var args = new List<string>();
                 foreach (var child in asset.Childs)
                 {
-                    var childName = template.FindVariableName(child) ?? GenerateCodeForFactor(child, template, graphName);
+                    var childName = template.FindVariableName(child) ?? GenerateCodeForFactor(child, template, graphName, includeNodeName);
                     if (childName != null) args.Add(childName);
                 }
                 methodCode = $"CreateFusionFactor<{typeName}>({args.Join()})";
@@ -314,7 +329,7 @@ namespace BehaviourAPI.Unity.Editor
         /// Generates code for an Utility Selectable Node. If the node has childs, generates code recursively.
         /// NODETYPE VARNAME = USNAME.CreateNODETYPE(args)...;
         /// </summary>
-        static string GenerateCodeForSelectableNode(NodeAsset asset, ScriptTemplate template, string graphName)
+        static string GenerateCodeForSelectableNode(NodeAsset asset, ScriptTemplate template, string graphName, bool includeNodeName)
         {
             UtilitySelectableNode selectableNode = asset.Node as UtilitySelectableNode;
 
@@ -327,8 +342,9 @@ namespace BehaviourAPI.Unity.Editor
             string typeName = selectableNode.TypeName();
 
             var method = "";
-
             var args = new List<string>();
+
+            if (includeNodeName && !string.IsNullOrEmpty(asset.Name)) args.Add($"\"{asset.Name}\"");
 
             // If is an utility action, generates code for the child factor and for the action if necessary.
             if (selectableNode is UtilityAction action)
@@ -358,7 +374,7 @@ namespace BehaviourAPI.Unity.Editor
 
                 asset.Childs.ForEach(child =>
                 {
-                    string childName = template.FindVariableName(child) ?? GenerateCodeForSelectableNode(child, template, graphName);
+                    string childName = template.FindVariableName(child) ?? GenerateCodeForSelectableNode(child, template, graphName, includeNodeName);
                     if (childName != null) args.Add(childName);
                 });
                 method = $"CreateUtilityBucket({args.Join()})";
@@ -370,7 +386,7 @@ namespace BehaviourAPI.Unity.Editor
         /// Generates code for an BTNode. If the node has childs, generates code recursively.
         /// NODETYPE VARNAME = USNAME.CreateNODETYPE(args)...;
         /// </summary>
-        static string GenerateCodeForBTNode(NodeAsset asset, ScriptTemplate template, string graphName)
+        static string GenerateCodeForBTNode(NodeAsset asset, ScriptTemplate template, string graphName, bool includeNodeName)
         {
             var btNode = asset.Node as BTNode;
 
@@ -383,37 +399,43 @@ namespace BehaviourAPI.Unity.Editor
             var typeName = btNode.TypeName();
 
             var method = "";
+            var args = new List<string>();
+
+            if (includeNodeName && !string.IsNullOrEmpty(asset.Name)) args.Add($"\"{asset.Name}\"");
 
             if (btNode is CompositeNode composite)
             {
-                var args = new List<string>();
                 args.Add(composite.IsRandomized.ToCodeFormat());
 
                 foreach (var child in asset.Childs)
                 {
-                    var childName = GenerateCodeForBTNode(child, template, graphName);
+                    var childName = GenerateCodeForBTNode(child, template, graphName, includeNodeName);
                     if (childName != null) args.Add(childName);
                 }
                 method = $"CreateComposite<{typeName}>({args.Join()})";
             }
             else if (btNode is DecoratorNode decorator)
             {
-                var childName = GenerateCodeForBTNode(asset.Childs.FirstOrDefault(), template, graphName) ?? "null /* Missing child */";
-
-                var propertyCode = GenerateSetterCode(decorator, template);
-                method = $"CreateDecorator<{typeName}>({childName}){propertyCode}";
+                var childName = GenerateCodeForBTNode(asset.Childs.FirstOrDefault(), template, graphName, includeNodeName) ?? "null /* Missing child */";
+                args.Add(childName);
+                var setterCode = GenerateSetterCode(decorator, template);
+                method = $"CreateDecorator<{typeName}>({args.Join()}){setterCode}";
             }
             else if (btNode is LeafNode leaf)
             {
                 var actionCode = GenerateActionCode(leaf.Action, template) ?? "null /* Missing action */";
-                method = $"CreateLeafNode({actionCode})";
+                args.Add(actionCode);
+                method = $"CreateLeafNode({args.Join()})";
             }
 
             return template.AddVariableDeclarationLine(btNode.GetType(), nodeName, asset, $"{graphName}.{method}");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
 
-        static string GenerateCodeForState(NodeAsset asset, ScriptTemplate template, string graphName)
+        static string GenerateCodeForState(NodeAsset asset, ScriptTemplate template, string graphName, bool includeNodeName)
         {
             var state = asset.Node as State;
 
@@ -424,11 +446,19 @@ namespace BehaviourAPI.Unity.Editor
 
             var nodeName = !string.IsNullOrEmpty(asset.Name) ? asset.Name : state.TypeName().ToLower();
             var typeName = state.TypeName();
+
+            var args = new List<string>();
+            if (includeNodeName && !string.IsNullOrEmpty(asset.Name)) args.Add($"\"{asset.Name}\"");
+
             var actionCode = GenerateActionCode(state.Action, template);
-            return template.AddVariableDeclarationLine(state.GetType(), nodeName, asset, $"{graphName}.CreateState({actionCode})");
+            args.Add(actionCode);
+            return template.AddVariableDeclarationLine(state.GetType(), nodeName, asset, $"{graphName}.CreateState({args.Join()})");
         }
 
-        static string GenerateCodeForTransition(NodeAsset asset, ScriptTemplate template, string graphName)
+        /// <summary>
+        /// 
+        /// </summary>
+        static string GenerateCodeForTransition(NodeAsset asset, ScriptTemplate template, string graphName, bool includeNodeName)
         {
             var transition = asset.Node as Transition;
 
@@ -439,10 +469,14 @@ namespace BehaviourAPI.Unity.Editor
 
             var nodeName = asset.Name ?? transition.TypeName().ToLower();
             var method = "";
+            
 
             bool perceptionAdded = false;
 
             var args = new List<string>();
+
+            if (includeNodeName && !string.IsNullOrEmpty(asset.Name)) args.Add($"\"{asset.Name}\"");
+
             var sourceState = template.FindVariableName(asset.Parents.FirstOrDefault()) ?? "null/*ERROR*/";
             args.Add(sourceState);
 

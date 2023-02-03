@@ -8,6 +8,8 @@ namespace BehaviourAPI.Unity.Editor
     public class ScriptCreationWindow : EditorWindow
     {
         TextField scriptNameTextField, pathTextField;
+
+        Toggle useFullNameVarToggle, includeNodeNamesToggle;
         private static string path => BehaviourAPISettings.instance.EditorLayoutsPath + "/Windows/createscriptwindow.uxml";
 
         public static void Create()
@@ -23,7 +25,6 @@ namespace BehaviourAPI.Unity.Editor
 
         public void CreateGUI()
         {
-
             var windownFromUXML = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(path).Instantiate();
             rootVisualElement.Add(windownFromUXML);
 
@@ -33,6 +34,9 @@ namespace BehaviourAPI.Unity.Editor
             scriptNameTextField.value = BehaviourAPISettings.instance.GenerateScriptDefaultName;
             pathTextField.value = BehaviourAPISettings.instance.GenerateScriptDefaultPath;
             rootVisualElement.Q<Button>("csw-create-button").clicked += GenerateScript;
+
+            includeNodeNamesToggle = rootVisualElement.Q<Toggle>("csw-includenodename-toggle");
+            useFullNameVarToggle = rootVisualElement.Q<Toggle>("csw-usefullvarname-toggle");
         }
 
         void GenerateScript()
@@ -40,7 +44,12 @@ namespace BehaviourAPI.Unity.Editor
             string path = pathTextField.text;
             string scriptName = scriptNameTextField.text;
 
-            ScriptGeneration.GenerateScript(path, scriptName, BehaviourGraphEditorWindow.SystemAsset);
+            var systemAsset = BehaviourGraphEditorWindow.SystemAsset;
+
+            bool useFullNameVar = useFullNameVarToggle.value;
+            bool includeNodeNames = includeNodeNamesToggle.value;
+
+            if(systemAsset != null) ScriptGeneration.GenerateScript(path, scriptName, systemAsset, useFullNameVar, includeNodeNames);
             Close();
         }
     }
