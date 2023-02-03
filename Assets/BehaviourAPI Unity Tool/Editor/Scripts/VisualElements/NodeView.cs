@@ -62,6 +62,12 @@ namespace BehaviourAPI.Unity.Editor
             SetUpContextualMenu();
             SetUpDataBinding();
 
+            if(node.Node is MissingNode)
+            {
+                IconElement.Add(new Label("Missing node"));
+                IconElement.Enable();
+            }
+
             if (graphView.Runtime) AddRuntimeLayout();
         }
 
