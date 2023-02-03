@@ -1,8 +1,11 @@
-using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
+
+using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.StateMachines;
+using BehaviourAPI.StateMachines.StackFSMs;
+
 using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Framework.Adaptations;
 using BehaviourAPI.Unity.Runtime;
@@ -20,13 +23,16 @@ using Object = UnityEngine.Object;
 using Action = BehaviourAPI.Core.Actions.Action;
 
 using Transition = BehaviourAPI.StateMachines.Transition;
-using State = BehaviourAPI.Unity.Framework.Adaptations.State;
-using ExitTransition = BehaviourAPI.Unity.Framework.Adaptations.ExitTransition;
+using State = BehaviourAPI.StateMachines.State;
+using ExitTransition = BehaviourAPI.StateMachines.ExitTransition;
 
 using LeafNode = BehaviourAPI.BehaviourTrees.LeafNode;
 
 using UtilityAction = BehaviourAPI.UtilitySystems.UtilityAction;
 using VariableFactor = BehaviourAPI.Unity.Framework.Adaptations.VariableFactor;
+using StateTransition = BehaviourAPI.StateMachines.StateTransition;
+using PopTransition = BehaviourAPI.StateMachines.StackFSMs.PopTransition;
+using PushTransition = BehaviourAPI.StateMachines.StackFSMs.PushTransition;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -482,7 +488,6 @@ namespace BehaviourAPI.Unity.Editor
             }
 
             var nodeName = asset.Name ?? transition.TypeName().ToLower();
-            var typeName = transition.TypeName();
             var method = "";
 
             var args = new List<string>();
@@ -494,31 +499,72 @@ namespace BehaviourAPI.Unity.Editor
                 var targetState = template.FindVariableName(asset.Childs.FirstOrDefault()) ?? "null/*ERROR*/";
                 args.Add(targetState);
 
-                if(stateTransition is FinishExecutionTransition finishExecutionTransition)
+                var perceptionCode = "";
+                if(stateTransition.Perception != null)
                 {
-                    typeName = typeof(Transition).Name;
-                    args.Add($"new {nameof(ExecutionStatusPerception)}({sourceState}, {finishExecutionTransition._statusFlags.ToCodeFormat()})");
+                    perceptionCode = GeneratePerceptionCode(transition.Perception, template);
                 }
-                else
+                else if (stateTransition is Framework.Adaptations.StateTransition adaptedTransition && 
+                    adaptedTransition.StatusFlags != StatusFlags.None)
                 {
-                    if (transition.Perception != null)
-                    {
-                        var perceptionCode = GeneratePerceptionCode(transition.Perception, template);
-                        if (!string.IsNullOrEmpty(perceptionCode)) args.Add(perceptionCode);
-                    }
+                    perceptionCode = $"new {nameof(ExecutionStatusPerception)}({sourceState}, {adaptedTransition.StatusFlags.ToCodeFormat()})";
                 }
+                if (!string.IsNullOrEmpty(perceptionCode)) args.Add(perceptionCode);
+               
                 method = "CreateTransition";
             }
             else if (transition is ExitTransition exitTransition)
             {
                 args.Add(exitTransition.ExitStatus.ToCodeFormat());
 
-                if (transition.Perception != null)
+                var perceptionCode = "";
+                if (exitTransition.Perception != null)
                 {
-                    var perceptionCode = GeneratePerceptionCode(transition.Perception, template);
-                    if (!string.IsNullOrEmpty(perceptionCode)) args.Add(perceptionCode);
+                    perceptionCode = GeneratePerceptionCode(transition.Perception, template);
                 }
+                else if (exitTransition is Framework.Adaptations.ExitTransition adaptedTransition &&
+                    adaptedTransition.StatusFlags != StatusFlags.None)
+                {
+                    perceptionCode = $"new {nameof(ExecutionStatusPerception)}({sourceState}, {adaptedTransition.StatusFlags.ToCodeFormat()})";
+                }
+                if (!string.IsNullOrEmpty(perceptionCode)) args.Add(perceptionCode);
+
                 method = "CreateExitTransition";
+            }
+            else if (transition is PopTransition popTransition)
+            {
+                var perceptionCode = "";
+                if (popTransition.Perception != null)
+                {
+                    perceptionCode = GeneratePerceptionCode(transition.Perception, template);
+                }
+                else if (popTransition is Framework.Adaptations.PopTransition adaptedTransition &&
+                    adaptedTransition.StatusFlags != StatusFlags.None)
+                {
+                    perceptionCode = $"new {nameof(ExecutionStatusPerception)}({sourceState}, {adaptedTransition.StatusFlags.ToCodeFormat()})";
+                }
+                if (!string.IsNullOrEmpty(perceptionCode)) args.Add(perceptionCode);
+
+                method = "CreatePopTransition";
+            }
+            else if (transition is PushTransition pushTransition)
+            {
+                var targetState = template.FindVariableName(asset.Childs.FirstOrDefault()) ?? "null/*ERROR*/";
+                args.Add(targetState);
+
+                var perceptionCode = "";
+                if (pushTransition.Perception != null)
+                {
+                    perceptionCode = GeneratePerceptionCode(transition.Perception, template);
+                }
+                else if (pushTransition is Framework.Adaptations.PushTransition adaptedTransition &&
+                    adaptedTransition.StatusFlags != StatusFlags.None)
+                {
+                    perceptionCode = $"new {nameof(ExecutionStatusPerception)}({sourceState}, {adaptedTransition.StatusFlags.ToCodeFormat()})";
+                }
+                if (!string.IsNullOrEmpty(perceptionCode)) args.Add(perceptionCode);
+
+                method = "CreatePopTransition";
             }
 
             if (transition.Action != null)

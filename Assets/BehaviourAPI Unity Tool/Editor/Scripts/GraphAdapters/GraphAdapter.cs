@@ -309,7 +309,7 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
-                if (!startPort.portType.IsAssignableFrom(port.portType)) return false;      // Type missmatch
+                if (!startPort.portType.IsAssignableFrom(port.portType)) return false;     // Type missmatch
                 if (bannedSourcePorts.Contains(node.Node)) return false;                   // Loop
             }
 

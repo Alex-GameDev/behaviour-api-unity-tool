@@ -14,9 +14,8 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 using ExitTransition = BehaviourAPI.StateMachines.ExitTransition;
-using PopTransition = BehaviourAPI.StateMachines.StackFSMs.PopTransition;
-using PushTransition = BehaviourAPI.StateMachines.StackFSMs.PushTransition;
 using State = BehaviourAPI.StateMachines.State;
+using StateTransition = BehaviourAPI.StateMachines.StateTransition;
 using Transition = BehaviourAPI.StateMachines.Transition;
 
 namespace BehaviourAPI.Unity.Editor
@@ -40,7 +39,7 @@ namespace BehaviourAPI.Unity.Editor
         //    var graphName = scriptTemplate.FindVariableName(graphAsset);
 
         //    var states = graphAsset.Nodes.FindAll(n => n.Node is State);
-        //    var transitions = graphAsset.Nodes.FindAll(n => n.Node is Transition);
+        //    var transitions = graphAsset.Nodes.FindAll(n => n.Node is StateTransition);
 
         //    foreach(var state in states)
         //    {
@@ -91,7 +90,7 @@ namespace BehaviourAPI.Unity.Editor
 
         //protected virtual void AddTransition(NodeAsset node, ScriptTemplate template, string graphName)
         //{
-        //    if (node.Node is Transition transition)
+        //    if (node.Node is StateTransition transition)
         //    {
         //        var nodeName = !string.IsNullOrEmpty(node.Name) ? node.Name : transition.TypeName().ToLower();
         //        string typeName = transition.TypeName();
@@ -108,7 +107,7 @@ namespace BehaviourAPI.Unity.Editor
         //            args.Add(targetState);
         //            if(stateTransition is FinishExecutionTransition finish)
         //            {
-        //                typeName = typeof(Transition).Name;
+        //                typeName = typeof(StateTransition).Name;
         //                args.Add($"new {nameof(ExecutionStatusPerception)}({sourceState}, {finish._statusFlags.ToCodeFormat()})");
         //            }
         //            else

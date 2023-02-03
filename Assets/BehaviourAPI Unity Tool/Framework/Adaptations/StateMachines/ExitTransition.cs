@@ -9,6 +9,8 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         [SerializeReference] Action _action;
         [SerializeReference] Perception perception;
 
+        public StatusFlags StatusFlags;
+
         public void OnAfterDeserialize()
         {
             Action = _action;
@@ -18,6 +20,13 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         public void OnBeforeSerialize()
         {
             return;
+        }
+
+        public override bool Check()
+        {
+            if (perception != null) return base.Check();
+
+            return ((uint)_sourceState.Status & (uint)StatusFlags) != 0;
         }
     }
 }

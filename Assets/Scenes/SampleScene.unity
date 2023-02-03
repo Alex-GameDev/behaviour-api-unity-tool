@@ -141,9 +141,9 @@ MonoBehaviour:
   nodes:
   - {fileID: 1257387451}
   - {fileID: 1842200208}
-  - {fileID: 1255559843}
-  - {fileID: 309940915}
-  - {fileID: 1147960972}
+  - {fileID: 1307492318}
+  - {fileID: 2017482573}
+  - {fileID: 1619809214}
   references:
     version: 2
     RefIds:
@@ -206,39 +206,6 @@ MonoBehaviour:
         variableFunction:
           component: {fileID: 0}
           methodName: 
---- !u!114 &309940915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: t2
-  node:
-    rid: 3601717597539926042
-  position: {x: 109, y: 367}
-  parents:
-  - {fileID: 1842200208}
-  childs:
-  - {fileID: 1257387451}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601717597539926042
-      type: {class: Transition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        isPulled: 1
-        _action:
-          rid: -2
-        perception:
-          rid: -2
 --- !u!114 &356251853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -554,77 +521,6 @@ MonoBehaviour:
       data:
         GrownRate: 0
         Midpoint: 2
---- !u!114 &1147960972
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: e1
-  node:
-    rid: 3601717597539926043
-  position: {x: -256, y: 530}
-  parents:
-  - {fileID: 1257387451}
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601717597539926043
-      type: {class: ExitTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        isPulled: 1
-        ExitStatus: 2
-        _action:
-          rid: -2
-        perception:
-          rid: 3601717597539926046
-    - rid: 3601717597539926046
-      type: {class: DistancePerception, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        SelfTransform: {fileID: 0}
-        OtherTransform: {fileID: 0}
-        Maxdistance: 0
---- !u!114 &1255559843
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: t1
-  node:
-    rid: 3601717597539926040
-  position: {x: 93, y: 132}
-  parents:
-  - {fileID: 1257387451}
-  childs:
-  - {fileID: 1842200208}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601717597539926040
-      type: {class: FinishExecutionTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        isPulled: 1
-        _statusFlags: 2
-        _action:
-          rid: -2
 --- !u!114 &1257387451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -642,10 +538,10 @@ MonoBehaviour:
     rid: 3601717597539926038
   position: {x: -244.66252, y: 208.95502}
   parents:
-  - {fileID: 309940915}
+  - {fileID: 2017482573}
   childs:
-  - {fileID: 1147960972}
-  - {fileID: 1255559843}
+  - {fileID: 1619809214}
+  - {fileID: 1307492318}
   references:
     version: 2
     RefIds:
@@ -855,6 +751,40 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &1307492318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601717597539926083
+  position: {x: 114, y: 103}
+  parents:
+  - {fileID: 1257387451}
+  childs:
+  - {fileID: 1842200208}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717597539926083
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        isPulled: 1
+        _action:
+          rid: -2
+        perception:
+          rid: -2
+        StatusFlags: 2
 --- !u!114 &1349853176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1102,6 +1032,40 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+--- !u!114 &1619809214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601717597539926085
+  position: {x: -239, y: 501}
+  parents:
+  - {fileID: 1257387451}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717597539926085
+      type: {class: ExitTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        isPulled: 1
+        ExitStatus: 0
+        _action:
+          rid: -2
+        perception:
+          rid: -2
+        StatusFlags: 0
 --- !u!114 &1678525969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1265,11 +1229,11 @@ MonoBehaviour:
   Name: s2
   node:
     rid: 3601717597539926039
-  position: {x: 364, y: 266}
+  position: {x: 359, y: 248}
   parents:
-  - {fileID: 1255559843}
+  - {fileID: 1307492318}
   childs:
-  - {fileID: 309940915}
+  - {fileID: 2017482573}
   references:
     version: 2
     RefIds:
@@ -1394,3 +1358,49 @@ MonoBehaviour:
       data:
         TargetStatus: 4
         MaxIterations: 3
+--- !u!114 &2017482573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601717597539926084
+  position: {x: 120, y: 338}
+  parents:
+  - {fileID: 1842200208}
+  childs:
+  - {fileID: 1257387451}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717597539926084
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        isPulled: 1
+        _action:
+          rid: -2
+        perception:
+          rid: 3601717597539926086
+        StatusFlags: 0
+    - rid: 3601717597539926086
+      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        init:
+          component: {fileID: 1499889795}
+          methodName: foo
+        check:
+          component: {fileID: 0}
+          methodName: 
+        reset:
+          component: {fileID: 0}
+          methodName: 
