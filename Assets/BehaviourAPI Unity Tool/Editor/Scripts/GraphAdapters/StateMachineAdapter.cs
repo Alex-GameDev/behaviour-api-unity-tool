@@ -35,115 +35,115 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ---------------- Code generation ----------------
 
-        public override void ConvertAssetToCode(GraphAsset graphAsset, ScriptTemplate scriptTemplate)
-        {
-            var graphName = scriptTemplate.FindVariableName(graphAsset);
+        //public override void ConvertAssetToCode(GraphAsset graphAsset, ScriptTemplate scriptTemplate)
+        //{
+        //    var graphName = scriptTemplate.FindVariableName(graphAsset);
 
-            var states = graphAsset.Nodes.FindAll(n => n.Node is State);
-            var transitions = graphAsset.Nodes.FindAll(n => n.Node is Transition);
+        //    var states = graphAsset.Nodes.FindAll(n => n.Node is State);
+        //    var transitions = graphAsset.Nodes.FindAll(n => n.Node is Transition);
 
-            foreach(var state in states)
-            {
-                AddState(state, scriptTemplate, graphName);
-            }
+        //    foreach(var state in states)
+        //    {
+        //        AddState(state, scriptTemplate, graphName);
+        //    }
 
-            scriptTemplate.AddLine("");
+        //    scriptTemplate.AddLine("");
 
-            foreach(var transition in transitions)
-            {
-                AddTransition(transition, scriptTemplate, graphName);
-            }
+        //    foreach(var transition in transitions)
+        //    {
+        //        AddTransition(transition, scriptTemplate, graphName);
+        //    }
 
-            var entryState = states.FirstOrDefault();
+        //    var entryState = states.FirstOrDefault();
 
-            if (entryState != null)
-            {
-                var entryStateName = scriptTemplate.FindVariableName(entryState);
-                if (!string.IsNullOrEmpty(entryStateName)) scriptTemplate.AddLine($"{graphName}.SetEntryState({entryStateName});");
-            }
-        }
-
-
-        public override string CreateGraphLine(GraphAsset graphAsset, ScriptTemplate scriptTemplate, string graphName)
-        {
-            if (graphAsset.Graph is FSM fsm)
-            {
-                scriptTemplate.AddUsingDirective(typeof(FSM).Namespace);
-                return scriptTemplate.AddVariableInstantiationLine(fsm.TypeName(), graphName, graphAsset);
-            }
-            else
-            {
-                return null;
-            }
-        }
+        //    if (entryState != null)
+        //    {
+        //        var entryStateName = scriptTemplate.FindVariableName(entryState);
+        //        if (!string.IsNullOrEmpty(entryStateName)) scriptTemplate.AddLine($"{graphName}.SetEntryState({entryStateName});");
+        //    }
+        //}
 
 
-        void AddState(NodeAsset node, ScriptTemplate template, string graphName)
-        {           
-            if(node.Node is State state)
-            {
-                var nodeName = !string.IsNullOrEmpty(node.Name) ? node.Name : state.TypeName().ToLower();
-                string typeName = state.TypeName();
-                var actionCode = GenerateActionCode(state.Action, template);
-                template.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.CreateState({actionCode})");
-            }
-        }
+        //public override string CreateGraphLine(GraphAsset graphAsset, ScriptTemplate scriptTemplate, string graphName)
+        //{
+        //    if (graphAsset.Graph is FSM fsm)
+        //    {
+        //        scriptTemplate.AddUsingDirective(typeof(FSM).Namespace);
+        //        return scriptTemplate.AddVariableInstantiationLine(fsm.TypeName(), graphName, graphAsset);
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
 
-        protected virtual void AddTransition(NodeAsset node, ScriptTemplate template, string graphName)
-        {
-            if (node.Node is Transition transition)
-            {
-                var nodeName = !string.IsNullOrEmpty(node.Name) ? node.Name : transition.TypeName().ToLower();
-                string typeName = transition.TypeName();
 
-                var args = new List<string>();
+        //void AddState(NodeAsset node, ScriptTemplate template, string graphName)
+        //{           
+        //    if(node.Node is State state)
+        //    {
+        //        var nodeName = !string.IsNullOrEmpty(node.Name) ? node.Name : state.TypeName().ToLower();
+        //        string typeName = state.TypeName();
+        //        var actionCode = GenerateActionCode(state.Action, template);
+        //        template.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.CreateState({actionCode})");
+        //    }
+        //}
 
-                var sourceState = template.FindVariableName(node.Parents.FirstOrDefault()) ?? "null/*ERROR*/";
-                args.Add(sourceState);
+        //protected virtual void AddTransition(NodeAsset node, ScriptTemplate template, string graphName)
+        //{
+        //    if (node.Node is Transition transition)
+        //    {
+        //        var nodeName = !string.IsNullOrEmpty(node.Name) ? node.Name : transition.TypeName().ToLower();
+        //        string typeName = transition.TypeName();
 
-                var methodName = string.Empty;
-                if (transition is StateTransition stateTransition)
-                {
-                    var targetState = template.FindVariableName(node.Childs.FirstOrDefault()) ?? "null/*ERROR*/";
-                    args.Add(targetState);
-                    if(stateTransition is FinishExecutionTransition finish)
-                    {
-                        typeName = typeof(Transition).Name;
-                        args.Add($"new {nameof(ExecutionStatusPerception)}({sourceState}, {finish._statusFlags.ToCodeFormat()})");
-                    }
-                    else
-                    {
-                        if (transition.Perception != null)
-                        {
-                            var perceptionCode = GeneratePerceptionCode(transition.Perception, template);
-                            if (!string.IsNullOrEmpty(perceptionCode)) args.Add(perceptionCode);
-                        }
-                    }
-                    methodName = "CreateTransition";
-                }
-                else if(transition is ExitTransition exitTransition)
-                {
-                    args.Add(exitTransition.ExitStatus.ToCodeFormat());
+        //        var args = new List<string>();
 
-                    if (transition.Perception != null)
-                    {
-                        var perceptionCode = GeneratePerceptionCode(transition.Perception, template);
-                        if (!string.IsNullOrEmpty(perceptionCode)) args.Add(perceptionCode);
-                    }
-                    methodName = "CreateExitTransition";
-                }
+        //        var sourceState = template.FindVariableName(node.Parents.FirstOrDefault()) ?? "null/*ERROR*/";
+        //        args.Add(sourceState);
 
-                if (transition.Action != null)
-                {
-                    var actionCode = GenerateActionCode(transition.Action, template);
-                    if (!string.IsNullOrEmpty(actionCode)) args.Add(actionCode);
-                }
+        //        var methodName = string.Empty;
+        //        if (transition is StateTransition stateTransition)
+        //        {
+        //            var targetState = template.FindVariableName(node.Childs.FirstOrDefault()) ?? "null/*ERROR*/";
+        //            args.Add(targetState);
+        //            if(stateTransition is FinishExecutionTransition finish)
+        //            {
+        //                typeName = typeof(Transition).Name;
+        //                args.Add($"new {nameof(ExecutionStatusPerception)}({sourceState}, {finish._statusFlags.ToCodeFormat()})");
+        //            }
+        //            else
+        //            {
+        //                if (transition.Perception != null)
+        //                {
+        //                    var perceptionCode = GeneratePerceptionCode(transition.Perception, template);
+        //                    if (!string.IsNullOrEmpty(perceptionCode)) args.Add(perceptionCode);
+        //                }
+        //            }
+        //            methodName = "CreateTransition";
+        //        }
+        //        else if(transition is ExitTransition exitTransition)
+        //        {
+        //            args.Add(exitTransition.ExitStatus.ToCodeFormat());
 
-                if (!transition.isPulled) args.Add("isPulled: false");
+        //            if (transition.Perception != null)
+        //            {
+        //                var perceptionCode = GeneratePerceptionCode(transition.Perception, template);
+        //                if (!string.IsNullOrEmpty(perceptionCode)) args.Add(perceptionCode);
+        //            }
+        //            methodName = "CreateExitTransition";
+        //        }
 
-                template.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.{methodName}({args.Join()})");
-            }
-        }
+        //        if (transition.Action != null)
+        //        {
+        //            var actionCode = GenerateActionCode(transition.Action, template);
+        //            if (!string.IsNullOrEmpty(actionCode)) args.Add(actionCode);
+        //        }
+
+        //        if (!transition.isPulled) args.Add("isPulled: false");
+
+        //        template.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.{methodName}({args.Join()})");
+        //    }
+        //}
 
         #endregion
 

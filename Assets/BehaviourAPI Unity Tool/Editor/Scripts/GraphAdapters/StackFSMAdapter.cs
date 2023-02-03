@@ -15,59 +15,59 @@ namespace BehaviourAPI.Unity.Editor
     {
         #region ---------------- Code generation ----------------
 
-        public override string CreateGraphLine(GraphAsset graphAsset, ScriptTemplate scriptTemplate, string graphName)
-        {
-            string gName = base.CreateGraphLine(graphAsset, scriptTemplate, graphName);
+        //public override string CreateGraphLine(GraphAsset graphAsset, ScriptTemplate scriptTemplate, string graphName)
+        //{
+        //    string gName = base.CreateGraphLine(graphAsset, scriptTemplate, graphName);
 
-            if (gName != null) scriptTemplate.AddUsingDirective(typeof(StackFSM).Namespace);
-            return gName;
-        }
+        //    if (gName != null) scriptTemplate.AddUsingDirective(typeof(StackFSM).Namespace);
+        //    return gName;
+        //}
 
-        protected override void AddTransition(NodeAsset node, ScriptTemplate template, string graphName)
-        {
-            if(node.Node is StackTransition transition)
-            {
-                var nodeName = !string.IsNullOrEmpty(node.Name) ? node.Name : transition.TypeName().ToLower();
-                string typeName = transition.TypeName();
+        //protected override void AddTransition(NodeAsset node, ScriptTemplate template, string graphName)
+        //{
+        //    if(node.Node is StackTransition transition)
+        //    {
+        //        var nodeName = !string.IsNullOrEmpty(node.Name) ? node.Name : transition.TypeName().ToLower();
+        //        string typeName = transition.TypeName();
 
-                var args = new List<string>();
+        //        var args = new List<string>();
 
-                var sourceState = template.FindVariableName(node.Parents.FirstOrDefault()) ?? "null/*ERROR*/";
-                args.Add(sourceState);
+        //        var sourceState = template.FindVariableName(node.Parents.FirstOrDefault()) ?? "null/*ERROR*/";
+        //        args.Add(sourceState);
 
-                var methodName = string.Empty;
-                if (transition is PushTransition pushTransition)
-                {
-                    var targetState = template.FindVariableName(node.Childs.FirstOrDefault()) ?? "null/*ERROR*/";
-                    args.Add(targetState);
-                    methodName = "CreatePushTransition";
-                }
-                else if(transition is PopTransition popTransition)
-                {
-                    methodName = "CreatePopTransition";
-                }
+        //        var methodName = string.Empty;
+        //        if (transition is PushTransition pushTransition)
+        //        {
+        //            var targetState = template.FindVariableName(node.Childs.FirstOrDefault()) ?? "null/*ERROR*/";
+        //            args.Add(targetState);
+        //            methodName = "CreatePushTransition";
+        //        }
+        //        else if(transition is PopTransition popTransition)
+        //        {
+        //            methodName = "CreatePopTransition";
+        //        }
 
-                if (transition.Perception != null)
-                {
-                    var perceptionCode = GeneratePerceptionCode(transition.Perception, template);
-                    if (!string.IsNullOrEmpty(perceptionCode)) args.Add(perceptionCode);
-                }
+        //        if (transition.Perception != null)
+        //        {
+        //            var perceptionCode = GeneratePerceptionCode(transition.Perception, template);
+        //            if (!string.IsNullOrEmpty(perceptionCode)) args.Add(perceptionCode);
+        //        }
 
-                if (transition.Action != null)
-                {
-                    var actionCode = GenerateActionCode(transition.Action, template);
-                    if (!string.IsNullOrEmpty(actionCode)) args.Add(actionCode);
-                }
+        //        if (transition.Action != null)
+        //        {
+        //            var actionCode = GenerateActionCode(transition.Action, template);
+        //            if (!string.IsNullOrEmpty(actionCode)) args.Add(actionCode);
+        //        }
 
-                if (!transition.isPulled) args.Add("isPulled: false");
+        //        if (!transition.isPulled) args.Add("isPulled: false");
 
-                template.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.{methodName}({args.Join()})");
-            }
-            else
-            {
-                base.AddTransition(node, template, graphName);
-            }
-        }
+        //        template.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.{methodName}({args.Join()})");
+        //    }
+        //    else
+        //    {
+        //        base.AddTransition(node, template, graphName);
+        //    }
+        //}
 
         #endregion
 

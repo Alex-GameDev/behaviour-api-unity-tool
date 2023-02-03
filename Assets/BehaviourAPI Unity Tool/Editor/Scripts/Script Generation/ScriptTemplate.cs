@@ -9,9 +9,9 @@ namespace BehaviourAPI.Unity.Editor
 {
     public class ScriptTemplate
     {
-        List<string> includes = new List<string>();    
+        HashSet<string> namespaces = new HashSet<string>();
+
         List<string> properties = new List<string>();
-        List<string> graphDeclarations = new List<string>();
         List<string> code = new List<string>();
 
         string currentCodeLine;
@@ -43,7 +43,7 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public override string ToString()
         {
-            var includeLines = string.Join("\n", includes.Select(l => $"using {l};"));
+            var includeLines = string.Join("\n", namespaces.Select(l => $"using {l};"));
             var propertyLines = string.Join("\n\t", properties);
             var codeLines = string.Join("\n\t", code);
 
@@ -58,11 +58,13 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public void AddUsingDirective(string include)
         {
-            if (!includes.Contains(include))
-            {
-                includes.Add(include);
-            }
+             if(!string.IsNullOrEmpty(include)) namespaces.Add(include);
         }
+
+        /// <summary>
+        /// Remove an include line with the given namespace
+        /// </summary>
+        public void RemoveUsingDirective(string include) => namespaces.Remove(include);
 
         /// <summary>
         /// Add a custom line after commit the last line.
@@ -114,10 +116,11 @@ namespace BehaviourAPI.Unity.Editor
         /// Add a variable declaration in the code.
         /// If the property is reference type, add a line in the property declaration section and returns the variable name. 
         /// If the property is value type, returns its value in code format.
+        /// [SerializeField] VARTYPE VARNAME;  -> VARNAME
         /// </summary>
-        public string AddPropertyLine(Type varType, string varName, object obj, bool isPublic = false, bool isSerialized = true)
+        public string AddVariableDeclaration(Type varType, string varName, object obj, bool isPublic = false, bool isSerialized = true)
         {
-            if(varType.IsEnum)
+            if (varType.IsEnum)
             {
                 return $"{varType.Name}.{obj}";
             }
@@ -127,10 +130,12 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
-                string line = "";
+                var ns = varType.Namespace;
+                AddUsingDirective(ns);
+
                 if (AddVariable(obj, ref varName))
                 {
-                    line = $"{(isSerialized ? "[SerializeField]" : "")} {(isPublic ? "public " : "private")} {varType.Name} {varName};";
+                    var line = $"{(isSerialized ? "[SerializeField]" : "")} {(isPublic ? "public " : "")} {varType.Name} {varName};";
                     properties.Add(line);
                 }
                 return varName;
@@ -139,17 +144,31 @@ namespace BehaviourAPI.Unity.Editor
 
         /// <summary>
         /// Add a line in the code section, inside a method. If the property exists yet, add a reassignation.
+        /// TYPENAME VARNAME = new TYPE
         /// </summary>
-        public string AddVariableInstantiationLine(string typeName, string varName, object obj, params string[] args)
+        public string AddVariableInstantiationLine(Type type, string varName, object obj, params object[] args)
         {
-            return AddVariableDeclarationLine(typeName, varName, obj, $"new {typeName}({string.Join(", ", args)})");
+            var typeName = type.Name;
+            var argsCode = args.Select(arg => AddVariableDeclaration(arg.GetType(), $"{varName}_arg", arg));
+            return AddVariableDeclarationLine(type, varName, obj, $"new {typeName}({string.Join(", ", argsCode)})");
         }
 
-        public string AddVariableDeclarationLine(string typeName, string varName, object obj, string methodCall)
+        /// <summary>
+        /// 
+        /// TYPENAME VARNAME = METHOD;
+        /// </summary>
+
+        public string AddVariableDeclarationLine(Type type, string varName, object obj, string methodCall)
         {
+            var ns = type.Namespace;
+            AddUsingDirective(ns);
+
+            var typeName = type.Name;
+
             string line;
             if (AddVariable(obj, ref varName))
             {
+
                 line = $"{typeName} {varName}";
             }
             else
