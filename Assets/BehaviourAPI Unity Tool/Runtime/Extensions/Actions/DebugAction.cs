@@ -8,15 +8,25 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
 {
     public class DebugAction : UnityAction
     {
+        public string message;
 
-        public string Message;
+        public DebugAction()
+        {
+        }
 
-        public override string DisplayInfo => "Debug Log $Message";
+        public DebugAction(string message)
+        {
+            this.message = message;
+        }
+
+        public override string DisplayInfo => "Debug Log $message";
 
         protected override void OnUpdate()
         {
-            Debug.Log(Message);
+            Debug.Log(message);
             Success();
         }
+
+
     }
 }

@@ -33,12 +33,13 @@ using VariableFactor = BehaviourAPI.Unity.Framework.Adaptations.VariableFactor;
 using StateTransition = BehaviourAPI.StateMachines.StateTransition;
 using PopTransition = BehaviourAPI.StateMachines.StackFSMs.PopTransition;
 using PushTransition = BehaviourAPI.StateMachines.StackFSMs.PushTransition;
+using UnityAction = BehaviourAPI.Unity.Runtime.Extensions.UnityAction;
 
 namespace BehaviourAPI.Unity.Editor
 {
     public static class ScriptGeneration
     {
-        private static readonly string[] basicNamespaces =
+        private static readonly string[] k_basicNamespaces =
         {
             "UnityEngine",
             "System.Collections",
@@ -49,16 +50,22 @@ namespace BehaviourAPI.Unity.Editor
             "BehaviourAPI.Core.Perceptions"
         };
 
-        private static readonly string[] bannedNamespaces =
+
+        private static readonly string[] k_bannedNamespaces =
         {
             "BehaviourAPI.Unity.Framework.Adaptations"
         };
 
         private static readonly string k_CodeForMissingNode = "null /*Missing node*/";
 
+        /// <summary>
+        /// Create a script for a <see cref="BehaviourRunner"/> with all the data stored in <paramref name="asset"/>
+        /// </summary>
+        /// <param name="path">The destination path to the script.</param>
+        /// <param name="name">The script class name.</param>
+        /// <param name="asset">The system asset.</param>
         public static void GenerateScript(string path, string name, BehaviourSystemAsset asset)
         {
-            //var scriptPath = EditorUtility.SaveFilePanel("Select a folder to save the script", path, $"{name}.cs", "CS");
             var scriptPath = $"{path}{name}.cs";
             if(!string.IsNullOrEmpty(scriptPath))
             {
@@ -73,77 +80,7 @@ namespace BehaviourAPI.Unity.Editor
             string folderPath = path.Substring(0, path.LastIndexOf("/") + 1);
             string scriptName = path.Substring(path.LastIndexOf("/") + 1).Replace(".cs", "");
 
-            //ScriptTemplate scriptTemplate = new ScriptTemplate(scriptName, nameof(CodeBehaviourRunner));
-
-            //foreach(var ns in basicNamespaces)
-            //{
-            //    scriptTemplate.AddUsingDirective(ns);
-            //}
-
-            //// Add main using directives
-            //scriptTemplate.AddUsingDirective("UnityEngine");
-            //scriptTemplate.AddUsingDirective("System.Collections.Generic");
-            //scriptTemplate.AddUsingDirective("BehaviourAPI.Core");
-            //scriptTemplate.AddUsingDirective("BehaviourAPI.Unity.Runtime");
-            //scriptTemplate.AddUsingDirective("BehaviourAPI.Core.Actions");
-            //scriptTemplate.AddUsingDirective("BehaviourAPI.Core.Perceptions");
-            //scriptTemplate.AddUsingDirective("BehaviourAPI.Unity.Runtime.Extensions");
-
-            //scriptTemplate.OpenMethodDeclaration("CreateGraph", nameof(BehaviourGraph), "protected override", $"HashSet<{typeof(BehaviourGraph).Name}> registeredGraphs");
-
-            //// Add the class
-
-            //var rootName = "";
-
-            //Dictionary<Type, GraphAdapter> graphAdapterMap = new Dictionary<Type, GraphAdapter>();
-
-            //for(int i = 0; i < asset.Graphs.Count; i++)
-            //{
-            //    var graph = asset.Graphs[i].Graph;
-
-            //    if(graph == null)
-            //    {
-            //        Debug.LogWarning($"Graph {i} is empty.");
-            //        scriptTemplate.AddLine($"//Graph {i} is empty.");
-            //        continue;
-            //    }
-
-            //    if(!graphAdapterMap.TryGetValue(graph.GetType(), out GraphAdapter adapter))
-            //    {
-            //        adapter = GraphAdapter.FindAdapter(graph);
-            //        graphAdapterMap.Add(graph.GetType(), adapter);
-            //    }
-
-            //    var graphName = !string.IsNullOrEmpty(asset.Graphs[i].Name) ? asset.Graphs[i].Name : graph.TypeName().ToLower();
-            //    graphName = adapter.CreateGraphLine(asset.Graphs[i], scriptTemplate, graphName);
-            //    scriptTemplate.AddLine($"registeredGraphs.Add({graphName});");
-
-            //    if (i == 0)
-            //    {
-            //        rootName = graphName;
-            //    }
-            //}
-
-            //for (int i = 0; i < asset.Graphs.Count; i++)
-            //{
-            //    var graph = asset.Graphs[i].Graph;
-            //    var adapter = graphAdapterMap[graph.GetType()];
-            //    scriptTemplate.AddLine("");
-            //    adapter.ConvertAssetToCode(asset.Graphs[i], scriptTemplate);
-
-            //}
-
-            //if (!string.IsNullOrEmpty(rootName))
-            //{
-            //    scriptTemplate.AddLine("");
-            //    scriptTemplate.AddLine($"return {rootName};");
-            //}
-
-            //scriptTemplate.CloseMethodDeclaration();
-
-            //var content = scriptTemplate.ToString();
-
-            var content = GenerateCode(asset, scriptName);
+            var content = GenerateSystemCode(asset, scriptName);
 
             UTF8Encoding encoding = new UTF8Encoding(true, false);
             StreamWriter writer = new StreamWriter(Path.GetFullPath(path), false, encoding);
@@ -154,11 +91,14 @@ namespace BehaviourAPI.Unity.Editor
             return AssetDatabase.LoadAssetAtPath(path, typeof(Object));
         }
 
-        static string GenerateCode(BehaviourSystemAsset asset, string scriptName)
+        /// <summary>
+        /// Returns all the code to create the <paramref name="asset"/> in runtime.
+        /// </summary>
+        static string GenerateSystemCode(BehaviourSystemAsset asset, string scriptName)
         {
             ScriptTemplate scriptTemplate = new ScriptTemplate(scriptName, nameof(CodeBehaviourRunner));
 
-            foreach (var ns in basicNamespaces)
+            foreach (var ns in k_basicNamespaces)
             {
                 scriptTemplate.AddUsingDirective(ns);
             }
@@ -202,7 +142,7 @@ namespace BehaviourAPI.Unity.Editor
                 scriptTemplate.AddLine("return null;");
             }
 
-            foreach (var ns in bannedNamespaces)
+            foreach (var ns in k_bannedNamespaces)
             {
                 scriptTemplate.RemoveUsingDirective(ns);
             }
@@ -213,6 +153,9 @@ namespace BehaviourAPI.Unity.Editor
             return scriptTemplate.ToString();
         }
 
+        /// <summary>
+        /// Add a graph declaration line at the beginning of the method and return the graph variable name.
+        /// </summary>
         static string AddCreateGraphLine(GraphAsset graphAsset, string graphName, ScriptTemplate template)
         {
             var graph = graphAsset.Graph;
@@ -229,6 +172,9 @@ namespace BehaviourAPI.Unity.Editor
             return graphName;
         }
 
+        /// <summary>
+        /// Add all the instructions to create the graph nodes and connections in the code.
+        /// </summary>
         static void GenerateCodeForGraph(GraphAsset graphAsset, ScriptTemplate scriptTemplate)
         {
             var graphName = scriptTemplate.FindVariableName(graphAsset);
@@ -420,6 +366,10 @@ namespace BehaviourAPI.Unity.Editor
             return template.AddVariableDeclarationLine(selectableNode.GetType(), nodeName, asset, $"{graphName}.{method}");
         }
 
+        /// <summary>
+        /// Generates code for an BTNode. If the node has childs, generates code recursively.
+        /// NODETYPE VARNAME = USNAME.CreateNODETYPE(args)...;
+        /// </summary>
         static string GenerateCodeForBTNode(NodeAsset asset, ScriptTemplate template, string graphName)
         {
             var btNode = asset.Node as BTNode;
@@ -490,6 +440,8 @@ namespace BehaviourAPI.Unity.Editor
             var nodeName = asset.Name ?? transition.TypeName().ToLower();
             var method = "";
 
+            bool perceptionAdded = false;
+
             var args = new List<string>();
             var sourceState = template.FindVariableName(asset.Parents.FirstOrDefault()) ?? "null/*ERROR*/";
             args.Add(sourceState);
@@ -509,7 +461,11 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     perceptionCode = $"new {nameof(ExecutionStatusPerception)}({sourceState}, {adaptedTransition.StatusFlags.ToCodeFormat()})";
                 }
-                if (!string.IsNullOrEmpty(perceptionCode)) args.Add(perceptionCode);
+                if (!string.IsNullOrEmpty(perceptionCode))
+                {
+                    args.Add(perceptionCode);
+                    perceptionAdded = true;
+                }
                
                 method = "CreateTransition";
             }
@@ -527,7 +483,11 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     perceptionCode = $"new {nameof(ExecutionStatusPerception)}({sourceState}, {adaptedTransition.StatusFlags.ToCodeFormat()})";
                 }
-                if (!string.IsNullOrEmpty(perceptionCode)) args.Add(perceptionCode);
+                if (!string.IsNullOrEmpty(perceptionCode))
+                {
+                    args.Add(perceptionCode);
+                    perceptionAdded = true;
+                }
 
                 method = "CreateExitTransition";
             }
@@ -543,7 +503,11 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     perceptionCode = $"new {nameof(ExecutionStatusPerception)}({sourceState}, {adaptedTransition.StatusFlags.ToCodeFormat()})";
                 }
-                if (!string.IsNullOrEmpty(perceptionCode)) args.Add(perceptionCode);
+                if (!string.IsNullOrEmpty(perceptionCode))
+                {
+                    args.Add(perceptionCode);
+                    perceptionAdded = true;
+                }
 
                 method = "CreatePopTransition";
             }
@@ -562,15 +526,23 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     perceptionCode = $"new {nameof(ExecutionStatusPerception)}({sourceState}, {adaptedTransition.StatusFlags.ToCodeFormat()})";
                 }
-                if (!string.IsNullOrEmpty(perceptionCode)) args.Add(perceptionCode);
+                if (!string.IsNullOrEmpty(perceptionCode))
+                {
+                    args.Add(perceptionCode);
+                    perceptionAdded = true;
+                }
 
-                method = "CreatePopTransition";
+                method = "CreatePushTransition";
             }
 
             if (transition.Action != null)
             {
                 var actionCode = GenerateActionCode(transition.Action, template);
-                if (!string.IsNullOrEmpty(actionCode)) args.Add(actionCode);
+                if (!string.IsNullOrEmpty(actionCode))
+                {
+                    if (!perceptionAdded) actionCode = "action: " + actionCode;
+                    args.Add(actionCode);
+                }
             }
 
             if (!transition.isPulled) args.Add("isPulled: false");
@@ -602,8 +574,7 @@ namespace BehaviourAPI.Unity.Editor
             }
             else if (action is UnityAction unityAction)
             {
-                // Add arguments
-                return $"new {unityAction.TypeName()}( )";
+                return GenerateConstructorCode(unityAction, scriptTemplate);
             }
             else if (action is SubgraphAction subgraphAction)
             {
@@ -636,11 +607,43 @@ namespace BehaviourAPI.Unity.Editor
             }
             else if (perception is UnityPerception unityPerception)
             {
-                // Add arguments
-                return $"new {unityPerception.TypeName()}()";
+                return GenerateConstructorCode(unityPerception, scriptTemplate);
             }
             else
                 return null;
+        }
+
+        /// <summary>
+        /// Generates a constructor code for a class. 
+        /// First search for the first constructor with at least one parameter.
+        /// If not found, uses a parameterless constructor.
+        /// The code will throw an exception at compilation time if the class has not
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="scriptTemplate"></param>
+        /// <returns></returns>
+        static string GenerateConstructorCode(object obj, ScriptTemplate scriptTemplate)
+        {
+            var type = obj.GetType();
+            var constructor = type.GetConstructors().FirstOrDefault(f => f.GetParameters().Length != 0);
+
+            var args = new List<string>();
+
+            if (constructor != null)
+            {
+                var parameters = constructor.GetParameters();
+                foreach (var param in parameters)
+                {
+                    var field = type.GetField(param.Name);
+                    if (field != null && field.FieldType == param.ParameterType)
+                    {
+                        args.Add(scriptTemplate.AddVariableDeclaration(field.FieldType, field.Name, field.GetValue(obj)));
+                    }
+                }
+
+                if (parameters.Count() != args.Count) args.Clear();
+            }
+            return $"new {obj.TypeName()}({args.Join()})";
         }
 
         /// <summary>

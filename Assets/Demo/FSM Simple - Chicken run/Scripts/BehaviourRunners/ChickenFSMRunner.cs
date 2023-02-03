@@ -1,6 +1,7 @@
 ﻿using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Runtime;
+using BehaviourAPI.Unity.Runtime.Extensions;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;

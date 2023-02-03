@@ -4,9 +4,18 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
 {
     public class DelayAction : UnityAction
     {
-        public float DelayTime;
+        public float delayTime;
 
         float _currentTime;
+
+        public DelayAction()
+        {
+        }
+
+        public DelayAction(float delayTime)
+        {
+            this.delayTime = delayTime;
+        }
 
         public override string DisplayInfo => "Wait $DelayTime seconds";
         protected override void OnStart()
@@ -22,7 +31,7 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
         protected override void OnUpdate()
         {
             _currentTime += Time.deltaTime;
-            if (_currentTime > DelayTime)
+            if (_currentTime > delayTime)
             {
                 Success();
             }

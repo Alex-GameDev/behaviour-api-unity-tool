@@ -1,50 +1,65 @@
+using UnityEngine;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.AI;
 
 namespace BehaviourAPI.Unity.Runtime.Extensions
 {
+    /// <summary>
+    /// Custom action that moves an agent to a given position, returning success when the position is arrived.
+    /// </summary>
     public class PatrolAction : UnityAction
     {
-
-        public Transform transform;
-
-        public List<Vector3> positions;
+        public NavMeshAgent agent;
         public float speed;
-        public float distanceThreshold;
+        public float maxDistance;
+        Vector3 _target;
 
-        int currentTargetPosId;
-
-        public override string DisplayInfo => "Move between $positions at $speed";
-
-        protected override void OnStart()
+        public PatrolAction()
         {
-            currentTargetPosId = 0;
+        }
+
+        public PatrolAction(NavMeshAgent agent, float speed, float maxDistance)
+        {
+            this.agent = agent;
+            this.speed = speed;
+            this.maxDistance = maxDistance;
+        }
+
+        public override void Start()
+        {
+            agent.speed = speed;
+            Vector3 positionToRun = Random.insideUnitSphere * maxDistance;
+            _target = new Vector3(positionToRun.x, agent.transform.position.y, positionToRun.z);
+            agent.destination = _target;
+
+        }
+
+        public override void Stop()
+        {
+            agent.speed = 0f;
+        }
+
+        public override Status Update()
+        {
+            if (!agent.hasPath || agent.velocity.sqrMagnitude == -1f ||
+                Vector3.Distance(agent.transform.position, _target) < .1f)
+            {
+                return Status.Success;
+            }
+            else
+                return Status.Running;
         }
 
         protected override void OnUpdate()
         {
-            if (positions.Count == 0) return;
-
-            if (Vector3.Distance(transform.position, positions[currentTargetPosId]) < distanceThreshold)
+            if (!agent.hasPath || agent.velocity.sqrMagnitude == -1f ||
+               Vector3.Distance(agent.transform.position, _target) < .1f)
             {
-                currentTargetPosId++;
-                if (currentTargetPosId >= positions.Count)
-                {
-                    Success();
-                    currentTargetPosId = 0;
-                }
+                Success();
             }
-
-            var currentPos = transform.position;
-            var rawMovement = positions[currentTargetPosId] - currentPos;
-            var maxDistance = rawMovement.magnitude;
-            var movement = rawMovement.normalized * speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(currentPos, currentPos + movement, maxDistance);
         }
+
+        public override string DisplayInfo => "Move randomly";
     }
 }
