@@ -14,6 +14,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Action = BehaviourAPI.Core.Actions.Action;
+using Node = BehaviourAPI.Core.Node;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -100,10 +101,33 @@ namespace BehaviourAPI.Unity.Editor
             if (serializedMethod != null && serializedMethod.component != null && !string.IsNullOrEmpty(serializedMethod.methodName))
             {
                 var component = serializedMethod.component;
-                var componentName = scriptTemplate.AddPropertyLine(component.TypeName(), component.TypeName().ToLower(), component);
+                var componentName = scriptTemplate.
+                    AddPropertyLine(component.GetType(), component.TypeName().ToLower(), component);
                 return $"{componentName}.{serializedMethod.methodName}";
             }
             else return null;
+        }
+
+        protected string GenerateSetterCode(Node node, ScriptTemplate scriptTemplate)
+        {
+            var type = node.GetType();
+            var fields = type.GetFields();
+            var functionCode = "";
+            foreach (var field in fields)
+            {
+                var methodName = $"Set{field.Name}";
+                var method = type.GetMethod(methodName);
+                if (method != null)
+                {
+                    var parameters = method.GetParameters();
+                    if (parameters.Count() == 1 && parameters[0].ParameterType == field.FieldType)
+                    {
+                        var argCode = scriptTemplate.AddPropertyLine(parameters[0].ParameterType, field.Name, field.GetValue(node));
+                        functionCode += $".{methodName}({argCode})";
+                    }
+                }
+            }
+            return functionCode;
         }
 
         #endregion

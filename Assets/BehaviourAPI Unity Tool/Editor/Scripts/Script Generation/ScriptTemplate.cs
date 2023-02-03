@@ -111,18 +111,30 @@ namespace BehaviourAPI.Unity.Editor
         #region -------------------------- Instructions --------------------------
 
         /// <summary>
-        /// Add a line in the property declaration section. If the property exists yet, add a reassignation.
+        /// Add a variable declaration in the code.
+        /// If the property is reference type, add a line in the property declaration section and returns the variable name. 
+        /// If the property is value type, returns its value in code format.
         /// </summary>
-        public string AddPropertyLine(string typeName, string varName, object obj, bool isPublic = false, bool isSerialized = true)
+        public string AddPropertyLine(Type varType, string varName, object obj, bool isPublic = false, bool isSerialized = true)
         {
-            string line = "";
-            if (AddVariable(obj, ref varName))
+            if(varType.IsEnum)
             {
-                line = $"{(isSerialized ? "[SerializeField]" : "")} {(isPublic ? "public " : "private")} {typeName} {varName};";
-                properties.Add(line);
+                return $"{varType.Name}.{obj}";
             }
-         
-            return varName;            
+            else if(varType.IsValueType)
+            {
+                return ToCode(obj);
+            }
+            else
+            {
+                string line = "";
+                if (AddVariable(obj, ref varName))
+                {
+                    line = $"{(isSerialized ? "[SerializeField]" : "")} {(isPublic ? "public " : "private")} {varType.Name} {varName};";
+                    properties.Add(line);
+                }
+                return varName;
+            }         
         }
 
         /// <summary>
@@ -204,6 +216,18 @@ namespace BehaviourAPI.Unity.Editor
         {
             code.Add(currentCodeLine);
             currentCodeLine = "";
+        }
+
+        string ToCode(object obj)
+        {
+            if (obj is int i) return i.ToString();
+            else if (obj is float f) return f.ToCodeFormat();
+            else if (obj is string s) return $"\"{s}\"";
+            else if (obj is bool b) return b.ToCodeFormat();
+            else if (obj is char c) return $"\'{c}\'";
+            else if (obj is Vector2 v2) return $"new Vector2({ToCode(v2.x)}, {ToCode(v2.y)})";
+            else if (obj is Vector3 v3) return $"new Vector3({ToCode(v3.x)}, {ToCode(v3.y)}, {ToCode(v3.z)})";
+            else return default;
         }
     }
 }

@@ -12,6 +12,7 @@ using UnityEngine.UIElements;
 
 using LeafNode = BehaviourAPI.Unity.Framework.Adaptations.LeafNode;
 using ConditionNode = BehaviourAPI.Unity.Framework.Adaptations.ConditionNode;
+using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -84,7 +85,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 var childName = AddNode(node.Childs.FirstOrDefault(), template, graphName) ?? "null /* Missing child */";
 
-                var propertyCode = AddDecoratorProperties(decorator, template);
+                var propertyCode = GenerateSetterCode(decorator, template);
                 method = $"CreateDecorator<{typeName}>({childName}){propertyCode}";                
             }
             else if (btNode is LeafNode leaf)
@@ -93,26 +94,6 @@ namespace BehaviourAPI.Unity.Editor
                 method = $"CreateLeafNode({actionCode})";                
             }
             return template.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.{method}");
-        }
-
-        string AddDecoratorProperties(DecoratorNode decorator, ScriptTemplate scriptTemplate)
-        {
-            if (decorator is IteratorNode iterator)
-            {
-                return $".SetIterations({iterator.Iterations})";
-            }
-            else if (decorator is LoopUntilNode loopUntil)
-            {
-                return $".SetTargetStatus({loopUntil.TargetStatus}).SetMaxIterations({loopUntil.MaxIterations})";
-            }
-            else if (decorator is ConditionNode conditionNode)
-            {
-                return $".SetPerception({GeneratePerceptionCode(conditionNode.Perception, scriptTemplate) ?? "null /* #Perception */"})";
-            }
-            else
-            {
-                return "";
-            }
         }
 
         #endregion

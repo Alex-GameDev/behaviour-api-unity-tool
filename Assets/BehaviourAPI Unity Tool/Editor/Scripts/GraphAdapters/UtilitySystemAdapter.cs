@@ -76,7 +76,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 var child = node.Childs.FirstOrDefault();
                 string childName = child != null ? template.FindVariableName(child) ?? AddFactor(child, template, graphName) : "null /*Missing child*/";
-                method = $"CreateFunctionFactor<{typeName}>({childName}){AddFunctionFactorProperties(functionFactor, template)}";
+                method = $"CreateFunctionFactor<{typeName}>({childName}){GenerateSetterCode(functionFactor, template)}";
             }
             else if(factor is FusionFactor fusionFactor)
             {
@@ -140,37 +140,7 @@ namespace BehaviourAPI.Unity.Editor
                 method = $"CreateUtilityBucket({args.Join()})";
             }
             return template.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.{method}");
-        }
-
-        private string AddFunctionFactorProperties(FunctionFactor functionFactor, ScriptTemplate scriptTemplate)
-        {
-            if (functionFactor is LinearFunction linear)
-            {
-                return $".SetSlope({linear.Slope.ToCodeFormat()}).SetYIntercept({linear.YIntercept.ToCodeFormat()})";
-            }
-            else if (functionFactor is ExponentialFunction exponential)
-            {
-                return $".SetSetExponent({exponential.Exponent.ToCodeFormat()}).SetDespX({exponential.DespX.ToCodeFormat()}).SetDespY({exponential.DespY.ToCodeFormat()})";
-            }
-            else if (functionFactor is SigmoidFunction sigmoid)
-            {
-                return $".SetMidpoint({sigmoid.Midpoint.ToCodeFormat()}).SetGrownRate({sigmoid.GrownRate.ToCodeFormat()})";
-            }
-            else if (functionFactor is CustomFunction custom)
-            {
-                var functionCode = GenerateSerializedMethodCode(custom.function, scriptTemplate) ?? "null /*missing function*/";
-                return $".SetFunction({functionCode})";
-            }
-            else if (functionFactor is CurveFunction curve)
-            {
-                var curvePropertyName = scriptTemplate.AddPropertyLine(nameof(AnimationCurve), "factorCurve", curve.curve);
-                return $".SetCurve({curvePropertyName})";
-            }
-            else
-            {
-                return string.Empty;
-            }
-        }
+        }      
 
         public override string CreateGraphLine(GraphAsset graphAsset, ScriptTemplate scriptTemplate, string graphName)
         {

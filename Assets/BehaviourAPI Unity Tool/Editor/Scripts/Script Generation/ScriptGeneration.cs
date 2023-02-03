@@ -39,6 +39,7 @@ namespace BehaviourAPI.Unity.Editor
             scriptTemplate.AddUsingDirective("BehaviourAPI.Unity.Runtime");
             scriptTemplate.AddUsingDirective("BehaviourAPI.Core.Actions");
             scriptTemplate.AddUsingDirective("BehaviourAPI.Core.Perceptions");
+            scriptTemplate.AddUsingDirective("BehaviourAPI.Unity.Runtime.Extensions");
 
             scriptTemplate.OpenMethodDeclaration("CreateGraph", nameof(BehaviourGraph), "protected override", $"HashSet<{typeof(BehaviourGraph).Name}> registeredGraphs");
 

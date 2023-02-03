@@ -18,7 +18,7 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
             _childExecuted = false;
         }
 
-        public UnityTimerDecorator SetTime(float time)
+        public UnityTimerDecorator SetTotalTime(float time)
         {
             TotalTime = time;
             return this;
