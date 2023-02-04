@@ -7,7 +7,7 @@ using BehaviourAPI.Unity.Framework;
 namespace BehaviourAPI.Unity.Editor
 {
     [CustomEditor(typeof(BehaviourSystemAsset))]
-    public class BehaviourGraphAssetEditor : UnityEditor.Editor
+    public class BehaviourSystemAssetEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
@@ -33,7 +33,7 @@ namespace BehaviourAPI.Unity.Editor
                     return;
                 }
 
-                BehaviourGraphEditorWindow.OpenGraph(asset);
+                BehaviourSystemEditorWindow.OpenGraph(asset);
             }
         }
     }

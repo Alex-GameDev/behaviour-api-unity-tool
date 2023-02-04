@@ -44,7 +44,7 @@ namespace BehaviourAPI.Unity.Editor
             string path = pathTextField.text;
             string scriptName = scriptNameTextField.text;
 
-            var systemAsset = BehaviourGraphEditorWindow.SystemAsset;
+            var systemAsset = BehaviourSystemEditorWindow.SystemAsset;
 
             bool useFullNameVar = useFullNameVarToggle.value;
             bool includeNodeNames = includeNodeNamesToggle.value;

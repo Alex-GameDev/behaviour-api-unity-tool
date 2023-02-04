@@ -24,7 +24,7 @@ namespace BehaviourAPI.Unity.Editor
         #region ---------------------------------- Fields ----------------------------------
 
         NodeCreationSearchWindow _nodeSearchWindow;
-        BehaviourGraphEditorWindow editorWindow;
+        BehaviourSystemEditorWindow editorWindow;
 
         Action<ContextualMenuPopulateEvent> _currentContextualMenuEvent;
 
@@ -50,11 +50,11 @@ namespace BehaviourAPI.Unity.Editor
 
         public GraphAdapter _adapter;
 
-        public bool Runtime => BehaviourGraphEditorWindow.IsRuntime;
+        public bool Runtime => BehaviourSystemEditorWindow.IsRuntime;
 
         #endregion
 
-        public BehaviourGraphView(BehaviourGraphEditorWindow parentWindow)
+        public BehaviourGraphView(BehaviourSystemEditorWindow parentWindow)
         {
             editorWindow = parentWindow;
             AddDecorators();
@@ -199,8 +199,8 @@ namespace BehaviourAPI.Unity.Editor
 
             ActionSearchWindow = ActionSearchWindow.Create();
             PerceptionSearchWindow = PerceptionSearchWindow.Create();
-            SubgraphSearchWindow = SubgraphSearchWindow.Create(BehaviourGraphEditorWindow.SystemAsset);
-            NodeSearchWindow = NodeSearchWindow.Create(BehaviourGraphEditorWindow.SystemAsset);
+            SubgraphSearchWindow = SubgraphSearchWindow.Create(BehaviourSystemEditorWindow.SystemAsset);
+            NodeSearchWindow = NodeSearchWindow.Create(BehaviourSystemEditorWindow.SystemAsset);
 
             nodeCreationRequest = context =>
             {

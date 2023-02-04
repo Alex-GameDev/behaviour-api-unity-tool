@@ -148,10 +148,11 @@ MonoBehaviour:
   - {fileID: 1305526521}
   - {fileID: 1407319933}
   - {fileID: 1190540241}
-  - {fileID: 629055445}
   - {fileID: 1526242034}
   - {fileID: 716699300}
   - {fileID: 1198822392}
+  - {fileID: 1023052127}
+  - {fileID: 1856598249}
   references:
     version: 2
     RefIds:
@@ -331,7 +332,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 3601717620696416285
-  position: {x: 600, y: 200}
+  position: {x: 300, y: 400}
   parents:
   - {fileID: 1797172811}
   childs:
@@ -466,40 +467,6 @@ MonoBehaviour:
       type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
         IsRandomized: 0
---- !u!114 &629055445
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  node:
-    rid: 3601717620696416289
-  position: {x: 651, y: 574}
-  parents:
-  - {fileID: 1198822392}
-  childs:
-  - {fileID: 716699300}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601717620696416289
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        isPulled: 1
-        _action:
-          rid: -2
-        perception:
-          rid: -2
-        StatusFlags: 0
 --- !u!114 &688638992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -557,9 +524,8 @@ MonoBehaviour:
   Name: s4
   node:
     rid: 3601717620696416291
-  position: {x: 0, y: 400}
-  parents:
-  - {fileID: 629055445}
+  position: {x: -600, y: 0}
+  parents: []
   childs:
   - {fileID: 1526242034}
   references:
@@ -671,7 +637,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 3601717620696416283
-  position: {x: 0, y: 200}
+  position: {x: -127, y: 192}
   parents:
   - {fileID: 1976958414}
   childs: []
@@ -685,6 +651,40 @@ MonoBehaviour:
       data:
         isPulled: 1
         ExitStatus: 0
+        _action:
+          rid: -2
+        perception:
+          rid: -2
+        StatusFlags: 0
+--- !u!114 &1023052127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601717620696416293
+  position: {x: 300, y: 0}
+  parents:
+  - {fileID: 1976958414}
+  childs:
+  - {fileID: 1198822392}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717620696416293
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        isPulled: 1
         _action:
           rid: -2
         perception:
@@ -733,7 +733,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 3601717620696416288
-  position: {x: 900, y: 0}
+  position: {x: 647, y: 216}
   parents:
   - {fileID: 2084857672}
   childs:
@@ -767,11 +767,11 @@ MonoBehaviour:
   Name: s5
   node:
     rid: 3601717620696416292
-  position: {x: 1200, y: 0}
+  position: {x: 600, y: 0}
   parents:
   - {fileID: 1190540241}
-  childs:
-  - {fileID: 629055445}
+  - {fileID: 1023052127}
+  childs: []
   references:
     version: 2
     RefIds:
@@ -994,7 +994,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 3601717620696416286
-  position: {x: 300, y: 200}
+  position: {x: 45, y: 200}
   parents:
   - {fileID: 1797172811}
   childs:
@@ -1137,7 +1137,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 3601717620696416287
-  position: {x: 600, y: 200}
+  position: {x: 316, y: 276}
   parents:
   - {fileID: 2084857672}
   childs:
@@ -1323,7 +1323,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 3601717620696416290
-  position: {x: 0, y: 200}
+  position: {x: -300, y: 0}
   parents:
   - {fileID: 716699300}
   childs:
@@ -1607,12 +1607,13 @@ MonoBehaviour:
   Name: s3
   node:
     rid: 3601717620696416284
-  position: {x: 600, y: 400}
+  position: {x: 0, y: 400}
   parents:
   - {fileID: 1407319933}
   childs:
   - {fileID: 469855905}
   - {fileID: 1305526521}
+  - {fileID: 1856598249}
   references:
     version: 2
     RefIds:
@@ -1638,7 +1639,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 3601717620696416280
-  position: {x: 300, y: 0}
+  position: {x: 300, y: 200}
   parents:
   - {fileID: 2084857672}
   childs:
@@ -1649,6 +1650,40 @@ MonoBehaviour:
     - rid: -2
       type: {class: , ns: , asm: }
     - rid: 3601717620696416280
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        isPulled: 1
+        _action:
+          rid: -2
+        perception:
+          rid: -2
+        StatusFlags: 0
+--- !u!114 &1856598249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601717620696416294
+  position: {x: 305, y: 533}
+  parents:
+  - {fileID: 1797172811}
+  childs:
+  - {fileID: 2084857672}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717620696416294
       type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
         isPulled: 1
@@ -1791,6 +1826,7 @@ MonoBehaviour:
   - {fileID: 1526242034}
   childs:
   - {fileID: 936951362}
+  - {fileID: 1023052127}
   references:
     version: 2
     RefIds:
@@ -1816,9 +1852,10 @@ MonoBehaviour:
   Name: s2
   node:
     rid: 3601717620696416282
-  position: {x: 600, y: 0}
+  position: {x: 600, y: 400}
   parents:
   - {fileID: 469855905}
+  - {fileID: 1856598249}
   childs:
   - {fileID: 1806137863}
   - {fileID: 1407319933}
