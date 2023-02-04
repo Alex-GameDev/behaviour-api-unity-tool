@@ -184,46 +184,57 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ------------------------------ Toolbar -------------------------------
 
-        VisualElement _editorSection;
+        Toolbar _mainToolbar;
+        Toolbar _editToolbar;
 
-        ToolbarMenu _selectGraphToolbarMenu;
-        ToolbarToggle _autosaveToolbarToggle;
-        ToolbarButton _saveBtn, _deleteBtn, _setMainBtn, _generateScriptBtn, _clearBtn;
+        ToolbarMenu _selectGraphMenu;
+
+        void SetUpMainToolbar()
+        {
+            _mainToolbar = rootVisualElement.Q<Toolbar>("bw-toolbar-main");
+
+            _selectGraphMenu = _mainToolbar.Q<ToolbarMenu>("bw-toolbar-graph-menu");
+        }
+
+        void SetUpEditToolbar()
+        {
+            _editToolbar = rootVisualElement.Q<Toolbar>("bw-toolbar-edit");
+
+            _editToolbar.Q<ToolbarButton>("bw-toolbar-setroot-btn").clicked += ChangeRootGraph;
+            _editToolbar.Q<ToolbarButton>("bw-toolbar-clear-btn").clicked += OpenClearGraphWindow;
+            _editToolbar.Q<ToolbarButton>("bw-toolbar-delete-btn").clicked += DisplayDeleteGraphAlertWindow;
+            _editToolbar.Q<ToolbarButton>("bw-toolbar-save-btn").clicked += SaveSystemData;
+            _editToolbar.Q<ToolbarButton>("bw-toolbar-generatescript-btn").clicked += OpenCreateScriptWindow;
+
+            var addGraphMenu = _editToolbar.Q<ToolbarMenu>("bw-toolbar-add-menu");
+
+            var adapters = typeof(GraphAdapter).GetSubClasses().FindAll(ad => ad.GetCustomAttribute<CustomAdapterAttribute>() != null);
+            foreach (var adapter in adapters)
+            {
+                var graphType = adapter.GetCustomAttribute<CustomAdapterAttribute>().type;
+                if (graphType.IsSubclassOf(typeof(BehaviourGraph)))
+                {
+                    addGraphMenu.menu.AppendAction(graphType.Name, _ => CreateGraph($"new {graphType.Name}", graphType));
+                }
+            }
+        }
 
         void SetUpToolbar()
         {
-            var toolbar = rootVisualElement.Q<Toolbar>("bw-toolbar");
-
-            _editorSection = toolbar.Q("bw-toolbar-editor-section");
-            _selectGraphToolbarMenu = rootVisualElement.Q<ToolbarMenu>("bw-toolbar-graph-menu");
-
-            _autosaveToolbarToggle = rootVisualElement.Q<ToolbarToggle>("bw-toolbar-autosave-toggle");
-            _saveBtn = rootVisualElement.Q<ToolbarButton>("bw-toolbar-save-btn");
-            _deleteBtn = rootVisualElement.Q<ToolbarButton>("bw-toolbar-delete-btn");
-            _setMainBtn = rootVisualElement.Q<ToolbarButton>("bw-toolbar-setroot-btn");
-            _generateScriptBtn = rootVisualElement.Q<ToolbarButton>("bw-toolbar-generatescript-btn");
-            _clearBtn = rootVisualElement.Q<ToolbarButton>("bw-toolbar-clear-btn");
-
-            _autosaveToolbarToggle.RegisterValueChangedCallback((evt) => autoSave = evt.newValue);
-            _saveBtn.clicked += SaveSystemData;
-            _deleteBtn.clicked += DisplayDeleteGraphAlertWindow;            
-            _setMainBtn.clicked += ChangeRootGraph;
-            _generateScriptBtn.clicked += OpenCreateScriptWindow;
-            _clearBtn.clicked += OpenClearGraphWindow;
-
-            SetUpAddGraphMenu();
+            SetUpMainToolbar();
+            SetUpEditToolbar();
             UpdateGraphSelectionToolbar();
         }
 
         void UpdateGraphSelectionToolbar()
         {
-            _selectGraphToolbarMenu.menu.MenuItems().Clear();
+            _selectGraphMenu.menu.MenuItems().Clear();
 
             if (SystemAsset == null) return;
 
             foreach(var graph in SystemAsset.Graphs)
             {
-                _selectGraphToolbarMenu.menu.AppendAction(
+                _selectGraphMenu.menu.AppendAction(
                     actionName: $"{graph.Name} ({graph.Graph.GetType().Name}) {(SystemAsset.RootGraph == graph ? "- root" : "")}",
                     action: _ => DisplayGraph(graph),
                     status: _currentGraphAsset == graph ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal
@@ -233,7 +244,7 @@ namespace BehaviourAPI.Unity.Editor
 
         void SetUpAddGraphMenu()
         {
-            var addGraphMenu = rootVisualElement.Q<ToolbarMenu>("bw-toolbar-add-menu");
+            var addGraphMenu = _editToolbar.Q<ToolbarMenu>("bw-toolbar-add-menu");
             var adapters = typeof(GraphAdapter).GetSubClasses().FindAll(ad => ad.GetCustomAttribute<CustomAdapterAttribute>() != null);
 
             foreach(var adapter in adapters)
