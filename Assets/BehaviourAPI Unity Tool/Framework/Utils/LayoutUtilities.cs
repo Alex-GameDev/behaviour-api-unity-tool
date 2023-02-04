@@ -10,11 +10,11 @@ namespace BehaviourAPI.Unity.Framework
 {
     public class LayoutUtilities : MonoBehaviour
     {
-        public static readonly Vector2 nodeOffset = new Vector2(280, 200);
+        public static readonly Vector2 nodeOffset = new Vector2(300, 200);
 
         public static void ComputeLayout(GraphAsset graphAsset)
         {
-            if(graphAsset == null) return;
+            if (graphAsset == null) return;
 
             if (graphAsset.Nodes.Count == 0) return;
 
@@ -24,17 +24,129 @@ namespace BehaviourAPI.Unity.Framework
                 if (root == null) return;
                 ProcessTreeNode(root, new Dictionary<int, float>(), 0, 0f);
             }
-            else if(graphAsset.Graph is UtilitySystem)
+            else if (graphAsset.Graph is UtilitySystem)
             {
                 ComputeUSLayout(graphAsset);
             }
-            else if(graphAsset.Graph is FSM)
+            else if (graphAsset.Graph is FSM)
             {
-
+                ComputeCyclicLayout(graphAsset);
             }
         }
 
-        private static float ProcessTreeNode(NodeAsset node, Dictionary<int, float> levelMap, int currentLevel, float targetPos)
+        private static void ComputeCyclicLayout(GraphAsset asset)
+        {
+            var nodeCount = asset.Nodes.Count();
+
+            var states = asset.Nodes.FindAll(n => n.Node != null && n.Node.MaxInputConnections == -1);
+
+            var centerPos = new Vector2Int(states.Count / 2, states.Count / 2);
+
+            Dictionary<NodeAsset, HashSet<NodeAsset>> nearNodeMap = states.ToDictionary(n => n, n => GetNearNodes(n).ToHashSet());
+
+            var orderedStates = states.OrderByDescending(s => nearNodeMap[s].Count);
+            Dictionary<NodeAsset, Vector2Int> statePositionMap = new Dictionary<NodeAsset, Vector2Int>();
+
+            HashSet<Vector2Int> validPositions = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> occupedPositions = new HashSet<Vector2Int>();
+
+            validPositions.Add(new Vector2Int(0, 0));
+
+            var mostConnectedState = orderedStates.First();
+            Queue<NodeAsset> queue = new Queue<NodeAsset>();
+            HashSet<NodeAsset> visitedNodes = new HashSet<NodeAsset>();
+
+            queue.Enqueue(mostConnectedState);
+            while(queue.Count > 0)
+            {
+                var currentState = queue.Dequeue();
+                visitedNodes.Add(currentState);
+                var nearStates = nearNodeMap[currentState];
+
+                var nearStatePos = new List<Vector2Int>();
+                foreach (var st2 in nearStates)
+                {
+                    if (statePositionMap.TryGetValue(st2, out var pos)) nearStatePos.Add(pos);
+                    if (!visitedNodes.Contains(st2))
+                    {
+                        visitedNodes.Add(st2);
+                        queue.Enqueue(st2);
+                    }
+                }
+
+                var bestPos = ComputeBetterPosition(currentState, nearStatePos, validPositions);
+                statePositionMap[currentState] = bestPos;
+                currentState.Position = nodeOffset * bestPos * 2f;
+                AddValidPositions(validPositions, occupedPositions, bestPos);
+            }
+
+            //Compute transition positions
+            foreach (var tr in asset.Nodes.Except(states))
+            {
+                if (tr.Parents.Count == 0) return;
+                if (tr.Childs.Count == 0)
+                {
+                    tr.Position = tr.Parents.First().Position + nodeOffset * Vector2.up;
+                    //Debug.Log($"Setting position of {tr.Name} above {tr.Parents.First().Name}");
+                }
+                else if (tr.Childs.Count == 1)
+                {
+                    tr.Position = Vector2.Lerp(tr.Parents.First().Position, tr.Childs.First().Position, .5f);
+                    //Debug.Log($"Setting position of {tr.Name} between its states");
+                }
+            }
+        }
+
+        static void AddValidPositions(HashSet<Vector2Int> validPositions, HashSet<Vector2Int> occupedPositions, Vector2Int lastOccupedPos)
+        {
+            occupedPositions.Add(lastOccupedPos);
+            validPositions.Remove(lastOccupedPos);
+            int[] hDirs = { 1, 1, 0, -1, -1, -1, 0, 1};
+            int[] vDirs = { 0, 1, 1, 1, 0, -1, -1, -1};
+
+            for(int i = 0; i < 8; i++)
+            {
+                var pos = lastOccupedPos + new Vector2Int(hDirs[i], vDirs[i]);
+                if (!occupedPositions.Contains(pos))
+                {
+                    validPositions.Add(pos);
+                }
+            }
+        }
+
+        static Vector2Int ComputeBetterPosition(NodeAsset state, List<Vector2Int> nearStatePos, HashSet<Vector2Int> validPositions)
+        {
+            var bestPos = new Vector2Int(0, 0);
+            var currentMinDist = float.MaxValue;
+
+            if (nearStatePos.Count == 0)
+            {
+                //Debug.Log("Not near states");
+                if (validPositions.Count > 0) return validPositions.First();
+                else return bestPos;
+            }
+
+            foreach (var validPos in validPositions)
+            {
+                var dist = nearStatePos.Sum(n => Vector2Int.Distance(validPos, n));
+                if(dist < currentMinDist)
+                {
+                    //Debug.Log("Better pos");
+                    bestPos = validPos;
+                    currentMinDist = dist;
+                }
+            }
+            return bestPos;
+        }        
+
+        static IEnumerable<NodeAsset> GetNearNodes(NodeAsset nodeAsset)
+        {
+            return nodeAsset.Childs.SelectMany(n => n.Childs)
+                .Union(nodeAsset.Parents.SelectMany(n => n.Parents))
+                .Distinct();
+        }
+
+        static float ProcessTreeNode(NodeAsset node, Dictionary<int, float> levelMap, int currentLevel, float targetPos)
         {
             float x;
             if (node.Childs.Count == 0)
