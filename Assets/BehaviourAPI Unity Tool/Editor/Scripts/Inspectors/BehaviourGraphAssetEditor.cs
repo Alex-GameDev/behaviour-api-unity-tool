@@ -33,7 +33,7 @@ namespace BehaviourAPI.Unity.Editor
                     return;
                 }
 
-                BehaviourSystemEditorWindow.OpenGraph(asset);
+                BehaviourSystemEditorWindow.OpenSystem(asset);
             }
         }
     }
