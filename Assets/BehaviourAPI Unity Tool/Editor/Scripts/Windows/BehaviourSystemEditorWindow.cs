@@ -55,7 +55,7 @@ namespace BehaviourAPI.Unity.Editor
             window.minSize = new Vector2(550, 250);
             window.titleContent = new GUIContent($"Behaviour graph editor");
 
-            if (SystemAsset != systemAsset)
+            if (SystemAsset != systemAsset || IsRuntime != runtime)
             {
                 SystemAsset = systemAsset;
                 IsAsset = AssetDatabase.Contains(systemAsset);
@@ -232,17 +232,26 @@ namespace BehaviourAPI.Unity.Editor
 
                 if (SystemAsset.Graphs.Count > 0)
                 {
-                    DisplayGraph(SystemAsset.MainGraph);
+                    DisplayGraph(SystemAsset.MainGraph, forceRefresh: true);
                 }
                 else
                 {
-                    DisplayGraph(null);
+                    DisplayGraph(null, forceRefresh: true);
                 }
             }
             else
             {
                 _graphView.ClearView();
                 _emptyPanel.Enable();
+            }
+
+            if (IsRuntime)
+            {
+                _editToolbar.Hide();
+            }
+            else
+            {
+                _editToolbar.Show();
             }
 
             UpdateGraphSelectionToolbar();
@@ -273,10 +282,13 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (_currentGraphAsset == null) return;
             AlertWindow.CreateAlertWindow("¿Clear current graph?", ClearCurrentGraph);
+
         }
 
-        void DisplayGraph(GraphAsset graphAsset)
+        void DisplayGraph(GraphAsset graphAsset, bool forceRefresh = false)
         {
+            if (graphAsset != null && _currentGraphAsset == graphAsset && !forceRefresh) return;
+
             _currentGraphAsset = graphAsset;
 
             if (graphAsset != null)
