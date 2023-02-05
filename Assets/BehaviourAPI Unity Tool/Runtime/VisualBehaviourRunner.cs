@@ -1,10 +1,6 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework;
-using Codice.CM.Common.Replication;
-using System.CodeDom.Compiler;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
@@ -33,9 +29,8 @@ namespace BehaviourAPI.Unity.Runtime
                 _rootGraph = SystemAsset.Build();
 
                 if (_rootGraph == null)
-
                 {
-                    Debug.LogError("Behaviour system is empty.");                    
+                    Debug.LogError("Behaviour system is empty.", this);                    
                 }
             }
         }
