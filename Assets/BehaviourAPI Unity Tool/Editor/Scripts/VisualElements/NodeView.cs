@@ -76,6 +76,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private void AddRuntimeLayout()
         {
+            this.Q("node-port-cover").Enable();
             if(Node.Node is IStatusHandler statusHandler)
             {
                 var statusBorder = this.Q("node-status");
