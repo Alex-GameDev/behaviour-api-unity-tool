@@ -72,7 +72,6 @@ namespace BehaviourAPI.Unity.Editor
             if (Runtime)
             {
                 nodeView.capabilities -= Capabilities.Deletable;
-                nodeView.capabilities -= Capabilities.Movable;
             }
             AddElement(nodeView);
             _assetViewMap.Add(nodeView.Node, nodeView);
@@ -84,7 +83,6 @@ namespace BehaviourAPI.Unity.Editor
             {
                 edge.capabilities -= Capabilities.Selectable;
                 edge.capabilities -= Capabilities.Deletable;
-                edge.capabilities -= Capabilities.Movable;
             }
             AddElement(edge);
         }
@@ -125,6 +123,14 @@ namespace BehaviourAPI.Unity.Editor
         GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
             graphViewChange.movedElements?.ForEach(OnElementMoved);
+
+            if(Runtime)
+            {
+                graphViewChange.elementsToRemove?.Clear();
+                graphViewChange.edgesToCreate?.Clear();
+                return graphViewChange;
+            }
+
             graphViewChange.elementsToRemove?.ForEach(OnElementRemoved);
             graphViewChange.edgesToCreate?.ForEach(OnEdgeCreated);
 
@@ -194,7 +200,6 @@ namespace BehaviourAPI.Unity.Editor
 
         void AddSearchWindows()
         {
-
             _nodeSearchWindow = NodeCreationSearchWindow.Create(CreateNode);
 
             ActionSearchWindow = ActionSearchWindow.Create();
@@ -205,6 +210,11 @@ namespace BehaviourAPI.Unity.Editor
             nodeCreationRequest = context =>
             {
                 if (GraphAsset == null) return;
+                if (Runtime)
+                {
+                    //Debug.LogWarning("Can't create nodes runtime");
+                    return;
+                }
 
                 var searchContext = new SearchWindowContext(context.screenMousePosition);
                 SearchWindow.Open(searchContext, _nodeSearchWindow);
