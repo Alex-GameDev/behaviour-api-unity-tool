@@ -198,7 +198,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             _editToolbar = rootVisualElement.Q<Toolbar>("bw-toolbar-edit");
 
-            _editToolbar.Q<ToolbarButton>("bw-toolbar-setroot-btn").clicked += ChangeRootGraph;
+            _editToolbar.Q<ToolbarButton>("bw-toolbar-setroot-btn").clicked += ChangeMainGraph;
             _editToolbar.Q<ToolbarButton>("bw-toolbar-clear-btn").clicked += OpenClearGraphWindow;
             _editToolbar.Q<ToolbarButton>("bw-toolbar-delete-btn").clicked += DisplayDeleteGraphAlertWindow;
             _editToolbar.Q<ToolbarButton>("bw-toolbar-save-btn").clicked += SaveSystemData;
@@ -232,7 +232,7 @@ namespace BehaviourAPI.Unity.Editor
 
                 if (SystemAsset.Graphs.Count > 0)
                 {
-                    DisplayGraph(SystemAsset.RootGraph);
+                    DisplayGraph(SystemAsset.MainGraph);
                 }
                 else
                 {
@@ -241,10 +241,10 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
+                _graphView.ClearView();
                 _emptyPanel.Enable();
             }
 
-            _graphView.ClearView();
             UpdateGraphSelectionToolbar();
         }
 
@@ -257,7 +257,7 @@ namespace BehaviourAPI.Unity.Editor
             foreach (var graph in SystemAsset.Graphs)
             {
                 _selectGraphMenu.menu.AppendAction(
-                    actionName: $"{graph.Name} ({graph.Graph.GetType().Name}) {(SystemAsset.RootGraph == graph ? "- root" : "")}",
+                    actionName: $"{graph.Name} ({graph.Graph.GetType().Name}) {(SystemAsset.MainGraph == graph ? "- root" : "")}",
                     action: _ => DisplayGraph(graph),
                     status: _currentGraphAsset == graph ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal
                 );
@@ -281,8 +281,8 @@ namespace BehaviourAPI.Unity.Editor
 
             if (graphAsset != null)
             {
-                _graphView.SetGraph(graphAsset);
                 _emptyGraphPanel.Disable();
+                _graphView.SetGraph(graphAsset);
             }
             else
             {
@@ -301,11 +301,12 @@ namespace BehaviourAPI.Unity.Editor
             AlertWindow.CreateAlertWindow("Are you sure to delete the current graph?", DeleteCurrentGraph);
         }
 
-        void ChangeRootGraph()
+        void ChangeMainGraph()
         {
-            if (_currentGraphAsset == SystemAsset.RootGraph) return;
-            SystemAsset.RootGraph = _currentGraphAsset;
+            if (_currentGraphAsset == SystemAsset.MainGraph) return;
+            SystemAsset.MainGraph = _currentGraphAsset;
             UpdateGraphSelectionToolbar();
+            Toast("Main graph changed");
         }
 
         void SaveSystemData()
@@ -403,7 +404,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (SystemAsset.Graphs.Count > 0)
             {
-                DisplayGraph(SystemAsset.RootGraph);
+                DisplayGraph(SystemAsset.MainGraph);
             }
             else
             {
