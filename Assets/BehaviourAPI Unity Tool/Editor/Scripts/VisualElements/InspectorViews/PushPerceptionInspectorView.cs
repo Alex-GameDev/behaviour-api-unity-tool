@@ -14,12 +14,15 @@ namespace BehaviourAPI.Unity.Editor
     public class PushPerceptionInspectorView : ListInspectorView<PushPerceptionAsset>
     {
         ListView _pushHandlerListView;
-        public NodeSearchWindow nodeSearchWindow { get; private set; }
+        public NodeSearchWindow nodeSearchWindow { get; set; }
 
         public Action<PushPerceptionAsset> PushPerceptionCreated, PushPerceptionRemoved;
 
-        public PushPerceptionInspectorView(BehaviourSystemAsset systemAsset, NodeSearchWindow searchWindow) : base(systemAsset, "Push Perceptions", Side.Right)
+        BehaviourSystemAsset _systemAsset;
+
+        public PushPerceptionInspectorView(BehaviourSystemAsset systemAsset, NodeSearchWindow searchWindow) : base("Push Perceptions", Side.Right)
         {
+            _systemAsset = systemAsset;
             nodeSearchWindow = searchWindow;
         }
 
@@ -34,6 +37,7 @@ namespace BehaviourAPI.Unity.Editor
 
         protected override List<PushPerceptionAsset> GetList()
         {
+            if (_systemAsset == null) return new List<PushPerceptionAsset>();
            return _systemAsset.PushPerceptions;
         }
 
@@ -46,6 +50,7 @@ namespace BehaviourAPI.Unity.Editor
         public override void UpdateInspector(PushPerceptionAsset asset)
         {
             base.UpdateInspector(asset);
+            if (asset == null) return; 
 
             _pushHandlerListView = new ListView(asset.Targets, -1, MakeItem, BindItem);
             _pushHandlerListView.selectionType = SelectionType.Single;
@@ -95,6 +100,14 @@ namespace BehaviourAPI.Unity.Editor
         {
             RefreshList();
             UpdateInspector(_selectedElement);
+        }
+
+        public void SetSystem(BehaviourSystemAsset systemAsset)
+        {
+            _systemAsset = systemAsset;
+            _selectedElement = null;
+            ResetList();
+            UpdateInspector(null);
         }
     }
 }

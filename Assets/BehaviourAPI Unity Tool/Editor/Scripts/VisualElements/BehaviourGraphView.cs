@@ -174,6 +174,12 @@ namespace BehaviourAPI.Unity.Editor
 
         #region --------------------------- CHANGE GRAPH ----------------------------
 
+        public void SetSystem(BehaviourSystemAsset systemAsset)
+        {
+            SubgraphSearchWindow = SubgraphSearchWindow.Create(BehaviourSystemEditorWindow.SystemAsset);
+            NodeSearchWindow = NodeSearchWindow.Create(BehaviourSystemEditorWindow.SystemAsset);
+        }
+
         public void SetGraph(GraphAsset graph)
         {
             ClearGraph();
@@ -204,8 +210,6 @@ namespace BehaviourAPI.Unity.Editor
 
             ActionSearchWindow = ActionSearchWindow.Create();
             PerceptionSearchWindow = PerceptionSearchWindow.Create();
-            SubgraphSearchWindow = SubgraphSearchWindow.Create(BehaviourSystemEditorWindow.SystemAsset);
-            NodeSearchWindow = NodeSearchWindow.Create(BehaviourSystemEditorWindow.SystemAsset);
 
             nodeCreationRequest = context =>
             {

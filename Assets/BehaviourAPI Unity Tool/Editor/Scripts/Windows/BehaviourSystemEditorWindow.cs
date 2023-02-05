@@ -230,6 +230,9 @@ namespace BehaviourAPI.Unity.Editor
                 if (IsAsset) _assetLabel.text = AssetDatabase.GetAssetPath(SystemAsset);
                 else _assetLabel.text = "Scene";
 
+                _graphView.SetSystem(SystemAsset);
+                _pushPerceptionInspector.nodeSearchWindow = _graphView.NodeSearchWindow;
+
                 if (SystemAsset.Graphs.Count > 0)
                 {
                     DisplayGraph(SystemAsset.MainGraph, forceRefresh: true);
@@ -245,14 +248,11 @@ namespace BehaviourAPI.Unity.Editor
                 _emptyPanel.Enable();
             }
 
-            if (IsRuntime)
-            {
-                _editToolbar.Hide();
-            }
-            else
-            {
-                _editToolbar.Show();
-            }
+            _pushPerceptionInspector.SetSystem(SystemAsset);
+
+            if (IsRuntime) _editToolbar.Hide();
+            else _editToolbar.Show();
+
 
             UpdateGraphSelectionToolbar();
         }
