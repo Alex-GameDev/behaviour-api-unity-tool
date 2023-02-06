@@ -9,9 +9,7 @@ namespace BehaviourAPI.Unity.Framework
 {
     public class CompoundPerceptionAsset : PerceptionAsset, ISerializationCallbackReceiver
     {
-        [HideInInspector] public List<PerceptionAsset> subperceptions;
-
-        public List<PerceptionAsset> subperceptionAssets = new List<PerceptionAsset>();
+        [HideInInspector] public List<PerceptionAsset> subperceptions = new List<PerceptionAsset>();
 
         public static CompoundPerceptionAsset CreateCompound(string name, Type type)
         {

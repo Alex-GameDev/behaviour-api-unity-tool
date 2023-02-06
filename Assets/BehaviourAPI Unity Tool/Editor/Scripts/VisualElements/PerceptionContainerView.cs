@@ -5,6 +5,7 @@ using BehaviourAPI.Unity.Framework.Adaptations;
 using BehaviourAPI.Unity.Runtime;
 using BehaviourAPI.Unity.Runtime.Extensions;
 using System;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -59,7 +60,6 @@ namespace BehaviourAPI.Unity.Editor
 
         void OnAssignPerception()
         {
-            Debug.Log("Open perception selector");
             _nodeView.GraphView.PerceptionSearchWindow.Open(SetPerception);
         }
 
@@ -104,12 +104,45 @@ namespace BehaviourAPI.Unity.Editor
 
                 var perceptionAsset = perceptionProperty.objectReferenceValue as PerceptionAsset;
 
-                var label = new Label("Perception");
+                var label = new Label($"if {GetPerceptionDescription(perceptionAsset)}");
                 label.AddToClassList("node-text");
                 _container.Add(label);
             }
         }
 
         public void RefreshView() => UpdateView();
+
+        public static string GetPerceptionDescription(PerceptionAsset perceptionAsset)
+        {
+            if (perceptionAsset == null || perceptionAsset.perception == null) return "";
+            else
+            {
+                if(perceptionAsset is CompoundPerceptionAsset cpa)
+                {
+                    if (cpa.subperceptions.Count == 0) return "false";
+
+                    string separator = (cpa.perception is AndPerception ? "&&" : "||");
+                    return $"({cpa.subperceptions.Select(sub => GetPerceptionDescription(sub)).Join(separator)})";
+                }
+                else if(perceptionAsset is StatusPerceptionAsset spa)
+                {
+                    if (spa.target != null) return $"check {spa.target.Name} status";
+                    else return "check node status";
+                }
+                else
+                {
+                    var perception = perceptionAsset.perception;
+                    
+                    if (perception is UnityPerception up)
+                    {
+                        return up.DisplayInfo;
+                    }
+                    else
+                    {
+                        return "custom perception";
+                    }
+                }              
+            }
+        }
     }
 }

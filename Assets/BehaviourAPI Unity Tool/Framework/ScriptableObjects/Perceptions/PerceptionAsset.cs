@@ -1,5 +1,6 @@
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework;
+using BehaviourAPI.Unity.Framework.Adaptations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ public class PerceptionAsset : ScriptableObject
         if (!type.IsSubclassOf(typeof(Perception))) return null;
 
         PerceptionAsset asset;
-        if (type.IsAssignableFrom(typeof(CompoundPerception)))
+        if (type.IsSubclassOf(typeof(CompoundPerception)))
         {
             asset = CreateInstance<CompoundPerceptionAsset>();
         }
