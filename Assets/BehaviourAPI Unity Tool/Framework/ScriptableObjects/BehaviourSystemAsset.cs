@@ -22,7 +22,7 @@ namespace BehaviourAPI.Unity.Framework
 
         Dictionary<string, PushPerception> buildedPushPerceptions;
 
-        public GraphAsset RootGraph
+        public GraphAsset MainGraph
         {
             get
             {
@@ -110,7 +110,7 @@ namespace BehaviourAPI.Unity.Framework
                 }
             });
 
-            return RootGraph?.Graph ?? null;
+            return MainGraph?.Graph ?? null;
         }
 
         public PushPerception GetPushPerception(string name)

@@ -24,7 +24,7 @@ namespace BehaviourAPI.Unity.Editor
                 }
                 else
                 {
-                    if(editor.IsDebuggerReady) BehaviourGraphEditorWindow.OpenGraph(editor.systemAsset, runtime: true);
+                    if(editor.IsDebuggerReady) BehaviourSystemEditorWindow.OpenSystem(editor.systemAsset, runtime: true);
                     else EditorWindow.GetWindow<SceneView>().ShowNotification(new GUIContent("Runtime debugger is not ready"));
                 }
             }

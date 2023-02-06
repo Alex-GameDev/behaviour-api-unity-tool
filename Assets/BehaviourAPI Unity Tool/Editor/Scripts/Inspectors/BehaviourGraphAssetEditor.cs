@@ -7,7 +7,7 @@ using BehaviourAPI.Unity.Framework;
 namespace BehaviourAPI.Unity.Editor
 {
     [CustomEditor(typeof(BehaviourSystemAsset))]
-    public class BehaviourGraphAssetEditor : UnityEditor.Editor
+    public class BehaviourSystemAssetEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
@@ -15,7 +15,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if(asset.Graphs.Count > 0)
             {
-                EditorGUILayout.LabelField($"Root graph: \t {asset.RootGraph.Graph.GetType().Name}");
+                EditorGUILayout.LabelField($"Root graph: \t {asset.MainGraph.Graph.GetType().Name}");
                 EditorGUILayout.LabelField($"Total graphs: \t {asset.Graphs.Count}");
                 EditorGUILayout.LabelField($"Total nodes: \t {asset.Graphs.Sum(g => g.Nodes.Count)}");
             }
@@ -33,7 +33,7 @@ namespace BehaviourAPI.Unity.Editor
                     return;
                 }
 
-                BehaviourGraphEditorWindow.OpenGraph(asset);
+                BehaviourSystemEditorWindow.OpenSystem(asset);
             }
         }
     }

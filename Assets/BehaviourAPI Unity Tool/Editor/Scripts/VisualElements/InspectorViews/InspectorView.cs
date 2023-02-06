@@ -48,6 +48,9 @@ namespace BehaviourAPI.Unity.Editor
         {
             _inspectorContent.Clear();
             _selectedElement = asset;
+
+            if (asset == null) return;
+
             var editor = UnityEditor.Editor.CreateEditor(asset);
             IMGUIContainer container = new IMGUIContainer(() =>
             {

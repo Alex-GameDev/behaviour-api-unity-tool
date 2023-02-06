@@ -1,30 +1,25 @@
-﻿using BehaviourAPI.Unity.Runtime;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.UIElements;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using BehaviourAPI.Unity.Framework;
 
 namespace BehaviourAPI.Unity.Editor
 {
     public abstract class ListInspectorView<T> : InspectorView<T> where T : ScriptableObject
     {
         protected static string itemPath => BehaviourAPISettings.instance.EditorLayoutsPath + "/listitem.uxml";
-        protected BehaviourSystemAsset _systemAsset;
         public Action<T> OnCreateElement;
         public Action<T> OnRemoveElement;
 
         ListView _listView;
 
-        public ListInspectorView(BehaviourSystemAsset systemAsset, string title, Side side) : base(title, side)
+        public ListInspectorView(string title, Side side) : base(title, side)
         {
-            if (systemAsset == null) return;
-
-            _systemAsset = systemAsset;
             _listView = AddListView();
+            _mainContainer.Add(new Button(AddElement) { text = "Add element" });
         }
 
         ListView AddListView()
@@ -37,13 +32,18 @@ namespace BehaviourAPI.Unity.Editor
             listView.style.marginTop = new StyleLength(5);
             listView.style.marginBottom = new StyleLength(5);
             listView.reorderable = true;
-
             _mainContainer.Add(listView);
-            _mainContainer.Add(new Button(AddElement) { text = "Add element" });
+
             return listView;
         }
 
         public abstract void AddElement();
+
+        public void ResetList()
+        {
+            if (_listView != null) _mainContainer.Remove(_listView);
+            _listView = AddListView();
+        }
 
         VisualElement MakeItem()
         {

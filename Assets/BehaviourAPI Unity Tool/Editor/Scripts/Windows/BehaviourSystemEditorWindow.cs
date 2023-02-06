@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    public class BehaviourGraphEditorWindow : EditorWindow
+    public class BehaviourSystemEditorWindow : EditorWindow
     {
         private static string path => BehaviourAPISettings.instance.EditorLayoutsPath + "windows/behavioursystemwindow.uxml";
         private static string emptyPanelPath => BehaviourAPISettings.instance.EditorLayoutsPath + "emptygraphpanel.uxml";
@@ -31,48 +31,60 @@ namespace BehaviourAPI.Unity.Editor
         BehaviourGraphInspectorView _graphInspector;
         PushPerceptionInspectorView _pushPerceptionInspector;
 
-        ToolbarMenu _selectGraphToolbarMenu, _addGraphMenu;
-        ToolbarToggle _autosaveToolbarToggle;
-        ToolbarButton _saveToolbarButton, _deleteGraphToolbarButton, _addGraphToolbarButton, _setRootGraphToolbarButton, _generateScriptToolbarButton, _clearGraphToolbarButton;
-
         GraphAsset _currentGraphAsset;
-
 
         bool autoSave = false;
 
-        public static void OpenGraph(BehaviourSystemAsset systemAsset, bool runtime = false)
-        {
-            SystemAsset = systemAsset;
-            IsAsset = AssetDatabase.Contains(systemAsset);
-            IsRuntime = runtime;
+        VisualElement _emptyPanel;
 
-            BehaviourGraphEditorWindow window = GetWindow<BehaviourGraphEditorWindow>();
+        Label _assetLabel;
+
+        [MenuItem("BehaviourAPI/Open window")]
+        public static void Open()
+        {
+            BehaviourSystemEditorWindow window = GetWindow<BehaviourSystemEditorWindow>();
             window.minSize = new Vector2(550, 250);
             window.titleContent = new GUIContent($"Behaviour graph editor");
+
+            window.Refresh();
         }
 
-        private void CreateGUI()
+        public static void OpenSystem(BehaviourSystemAsset systemAsset, bool runtime = false)
         {
-            AddLayout();
+            BehaviourSystemEditorWindow window = GetWindow<BehaviourSystemEditorWindow>();
+            window.minSize = new Vector2(550, 250);
+            window.titleContent = new GUIContent($"Behaviour graph editor");
 
-            if (SystemAsset == null) return;
-
-            if (SystemAsset.Graphs.Count > 0)
+            if (SystemAsset != systemAsset || IsRuntime != runtime)
             {
-                DisplayGraph(SystemAsset.RootGraph);
-            }
-            else
-            {
-                _emptyGraphPanel.style.display = DisplayStyle.Flex;
+                SystemAsset = systemAsset;
+                IsAsset = AssetDatabase.Contains(systemAsset);
+                IsRuntime = runtime;
+                window.Refresh();
             }
         }
 
         #region ----------------------------- Create GUI -----------------------------
 
+        void CreateGUI()
+        {
+            AddLayout();           
+        }
+
+        void OnDisable()
+        {
+            SystemAsset = null;
+            IsAsset = false;
+            IsRuntime = false;
+        }
+
         void AddLayout()
         {
             var windownFromUXML = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(path).Instantiate();
             rootVisualElement.Add(windownFromUXML);
+
+            _emptyPanel = AddEmptyPanel();
+            _assetLabel = rootVisualElement.Q<Label>("bw-asset-label");
 
             _container = rootVisualElement.Q("bw-content");
             _graphView = AddGraphView();
@@ -88,15 +100,32 @@ namespace BehaviourAPI.Unity.Editor
             _emptyGraphPanel.style.display = DisplayStyle.None;
 
             SetUpInspectorMenu();
-            SetUpToolbar();
+
+            SetUpMainToolbar();
+            SetUpEditToolbar();
 
             ChangeInspector(_graphInspector);
+        }
+
+        VisualElement AddEmptyPanel()
+        {
+            var emptyPanel = new VisualElement();
+            emptyPanel.ChangeBackgroundColor(new Color(.085f, .085f, .085f, .9f));
+            emptyPanel.style.alignItems = Align.Center;
+            emptyPanel.style.justifyContent = Justify.Center;
+
+            var label = new Label("Select a Behaviour System to start editing");
+            label.style.fontSize = 16;
+            emptyPanel.Add(label);
+            emptyPanel.StretchToParentSize();
+            rootVisualElement.Add(emptyPanel);
+            return emptyPanel;
         }
 
         VisualElement AddEmptyGraphPanel()
         {
             var emptyPanel = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(emptyPanelPath).Instantiate();
-            rootVisualElement.Add(emptyPanel);
+            _container.Add(emptyPanel);
             return emptyPanel;
         }
 
@@ -138,72 +167,6 @@ namespace BehaviourAPI.Unity.Editor
             rootVisualElement.Q<Button>("im-pushperceptions-btn").clicked += () => ChangeInspector(_pushPerceptionInspector);
         }
 
-        void SetUpToolbar()
-        {
-            if (IsRuntime)
-            {
-                var toolbar = rootVisualElement.Q<Toolbar>("bw-toolbar");
-                var runtimeToolbar = rootVisualElement.Q<Toolbar>("bw-runtime-toolbar");
-                toolbar.Disable();
-                runtimeToolbar.Enable();
-
-                _selectGraphToolbarMenu = rootVisualElement.Q<ToolbarMenu>("bw-runtime-toolbar-graph-menu");
-            }
-            else
-            {
-                _selectGraphToolbarMenu = rootVisualElement.Q<ToolbarMenu>("bw-toolbar-graph-menu");
-                _addGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-add-btn");
-                _autosaveToolbarToggle = rootVisualElement.Q<ToolbarToggle>("bw-toolbar-autosave-toggle");
-                _saveToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-save-btn");
-                _deleteGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-delete-btn");
-                _setRootGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-setroot-btn");
-                _generateScriptToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-generatescript-btn");
-                _clearGraphToolbarButton = rootVisualElement.Q<ToolbarButton>("bw-toolbar-clear-btn");
-
-                _deleteGraphToolbarButton.clicked += DisplayDeleteGraphAlertWindow;
-                _saveToolbarButton.clicked += SaveSystemData;
-                _autosaveToolbarToggle.RegisterValueChangedCallback((evt) => autoSave = evt.newValue);
-                _setRootGraphToolbarButton.clicked += ChangeRootGraph;
-                _generateScriptToolbarButton.clicked += OpenCreateScriptWindow;
-                _clearGraphToolbarButton.clicked += OpenClearGraphWindow;
-
-                SetUpAddGraphMenu();
-
-            }
-            UpdateGraphSelectionToolbar();
-        }
-
-        void SetUpAddGraphMenu()
-        {
-            var addGraphMenu = rootVisualElement.Q<ToolbarMenu>("bw-toolbar-add-menu");
-            typeof(GraphAdapter).GetSubClasses().ForEach(adapterType =>
-            {
-                var adapterAttribute = adapterType.GetCustomAttribute<CustomAdapterAttribute>();
-                if (adapterAttribute != null)
-                {
-                    var graphType = adapterAttribute.type;
-                    if (graphType.IsSubclassOf(typeof(BehaviourGraph)))
-                    {
-                        addGraphMenu.menu.AppendAction(graphType.Name, _ => CreateGraph($"new {graphType.Name}", graphType));
-                    }
-                }
-            });
-        }
-
-        void UpdateGraphSelectionToolbar()
-        {
-            _selectGraphToolbarMenu.menu.MenuItems().Clear();
-
-            if (SystemAsset == null) return;
-
-            SystemAsset.Graphs.ForEach(g =>
-                _selectGraphToolbarMenu.menu.AppendAction(
-                    $"{g.Name} ({g.Graph.GetType().Name}) {(SystemAsset.RootGraph == g ? "- root" : "")}",
-                    (d) => DisplayGraph(g),
-                _currentGraphAsset == g ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal)
-            );
-        }
-
         void ChangeInspector(IHidable inspector)
         {
             if (_currentInspector == inspector) return;
@@ -217,26 +180,130 @@ namespace BehaviourAPI.Unity.Editor
 
         #endregion
 
+        #region ------------------------------ Toolbar -------------------------------
+
+        Toolbar _mainToolbar;
+        Toolbar _editToolbar;
+
+        ToolbarMenu _selectGraphMenu;
+
+        void SetUpMainToolbar()
+        {
+            _mainToolbar = rootVisualElement.Q<Toolbar>("bw-toolbar-main");
+
+            _selectGraphMenu = _mainToolbar.Q<ToolbarMenu>("bw-toolbar-graph-menu");
+        }
+
+        void SetUpEditToolbar()
+        {
+            _editToolbar = rootVisualElement.Q<Toolbar>("bw-toolbar-edit");
+
+            _editToolbar.Q<ToolbarButton>("bw-toolbar-setroot-btn").clicked += ChangeMainGraph;
+            _editToolbar.Q<ToolbarButton>("bw-toolbar-clear-btn").clicked += OpenClearGraphWindow;
+            _editToolbar.Q<ToolbarButton>("bw-toolbar-delete-btn").clicked += DisplayDeleteGraphAlertWindow;
+            _editToolbar.Q<ToolbarButton>("bw-toolbar-save-btn").clicked += SaveSystemData;
+            _editToolbar.Q<ToolbarButton>("bw-toolbar-generatescript-btn").clicked += OpenCreateScriptWindow;
+
+            var addGraphMenu = _editToolbar.Q<ToolbarMenu>("bw-toolbar-add-menu");
+
+            var adapters = typeof(GraphAdapter).GetSubClasses().FindAll(ad => ad.GetCustomAttribute<CustomAdapterAttribute>() != null);
+            foreach (var adapter in adapters)
+            {
+                var graphType = adapter.GetCustomAttribute<CustomAdapterAttribute>().type;
+                if (graphType.IsSubclassOf(typeof(BehaviourGraph)))
+                {
+                    addGraphMenu.menu.AppendAction(graphType.Name, _ => CreateGraph($"new {graphType.Name}", graphType));
+                }
+            }
+        }
+
+        #endregion
+
         #region ----------------------- Layout event callbacks -----------------------
 
-        private void OpenCreateScriptWindow()
+        void Refresh()
+        {
+            if (SystemAsset != null)
+            {
+                _emptyPanel.Disable();
+
+                if (IsAsset) _assetLabel.text = AssetDatabase.GetAssetPath(SystemAsset);
+                else _assetLabel.text = "Scene";
+
+                _graphView.SetSystem(SystemAsset);
+                _pushPerceptionInspector.nodeSearchWindow = _graphView.NodeSearchWindow;
+
+                if (SystemAsset.Graphs.Count > 0)
+                {
+                    DisplayGraph(SystemAsset.MainGraph, forceRefresh: true);
+                }
+                else
+                {
+                    DisplayGraph(null, forceRefresh: true);
+                }
+            }
+            else
+            {
+                _graphView.ClearView();
+                _emptyPanel.Enable();
+            }
+
+            _pushPerceptionInspector.SetSystem(SystemAsset);
+
+            if (IsRuntime) _editToolbar.Hide();
+            else _editToolbar.Show();
+
+
+            UpdateGraphSelectionToolbar();
+        }
+
+        void UpdateGraphSelectionToolbar()
+        {
+            _selectGraphMenu.menu.MenuItems().Clear();
+
+            if (SystemAsset == null) return;
+
+            foreach (var graph in SystemAsset.Graphs)
+            {
+                _selectGraphMenu.menu.AppendAction(
+                    actionName: $"{graph.Name} ({graph.Graph.GetType().Name}) {(SystemAsset.MainGraph == graph ? "- root" : "")}",
+                    action: _ => DisplayGraph(graph),
+                    status: _currentGraphAsset == graph ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal
+                );
+            }
+        }
+
+        void OpenCreateScriptWindow()
         {
             ScriptCreationWindow.Create();
         }
 
-        private void OpenClearGraphWindow()
+        void OpenClearGraphWindow()
         {
             if (_currentGraphAsset == null) return;
             AlertWindow.CreateAlertWindow("¿Clear current graph?", ClearCurrentGraph);
+
         }
 
-        void DisplayGraph(GraphAsset graphAsset)
+        void DisplayGraph(GraphAsset graphAsset, bool forceRefresh = false)
         {
-            _currentGraphAsset = graphAsset;
-            _graphInspector.UpdateInspector(graphAsset);
-            _graphView.SetGraph(graphAsset);
+            if (graphAsset != null && _currentGraphAsset == graphAsset && !forceRefresh) return;
 
-            _emptyGraphPanel.style.display = DisplayStyle.None;
+            _currentGraphAsset = graphAsset;
+
+            if (graphAsset != null)
+            {
+                _emptyGraphPanel.Disable();
+                _graphView.SetGraph(graphAsset);
+            }
+            else
+            {
+                _graphView.ClearView();
+                _emptyGraphPanel.Enable();
+            }
+
+            _graphInspector.UpdateInspector(graphAsset);     
+
             UpdateGraphSelectionToolbar();
         }
 
@@ -246,11 +313,12 @@ namespace BehaviourAPI.Unity.Editor
             AlertWindow.CreateAlertWindow("Are you sure to delete the current graph?", DeleteCurrentGraph);
         }
 
-        void ChangeRootGraph()
+        void ChangeMainGraph()
         {
-            if (_currentGraphAsset == SystemAsset.RootGraph) return;
-            SystemAsset.RootGraph = _currentGraphAsset;
+            if (_currentGraphAsset == SystemAsset.MainGraph) return;
+            SystemAsset.MainGraph = _currentGraphAsset;
             UpdateGraphSelectionToolbar();
+            Toast("Main graph changed");
         }
 
         void SaveSystemData()
@@ -348,7 +416,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (SystemAsset.Graphs.Count > 0)
             {
-                DisplayGraph(SystemAsset.RootGraph);
+                DisplayGraph(SystemAsset.MainGraph);
             }
             else
             {
@@ -362,7 +430,7 @@ namespace BehaviourAPI.Unity.Editor
 
         #endregion
 
-        private void Toast(string message, float timeout = .5f)
+        void Toast(string message, float timeout = .5f)
         {
             ShowNotification(new GUIContent(message), timeout);
         }
