@@ -63,7 +63,7 @@ namespace BehaviourAPI.Unity.Editor
 
         void OnAssignAction()
         {
-            _nodeView.GraphView.ActionSearchWindow.Open(SetActionType);
+            _nodeView.GraphView.ActionCreationWindow.Open(SetActionType);
         }
 
         private void ClearAction()

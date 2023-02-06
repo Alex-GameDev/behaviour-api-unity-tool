@@ -9,7 +9,7 @@ namespace BehaviourAPI.Unity.Editor
     /// <summary>
     /// Creates a window menu to select a type
     /// </summary>
-    public class NodeCreationSearchWindow : ScriptableObject, ISearchWindowProvider
+    public class NodeCreationWindow : ScriptableObject, ISearchWindowProvider
     {
         List<SearchTreeEntry> entries;
         HierarchicalTypeNode rootTypeNode;
@@ -63,9 +63,9 @@ namespace BehaviourAPI.Unity.Editor
             return true;
         }
 
-        public static NodeCreationSearchWindow Create(Action<Type, Vector2> createNode)
+        public static NodeCreationWindow Create(Action<Type, Vector2> createNode)
         {
-            var searchWindow = CreateInstance<NodeCreationSearchWindow>();
+            var searchWindow = CreateInstance<NodeCreationWindow>();
             searchWindow.TreeEntrySelected += createNode;
             return searchWindow;
         }

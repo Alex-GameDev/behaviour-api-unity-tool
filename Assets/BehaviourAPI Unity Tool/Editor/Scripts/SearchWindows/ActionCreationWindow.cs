@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    public class ActionSearchWindow : ScriptableObject, ISearchWindowProvider
+    public class ActionCreationWindow : ScriptableObject, ISearchWindowProvider
     {
         Action<Type> _entrySelected;
 
@@ -71,6 +71,6 @@ namespace BehaviourAPI.Unity.Editor
             SearchWindow.Open(searchContext, this);
         }
 
-        public static ActionSearchWindow Create() => CreateInstance<ActionSearchWindow>();
+        public static ActionCreationWindow Create() => CreateInstance<ActionCreationWindow>();
     }
 }

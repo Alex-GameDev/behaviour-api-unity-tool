@@ -155,7 +155,7 @@ namespace BehaviourAPI.Unity.Editor
 
         PullPerceptionInspectorView AddPullPerceptionInspectorView()
         {
-            var pullPerceptionWindow = new PullPerceptionInspectorView(SystemAsset, _graphView.NodeSearchWindow, _graphView.PerceptionSearchWindow);
+            var pullPerceptionWindow = new PullPerceptionInspectorView(SystemAsset, _graphView.NodeSearchWindow, _graphView.PerceptionCreationWindow);
             _container.Add(pullPerceptionWindow);
             pullPerceptionWindow.Disable();
             pullPerceptionWindow.PerceptionCreated += OnAddAsset;

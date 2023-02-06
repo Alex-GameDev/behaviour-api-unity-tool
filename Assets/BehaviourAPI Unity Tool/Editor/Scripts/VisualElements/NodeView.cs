@@ -108,6 +108,7 @@ namespace BehaviourAPI.Unity.Editor
             bool propertiesLeft = true;
             while (propertiesLeft)
             {
+                // Actions
                 if (prop.propertyType == SerializedPropertyType.ManagedReference)
                 {
                     var typeName = prop.managedReferenceFieldTypename.Split(' ').Last();
@@ -116,9 +117,12 @@ namespace BehaviourAPI.Unity.Editor
                     {
                         var containerView = new ActionContainerView(Node, prop.Copy(), this);
                         extensionContainer.Add(containerView);
-                    }
-
-                    if (typeName == typeof(Perception).FullName)
+                    }                   
+                }
+                // Perceptions
+                else if(prop.propertyType == SerializedPropertyType.ObjectReference)
+                {
+                    if (prop.displayName == "Perception")
                     {
                         var containerView = new PerceptionContainerView(Node, prop.Copy(), this);
                         extensionContainer.Add(containerView);

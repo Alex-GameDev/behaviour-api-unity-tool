@@ -10,11 +10,11 @@ namespace BehaviourAPI.Unity.Editor
     {
         BehaviourSystemAsset _systemAsset;
         public NodeSearchWindow nodeSearchWindow { get; set; }
-        public PerceptionSearchWindow perceptionSearchWindow { get; set; }
+        public PerceptionCreationWindow perceptionSearchWindow { get; set; }
 
         public Action<PerceptionAsset> PerceptionCreated, PerceptionRemoved;
 
-        public PullPerceptionInspectorView(BehaviourSystemAsset systemAsset, NodeSearchWindow searchWindow, PerceptionSearchWindow pSearchWindow) : base("Perceptions", Side.Right)
+        public PullPerceptionInspectorView(BehaviourSystemAsset systemAsset, NodeSearchWindow searchWindow, PerceptionCreationWindow pSearchWindow) : base("Perceptions", Side.Right)
         {
             _systemAsset = systemAsset;
             nodeSearchWindow = searchWindow;

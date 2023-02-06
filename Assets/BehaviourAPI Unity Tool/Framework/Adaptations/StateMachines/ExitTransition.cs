@@ -7,14 +7,18 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     public class ExitTransition : StateMachines.ExitTransition, ISerializationCallbackReceiver
     {
         [SerializeReference] Action _action;
-        [SerializeReference] Perception perception;
+        [SerializeField] public PerceptionAsset perception;
 
         public StatusFlags StatusFlags;
 
         public void OnAfterDeserialize()
         {
             Action = _action;
-            Perception = perception;
+
+            if (perception != null)
+            {
+                Perception = perception.perception;
+            }
         }
 
         public void OnBeforeSerialize()

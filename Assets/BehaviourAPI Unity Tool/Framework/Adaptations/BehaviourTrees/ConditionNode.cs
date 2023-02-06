@@ -5,11 +5,14 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
 {
     public class ConditionNode : BehaviourTrees.ConditionNode, ISerializationCallbackReceiver
     {
-        [SerializeReference] Perception _perception;
+        [SerializeField] PerceptionAsset perception;
 
         public void OnAfterDeserialize()
         {
-            Perception = _perception;
+            if (perception != null)
+            {
+                Perception = perception.perception;
+            }
         }
 
         public void OnBeforeSerialize()

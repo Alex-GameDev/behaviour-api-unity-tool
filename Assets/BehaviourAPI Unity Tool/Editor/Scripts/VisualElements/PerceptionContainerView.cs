@@ -10,6 +10,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Action = BehaviourAPI.Core.Actions.Action;
+using Object = UnityEngine.Object;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -51,14 +52,15 @@ namespace BehaviourAPI.Unity.Editor
             this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
             {
                 menuEvt.menu.AppendAction("Clear perception", dd => ClearPerception(),
-                    (_) => GetSerializedProperty().managedReferenceValue != null ?
+                    (_) => GetSerializedProperty().objectReferenceValue != null ?
                     DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
             }));
         }
 
         void OnAssignPerception()
         {
-            _nodeView.GraphView.PerceptionSearchWindow.Open(SetPerceptionType);
+            Debug.Log("Open perception selector");
+            _nodeView.GraphView.PerceptionSearchWindow.Open(SetPerception);
         }
 
         private void ClearPerception()
@@ -67,18 +69,16 @@ namespace BehaviourAPI.Unity.Editor
             UpdateView();
         }
 
-        void SetPerceptionType(Type perceptionType)
+        void SetPerception(PerceptionAsset perceptionAsset)
         {
-            if (!perceptionType.IsSubclassOf(typeof(Perception))) return;
-
-            UpdatePerceptionValue(Activator.CreateInstance(perceptionType));
+            UpdatePerceptionValue(perceptionAsset);
             UpdateView();
         }
 
-        void UpdatePerceptionValue(object action)
+        void UpdatePerceptionValue(Object perceptionAsset)
         {
             var obj = new SerializedObject(nodeAsset);
-            obj.FindProperty(propertyPath).managedReferenceValue = action;
+            obj.FindProperty(propertyPath).objectReferenceValue = perceptionAsset;
             obj.ApplyModifiedPropertiesWithoutUndo();
         }
 
@@ -91,7 +91,7 @@ namespace BehaviourAPI.Unity.Editor
         void UpdateView()
         {
             var perceptionProperty = GetSerializedProperty();
-            if (perceptionProperty.managedReferenceValue == null)
+            if (perceptionProperty.objectReferenceValue == null)
             {
                 _assignButton.Enable();
                 _container.Clear();
@@ -102,21 +102,14 @@ namespace BehaviourAPI.Unity.Editor
                 _assignButton.Disable();
                 _container.Enable();
 
-                Perception perception = perceptionProperty.managedReferenceValue as Perception;
+                var perceptionAsset = perceptionProperty.objectReferenceValue as PerceptionAsset;
 
-                if (perception is CustomPerception customAction)
-                {
-                    var label = new Label("Custom Perception");
-                    label.AddToClassList("node-text");
-                    _container.Add(label);
-                }
-                else if (perception is UnityPerception unityAction)
-                {
-                    var label = new Label(unityAction.DisplayInfo);
-                    label.AddToClassList("node-text");
-                    _container.Add(label);
-                }
+                var label = new Label("Perception");
+                label.AddToClassList("node-text");
+                _container.Add(label);
             }
         }
+
+        public void RefreshView() => UpdateView();
     }
 }

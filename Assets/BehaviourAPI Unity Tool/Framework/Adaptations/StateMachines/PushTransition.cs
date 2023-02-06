@@ -1,6 +1,5 @@
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
-using UnityEditorInternal;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
@@ -8,20 +7,25 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     public class PushTransition : StateMachines.StackFSMs.PushTransition, ISerializationCallbackReceiver
     {
         [SerializeReference] Action _action;
-        [SerializeReference] Perception perception;
+        [SerializeField] public PerceptionAsset perception;
 
         public StatusFlags StatusFlags;
 
         public void OnAfterDeserialize()
         {
             Action = _action;
-            Perception = perception;
+
+            if(perception != null)
+            {
+                Perception = perception.perception;
+            }
         }
 
         public void OnBeforeSerialize()
         {
             return;
         }
+
         public override bool Check()
         {
             if (perception != null) return base.Check();

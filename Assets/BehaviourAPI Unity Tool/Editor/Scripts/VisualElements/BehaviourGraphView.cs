@@ -23,7 +23,7 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ---------------------------------- Fields ----------------------------------
 
-        NodeCreationSearchWindow _nodeSearchWindow;
+        NodeCreationWindow _nodeSearchWindow;
         BehaviourSystemEditorWindow editorWindow;
 
         Action<ContextualMenuPopulateEvent> _currentContextualMenuEvent;
@@ -40,12 +40,14 @@ namespace BehaviourAPI.Unity.Editor
 
         #region -------------------------------- Properties --------------------------------
 
-        public ActionSearchWindow ActionSearchWindow { get; private set; }
-        public PerceptionSearchWindow PerceptionSearchWindow { get; private set; }
-        public SubgraphSearchWindow SubgraphSearchWindow { get; private set; }
+        public ActionCreationWindow ActionCreationWindow { get; private set; }
+        public PerceptionCreationWindow PerceptionCreationWindow { get; private set; }
 
+
+        public SubgraphSearchWindow SubgraphSearchWindow { get; private set; }
         public NodeSearchWindow NodeSearchWindow { get; private set; }
-        
+        public PerceptionSearchWindow PerceptionSearchWindow { get; private set; }
+
         public GraphAsset GraphAsset { get; private set ; }
 
         public GraphAdapter _adapter;
@@ -176,8 +178,9 @@ namespace BehaviourAPI.Unity.Editor
 
         public void SetSystem(BehaviourSystemAsset systemAsset)
         {
-            SubgraphSearchWindow = SubgraphSearchWindow.Create(BehaviourSystemEditorWindow.SystemAsset);
-            NodeSearchWindow = NodeSearchWindow.Create(BehaviourSystemEditorWindow.SystemAsset);
+            SubgraphSearchWindow = SubgraphSearchWindow.Create(systemAsset);
+            NodeSearchWindow = NodeSearchWindow.Create(systemAsset);
+            PerceptionSearchWindow = PerceptionSearchWindow.Create(systemAsset);
         }
 
         public void SetGraph(GraphAsset graph)
@@ -206,10 +209,10 @@ namespace BehaviourAPI.Unity.Editor
 
         void AddSearchWindows()
         {
-            _nodeSearchWindow = NodeCreationSearchWindow.Create(CreateNode);
+            _nodeSearchWindow = NodeCreationWindow.Create(CreateNode);
 
-            ActionSearchWindow = ActionSearchWindow.Create();
-            PerceptionSearchWindow = PerceptionSearchWindow.Create();
+            ActionCreationWindow = ActionCreationWindow.Create();
+            PerceptionCreationWindow = PerceptionCreationWindow.Create();
 
             nodeCreationRequest = context =>
             {

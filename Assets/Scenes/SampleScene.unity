@@ -123,6 +123,55 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &50625190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601717664821542937
+  position: {x: 301, y: 351}
+  parents: []
+  childs:
+  - {fileID: 680053359}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717664821542937
+      type: {class: ConditionNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        perception: {fileID: 0}
+--- !u!114 &54780613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: new BehaviourTree
+  graph:
+    rid: 3601717664821542936
+  nodes:
+  - {fileID: 50625190}
+  - {fileID: 680053359}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717664821542936
+      type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
 --- !u!114 &234178848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,6 +233,26 @@ MonoBehaviour:
     RefIds:
     - rid: 3601717597539926032
       type: {class: MaxFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+--- !u!114 &271235331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  perception:
+    rid: 3601717664821542941
+  Name: new pushperception
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717664821542941
+      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
 --- !u!114 &286956305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,8 +445,7 @@ MonoBehaviour:
         isPulled: 1
         _action:
           rid: -2
-        perception:
-          rid: -2
+        perception: {fileID: 0}
         StatusFlags: 0
 --- !u!114 &484271136
 MonoBehaviour:
@@ -410,8 +478,7 @@ MonoBehaviour:
         isPulled: 1
         _action:
           rid: -2
-        perception:
-          rid: -2
+        perception: {fileID: 0}
         StatusFlags: 2
 --- !u!114 &504773380
 MonoBehaviour:
@@ -444,6 +511,51 @@ MonoBehaviour:
       type: {class: DebugAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
       data:
         message: A
+--- !u!1 &545907237
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 545907239}
+  - component: {fileID: 545907238}
+  m_Layer: 0
+  m_Name: GameObject (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &545907238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545907237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c2b1192a95e0c64db5759a68a634f42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SystemAsset: {fileID: 1918423565}
+--- !u!4 &545907239
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545907237}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &572655171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -469,6 +581,35 @@ MonoBehaviour:
     RefIds:
     - rid: 3601717597539926087
       type: {class: StackFSM, ns: BehaviourAPI.StateMachines.StackFSMs, asm: BehaviourAPI.StateMachines}
+--- !u!114 &680053359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601717664821542938
+  position: {x: 308, y: 569}
+  parents:
+  - {fileID: 50625190}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717664821542938
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        SerializedAction:
+          rid: -2
 --- !u!114 &700468673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -617,35 +758,12 @@ MonoBehaviour:
   - {fileID: 504773380}
   - {fileID: 341452035}
   - {fileID: 1323566895}
+  - {fileID: 1924329330}
   references:
     version: 2
     RefIds:
     - rid: 3601717574925811743
       type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
---- !u!114 &930879725
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  perception:
-    rid: 3601717664821542929
-  Name: unity
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717664821542929
-      type: {class: DistancePerception, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        SelfTransform: {fileID: 0}
-        OtherTransform: {fileID: 0}
-        Maxdistance: 0
 --- !u!114 &936951362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -677,8 +795,7 @@ MonoBehaviour:
         ExitStatus: 0
         _action:
           rid: -2
-        perception:
-          rid: -2
+        perception: {fileID: 0}
         StatusFlags: 0
 --- !u!114 &1023052127
 MonoBehaviour:
@@ -711,8 +828,7 @@ MonoBehaviour:
         isPulled: 1
         _action:
           rid: -2
-        perception:
-          rid: -2
+        perception: {fileID: 0}
         StatusFlags: 0
 --- !u!114 &1052639726
 MonoBehaviour:
@@ -742,36 +858,6 @@ MonoBehaviour:
       data:
         GrownRate: 0
         Midpoint: 2
---- !u!114 &1076217224
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  perception:
-    rid: 3601717664821542930
-  Name: custom
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717664821542930
-      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        init:
-          component: {fileID: 0}
-          methodName: 
-        check:
-          component: {fileID: 0}
-          methodName: 
-        reset:
-          component: {fileID: 0}
-          methodName: 
 --- !u!114 &1190540241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -803,8 +889,7 @@ MonoBehaviour:
         isPulled: 1
         _action:
           rid: -2
-        perception:
-          rid: -2
+        perception: {fileID: 0}
         StatusFlags: 0
 --- !u!114 &1198822392
 MonoBehaviour:
@@ -1037,8 +1122,7 @@ MonoBehaviour:
         isPulled: 1
         _action:
           rid: -2
-        perception:
-          rid: -2
+        perception: {fileID: 0}
         StatusFlags: 0
 --- !u!114 &1312600017
 MonoBehaviour:
@@ -1055,23 +1139,20 @@ MonoBehaviour:
   Name: pop
   node:
     rid: 3601717597539926090
-  position: {x: 229, y: 122}
+  position: {x: 246, y: 138}
   parents:
   - {fileID: 1372618747}
   childs: []
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
     - rid: 3601717597539926090
       type: {class: PopTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
         isPulled: 1
         _action:
           rid: 3601717597539926095
-        perception:
-          rid: -2
+        perception: {fileID: 0}
         StatusFlags: 0
     - rid: 3601717597539926095
       type: {class: PatrolAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
@@ -1177,8 +1258,7 @@ MonoBehaviour:
         isPulled: 1
         _action:
           rid: -2
-        perception:
-          rid: -2
+        perception: {fileID: 0}
         StatusFlags: 0
 --- !u!114 &1419201612
 MonoBehaviour:
@@ -1203,6 +1283,37 @@ MonoBehaviour:
       type: {class: ExecutionStatusPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
       data:
         StatusFlags: 2
+--- !u!114 &1495555089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601717664821542940
+  position: {x: 213, y: 384}
+  parents: []
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717664821542940
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        isPulled: 1
+        _action:
+          rid: -2
+        perception: {fileID: 0}
+        StatusFlags: 0
 --- !u!1 &1499889789
 GameObject:
   m_ObjectHideFlags: 0
@@ -1363,8 +1474,7 @@ MonoBehaviour:
         isPulled: 1
         _action:
           rid: -2
-        perception:
-          rid: -2
+        perception: {fileID: 0}
         StatusFlags: 0
 --- !u!114 &1597939239
 MonoBehaviour:
@@ -1386,9 +1496,9 @@ MonoBehaviour:
   pushPerceptions:
   - {fileID: 1952939524}
   perceptions:
-  - {fileID: 930879725}
-  - {fileID: 1076217224}
   - {fileID: 1419201612}
+  - {fileID: 2035364726}
+  - {fileID: 271235331}
 --- !u!114 &1615127173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1697,8 +1807,7 @@ MonoBehaviour:
         isPulled: 1
         _action:
           rid: -2
-        perception:
-          rid: -2
+        perception: {fileID: 0}
         StatusFlags: 0
 --- !u!114 &1856598249
 MonoBehaviour:
@@ -1731,8 +1840,7 @@ MonoBehaviour:
         isPulled: 1
         _action:
           rid: -2
-        perception:
-          rid: -2
+        perception: {fileID: 0}
         StatusFlags: 0
 --- !u!1 &1882890571
 GameObject:
@@ -1818,6 +1926,48 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1918423565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db249917b7c50574eaa600c74aff1437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graphs:
+  - {fileID: 54780613}
+  - {fileID: 2072587831}
+  pushPerceptions: []
+  perceptions: []
+--- !u!114 &1924329330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601717664821542935
+  position: {x: 499, y: 434}
+  parents: []
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717664821542935
+      type: {class: ConditionNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        perception: {fileID: 0}
 --- !u!114 &1952939524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1865,6 +2015,48 @@ MonoBehaviour:
       data:
         _action:
           rid: -2
+--- !u!114 &2035364726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  perception:
+    rid: 3601717664821542934
+  Name: new pushperception
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717664821542934
+      type: {class: OrPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
+--- !u!114 &2072587831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: new FSM
+  graph:
+    rid: 3601717664821542939
+  nodes:
+  - {fileID: 1495555089}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717664821542939
+      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
 --- !u!114 &2084857672
 MonoBehaviour:
   m_ObjectHideFlags: 0
