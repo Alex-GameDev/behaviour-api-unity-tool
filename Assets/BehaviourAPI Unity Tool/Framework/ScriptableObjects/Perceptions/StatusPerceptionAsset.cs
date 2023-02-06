@@ -17,7 +17,12 @@ namespace BehaviourAPI.Unity.Framework
         public void OnBeforeSerialize()
         {
             if(perception is ExecutionStatusPerception statusPerception)
-                statusPerception.StatusHandler = target.Node as IStatusHandler;
+            {
+                if(target != null)
+                {
+                    statusPerception.StatusHandler = target.Node as IStatusHandler;
+                }
+            }
         }
     }
 }
