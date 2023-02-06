@@ -28,6 +28,7 @@
         <ui:VisualElement style="position: absolute; right: 0; top: 0;">
             <ui:VisualElement name="im-menu-container" style="flex-direction: row; margin-right: 10px;">
                 <ui:Button text="G" display-tooltip-when-elided="true" name="im-graph-btn" />
+                <ui:Button text="P" display-tooltip-when-elided="true" name="im-pullperceptions-btn" />
                 <ui:Button text="PP" display-tooltip-when-elided="true" name="im-pushperceptions-btn" />
             </ui:VisualElement>
         </ui:VisualElement>

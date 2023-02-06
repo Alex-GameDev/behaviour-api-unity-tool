@@ -552,6 +552,29 @@ MonoBehaviour:
       type: {class: IteratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
         Iterations: -1
+--- !u!114 &782099268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  perception:
+    rid: 3601717664821542928
+  Name: status
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717664821542928
+      type: {class: StatusPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        target: {fileID: 0}
+        status: 0
 --- !u!114 &783924458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -566,6 +589,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   graphs: []
   pushPerceptions: []
+  perceptions: []
 --- !u!114 &784021453
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -621,6 +645,30 @@ MonoBehaviour:
     RefIds:
     - rid: 3601717574925811743
       type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+--- !u!114 &930879725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  perception:
+    rid: 3601717664821542929
+  Name: unity
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717664821542929
+      type: {class: DistancePerception, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        SelfTransform: {fileID: 0}
+        OtherTransform: {fileID: 0}
+        Maxdistance: 0
 --- !u!114 &936951362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -717,6 +765,36 @@ MonoBehaviour:
       data:
         GrownRate: 0
         Midpoint: 2
+--- !u!114 &1076217224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  perception:
+    rid: 3601717664821542930
+  Name: custom
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717664821542930
+      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        init:
+          component: {fileID: 0}
+          methodName: 
+        check:
+          component: {fileID: 0}
+          methodName: 
+        reset:
+          component: {fileID: 0}
+          methodName: 
 --- !u!114 &1190540241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1310,6 +1388,11 @@ MonoBehaviour:
   - {fileID: 1291756993}
   pushPerceptions:
   - {fileID: 1952939524}
+  perceptions:
+  - {fileID: 1898645375}
+  - {fileID: 782099268}
+  - {fileID: 930879725}
+  - {fileID: 1076217224}
 --- !u!114 &1615127173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1739,6 +1822,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1898645375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  perception:
+    rid: 3601717664821542927
+  Name: compound
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717664821542927
+      type: {class: CompoundPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        perceptionA:
+          rid: -2
+        perceptionB:
+          rid: -2
+        logicOperation: 0
 --- !u!114 &1952939524
 MonoBehaviour:
   m_ObjectHideFlags: 0

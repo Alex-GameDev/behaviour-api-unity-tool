@@ -37,7 +37,7 @@ namespace BehaviourAPI.Unity.Editor
 
         protected override List<PushPerceptionAsset> GetList()
         {
-            if (_systemAsset == null) return new List<PushPerceptionAsset>();
+           if (_systemAsset == null) return new List<PushPerceptionAsset>();
            return _systemAsset.PushPerceptions;
         }
 

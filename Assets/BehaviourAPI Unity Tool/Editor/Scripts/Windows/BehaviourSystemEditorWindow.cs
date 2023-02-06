@@ -29,6 +29,7 @@ namespace BehaviourAPI.Unity.Editor
         IHidable _currentInspector;
 
         BehaviourGraphInspectorView _graphInspector;
+        PullPerceptionInspectorView _pullPerceptionInspector;
         PushPerceptionInspectorView _pushPerceptionInspector;
 
         GraphAsset _currentGraphAsset;
@@ -90,6 +91,7 @@ namespace BehaviourAPI.Unity.Editor
             _graphView = AddGraphView();
             _nodeInspector = AddNodeInspectorView();
             _graphInspector = AddGraphInspectorView();
+            _pullPerceptionInspector = AddPullPerceptionInspectorView();
             _pushPerceptionInspector = AddPushPerceptionInspectorView();
 
             _graphView.NodeSelected += _nodeInspector.UpdateInspector;
@@ -151,6 +153,16 @@ namespace BehaviourAPI.Unity.Editor
             return graphInspector;
         }
 
+        PullPerceptionInspectorView AddPullPerceptionInspectorView()
+        {
+            var pullPerceptionWindow = new PullPerceptionInspectorView(SystemAsset, _graphView.NodeSearchWindow, _graphView.PerceptionSearchWindow);
+            _container.Add(pullPerceptionWindow);
+            pullPerceptionWindow.Disable();
+            pullPerceptionWindow.PerceptionCreated += OnAddAsset;
+            pullPerceptionWindow.PerceptionRemoved += OnRemoveAsset;
+            return pullPerceptionWindow;
+        }
+
         PushPerceptionInspectorView AddPushPerceptionInspectorView()
         {
             var pushPerceptionInspector = new PushPerceptionInspectorView(SystemAsset, _graphView.NodeSearchWindow);
@@ -163,6 +175,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private void SetUpInspectorMenu()
         {
+            rootVisualElement.Q<Button>("im-pullperceptions-btn").clicked += () => ChangeInspector(_pullPerceptionInspector);
             rootVisualElement.Q<Button>("im-graph-btn").clicked += () => ChangeInspector(_graphInspector);
             rootVisualElement.Q<Button>("im-pushperceptions-btn").clicked += () => ChangeInspector(_pushPerceptionInspector);
         }
@@ -248,6 +261,7 @@ namespace BehaviourAPI.Unity.Editor
                 _emptyPanel.Enable();
             }
 
+            _pullPerceptionInspector.SetSystem(SystemAsset);
             _pushPerceptionInspector.SetSystem(SystemAsset);
 
             if (IsRuntime) _editToolbar.Hide();

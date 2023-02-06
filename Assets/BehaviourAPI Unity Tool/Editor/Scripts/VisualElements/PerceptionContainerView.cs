@@ -10,7 +10,6 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Action = BehaviourAPI.Core.Actions.Action;
-using CompoundPerception = BehaviourAPI.Unity.Framework.Adaptations.CompoundPerception;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -116,14 +115,6 @@ namespace BehaviourAPI.Unity.Editor
                     var label = new Label(unityAction.DisplayInfo);
                     label.AddToClassList("node-text");
                     _container.Add(label);
-                }
-                else if (perception is CompoundPerception compoundPerception)
-                {
-                    
-                }
-                else if (perception is StatusPerception statusPerception)
-                {
-
                 }
             }
         }

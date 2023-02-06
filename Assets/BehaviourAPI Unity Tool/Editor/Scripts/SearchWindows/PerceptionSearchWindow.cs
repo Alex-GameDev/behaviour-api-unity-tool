@@ -1,3 +1,4 @@
+using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework.Adaptations;
 using BehaviourAPI.Unity.Runtime;
 using BehaviourAPI.Unity.Runtime.Extensions;
@@ -22,11 +23,14 @@ namespace BehaviourAPI.Unity.Editor
             list.Add(CreateEntry(typeof(CustomPerception), 1));
 
             list.Add(CreateGroup("Unity Perceptions", 1));
-            var unityActionTypes = typeof(UnityPerception).GetSubClasses().FindAll(t => !t.IsAbstract);
-            unityActionTypes.ForEach(t => list.Add(CreateEntry(t, 2)));
+            var unityPerceptionTypes = typeof(UnityPerception).GetSubClasses().FindAll(t => !t.IsAbstract);
+            unityPerceptionTypes.ForEach(t => list.Add(CreateEntry(t, 2)));
 
-            list.Add(CreateEntry(typeof(CompoundPerception), 1));
-            list.Add(CreateEntry(typeof(StatusPerception), 1));
+            list.Add(CreateGroup("Compound Perceptions", 1));
+            var compoundPerceptionTypes = typeof(CompoundPerception).GetSubClasses().FindAll(t => !t.IsAbstract);
+            compoundPerceptionTypes.ForEach(t => list.Add(CreateEntry(t, 2)));
+
+            list.Add(CreateEntry(typeof(ExecutionStatusPerception), 1));
             return list;
         }
 
