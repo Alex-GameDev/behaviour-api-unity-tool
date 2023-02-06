@@ -18,6 +18,7 @@ namespace BehaviourAPI.Unity.Framework
     {
         [SerializeField] List<GraphAsset> graphs = new List<GraphAsset>();
         [SerializeField] List<PushPerceptionAsset> pushPerceptions = new List<PushPerceptionAsset>();
+        [SerializeField] List<PerceptionAsset> perceptions = new List<PerceptionAsset>();
 
         Dictionary<string, PushPerception> buildedPushPerceptions;
 
@@ -37,7 +38,7 @@ namespace BehaviourAPI.Unity.Framework
 
         public List<GraphAsset> Graphs => graphs;
         public List<PushPerceptionAsset> PushPerceptions => pushPerceptions;
-
+        public List<PerceptionAsset> Perceptions => perceptions;
 
         public GraphAsset CreateGraph(string name, Type type)
         {
@@ -61,6 +62,17 @@ namespace BehaviourAPI.Unity.Framework
             return pushPerceptionAsset;
         }
 
+        public PerceptionAsset CreatePerception(string name, Type type)
+        {
+            var perceptionAsset = PerceptionAsset.Create(name, type);
+
+            if (perceptionAsset != null)
+            {
+                Perceptions.Add(perceptionAsset);
+            }
+            return perceptionAsset;
+        }
+
         public void RemoveGraph(GraphAsset graph)
         {
             Graphs.Remove(graph);
@@ -69,6 +81,11 @@ namespace BehaviourAPI.Unity.Framework
         public void RemovePushPerception(PushPerceptionAsset pushPerception)
         {
             PushPerceptions.Remove(pushPerception);
+        }
+
+        public void RemovePerception(PerceptionAsset pushPerception)
+        {
+            Perceptions.Remove(pushPerception);
         }
 
         public BehaviourGraph Build()
@@ -85,6 +102,7 @@ namespace BehaviourAPI.Unity.Framework
                         Debug.LogWarning($"Push perception with name \"{pp.Name}\" cannot be added. Another push perception with the same name already exists");
                     }
                 }
+
                 else
                 {
                     Debug.Log($"Push perception with name \"{pp.Name}\" wasn't added because it has no targets.");
