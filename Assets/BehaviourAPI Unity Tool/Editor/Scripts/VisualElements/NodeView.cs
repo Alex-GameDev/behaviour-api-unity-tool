@@ -25,6 +25,7 @@ namespace BehaviourAPI.Unity.Editor
         public NodeAsset Node;
 
         public Action<NodeAsset> Selected;
+        public Action<NodeAsset> UnSelected;
 
         BehaviourGraphView _graphView;
         public BehaviourGraphView GraphView => _graphView;
@@ -36,6 +37,7 @@ namespace BehaviourAPI.Unity.Editor
         #region ----------------------- Visual elements -----------------------
         public VisualElement RootElement { get; private set; }
         public VisualElement IconElement { get; private set; }
+        public VisualElement BorderElement { get; private set; }
 
         public PortView InputPort => InputPorts.FirstOrDefault();
         public PortView OutputPort => OutputPorts.FirstOrDefault();
@@ -56,6 +58,7 @@ namespace BehaviourAPI.Unity.Editor
             outputPorts = new List<PortView>();
             RootElement = this.Q("node-root");
             IconElement = this.Q("node-icon");
+            BorderElement = this.Q("node-border");
 
             SetPosition(new Rect(node.Position, Vector2.zero));
             SetUpPorts();
@@ -182,7 +185,15 @@ namespace BehaviourAPI.Unity.Editor
         public override void OnSelected()
         {
             base.OnSelected();
+            BorderElement.ChangeBackgroundColor(new Color(.5f, .5f, .5f, .5f));
             Selected?.Invoke(Node);
+        }
+
+        public override void OnUnselected()
+        {
+            BorderElement.ChangeBackgroundColor(new Color(0f, 0f, 0f, 0f));
+            base.OnUnselected();
+            Selected?.Invoke(null);
         }
 
         public virtual void OnConnected(NodeView other, Port port, bool ignoreConnection = false)

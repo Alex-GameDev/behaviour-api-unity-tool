@@ -32,6 +32,7 @@ namespace BehaviourAPI.Unity.Framework
 
         public void OnAfterDeserialize()
         {
+            pushPerception.PushListeners = new List<IPushActivable>();
             targets.ForEach(t =>
             {
                 if (t.Node is IPushActivable pushTarget)
