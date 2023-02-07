@@ -8,8 +8,9 @@ using UnityEngine;
 
 public class PerceptionAsset : ScriptableObject
 {
-    [SerializeReference] public Perception perception;
     public string Name;
+
+    [SerializeReference] public Perception perception;
 
     public static PerceptionAsset Create(string name, Type type)
     {

@@ -50,7 +50,10 @@ namespace BehaviourAPI.Unity.Editor
         public override void UpdateInspector(PushPerceptionAsset asset)
         {
             base.UpdateInspector(asset);
-            if (asset == null) return; 
+            if (asset == null) return;
+
+            var subtitleLabel = new Label("Targets");
+            _inspectorContent.Add(subtitleLabel);
 
             _pushHandlerListView = new ListView(asset.Targets, -1, MakeItem, BindItem);
             _pushHandlerListView.selectionType = SelectionType.Single;
@@ -59,10 +62,10 @@ namespace BehaviourAPI.Unity.Editor
             _pushHandlerListView.style.marginBottom = new StyleLength(5);
 
             _inspectorContent.Add(_pushHandlerListView);
-            _inspectorContent.Add(new Button(AddPushPerceptionTarget) { text = "Add Target" });
+            _inspectorContent.Add(new Button(OpenNodeSearchWindow) { text = "Add Target" });
         }
 
-        private void AddPushPerceptionTarget()
+        private void OpenNodeSearchWindow()
         {
             if (nodeSearchWindow == null) Debug.Log("Error");
             nodeSearchWindow.Open(nodeAsset => nodeAsset.Node is IPushActivable && !_selectedElement.Targets.Contains(nodeAsset), AddPushHandler);

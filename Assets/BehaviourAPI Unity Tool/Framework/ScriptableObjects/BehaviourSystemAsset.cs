@@ -68,7 +68,6 @@ namespace BehaviourAPI.Unity.Framework
 
             if (perceptionAsset != null)
             {
-                Debug.Log("Perception added to list");
                 Perceptions.Add(perceptionAsset);
             }
             return perceptionAsset;

@@ -123,6 +123,30 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &52252970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 3
+  perception:
+    rid: 3601717687359635461
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717687359635461
+      type: {class: DistancePerception, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        SelfTransform: {fileID: 0}
+        OtherTransform: {fileID: 0}
+        Maxdistance: 3
 --- !u!114 &372579657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,7 +187,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 3601717669560320047
-  position: {x: -153, y: 174}
+  position: {x: 0, y: 0}
   parents: []
   childs:
   - {fileID: 688186009}
@@ -264,6 +288,36 @@ MonoBehaviour:
       type: {class: IteratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
         Iterations: -1
+--- !u!114 &605211978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 1
+  perception:
+    rid: 3601717687359635458
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717687359635458
+      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        init:
+          component: {fileID: 0}
+          methodName: 
+        check:
+          component: {fileID: 0}
+          methodName: 
+        reset:
+          component: {fileID: 0}
+          methodName: 
 --- !u!114 &688186009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -279,7 +333,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 3601717669560320049
-  position: {x: 151, y: 150}
+  position: {x: 300, y: 0}
   parents:
   - {fileID: 374231970}
   childs:
@@ -297,6 +351,29 @@ MonoBehaviour:
         _action:
           rid: -2
         perception: {fileID: 0}
+--- !u!114 &832001414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 631992b1e4558c347a0fc2a841a76fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 2
+  perception:
+    rid: 3601717687359635460
+  subperceptions:
+  - {fileID: 605211978}
+  - {fileID: 52252970}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717687359635460
+      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
 --- !u!114 &982497819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,7 +414,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 3601717669560320050
-  position: {x: 764, y: 158}
+  position: {x: 600, y: 200}
   parents:
   - {fileID: 1364620529}
   childs: []
@@ -355,27 +432,6 @@ MonoBehaviour:
         _action:
           rid: -2
         perception: {fileID: 0}
---- !u!114 &1027488547
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 631992b1e4558c347a0fc2a841a76fbc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  perception:
-    rid: 3601717669560320003
-  Name: new pushperception
-  subperceptions: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717669560320003
-      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
 --- !u!1 &1298338776
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,7 +541,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 3601717669560320048
-  position: {x: 439, y: 195}
+  position: {x: 600, y: 0}
   parents:
   - {fileID: 688186009}
   childs:
@@ -646,9 +702,12 @@ MonoBehaviour:
   graphs:
   - {fileID: 372579657}
   - {fileID: 982497819}
-  pushPerceptions: []
+  pushPerceptions:
+  - {fileID: 2112747951}
   perceptions:
-  - {fileID: 1027488547}
+  - {fileID: 605211978}
+  - {fileID: 832001414}
+  - {fileID: 52252970}
 --- !u!1 &1882890571
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,3 +823,17 @@ MonoBehaviour:
       type: {class: DelayAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
       data:
         delayTime: 3
+--- !u!114 &2112747951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 212d5be0b64d9d143980afbe174ecdab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: new pushperception
+  targets: []

@@ -155,11 +155,11 @@ namespace BehaviourAPI.Unity.Editor
 
         PullPerceptionInspectorView AddPullPerceptionInspectorView()
         {
-            var pullPerceptionWindow = new PullPerceptionInspectorView(SystemAsset, _graphView.NodeSearchWindow, _graphView.PerceptionCreationWindow);
+            var pullPerceptionWindow = new PullPerceptionInspectorView(SystemAsset, _graphView);
             _container.Add(pullPerceptionWindow);
             pullPerceptionWindow.Disable();
-            pullPerceptionWindow.PerceptionCreated += OnAddAsset;
-            pullPerceptionWindow.PerceptionRemoved += OnRemoveAsset;
+            pullPerceptionWindow.PerceptionCreated += OnAddPerception;
+            pullPerceptionWindow.PerceptionRemoved += OnRemovePerception;
             return pullPerceptionWindow;
         }
 
@@ -359,6 +359,24 @@ namespace BehaviourAPI.Unity.Editor
             if (isChanged) _pushPerceptionInspector.ForceRefresh();
 
             OnRemoveAsset(node);
+        }
+
+        void OnAddPerception(PerceptionAsset perceptionAsset)
+        {
+            OnAddAsset(perceptionAsset);
+        }
+
+        void OnRemovePerception(PerceptionAsset perception)
+        {
+            bool isChanged = false;
+            foreach(var p in SystemAsset.Perceptions)
+            {
+                if (p is CompoundPerceptionAsset cpa && cpa.subperceptions.Remove(perception)) isChanged = true;
+            }
+
+            if (isChanged) _pullPerceptionInspector.ForceRefresh();
+
+            OnRemoveAsset(perception);
         }
 
         void OnAddAsset(ScriptableObject asset)

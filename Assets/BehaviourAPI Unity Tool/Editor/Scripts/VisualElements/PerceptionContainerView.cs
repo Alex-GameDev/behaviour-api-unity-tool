@@ -121,7 +121,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     if (cpa.subperceptions.Count == 0) return "false";
 
-                    string separator = (cpa.perception is AndPerception ? "&&" : "||");
+                    string separator = (cpa.perception is AndPerception ? " && " : " || ");
                     return $"({cpa.subperceptions.Select(sub => GetPerceptionDescription(sub)).Join(separator)})";
                 }
                 else if(perceptionAsset is StatusPerceptionAsset spa)
