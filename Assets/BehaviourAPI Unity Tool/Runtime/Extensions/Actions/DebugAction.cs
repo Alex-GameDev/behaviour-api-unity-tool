@@ -26,7 +26,5 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
             Debug.Log(message);
             Success();
         }
-
-
     }
 }

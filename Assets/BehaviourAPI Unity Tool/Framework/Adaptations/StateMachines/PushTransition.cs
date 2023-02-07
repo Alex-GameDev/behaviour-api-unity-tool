@@ -9,7 +9,10 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         [SerializeReference] Action _action;
         [SerializeField] public PerceptionAsset perception;
 
-        public StatusFlags StatusFlags;
+        public PushTransition()
+        {
+            StatusFlags = StatusFlags.Actived;
+        }
 
         public void OnAfterDeserialize()
         {
@@ -24,13 +27,6 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         public void OnBeforeSerialize()
         {
             return;
-        }
-
-        public override bool Check()
-        {
-            if (perception != null) return base.Check();
-
-            return ((uint)_sourceState.Status & (uint)StatusFlags) != 0;
         }
     }
 }
