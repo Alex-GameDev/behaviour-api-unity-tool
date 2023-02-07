@@ -55,7 +55,7 @@ namespace BehaviourAPI.Unity.Framework
         }
 
         /// <summary>
-        /// Returns all the child nodes above this, including itself.
+        /// Returns all the child nodeMap above this, including itself.
         /// </summary>
         public HashSet<NodeAsset> GetPathFromRoot()
         {
@@ -79,7 +79,7 @@ namespace BehaviourAPI.Unity.Framework
         }
 
         /// <summary>
-        /// Returns all the child nodes below this, including itself.
+        /// Returns all the child nodeMap below this, including itself.
         /// </summary>
         public HashSet<NodeAsset> GetPathToLeaves()
         {

@@ -10,9 +10,11 @@ namespace BehaviourAPI.Unity.Framework
     /// <summary>
     /// Stores a push perception as an unity object.
     /// </summary>
-    public class PushPerceptionAsset : ScriptableObject
+    public class PushPerceptionAsset : ScriptableObject, ISerializationCallbackReceiver
     {
         public string Name;
+
+        [SerializeReference] public PushPerception pushPerception = new PushPerception();
 
         [HideInInspector][SerializeField] List<NodeAsset> targets = new List<NodeAsset>();       
 
@@ -28,14 +30,23 @@ namespace BehaviourAPI.Unity.Framework
             return pushPerceptionAsset;
         }
 
-        public PushPerception Build()
+        public void OnAfterDeserialize()
         {
-            var pp = new PushPerception();
             targets.ForEach(t =>
             {
-                if (t.Node is IPushActivable pushTarget) pp.PushListeners.Add(pushTarget);
+                if (t.Node is IPushActivable pushTarget)
+                {
+                    pushPerception.PushListeners.Add(pushTarget);
+                }
+                else
+                    Debug.LogWarning("Deserialization error: node target is not an IPushActivable");
+
             });
-            return pp;
+        }
+
+        public void OnBeforeSerialize()
+        {
+            return;
         }
     }
 }

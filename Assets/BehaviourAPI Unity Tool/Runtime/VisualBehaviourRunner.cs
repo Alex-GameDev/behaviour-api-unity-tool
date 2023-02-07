@@ -50,9 +50,29 @@ namespace BehaviourAPI.Unity.Runtime
             return SystemAsset;
         }
 
-        protected PushPerception FindPushPerception(string name)
+        /// <summary>
+        /// Find a push perception by its name
+        /// </summary>
+        /// <param name="name">The name of the push perception asset</param>
+        /// <returns>The push perception found, or null.</returns>
+        public PushPerception FindPushPerception(string name)
         {
-            return SystemAsset.GetPushPerception(name);
+            return SystemAsset.FindPushPerception(name);
+        }
+
+        /// <summary>
+        /// Find a perception by its name
+        /// </summary>
+        /// <param name="name">The name of the perception asset</param>
+        /// <returns>The perception found or null.</returns>
+        public Perception FindPerception(string name)
+        {
+            return SystemAsset.FindPerception(name);
+        }
+
+        public T FindNode<T>(string nodeName, string graphName = null) where T : Node
+        {
+            return SystemAsset.FindNode<T>(nodeName, graphName);
         }
     }
 }
