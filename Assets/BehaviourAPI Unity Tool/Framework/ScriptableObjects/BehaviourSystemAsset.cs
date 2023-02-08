@@ -20,9 +20,9 @@ namespace BehaviourAPI.Unity.Framework
         [SerializeField] List<PushPerceptionAsset> pushPerceptions = new List<PushPerceptionAsset>();
         [SerializeField] List<PerceptionAsset> perceptions = new List<PerceptionAsset>();
 
-        Dictionary<string, PushPerception> pushPerceptionMap;
-        Dictionary<string, Perception> pullPerceptionMap;
-        Dictionary<string, Dictionary<string, Node>> nodeMap;
+        public Dictionary<string, PushPerception> pushPerceptionMap;
+        public Dictionary<string, Perception> pullPerceptionMap;
+        public Dictionary<string, BehaviourGraph> graphMap;
 
         public GraphAsset MainGraph
         {
@@ -90,39 +90,102 @@ namespace BehaviourAPI.Unity.Framework
             Perceptions.Remove(pushPerception);
         }
 
-        public BehaviourGraph Build()
+        public BehaviourGraph Build(NamingSettings nodeSettings, NamingSettings perceptionSettings, NamingSettings pushSettings)
         {
             graphs.ForEach(g => g.Build());
-            BuildPushPerceptionMap();
-            BuildPullPerceptionMap();
+            BuildGraphMap(nodeSettings);
+            BuildPushPerceptionMap(pushSettings);
+            BuildPullPerceptionMap(perceptionSettings);
             return MainGraph?.Graph ?? null;
         }
 
-        void BuildPushPerceptionMap()
+        void BuildGraphMap(NamingSettings settings)
         {
-            pushPerceptionMap = new Dictionary<string, PushPerception>();
-            foreach(var pushPerception in pushPerceptions)
-            {
-                if(pushPerception.Targets.Count > 0)
+            graphMap = new Dictionary<string, BehaviourGraph>();
+
+            if(settings == NamingSettings.TryAddAlways)
+            { 
+                foreach(var graph in graphs)
                 {
-                    if (!pushPerceptionMap.TryAdd(pushPerception.Name, pushPerception.pushPerception))
-                    {
-                        Debug.LogWarning($"Push perception with name \"{pushPerception.Name}\" cannot be added. Another push perception with the same name already exists");
-                    }
+                    graphMap.Add(graph.Name, graph.Graph);
                 }
-                else
+            }
+            else if(settings == NamingSettings.IgnoreWhenInvalid)
+            {
+                foreach (var graph in graphs)
                 {
-                    Debug.Log($"Push perception \"{pushPerception.Name}\" wasn't added because it has no targets.");
+                    if (graph.Graph != null)
+                    {
+                        if (!graphMap.TryAdd(graph.Name, graph.Graph))
+                        {
+                            Debug.LogWarning($"Graph with name \"{graph.Name}\" cannot be added to map. Another graph with the same name was already added");
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Graph \"{graph.Name}\" wasn't added because it's empty.");
+                    }
                 }
             }
         }
 
-        void BuildPullPerceptionMap()
+        void BuildPushPerceptionMap(NamingSettings settings)
         {
-
+            pushPerceptionMap = new Dictionary<string, PushPerception>();
+            if (settings == NamingSettings.TryAddAlways)
+            {
+                foreach (var pushPerception in pushPerceptions)
+                {
+                    pushPerceptionMap.Add(pushPerception.Name, pushPerception.pushPerception);
+                }
+            }
+            else if (settings == NamingSettings.IgnoreWhenInvalid)
+            {
+                foreach (var pushPerception in pushPerceptions)
+                {
+                    if (pushPerception.Targets.Count > 0)
+                    {
+                        if (!pushPerceptionMap.TryAdd(pushPerception.Name, pushPerception.pushPerception))
+                        {
+                            Debug.LogWarning($"Push perception with name \"{pushPerception.Name}\" cannot be added. Another push perception with the same name was already added");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log($"Push perception \"{pushPerception.Name}\" wasn't added because it has no targets.");
+                    }
+                }
+            }
         }
 
-        // ----------------------------------------------
+        void BuildPullPerceptionMap(NamingSettings settings)
+        {
+            pullPerceptionMap = new Dictionary<string, Perception>();
+            if (settings == NamingSettings.TryAddAlways)
+            {
+                foreach (var perception in perceptions)
+                {
+                    pullPerceptionMap.Add(perception.Name, perception.perception);
+                }
+            }
+            else if (settings == NamingSettings.IgnoreWhenInvalid)
+            {
+                foreach (var perception in perceptions)
+                {
+                    if (perception.perception != null)
+                    {
+                        if (!pullPerceptionMap.TryAdd(perception.Name, perception.perception))
+                        {
+                            Debug.LogWarning($"Perception with name \"{perception.Name}\" cannot be added. Another perception with the same name was already addeds");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log($"Push perception \"{perception.Name}\" wasn't added because it's empty.");
+                    }
+                }
+            }
+        }
 
         public static BehaviourSystemAsset CreateSystem(HashSet<BehaviourGraph> behaviourGraphs)
         {
@@ -135,31 +198,5 @@ namespace BehaviourAPI.Unity.Framework
             }
             return system;
         }
-
-        #region ------------------------------ Find elements ------------------------------
-
-        public PushPerception FindPushPerception(string name)
-        {
-            return pushPerceptionMap.GetValueOrDefault(name);
-        }
-
-        public Perception FindPerception(string name)
-        {
-            return pullPerceptionMap.GetValueOrDefault(name);
-        }
-
-        public T FindNode<T>(string nodeName, string graphName) where T : Node
-        {
-            if(graphName != null)
-            {
-                return null;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        #endregion
     }
 }

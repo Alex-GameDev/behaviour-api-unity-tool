@@ -10,6 +10,7 @@ public class TestVisualRunner : VisualBehaviourRunner
     protected override void OnStart()
     {
         _pp = FindPushPerception("push");
+        Debug.Log("Start");
         base.OnStart();       
     }
 

@@ -123,79 +123,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &52252970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 3
-  perception:
-    rid: 3601717687359635461
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717687359635461
-      type: {class: DistancePerception, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        SelfTransform: {fileID: 0}
-        OtherTransform: {fileID: 0}
-        Maxdistance: 3
---- !u!114 &99515128
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 212d5be0b64d9d143980afbe174ecdab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: new pushperception
-  pushPerception:
-    rid: 3601717687359635463
-  targets:
-  - {fileID: 688186009}
-  - {fileID: 1015517061}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717687359635463
-      type: {class: PushPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
---- !u!114 &372579657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: new BehaviourTree
-  graph:
-    rid: 3601717669560320039
-  nodes:
-  - {fileID: 544095583}
-  - {fileID: 504345730}
-  - {fileID: 2050505508}
-  - {fileID: 413869372}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717669560320039
-      type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
---- !u!114 &374231970
+--- !u!114 &341355929
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -209,83 +137,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: 
   node:
-    rid: 3601717669560320047
-  position: {x: 29, y: -3}
-  parents: []
-  childs:
-  - {fileID: 688186009}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717669560320047
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        _action:
-          rid: 3601717669560320053
-    - rid: 3601717669560320053
-      type: {class: DebugAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        message: a
---- !u!114 &413869372
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: d
-  node:
-    rid: 3601717669560320043
-  position: {x: 141, y: 341}
+    rid: 3601717710546796546
+  position: {x: 0, y: 400}
   parents:
-  - {fileID: 504345730}
+  - {fileID: 2081179770}
   childs: []
   references:
     version: 2
     RefIds:
-    - rid: 3601717669560320043
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717710546796546
       type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
         SerializedAction:
-          rid: 3601717669560320045
-    - rid: 3601717669560320045
-      type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        subgraph: {fileID: 982497819}
---- !u!114 &504345730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: b
-  node:
-    rid: 3601717669560320040
-  position: {x: -24, y: 125}
-  parents:
-  - {fileID: 544095583}
-  childs:
-  - {fileID: 2050505508}
-  - {fileID: 413869372}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717669560320040
-      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        IsRandomized: 0
---- !u!114 &544095583
+          rid: -2
+--- !u!114 &433118620
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -299,106 +166,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: a
   node:
-    rid: 3601717669560320041
-  position: {x: -24, y: -75}
+    rid: 3601717710546796545
+  position: {x: 6, y: 12}
   parents: []
   childs:
-  - {fileID: 504345730}
+  - {fileID: 2081179770}
   references:
     version: 2
     RefIds:
-    - rid: 3601717669560320041
-      type: {class: IteratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+    - rid: 3601717710546796545
+      type: {class: ParallelCompositeNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
-        Iterations: -1
---- !u!114 &605211978
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 1
-  perception:
-    rid: 3601717687359635458
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717687359635458
-      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        init:
-          component: {fileID: 0}
-          methodName: 
-        check:
-          component: {fileID: 0}
-          methodName: 
-        reset:
-          component: {fileID: 0}
-          methodName: 
---- !u!114 &688186009
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  node:
-    rid: 3601717669560320049
-  position: {x: 325, y: -33}
-  parents:
-  - {fileID: 374231970}
-  childs:
-  - {fileID: 1364620529}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601717669560320049
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        isPulled: 1
-        StatusFlags: 7
-        _action:
-          rid: -2
-        perception: {fileID: 832001414}
---- !u!114 &832001414
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 631992b1e4558c347a0fc2a841a76fbc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 2
-  perception:
-    rid: 3601717687359635460
-  subperceptions:
-  - {fileID: 605211978}
-  - {fileID: 52252970}
-  - {fileID: 1374767265}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717687359635460
-      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
---- !u!114 &982497819
+        IsRandomized: 0
+        TriggerStatus: 4
+--- !u!114 &484869573
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -410,52 +191,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: new FSM
+  Name: new BehaviourTree
   graph:
-    rid: 3601717669560320046
+    rid: 3601717710546796544
   nodes:
-  - {fileID: 374231970}
-  - {fileID: 1364620529}
-  - {fileID: 688186009}
-  - {fileID: 1015517061}
+  - {fileID: 433118620}
+  - {fileID: 341355929}
+  - {fileID: 2081179770}
   references:
     version: 2
     RefIds:
-    - rid: 3601717669560320046
-      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
---- !u!114 &1015517061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  node:
-    rid: 3601717669560320050
-  position: {x: 629, y: 197}
-  parents:
-  - {fileID: 1364620529}
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601717669560320050
-      type: {class: ExitTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        isPulled: 1
-        StatusFlags: 7
-        ExitStatus: 2
-        _action:
-          rid: -2
-        perception: {fileID: 0}
+    - rid: 3601717710546796544
+      type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
 --- !u!1 &1298338776
 GameObject:
   m_ObjectHideFlags: 0
@@ -550,61 +297,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!114 &1364620529
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  node:
-    rid: 3601717669560320048
-  position: {x: 629, y: -3}
-  parents:
-  - {fileID: 688186009}
-  childs:
-  - {fileID: 1015517061}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717669560320048
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        _action:
-          rid: 3601717669560320052
-    - rid: 3601717669560320052
-      type: {class: DebugAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        message: b
---- !u!114 &1374767265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 947dad2a0bf31334a8fc273f09cd09ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: status
-  perception:
-    rid: 3601717687359635462
-  target: {fileID: 0}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717687359635462
-      type: {class: ExecutionStatusPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
-      data:
-        StatusFlags: 1
 --- !u!1 &1499889789
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,7 +409,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c2b1192a95e0c64db5759a68a634f42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SystemAsset: {fileID: 1597939239}
+  nodeNamingSettings: 1
+  perceptionNamingSettings: 1
+  pullPerceptionNamingSettings: 1
+  SystemAsset: {fileID: 2088648569}
 --- !u!114 &1499889796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -734,28 +429,6 @@ MonoBehaviour:
   _logGraphStatusChanged: 0
   _logNodeStatusChanged: 0
   _openDebuggerOnPlay: 0
---- !u!114 &1597939239
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db249917b7c50574eaa600c74aff1437, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  graphs:
-  - {fileID: 372579657}
-  - {fileID: 982497819}
-  pushPerceptions:
-  - {fileID: 99515128}
-  perceptions:
-  - {fileID: 605211978}
-  - {fileID: 832001414}
-  - {fileID: 52252970}
-  - {fileID: 1374767265}
 --- !u!1 &1882890571
 GameObject:
   m_ObjectHideFlags: 0
@@ -840,7 +513,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2050505508
+--- !u!114 &2081179770
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -852,22 +525,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: c
+  Name: 
   node:
-    rid: 3601717669560320042
-  position: {x: -167, y: 333}
+    rid: 3601717710546796547
+  position: {x: 0, y: 200}
   parents:
-  - {fileID: 504345730}
-  childs: []
+  - {fileID: 433118620}
+  childs:
+  - {fileID: 341355929}
   references:
     version: 2
     RefIds:
-    - rid: 3601717669560320042
-      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+    - rid: 3601717710546796547
+      type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
-        SerializedAction:
-          rid: 3601717669560320044
-    - rid: 3601717669560320044
-      type: {class: DelayAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        delayTime: 3
+        IsRandomized: 0
+--- !u!114 &2088648569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db249917b7c50574eaa600c74aff1437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graphs:
+  - {fileID: 484869573}
+  pushPerceptions: []
+  perceptions: []

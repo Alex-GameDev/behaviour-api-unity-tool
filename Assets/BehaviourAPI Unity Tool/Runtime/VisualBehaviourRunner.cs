@@ -1,12 +1,18 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework;
+using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
 {
     public abstract class VisualBehaviourRunner : BehaviourRunner
     {
+        public NamingSettings nodeNamingSettings = NamingSettings.IgnoreWhenInvalid;
+        public NamingSettings perceptionNamingSettings = NamingSettings.IgnoreWhenInvalid;
+        public NamingSettings pullPerceptionNamingSettings = NamingSettings.IgnoreWhenInvalid;
+
         [HideInInspector] public BehaviourSystemAsset SystemAsset;
 
         BehaviourGraph _rootGraph;
@@ -26,7 +32,7 @@ namespace BehaviourAPI.Unity.Runtime
             }
             else
             {
-                _rootGraph = SystemAsset.Build();
+                _rootGraph = SystemAsset.Build(nodeNamingSettings, perceptionNamingSettings, pullPerceptionNamingSettings);
 
                 if (_rootGraph == null)
                 {
@@ -50,29 +56,83 @@ namespace BehaviourAPI.Unity.Runtime
             return SystemAsset;
         }
 
-        /// <summary>
-        /// Find a push perception by its name
-        /// </summary>
-        /// <param name="name">The name of the push perception asset</param>
-        /// <returns>The push perception found, or null.</returns>
+        #region ------------------------------------ Find elements ---------------------------------------
+
         public PushPerception FindPushPerception(string name)
         {
-            return SystemAsset.FindPushPerception(name);
+            return SystemAsset.pushPerceptionMap[name];
         }
 
-        /// <summary>
-        /// Find a perception by its name
-        /// </summary>
-        /// <param name="name">The name of the perception asset</param>
-        /// <returns>The perception found or null.</returns>
+        public PushPerception FindPushPerceptionOrDefault(string name)
+        {
+            return SystemAsset.pushPerceptionMap.GetValueOrDefault(name);
+        }
+
         public Perception FindPerception(string name)
         {
-            return SystemAsset.FindPerception(name);
+            return SystemAsset.pullPerceptionMap[name];
         }
 
-        public T FindNode<T>(string nodeName, string graphName = null) where T : Node
+        public Perception FindPerceptionOrDefault(string name)
         {
-            return SystemAsset.FindNode<T>(nodeName, graphName);
+            return SystemAsset.pullPerceptionMap.GetValueOrDefault(name);
         }
+
+        public Perception FindPerception<T>(string name) where T : Perception
+        {
+            if (SystemAsset.pullPerceptionMap.TryGetValue(name, out var perception))
+            {
+                if (perception is T perceptionTyped) return perceptionTyped;
+                else throw new InvalidCastException($"Perception \"{name}\" exists, but is not an instance of {typeof(T).FullName} class.");
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Perception \"{name}\" doesn't exist.");
+            }
+        }
+
+        public Perception FindPerceptionOrDefault<T>(string name) where T : Perception
+        {
+            if (SystemAsset.pullPerceptionMap.TryGetValue(name, out var perception))
+            {
+                if (perception is T perceptionTyped) return perceptionTyped;
+            }
+            return null;
+        }
+
+        public BehaviourGraph FindGraph(string name)
+        {
+            return SystemAsset.graphMap[name];
+        }
+
+        public BehaviourGraph FindGraphOrDefault(string name)
+        {
+            return SystemAsset.graphMap.GetValueOrDefault(name);
+        }
+
+        public T FindGraph<T>(string name) where T : BehaviourGraph
+        {
+            if (SystemAsset.graphMap.TryGetValue(name, out var graph))
+            {
+                if (graph is T graphTyped) return graphTyped;
+                else throw new InvalidCastException($"Graph \"{name}\" exists, but is not an instance of {typeof(T).FullName} class.");
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Graph \"{name}\" doesn't exist.");
+            }
+        }
+
+        public T FindGraphOrDefault<T>(string name) where T : BehaviourGraph
+        {
+            if (SystemAsset.graphMap.TryGetValue(name, out var graph))
+            {
+                if (graph is T graphTyped) return graphTyped;
+            }
+            return null;
+        }
+
+
+        #endregion
     }
 }
