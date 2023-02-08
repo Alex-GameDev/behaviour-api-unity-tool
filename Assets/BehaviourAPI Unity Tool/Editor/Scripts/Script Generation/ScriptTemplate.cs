@@ -132,6 +132,11 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
+                if(varType == typeof(string))
+                {
+                    return $"\"{obj}\"";
+                }
+
                 var ns = varType.Namespace;
                 AddUsingDirective(ns);
 
@@ -149,6 +154,17 @@ namespace BehaviourAPI.Unity.Editor
         /// TYPENAME VARNAME = new TYPE
         /// </summary>
         public string AddVariableInstantiationLine(Type type, string varName, object obj, params object[] args)
+        {
+            var typeName = type.Name;
+            var argsCode = args.Select(arg => AddVariableDeclaration(arg.GetType(), $"{varName}_arg", arg));
+            return AddVariableDeclarationLine(type, varName, obj, $"new {typeName}({string.Join(", ", argsCode)})");
+        }
+
+        /// <summary>
+        /// Add a line in the code section, inside a method. If the property exists yet, add a reassignation.
+        /// TYPENAME VARNAME = new TYPE
+        /// </summary>
+        public string AddVariableInstantiationLine(Type type, string varName, object obj, IEnumerable<object> args)
         {
             var typeName = type.Name;
             var argsCode = args.Select(arg => AddVariableDeclaration(arg.GetType(), $"{varName}_arg", arg));
@@ -243,7 +259,6 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (obj is int i) return i.ToString();
             else if (obj is float f) return f.ToCodeFormat();
-            else if (obj is string s) return $"\"{s}\"";
             else if (obj is bool b) return b.ToCodeFormat();
             else if (obj is char c) return $"\'{c}\'";
             else if (obj is Vector2 v2) return $"new Vector2({ToCode(v2.x)}, {ToCode(v2.y)})";

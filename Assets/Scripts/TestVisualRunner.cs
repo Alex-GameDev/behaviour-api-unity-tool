@@ -6,21 +6,19 @@ using UnityEngine;
 
 public class TestVisualRunner : VisualBehaviourRunner
 {
-    PushPerception _pp;
     protected override void OnStart()
     {
-        _pp = FindPushPerception("push");
-        Debug.Log("Start");
-        base.OnStart();       
+        base.OnStart();
+
+        FindPushPerception("pp");
+        FindPushPerception("pp2");
+        FindPushPerception("pp3");
+        FindPushPerception("pp4");
     }
 
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            _pp.Fire();
-        }
     }
 
     [CustomMethod]

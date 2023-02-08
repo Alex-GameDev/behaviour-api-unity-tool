@@ -7,21 +7,21 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     public class PopTransition : StateMachines.StackFSMs.PopTransition, ISerializationCallbackReceiver
     {
         [SerializeReference] Action _action;
-        [SerializeField] public PerceptionAsset perception;
+        public PerceptionAsset perception;
 
         public PopTransition()
         {
             StatusFlags = StatusFlags.Actived;
         }
 
+        public override bool Check()
+        {
+            return perception?.perception?.Check() ?? true;
+        }
+
         public void OnAfterDeserialize()
         {
             Action = _action;
-
-            if (perception != null)
-            {
-                Perception = perception.perception;
-            }
         }
 
         public void OnBeforeSerialize()

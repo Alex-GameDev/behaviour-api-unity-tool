@@ -39,9 +39,6 @@ namespace BehaviourAPI.Unity.Framework
                 {
                     pushPerception.PushListeners.Add(pushTarget);
                 }
-                else
-                    Debug.LogWarning("Deserialization error: node target is not an IPushActivable");
-
             });
         }
 

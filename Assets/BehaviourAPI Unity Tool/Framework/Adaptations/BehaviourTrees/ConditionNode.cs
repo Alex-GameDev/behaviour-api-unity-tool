@@ -3,21 +3,14 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
-    public class ConditionNode : BehaviourTrees.ConditionNode, ISerializationCallbackReceiver
+    public class ConditionNode : BehaviourTrees.ConditionNode
     {
-        [SerializeField] PerceptionAsset perception;
+        public PerceptionAsset perception;
 
-        public void OnAfterDeserialize()
+        public override void Start()
         {
-            if (perception != null)
-            {
-                Perception = perception.perception;
-            }
-        }
-
-        public void OnBeforeSerialize()
-        {
-            return;
+            Perception = perception?.perception;
+            base.Start();
         }
     }
 }

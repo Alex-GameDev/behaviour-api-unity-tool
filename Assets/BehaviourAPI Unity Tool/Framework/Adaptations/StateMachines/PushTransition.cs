@@ -7,21 +7,21 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     public class PushTransition : StateMachines.StackFSMs.PushTransition, ISerializationCallbackReceiver
     {
         [SerializeReference] Action _action;
-        [SerializeField] public PerceptionAsset perception;
+        public PerceptionAsset perception;
 
         public PushTransition()
         {
             StatusFlags = StatusFlags.Actived;
         }
 
+        public override bool Check()
+        {
+            return perception?.perception?.Check() ?? true;
+        }
+
         public void OnAfterDeserialize()
         {
             Action = _action;
-
-            if(perception != null)
-            {
-                Perception = perception.perception;
-            }
         }
 
         public void OnBeforeSerialize()

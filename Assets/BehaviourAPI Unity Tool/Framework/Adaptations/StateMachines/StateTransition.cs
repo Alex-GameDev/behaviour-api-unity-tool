@@ -7,21 +7,21 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     public class StateTransition : StateMachines.StateTransition, ISerializationCallbackReceiver
     {
         [SerializeReference] Action _action;
-        [SerializeField] PerceptionAsset perception;
+        public PerceptionAsset perception;
 
         public StateTransition()
         {
             StatusFlags = StatusFlags.Actived;
         }
 
+        public override bool Check()
+        {
+            return perception?.perception?.Check() ?? true;
+        }
+
         public void OnAfterDeserialize()
         {
             Action = _action;
-
-            if (perception != null)
-            {
-                Perception = perception.perception;
-            }
         }
 
         public void OnBeforeSerialize()

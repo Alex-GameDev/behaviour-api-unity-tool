@@ -100,7 +100,7 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Returns all the code to create the <paramref name="asset"/> in runtime.
         /// </summary>
-        static string GenerateSystemCode(BehaviourSystemAsset asset, string scriptName, bool useFullNameVar, bool includeNodeNames)
+        static string GenerateSystemCode(BehaviourSystemAsset asset, string scriptName, bool useFullNameVar, bool includeNames)
         {
             ScriptTemplate scriptTemplate = new ScriptTemplate(scriptName, useFullNameVar, nameof(CodeBehaviourRunner));
 
@@ -112,7 +112,10 @@ namespace BehaviourAPI.Unity.Editor
             scriptTemplate.OpenMethodDeclaration("CreateGraph", nameof(BehaviourGraph), 
                 "protected override", parameters: $"HashSet<{typeof(BehaviourGraph).Name}> registeredGraphs");
 
+
+            //Graphs
             scriptTemplate.AddLine("/* --------------------------- GRAPHS: --------------------------- */");
+            scriptTemplate.AddLine("");
 
             foreach (var graphAsset in asset.Graphs)
             {
@@ -131,15 +134,39 @@ namespace BehaviourAPI.Unity.Editor
                 graphName = AddCreateGraphLine(graphAsset, graphName, scriptTemplate);
             }
 
+            // Perceptions
+            scriptTemplate.AddLine("");
+            scriptTemplate.AddLine("/* --------------------------- Perceptions: --------------------------- */");
+            scriptTemplate.AddLine("");
+
+            foreach(var perceptionAsset in asset.Perceptions)
+            {
+                GenerateCodeForPullPerception(perceptionAsset, scriptTemplate);
+            }
+
+            // Nodes
+            scriptTemplate.AddLine("");
+            scriptTemplate.AddLine("/* --------------------------- Nodes: --------------------------- */");
             scriptTemplate.AddLine("");
 
             foreach (var graphAsset in asset.Graphs)
             {
-                GenerateCodeForGraph(graphAsset, scriptTemplate, includeNodeNames);
+                GenerateCodeForGraph(graphAsset, scriptTemplate, includeNames);
                 scriptTemplate.AddLine("");
             }
 
-            if(asset.Graphs.Count > 0)
+            // Push perceptions
+            scriptTemplate.AddLine("");
+            scriptTemplate.AddLine("/* ------------------------- Push Perceptions: ------------------------- */");
+            scriptTemplate.AddLine("");
+
+            foreach(var pushPerception in asset.PushPerceptions)
+            {
+                GenerateCodeForPushPerception(pushPerception, scriptTemplate);
+            }
+
+            // Return
+            if (asset.Graphs.Count > 0)
             {
                 var mainGraphName = scriptTemplate.FindVariableName(asset.Graphs[0]);
                 scriptTemplate.AddLine("return " + (mainGraphName ?? "null") + ";");
@@ -153,7 +180,6 @@ namespace BehaviourAPI.Unity.Editor
             {
                 scriptTemplate.RemoveUsingDirective(ns);
             }
-
 
             scriptTemplate.CloseMethodDeclaration();
 
@@ -179,6 +205,151 @@ namespace BehaviourAPI.Unity.Editor
             return graphName;
         }
 
+        #region ---------------------------------- Actions and perceptions ----------------------------------
+        /// <summary>
+        /// Add the instruction line to create a push perception
+        /// PushPerception p = new PushPerception(h1, h2, ...);
+        /// </summary>
+        /// <param name="pushPerception">The push perception asset</param>
+        /// <param name="scriptTemplate">YThe script template</param>
+        private static void GenerateCodeForPushPerception(PushPerceptionAsset pushPerception, ScriptTemplate scriptTemplate)
+        {
+            var targets = pushPerception.Targets.FindAll(tgt => tgt.Node is IPushActivable);
+            scriptTemplate.AddVariableInstantiationLine(typeof(PushPerception), pushPerception.Name, pushPerception, targets);
+        }
+
+        private static string GenerateCodeForPullPerception(PerceptionAsset perception, ScriptTemplate scriptTemplate)
+        {
+            var p = perception.perception;
+            var methodCode = "";
+
+            scriptTemplate.AddUsingDirective(p.GetType().Namespace);
+            var type = p.GetType();
+
+            if (perception is CompoundPerceptionAsset cpa)
+            {
+                if(cpa.perception is CompoundPerception)
+                {
+                    var args = new List<string>();
+                    foreach(var subPerception in cpa.subperceptions)
+                    {
+                        var subPerceptionName = scriptTemplate.FindVariableName(subPerception) ?? GenerateCodeForPullPerception(subPerception, scriptTemplate);
+                        if (subPerceptionName != null) args.Add(subPerceptionName);
+                    }
+                    methodCode = $"new {cpa.perception.TypeName()}({args.Join()})";
+                }
+            }
+            else if(perception is StatusPerceptionAsset spa)
+            {
+                var statusPerception = spa.perception as ExecutionStatusPerception;
+                if(statusPerception != null)
+                {
+                    methodCode = $"new {nameof(ExecutionStatusPerception)}(null /**/, {statusPerception.StatusFlags.ToCodeFormat()})";
+                }
+            }
+            else
+            {
+                if(p is CustomPerception customPerception)
+                {
+                    var parameters = new List<string>();
+
+                    var initMethodArg = GenerateSerializedMethodCode(customPerception.init, scriptTemplate);
+                    var checkMethodArg = GenerateSerializedMethodCode(customPerception.check, scriptTemplate);
+                    var resetMethodArg = GenerateSerializedMethodCode(customPerception.reset, scriptTemplate);
+
+                    if (initMethodArg != null) parameters.Add(initMethodArg);
+                    if (checkMethodArg != null) parameters.Add(checkMethodArg);
+                    else parameters.Add("() => false");
+                    if (resetMethodArg != null) parameters.Add(resetMethodArg);
+
+                    methodCode = $"new {nameof(ConditionPerception)}({string.Join(", ", parameters)})";
+                    type = typeof(ConditionPerception);
+                }
+                else if(p is UnityPerception unityPerception)
+                {
+                    methodCode = GenerateConstructorCode(unityPerception, scriptTemplate);
+                }
+            }
+
+            if(!string.IsNullOrEmpty(methodCode))
+            {
+                var name = scriptTemplate.AddVariableDeclarationLine(type, perception.Name, perception, methodCode);
+                return name;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Generates code for a action inline.
+        /// new ACTIONTYPE(args)
+        /// </summary>
+        static string GenerateActionCode(Action action, ScriptTemplate scriptTemplate)
+        {
+            if (action is CustomAction customAction)
+            {
+                var parameters = new List<string>();
+
+                var startMethodArg = GenerateSerializedMethodCode(customAction.start, scriptTemplate);
+                var updateMethodArg = GenerateSerializedMethodCode(customAction.update, scriptTemplate);
+                var stopMethodArg = GenerateSerializedMethodCode(customAction.stop, scriptTemplate);
+
+                if (startMethodArg != null) parameters.Add(startMethodArg);
+                if (updateMethodArg != null) parameters.Add(updateMethodArg);
+                else parameters.Add("() => Status.Running");
+                if (stopMethodArg != null) parameters.Add(stopMethodArg);
+
+                return $"new {nameof(FunctionalAction)}({string.Join(", ", parameters)})";
+
+            }
+            else if (action is UnityAction unityAction)
+            {
+                scriptTemplate.AddUsingDirective(typeof(UnityAction).Namespace);
+                return GenerateConstructorCode(unityAction, scriptTemplate);
+            }
+            else if (action is SubgraphAction subgraphAction)
+            {
+                var graphName = scriptTemplate.FindVariableName(subgraphAction.Subgraph);
+                return $"new {nameof(SubsystemAction)}({graphName ?? "null /* Missing subgraph */"})";
+            }
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Generates code for a perception variable.
+        /// PERCEPTIONTYPE p = new PERCEPTIONTYPE(args);
+        static string GeneratePerceptionCode(Perception perception, ScriptTemplate scriptTemplate)
+        {
+            if (perception is CustomPerception customPerception)
+            {
+                var parameters = new List<string>();
+
+                var initMethodArg = GenerateSerializedMethodCode(customPerception.init, scriptTemplate);
+                var checkMethodArg = GenerateSerializedMethodCode(customPerception.check, scriptTemplate);
+                var resetMethodArg = GenerateSerializedMethodCode(customPerception.reset, scriptTemplate);
+
+                if (initMethodArg != null) parameters.Add(initMethodArg);
+                if (checkMethodArg != null) parameters.Add(checkMethodArg);
+                else parameters.Add("() => false");
+                if (resetMethodArg != null) parameters.Add(resetMethodArg);
+
+                return $"new {nameof(ConditionPerception)}({string.Join(", ", parameters)})";
+            }
+            else if (perception is UnityPerception unityPerception)
+            {
+                return GenerateConstructorCode(unityPerception, scriptTemplate);
+            }
+            else
+                return null;
+        }
+
+        #endregion
+
+
+        #region ------------------------------------------ Graphs ------------------------------------------
         /// <summary>
         /// Add all the instructions to create the graph nodes and connections in the code.
         /// </summary>
@@ -188,7 +359,7 @@ namespace BehaviourAPI.Unity.Editor
 
             var graph = graphAsset.Graph;
 
-            scriptTemplate.AddLine($"/* --------------------------- {graphName} --------------------------- */");
+            scriptTemplate.AddLine($"// {graphName}:");
             if (graph is FSM fsm)
             {
                 var states = graphAsset.Nodes.FindAll(n => n.Node is State);
@@ -266,6 +437,9 @@ namespace BehaviourAPI.Unity.Editor
                 }
             }
         }
+        #endregion
+
+        #region --------------------------------------- UtilitySystems ---------------------------------------
 
         /// <summary>
         /// Generates code for a utility system's factor. If the factor has childs, the method generates code recursively.
@@ -381,6 +555,9 @@ namespace BehaviourAPI.Unity.Editor
             }
             return template.AddVariableDeclarationLine(selectableNode.GetType(), nodeName, asset, $"{graphName}.{method}");
         }
+        #endregion
+
+        #region ----------------------------------------- BTNodes -----------------------------------------
 
         /// <summary>
         /// Generates code for an BTNode. If the node has childs, generates code recursively.
@@ -431,6 +608,9 @@ namespace BehaviourAPI.Unity.Editor
             return template.AddVariableDeclarationLine(btNode.GetType(), nodeName, asset, $"{graphName}.{method}");
         }
 
+        #endregion
+
+        #region ------------------------------------------- FSMs ------------------------------------------
         /// <summary>
         /// 
         /// </summary>
@@ -451,7 +631,7 @@ namespace BehaviourAPI.Unity.Editor
             if (includeNodeName && !string.IsNullOrEmpty(asset.Name)) args.Add($"\"{asset.Name}\"");
 
             var actionCode = GenerateActionCode(state.Action, template);
-            args.Add(actionCode);
+            if(!string.IsNullOrEmpty(actionCode)) args.Add(actionCode);
             return template.AddVariableDeclarationLine(state.GetType(), nodeName, asset, $"{graphName}.CreateState({args.Join()})");
         }
 
@@ -480,25 +660,16 @@ namespace BehaviourAPI.Unity.Editor
             var sourceState = template.FindVariableName(asset.Parents.FirstOrDefault()) ?? "null/*ERROR*/";
             args.Add(sourceState);
 
-            if(transition is StateTransition stateTransition)
+            var perceptionCode = "";
+
+            if (transition is StateTransition stateTransition)
             {
                 var targetState = template.FindVariableName(asset.Childs.FirstOrDefault()) ?? "null/*ERROR*/";
-                args.Add(targetState);
+                args.Add(targetState);                
 
-                var perceptionCode = "";
-                if(stateTransition.Perception != null)
+                if(stateTransition is Framework.Adaptations.StateTransition sta)
                 {
-                    perceptionCode = GeneratePerceptionCode(transition.Perception, template);
-                }
-                else if (stateTransition is Framework.Adaptations.StateTransition adaptedTransition && 
-                    adaptedTransition.StatusFlags != StatusFlags.None)
-                {
-                    perceptionCode = $"new {nameof(ExecutionStatusPerception)}({sourceState}, {adaptedTransition.StatusFlags.ToCodeFormat()})";
-                }
-                if (!string.IsNullOrEmpty(perceptionCode))
-                {
-                    args.Add(perceptionCode);
-                    perceptionAdded = true;
+                    perceptionCode = template.FindVariableName(sta.perception);
                 }
                
                 method = "CreateTransition";
@@ -507,40 +678,19 @@ namespace BehaviourAPI.Unity.Editor
             {
                 args.Add(exitTransition.ExitStatus.ToCodeFormat());
 
-                var perceptionCode = "";
-                if (exitTransition.Perception != null)
+
+                if (exitTransition is Framework.Adaptations.ExitTransition sta)
                 {
-                    perceptionCode = GeneratePerceptionCode(transition.Perception, template);
-                }
-                else if (exitTransition is Framework.Adaptations.ExitTransition adaptedTransition &&
-                    adaptedTransition.StatusFlags != StatusFlags.None)
-                {
-                    perceptionCode = $"new {nameof(ExecutionStatusPerception)}({sourceState}, {adaptedTransition.StatusFlags.ToCodeFormat()})";
-                }
-                if (!string.IsNullOrEmpty(perceptionCode))
-                {
-                    args.Add(perceptionCode);
-                    perceptionAdded = true;
+                    perceptionCode = template.FindVariableName(sta.perception);
                 }
 
                 method = "CreateExitTransition";
             }
             else if (transition is PopTransition popTransition)
             {
-                var perceptionCode = "";
-                if (popTransition.Perception != null)
+                if (popTransition is Framework.Adaptations.PopTransition sta)
                 {
-                    perceptionCode = GeneratePerceptionCode(transition.Perception, template);
-                }
-                else if (popTransition is Framework.Adaptations.PopTransition adaptedTransition &&
-                    adaptedTransition.StatusFlags != StatusFlags.None)
-                {
-                    perceptionCode = $"new {nameof(ExecutionStatusPerception)}({sourceState}, {adaptedTransition.StatusFlags.ToCodeFormat()})";
-                }
-                if (!string.IsNullOrEmpty(perceptionCode))
-                {
-                    args.Add(perceptionCode);
-                    perceptionAdded = true;
+                    perceptionCode = template.FindVariableName(sta.perception);
                 }
 
                 method = "CreatePopTransition";
@@ -550,23 +700,18 @@ namespace BehaviourAPI.Unity.Editor
                 var targetState = template.FindVariableName(asset.Childs.FirstOrDefault()) ?? "null/*ERROR*/";
                 args.Add(targetState);
 
-                var perceptionCode = "";
-                if (pushTransition.Perception != null)
+                if (pushTransition is Framework.Adaptations.PushTransition sta)
                 {
-                    perceptionCode = GeneratePerceptionCode(transition.Perception, template);
-                }
-                else if (pushTransition is Framework.Adaptations.PushTransition adaptedTransition &&
-                    adaptedTransition.StatusFlags != StatusFlags.None)
-                {
-                    perceptionCode = $"new {nameof(ExecutionStatusPerception)}({sourceState}, {adaptedTransition.StatusFlags.ToCodeFormat()})";
-                }
-                if (!string.IsNullOrEmpty(perceptionCode))
-                {
-                    args.Add(perceptionCode);
-                    perceptionAdded = true;
+                    perceptionCode = template.FindVariableName(sta.perception);
                 }
 
                 method = "CreatePushTransition";
+            }
+
+            if (!string.IsNullOrEmpty(perceptionCode))
+            {
+                args.Add(perceptionCode);
+                perceptionAdded = true;
             }
 
             if (transition.Action != null)
@@ -579,73 +724,14 @@ namespace BehaviourAPI.Unity.Editor
                 }
             }
 
-            if (!transition.isPulled) args.Add("isPulled: false");
+            if (transition.StatusFlags != StatusFlags.Actived) args.Add($"statusFlags: {transition.StatusFlags.ToCodeFormat()}");
 
             return template.AddVariableDeclarationLine(transition.GetType(), nodeName, asset, $"{graphName}.{method}({args.Join()})");
         }
 
-        /// <summary>
-        /// Generates code for a action inline.
-        /// new ACTIONTYPE(args)
-        /// </summary>
-        static string GenerateActionCode(Action action, ScriptTemplate scriptTemplate)
-        {
-            if (action is CustomAction customAction)
-            {
-                var parameters = new List<string>();
+        #endregion
 
-                var startMethodArg = GenerateSerializedMethodCode(customAction.start, scriptTemplate);
-                var updateMethodArg = GenerateSerializedMethodCode(customAction.update, scriptTemplate);
-                var stopMethodArg = GenerateSerializedMethodCode(customAction.stop, scriptTemplate);
-
-                if (startMethodArg != null) parameters.Add(startMethodArg);
-                if (updateMethodArg != null) parameters.Add(updateMethodArg);
-                else parameters.Add("() => Status.Running");
-                if (stopMethodArg != null) parameters.Add(stopMethodArg);
-
-                return $"new {nameof(FunctionalAction)}({string.Join(", ", parameters)})";
-
-            }
-            else if (action is UnityAction unityAction)
-            {
-                return GenerateConstructorCode(unityAction, scriptTemplate);
-            }
-            else if (action is SubgraphAction subgraphAction)
-            {
-                var graphName = scriptTemplate.FindVariableName(subgraphAction.Subgraph);
-                return $"new {nameof(SubsystemAction)}({graphName ?? "null /* Missing subgraph */"})";
-            }
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Generates code for a perception inline.
-        /// new PERCEPTIONTYPE(args)
-        static string GeneratePerceptionCode(Perception perception, ScriptTemplate scriptTemplate)
-        {
-            if (perception is CustomPerception customPerception)
-            {
-                var parameters = new List<string>();
-
-                var initMethodArg = GenerateSerializedMethodCode(customPerception.init, scriptTemplate);
-                var checkMethodArg = GenerateSerializedMethodCode(customPerception.check, scriptTemplate);
-                var resetMethodArg = GenerateSerializedMethodCode(customPerception.reset, scriptTemplate);
-
-                if (initMethodArg != null) parameters.Add(initMethodArg);
-                if (checkMethodArg != null) parameters.Add(checkMethodArg);
-                else parameters.Add("() => false");
-                if (resetMethodArg != null) parameters.Add(resetMethodArg);
-
-                return $"new {nameof(ConditionPerception)}({string.Join(", ", parameters)})";
-            }
-            else if (perception is UnityPerception unityPerception)
-            {
-                return GenerateConstructorCode(unityPerception, scriptTemplate);
-            }
-            else
-                return null;
-        }
+        #region ---------------------------------------- Other elements ----------------------------------------
 
         /// <summary>
         /// Generates a constructor code for a class. 
@@ -732,5 +818,6 @@ namespace BehaviourAPI.Unity.Editor
             }
             return functionCode;
         }
+        #endregion
     }
 }
