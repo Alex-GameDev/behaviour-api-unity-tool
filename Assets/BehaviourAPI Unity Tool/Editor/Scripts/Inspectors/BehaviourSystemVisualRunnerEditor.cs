@@ -27,7 +27,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     if (Application.isPlaying)
                     {
-                        EditorWindow.GetWindow<SceneView>().ShowNotification(new GUIContent("Cannot bind behaviour system on runtime"));
+                        EditorWindow.GetWindow<BehaviourSystemEditorWindow>().ShowNotification(new GUIContent("Cannot bind behaviour system on runtime"));
                         return;
                     }
 
@@ -54,7 +54,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     if (Application.isPlaying)
                     {
-                        EditorWindow.GetWindow<SceneView>().ShowNotification(new GUIContent("Cannot delete behaviour system on runtime"));
+                        EditorWindow.GetWindow<BehaviourSystemEditorWindow>().ShowNotification(new GUIContent("Cannot delete behaviour system on runtime"));
                         return;
                     }
 

@@ -29,7 +29,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (Application.isPlaying && !AssetDatabase.Contains(asset))
                 {
-                    EditorWindow.GetWindow<SceneView>().ShowNotification(new GUIContent("Cannot edit binded behaviour system on runtime"));
+                    EditorWindow.GetWindow<BehaviourSystemEditorWindow>().ShowNotification(new GUIContent("Cannot edit binded behaviour system on runtime"));
                     return;
                 }
 
