@@ -14,6 +14,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 using ExitTransition = BehaviourAPI.StateMachines.ExitTransition;
+using ProbabilisticState = BehaviourAPI.StateMachines.ProbabilisticState;
 using State = BehaviourAPI.StateMachines.State;
 using StateTransition = BehaviourAPI.StateMachines.StateTransition;
 using Transition = BehaviourAPI.StateMachines.Transition;

@@ -1,5 +1,5 @@
-using BehaviourAPI.Core.Perceptions;
-using UnityEngine;
+using BehaviourAPI.Core;
+using System.Collections.Generic;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
@@ -7,10 +7,10 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     {
         public PerceptionAsset perception;
 
-        public override void Start()
+        protected override void BuildConnections(List<Node> parents, List<Node> children)
         {
+            base.BuildConnections(parents, children);
             Perception = perception?.perception;
-            base.Start();
         }
     }
 }

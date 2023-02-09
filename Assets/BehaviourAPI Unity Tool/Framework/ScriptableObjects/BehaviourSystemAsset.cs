@@ -92,9 +92,9 @@ namespace BehaviourAPI.Unity.Framework
 
         public BehaviourGraph Build(NamingSettings nodeSettings, NamingSettings perceptionSettings, NamingSettings pushSettings)
         {
+            BuildPullPerceptionMap(perceptionSettings);
             BuildGraphMap(nodeSettings);
             BuildPushPerceptionMap(pushSettings);
-            BuildPullPerceptionMap(perceptionSettings);
             return MainGraph?.Graph ?? null;
         }
 

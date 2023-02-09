@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
-    public class State : BehaviourAPI.StateMachines.State, ISerializationCallbackReceiver
+    public class State : StateMachines.State, ISerializationCallbackReceiver
     {
         [SerializeReference] Action _action;
 
