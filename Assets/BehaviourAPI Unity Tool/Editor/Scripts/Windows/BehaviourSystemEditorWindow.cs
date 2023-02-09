@@ -16,6 +16,7 @@ namespace BehaviourAPI.Unity.Editor
 {
     public class BehaviourSystemEditorWindow : EditorWindow
     {
+        public static BehaviourSystemEditorWindow Instance;
         private static string path => BehaviourAPISettings.instance.EditorLayoutsPath + "windows/behavioursystemwindow.uxml";
         private static string emptyPanelPath => BehaviourAPISettings.instance.EditorLayoutsPath + "emptygraphpanel.uxml";
 
@@ -72,8 +73,14 @@ namespace BehaviourAPI.Unity.Editor
             AddLayout();           
         }
 
+        private void OnEnable()
+        {
+            Instance = this;
+        }
+
         void OnDisable()
         {
+            Instance = null;
             SystemAsset = null;
             IsAsset = false;
             IsRuntime = false;
@@ -465,6 +472,17 @@ namespace BehaviourAPI.Unity.Editor
         void Toast(string message, float timeout = .5f)
         {
             ShowNotification(new GUIContent(message), timeout);
+        }
+
+        public void OnChangePlayModeState(PlayModeStateChange playModeStateChange)
+        {
+            if(playModeStateChange == PlayModeStateChange.ExitingPlayMode)
+            {
+                SystemAsset = null;
+                IsAsset = false;
+                IsRuntime = false;
+                Refresh();
+            }
         }
     }
 }
