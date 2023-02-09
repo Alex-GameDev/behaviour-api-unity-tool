@@ -595,8 +595,14 @@ namespace BehaviourAPI.Unity.Editor
             {
                 var childName = GenerateCodeForBTNode(asset.Childs.FirstOrDefault(), template, graphName, includeNodeName) ?? "null /* Missing child */";
                 args.Add(childName);
+
                 var setterCode = GenerateSetterCode(decorator, template);
                 method = $"CreateDecorator<{typeName}>({args.Join()}){setterCode}";
+                if (btNode is Framework.Adaptations.ConditionNode cn)
+                {
+                    var perceptionName = template.FindVariableName(cn.perception) ?? "null /*Missing perception*/";
+                    method += $".SetPerception({perceptionName})";
+                }
             }
             else if (btNode is LeafNode leaf)
             {
@@ -806,8 +812,8 @@ namespace BehaviourAPI.Unity.Editor
                         }
                         else if(field.FieldType.IsAssignableFrom(typeof(Perception)))
                         {
-                            argCode = GeneratePerceptionCode(field.GetValue(node) as Perception, scriptTemplate);
-                        }
+                            break;
+                        }                       
                         else
                         {
                             argCode = scriptTemplate.AddVariableDeclaration(parameters[0].ParameterType, field.Name, field.GetValue(node));

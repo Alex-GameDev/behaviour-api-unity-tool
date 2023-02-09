@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework
 {
-    public class CompoundPerceptionAsset : PerceptionAsset, ISerializationCallbackReceiver
+    public class CompoundPerceptionAsset : PerceptionAsset
     {
         [HideInInspector] public List<PerceptionAsset> subperceptions = new List<PerceptionAsset>();
 
@@ -21,13 +21,9 @@ namespace BehaviourAPI.Unity.Framework
             return asset;
         }
 
-        public void OnAfterDeserialize()
+        public override void Build()
         {
-            return;
-        }
-
-        public void OnBeforeSerialize()
-        {
+            base.Build();
             if(perception is CompoundPerception compoundPerception)
                 compoundPerception.Perceptions = subperceptions.Select(sp => sp.perception).ToList();
         }

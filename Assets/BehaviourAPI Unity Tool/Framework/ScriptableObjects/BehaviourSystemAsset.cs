@@ -92,7 +92,6 @@ namespace BehaviourAPI.Unity.Framework
 
         public BehaviourGraph Build(NamingSettings nodeSettings, NamingSettings perceptionSettings, NamingSettings pushSettings)
         {
-            graphs.ForEach(g => g.Build());
             BuildGraphMap(nodeSettings);
             BuildPushPerceptionMap(pushSettings);
             BuildPullPerceptionMap(perceptionSettings);
@@ -101,6 +100,8 @@ namespace BehaviourAPI.Unity.Framework
 
         void BuildGraphMap(NamingSettings settings)
         {
+            graphs.ForEach(g => g.Build());
+
             graphMap = new Dictionary<string, BehaviourGraph>();
 
             if(settings == NamingSettings.TryAddAlways)
@@ -131,6 +132,8 @@ namespace BehaviourAPI.Unity.Framework
 
         void BuildPushPerceptionMap(NamingSettings settings)
         {
+            pushPerceptions.ForEach(pp => pp.Build());
+
             pushPerceptionMap = new Dictionary<string, PushPerception>();
             if (settings == NamingSettings.TryAddAlways)
             {
@@ -160,6 +163,8 @@ namespace BehaviourAPI.Unity.Framework
 
         void BuildPullPerceptionMap(NamingSettings settings)
         {
+            perceptions.ForEach(p => p.Build());
+
             pullPerceptionMap = new Dictionary<string, Perception>();
             if (settings == NamingSettings.TryAddAlways)
             {

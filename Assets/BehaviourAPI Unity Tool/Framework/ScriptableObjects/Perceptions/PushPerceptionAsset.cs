@@ -10,7 +10,7 @@ namespace BehaviourAPI.Unity.Framework
     /// <summary>
     /// Stores a push perception as an unity object.
     /// </summary>
-    public class PushPerceptionAsset : ScriptableObject, ISerializationCallbackReceiver
+    public class PushPerceptionAsset : ScriptableObject
     {
         public string Name;
 
@@ -30,7 +30,7 @@ namespace BehaviourAPI.Unity.Framework
             return pushPerceptionAsset;
         }
 
-        public void OnAfterDeserialize()
+        public void Build()
         {
             pushPerception.PushListeners = new List<IPushActivable>();
             targets.ForEach(t =>
@@ -40,11 +40,6 @@ namespace BehaviourAPI.Unity.Framework
                     pushPerception.PushListeners.Add(pushTarget);
                 }
             });
-        }
-
-        public void OnBeforeSerialize()
-        {
-            return;
         }
     }
 }

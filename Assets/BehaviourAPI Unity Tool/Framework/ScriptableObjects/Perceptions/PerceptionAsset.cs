@@ -32,4 +32,9 @@ public class PerceptionAsset : ScriptableObject
         asset.perception = (Perception) Activator.CreateInstance(type);
         return asset;
     }
+
+    public virtual void Build()
+    {
+        return;
+    }
 }
