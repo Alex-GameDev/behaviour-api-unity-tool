@@ -20,10 +20,17 @@ namespace BehaviourAPI.Unity.Demo
 
         protected override BehaviourGraph CreateGraph(HashSet<BehaviourGraph> registeredGraphs)
         {
-            var fishPerception = new ConditionPerception(() => _fishCatched);
+            /* --------------------------- GRAPHS: --------------------------- */
 
             var bt = new BehaviourTree();
 
+            /* --------------------------- Perceptions: --------------------------- */
+
+            var fishPerception = new ConditionPerception(() => _fishCatched);
+
+            /* --------------------------- Nodes: --------------------------- */
+
+            //bt:
             var throwTheRod = bt.CreateLeafNode("Throw rod", new FunctionalAction(StartThrow, () => _rod.IsThrown() ? Status.Success : Status.Running));
             var catchSomething = bt.CreateLeafNode("Catch sonmething", new FunctionalAction(StartCatch, () => _rod.IsPickedUp() ? Status.Success : Status.Running));
 

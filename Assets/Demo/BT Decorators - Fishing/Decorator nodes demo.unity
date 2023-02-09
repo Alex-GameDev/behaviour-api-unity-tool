@@ -138,7 +138,7 @@ MonoBehaviour:
   Name: storeInBasket
   node:
     rid: 2511131225754173448
-  position: {x: 700, y: 989}
+  position: {x: 300, y: 800}
   parents:
   - {fileID: 43033864}
   childs: []
@@ -177,7 +177,7 @@ MonoBehaviour:
   Name: check
   node:
     rid: 2511131225754173447
-  position: {x: 722, y: 792}
+  position: {x: 300, y: 600}
   parents:
   - {fileID: 1909721724}
   childs:
@@ -188,20 +188,7 @@ MonoBehaviour:
     - rid: 2511131225754173447
       type: {class: ConditionNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        _perception:
-          rid: 2511131225754173454
-    - rid: 2511131225754173454
-      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        init:
-          component: {fileID: 0}
-          methodName: 
-        check:
-          component: {fileID: 90416565}
-          methodName: IsFishCatched
-        reset:
-          component: {fileID: 0}
-          methodName: 
+        perception: {fileID: 2117181221}
 --- !u!1001 &90416561
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -211,11 +198,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4600201873981623957, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
       propertyPath: m_Name
-      value: Test boy BT (Visual graph)
+      value: Test boy BT (Visual)
       objectReference: {fileID: 0}
     - target: {fileID: 4600201873981623957, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
       propertyPath: m_RootOrder
@@ -316,6 +303,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e693077d91cc3394791faadbd922de3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nodeNamingSettings: 1
+  perceptionNamingSettings: 1
+  pullPerceptionNamingSettings: 1
   SystemAsset: {fileID: 308420365}
   _fishPrefab: {fileID: 5281474623226569190, guid: c63f1f735b851024faf98461c4931367, type: 3}
   _bootPrefab: {fileID: 2808376287602457127, guid: 273a344fd2f2c1e4984ab8bc8754d7e3, type: 3}
@@ -592,7 +582,7 @@ MonoBehaviour:
   Name: returnToWater
   node:
     rid: 2511131225754173449
-  position: {x: 938, y: 800}
+  position: {x: 600, y: 600}
   parents:
   - {fileID: 1909721724}
   childs: []
@@ -616,6 +606,33 @@ MonoBehaviour:
         stop:
           component: {fileID: 0}
           methodName: 
+--- !u!114 &302121898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601717732746985478
+  position: {x: 0, y: 400}
+  parents:
+  - {fileID: 1122302136}
+  childs:
+  - {fileID: 1443121607}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717732746985478
+      type: {class: UnityTimerDecorator, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        TotalTime: 3
 --- !u!114 &308420365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -631,6 +648,8 @@ MonoBehaviour:
   graphs:
   - {fileID: 1693644974}
   pushPerceptions: []
+  perceptions:
+  - {fileID: 2117181221}
 --- !u!114 &322078536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -646,7 +665,7 @@ MonoBehaviour:
   Name: throwTheRod
   node:
     rid: 2511131225754173443
-  position: {x: 184, y: 593}
+  position: {x: -300, y: 400}
   parents:
   - {fileID: 1122302136}
   childs: []
@@ -670,33 +689,6 @@ MonoBehaviour:
         stop:
           component: {fileID: 0}
           methodName: 
---- !u!114 &344836148
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: timer
-  node:
-    rid: 2511131225754173444
-  position: {x: 385, y: 630}
-  parents:
-  - {fileID: 1122302136}
-  childs:
-  - {fileID: 1443121607}
-  references:
-    version: 2
-    RefIds:
-    - rid: 2511131225754173444
-      type: {class: UnityTimerDecorator, ns: BehaviourAPI.Unity.Runtime, asm: Assembly-CSharp}
-      data:
-        TotalTime: 3
 --- !u!1 &394313092
 GameObject:
   m_ObjectHideFlags: 0
@@ -741,7 +733,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4600201873981623957, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
       propertyPath: m_RootOrder
@@ -990,7 +982,7 @@ MonoBehaviour:
   Name: loop
   node:
     rid: 2511131225754173441
-  position: {x: 391, y: 259}
+  position: {x: 75, y: 0}
   parents: []
   childs:
   - {fileID: 1122302136}
@@ -1242,12 +1234,12 @@ MonoBehaviour:
   Name: seq
   node:
     rid: 2511131225754173442
-  position: {x: 387, y: 405}
+  position: {x: 75, y: 200}
   parents:
   - {fileID: 911924050}
   childs:
   - {fileID: 322078536}
-  - {fileID: 344836148}
+  - {fileID: 302121898}
   - {fileID: 1909721724}
   references:
     version: 2
@@ -1304,9 +1296,9 @@ MonoBehaviour:
   Name: catchSomething
   node:
     rid: 2511131225754173445
-  position: {x: 386, y: 832}
+  position: {x: 0, y: 600}
   parents:
-  - {fileID: 344836148}
+  - {fileID: 302121898}
   childs: []
   references:
     version: 2
@@ -1445,12 +1437,12 @@ MonoBehaviour:
   - {fileID: 911924050}
   - {fileID: 1122302136}
   - {fileID: 322078536}
-  - {fileID: 344836148}
   - {fileID: 1443121607}
   - {fileID: 1909721724}
   - {fileID: 43033864}
   - {fileID: 8931427}
   - {fileID: 275182123}
+  - {fileID: 302121898}
   references:
     version: 2
     RefIds:
@@ -1613,7 +1605,7 @@ MonoBehaviour:
   Name: sel
   node:
     rid: 2511131225754173446
-  position: {x: 736, y: 598}
+  position: {x: 450, y: 400}
   parents:
   - {fileID: 1122302136}
   childs:
@@ -1626,3 +1618,33 @@ MonoBehaviour:
       type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
         IsRandomized: 0
+--- !u!114 &2117181221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: new pushperception
+  perception:
+    rid: 3601717732746985477
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717732746985477
+      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        init:
+          component: {fileID: 0}
+          methodName: 
+        check:
+          component: {fileID: 90416565}
+          methodName: IsFishCatched
+        reset:
+          component: {fileID: 0}
+          methodName: 

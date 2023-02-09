@@ -11,6 +11,9 @@ public class FishingBoyBTVisualRunner : VisualBehaviourRunner
     bool _fishCatched;
     GameObject _currentCapture;
 
+    float _time;
+    float totalTimeToDrop = 2f;
+
     [CustomMethod]
     public void DropCaptureInWater() => DropCapture(_bootPrefab, _bootDropTarget, true);
 
@@ -38,7 +41,16 @@ public class FishingBoyBTVisualRunner : VisualBehaviourRunner
     public bool IsFishCatched() => _fishCatched;
 
     [CustomMethod]
-    public Status CompleteOnSuccess() => Status.Success;
+    public Status CompleteOnSuccess()
+    {
+        if(_time < totalTimeToDrop)
+        {
+            _time += Time.deltaTime;
+            return Status.Running;
+        }
+        _time = 0f;
+        return Status.Success;
+    }
 
     [CustomMethod]
     public Status RodThrownStatus() => _rod.IsThrown() ? Status.Success : Status.Running;
@@ -52,5 +64,6 @@ public class FishingBoyBTVisualRunner : VisualBehaviourRunner
         var drop = Instantiate(capturePrefab, target.position, target.rotation);
         drop.transform.localScale = target.localScale;
         if (destroyAfter) Destroy(drop, 2f);
+        _time = 0f;
     }
 }
