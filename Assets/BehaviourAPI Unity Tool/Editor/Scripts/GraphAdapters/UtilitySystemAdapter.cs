@@ -44,8 +44,10 @@ namespace BehaviourAPI.Unity.Editor
         protected override NodeView GetLayout(NodeAsset asset, BehaviourGraphView graphView) => new LayeredNodeView(asset, graphView);
 
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
-        {            
+        {
+            menuEvt.menu.AppendAction("Order childs by position (y)", _ => node.Node.OrderChilds(n => n.Position.y), (node.Node.Childs.Count > 1).ToMenuStatus());
         }
+
         protected override void SetUpDetails(NodeView nodeView)
         {
             var node = nodeView.Node.Node;
@@ -106,6 +108,7 @@ namespace BehaviourAPI.Unity.Editor
 
         protected override void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt)
         {
+            menuEvt.menu.AppendAction("Order all node's child by position (y)", _ => graph.GraphAsset.Nodes.ForEach(n => n.OrderChilds(n => n.Position.y)));
         }
 
 

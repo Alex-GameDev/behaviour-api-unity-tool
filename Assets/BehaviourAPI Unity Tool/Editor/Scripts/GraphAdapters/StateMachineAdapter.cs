@@ -53,6 +53,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             menuEvt.menu.AppendAction("Set entry state", _ => ChangeEntryState(node), 
                 _ => (node.Node != null && node.Node.Node is State) ? (node != _entryStateView).ToMenuStatus() : DropdownMenuAction.Status.Hidden);
+            menuEvt.menu.AppendAction("Order childs by position (x)", _ => node.Node.OrderChilds(n => n.Position.x), (node.Node.Childs.Count > 1).ToMenuStatus());
+            menuEvt.menu.AppendAction("Order childs by position (y)", _ => node.Node.OrderChilds(n => n.Position.y), (node.Node.Childs.Count > 1).ToMenuStatus());
         }
 
         protected override void SetUpDetails(NodeView nodeView)
@@ -121,6 +123,8 @@ namespace BehaviourAPI.Unity.Editor
 
         protected override void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt)
         {
+            menuEvt.menu.AppendAction("Order all node's child by position (x)", _ => graph.GraphAsset.Nodes.ForEach(n => n.OrderChilds(n => n.Position.x)));
+            menuEvt.menu.AppendAction("Order all node's child by position (y)", _ => graph.GraphAsset.Nodes.ForEach(n => n.OrderChilds(n => n.Position.y)));
         }
 
         #endregion

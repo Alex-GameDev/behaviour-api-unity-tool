@@ -10,10 +10,6 @@ using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Framework
 {
-    /// <summary>
-    /// Stores a system compound by multiple behaviour graphs as an unity object
-    /// </summary>
-    [CreateAssetMenu(menuName = "BehaviourAPI/Graph", order = 0)]
     public class BehaviourSystemAsset : ScriptableObject
     {
         [SerializeField] List<GraphAsset> graphs = new List<GraphAsset>();
