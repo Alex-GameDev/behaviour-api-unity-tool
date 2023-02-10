@@ -12,92 +12,12 @@ using UnityEngine.UIElements;
 
 using LeafNode = BehaviourAPI.Unity.Framework.Adaptations.LeafNode;
 using ConditionNode = BehaviourAPI.Unity.Framework.Adaptations.ConditionNode;
-using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
     [CustomAdapter(typeof(BehaviourTree))]
     public class BehaviourTreeAdapter : GraphAdapter
     {
-        #region --------------- Assets generation ---------------
-
-        public override GraphAsset ConvertCodeToAsset(BehaviourGraph graph)
-        {
-            Dictionary<NodeAsset, int> nodeLevelMap = new Dictionary<NodeAsset, int>();
-
-            var graphAsset = GraphAsset.Create("graph", graph);
-            return null;
-        }
-
-        #endregion
-
-        #region ---------------- Code generation ----------------
-
-        //public override void ConvertAssetToCode(GraphAsset graphAsset, ScriptTemplate scriptTemplate)
-        //{
-        //    var graphName = scriptTemplate.FindVariableName(graphAsset);
-
-        //    scriptTemplate.AddLine($"// BehaviourTree - {graphName}:");
-
-        //    var rootNode = graphAsset.Nodes.FirstOrDefault();
-
-        //    if (rootNode != null)
-        //    {
-        //        var rootNodeName = AddNode(rootNode, scriptTemplate, graphName);
-        //        scriptTemplate.AddLine($"{graphName}.SetRootNode({rootNodeName});");
-        //    }
-        //}
-
-        //public override string CreateGraphLine(GraphAsset graphAsset, ScriptTemplate scriptTemplate, string graphName)
-        //{
-        //    if(graphAsset.Graph is BehaviourTree behaviourTree)
-        //    {
-        //        scriptTemplate.AddUsingDirective(typeof(BehaviourTree).Namespace);
-        //        return scriptTemplate.AddVariableInstantiationLine(behaviourTree.TypeName(), graphName, graphAsset);
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //}
-
-        //string AddNode(NodeAsset node, ScriptTemplate template, string graphName)
-        //{
-        //    var btNode = node.Node as BTNode;
-        //    var nodeName = node.Name ?? btNode.TypeName().ToLower();
-        //    string typeName = btNode.TypeName();
-
-        //    var method = string.Empty;
-
-        //    if (btNode is CompositeNode composite)
-        //    {
-        //        var args = new List<string>();
-        //        args.Add(composite.IsRandomized.ToCodeFormat());
-
-        //        foreach (var child in node.Childs)
-        //        {
-        //            var childName = AddNode(child, template, graphName);
-        //            if (childName != null) args.Add(childName);
-        //        }
-        //        method = $"CreateComposite<{typeName}>({args.Join()})";
-        //    }
-        //    else if (btNode is DecoratorNode decorator)
-        //    {
-        //        var childName = AddNode(node.Childs.FirstOrDefault(), template, graphName) ?? "null /* Missing child */";
-
-        //        var propertyCode = GenerateSetterCode(decorator, template);
-        //        method = $"CreateDecorator<{typeName}>({childName}){propertyCode}";                
-        //    }
-        //    else if (btNode is LeafNode leaf)
-        //    {
-        //        var actionCode = GenerateActionCode(leaf.Action, template) ?? "null /* Missing action */";
-        //        method = $"CreateLeafNode({actionCode})";                
-        //    }
-        //    return template.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.{method}");
-        //}
-
-        #endregion
-
         #region ------------------- Rendering -------------------
 
         NodeView _rootView;
@@ -131,7 +51,7 @@ namespace BehaviourAPI.Unity.Editor
         protected override void SetUpDetails(NodeView nodeView)
         {
             var node = nodeView.Node.Node;
-            if (node is LeafNode) return;
+            if (node is BehaviourTrees.LeafNode) return;
             else
             {
                 nodeView.IconElement.Enable();
