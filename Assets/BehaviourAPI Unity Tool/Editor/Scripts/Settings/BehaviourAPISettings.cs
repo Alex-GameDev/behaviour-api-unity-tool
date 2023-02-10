@@ -25,31 +25,37 @@ namespace BehaviourAPI.Unity.Editor
         public string EditorLayoutsPath => $"{RootPath}/Editor/uxml/";
         public string EditorStylesPath => $"{RootPath}/Editor/uss/";
 
-
-        public string Assemblies;
+        public string CustomAssemblies;
 
         public readonly string[] DefaultAssemblies = new[]
         {
             "Assembly-CSharp",
-            "BehaviourAPI.Unity.Runtime",
-            "BehaviourAPI.Unity.Framework",
-            "BehaviourAPI.Unity.Editor",
             "BehaviourAPI.Core",
             "BehaviourAPI.StateMachines",
             "BehaviourAPI.BehaviourTrees",
-            "BehaviourAPI.UtilitySystems"
+            "BehaviourAPI.UtilitySystems",
+            "BehaviourAPI.Unity.Runtime",
+            "BehaviourAPI.Unity.Framework",
+            "BehaviourAPI.Unity.Editor"
         };
+
+        List<Assembly> assemblies = new List<Assembly>();
 
         public void Save() => Save(true);
 
-        public List<Assembly> GetAssemblies()
-        {
-            return DefaultAssemblies.Select(assemblyName => Assembly.Load(assemblyName)).ToList();
-        }
+        public List<Assembly> GetAssemblies() => assemblies;
 
         public List<Type> GetTypes()
         {
-            return DefaultAssemblies.Select(assemblyName => Assembly.Load(assemblyName)).SelectMany(a => a.GetTypes()).ToList();
+            return GetAssemblies().SelectMany(a => a.GetTypes()).ToList();
+        }
+
+        public void ReloadAssemblies()
+        {
+            var customAssemblies = CustomAssemblies.Split(';').ToList();
+            var allAssemblyNames = customAssemblies.Union(DefaultAssemblies).ToHashSet();
+            assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList().FindAll(assembly =>
+                allAssemblyNames.Contains(assembly.GetName().Name));
         }
     }
 }

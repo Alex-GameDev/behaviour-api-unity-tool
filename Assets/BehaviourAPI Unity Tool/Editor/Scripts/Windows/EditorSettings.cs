@@ -11,12 +11,14 @@ namespace BehaviourAPI.Unity.Editor
         static EditorSettings()
         {
             EditorApplication.playModeStateChanged += RefreshBehaviourEditorWindow;
+            BehaviourAPISettings.instance.ReloadAssemblies();
         }
 
         static void RefreshBehaviourEditorWindow(PlayModeStateChange playModeStateChange)
         {
             if (BehaviourSystemEditorWindow.Instance != null)
                 BehaviourSystemEditorWindow.Instance.OnChangePlayModeState(playModeStateChange);
+
         }
     }
 }

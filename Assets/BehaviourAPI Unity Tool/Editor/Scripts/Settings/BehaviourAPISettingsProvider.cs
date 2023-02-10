@@ -12,25 +12,11 @@ namespace BehaviourAPI.Unity.Editor
     {
         class Styles
         {
-            public static GUIContent BehaviourGraphEditorWindowLayout = new GUIContent("BehaviourGraphEditorWindowLayout");
-
-            public static GUIContent AlertWindowLayout = new GUIContent("AlertWindowLayout");
-            public static GUIContent GraphCreationWindowLayout = new GUIContent("GraphCreationWindowLayout");
-            public static GUIContent ScriptCreationWindowLayout = new GUIContent("ScriptCreationWindowLayout");
-
-            public static GUIContent NodeLayout = new GUIContent("NodeLayout");
-            public static GUIContent ContainerLayout = new GUIContent("ContainerLayout");
-            public static GUIContent InspectorLayout = new GUIContent("InspectorLayout");
-            public static GUIContent EmptyGraphPanel = new GUIContent("EmptyGraphPanel");
-
-            public static GUIContent CustomActionLayout = new GUIContent("Custom Task Layout File");
-            public static GUIContent UnityActionLayout = new GUIContent("Unity Task Layout File");
-            public static GUIContent SubgraphActionLayout = new GUIContent("Subgraph Action Layout File");
-            public static GUIContent ExitActionLayout = new GUIContent("Exit Action Layout File");
-            public static GUIContent StatusPerceptionLayout = new GUIContent("Status Perception Layout File");
-            public static GUIContent CompoundPerceptionLayout = new GUIContent("Compound Perception Layout File");
-
+            public static GUIContent RootPath = new GUIContent("Package root path");
             public static GUIContent Assemblies = new GUIContent("Assemblies");
+
+            public static GUIContent ScriptPath = new GUIContent("Default script path");
+            public static GUIContent ScriptName = new GUIContent("Default script name");
         }
 
         SerializedObject m_SerializedObject;
@@ -50,8 +36,39 @@ namespace BehaviourAPI.Unity.Editor
         {
             using (CreateSettingsWindowGUIScope())
             {
-                EditorGUILayout.LabelField("Assemblies", EditorStyles.boldLabel);
-                m_SerializedObject.FindProperty("Assemblies").stringValue = EditorGUILayout.TextField(Styles.Assemblies, m_SerializedObject.FindProperty("Assemblies").stringValue);
+                EditorGUILayout.LabelField("General", EditorStyles.boldLabel);
+
+                var pathProp = m_SerializedObject.FindProperty("RootPath");
+                if(pathProp != null)
+                {
+                    pathProp.stringValue = EditorGUILayout.TextField(Styles.RootPath, pathProp.stringValue);
+                }
+
+                var assemblyProp = m_SerializedObject.FindProperty("CustomAssemblies");
+                if(assemblyProp != null)
+                {
+                    assemblyProp.stringValue = EditorGUILayout.TextField(Styles.Assemblies, assemblyProp.stringValue);
+                }
+
+                if (EditorGUI.EndChangeCheck())
+                {
+                    m_SerializedObject.ApplyModifiedProperties();
+                    BehaviourAPISettings.instance.Save();
+                }
+
+                EditorGUILayout.LabelField("Script generation", EditorStyles.boldLabel);
+
+                var scriptPathProp = m_SerializedObject.FindProperty("GenerateScriptDefaultPath");
+                if (scriptPathProp != null)
+                {
+                    scriptPathProp.stringValue = EditorGUILayout.TextField(Styles.ScriptName, scriptPathProp.stringValue);
+                }
+
+                var scriptNameProp = m_SerializedObject.FindProperty("GenerateScriptDefaultName");
+                if (scriptNameProp != null)
+                {
+                    scriptNameProp.stringValue = EditorGUILayout.TextField(Styles.ScriptName, scriptNameProp.stringValue);
+                }
 
                 if (EditorGUI.EndChangeCheck())
                 {
@@ -59,11 +76,6 @@ namespace BehaviourAPI.Unity.Editor
                     BehaviourAPISettings.instance.Save();
                 }
             }
-        }
-
-        void LayoutProperty(SerializedProperty property, GUIContent label, Type type)
-        {
-            property.objectReferenceValue = EditorGUILayout.ObjectField(label, property.objectReferenceValue, type, false);
         }
 
         [SettingsProvider]
