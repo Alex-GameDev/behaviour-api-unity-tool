@@ -42,20 +42,24 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
             agent.speed = 0f;
         }
 
-        protected override void OnUpdate()
+        public override string DisplayInfo => "Flee to random direction";
+
+        public override Status Update()
         {
             _timeRunning += Time.deltaTime;
 
             if (_timeRunning > maxTimeRunning)
             {
-                Failure();
+                return Status.Failure;
             }
             else if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
             {
-                Success();
+                return Status.Success;
+            }
+            else
+            {
+                return Status.Running;
             }
         }
-
-        public override string DisplayInfo => "Flee to random direction";
     }
 }

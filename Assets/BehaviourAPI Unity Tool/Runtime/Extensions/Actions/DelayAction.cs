@@ -1,3 +1,4 @@
+using BehaviourAPI.Core;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime.Extensions
@@ -18,23 +19,26 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
         }
 
         public override string DisplayInfo => "Wait $DelayTime seconds";
-        protected override void OnStart()
+
+        public override void Start()
         {
             _currentTime = 0;
         }
 
-        protected override void OnStop()
+        public override void Stop()
         {
             _currentTime = 0;
         }
 
-        protected override void OnUpdate()
+        public override Status Update()
         {
             _currentTime += Time.deltaTime;
             if (_currentTime > delayTime)
             {
-                Success();
+                return Status.Success;
             }
+            else
+                return Status.Running;
         }
     }
 }

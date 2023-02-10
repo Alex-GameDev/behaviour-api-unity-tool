@@ -41,9 +41,10 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
             agent.speed = 0f;
         }
 
-        protected override void OnUpdate()
+        public override Status Update()
         {
-            if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f) Success();
+            if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f) return Status.Success;
+            else return Status.Failure;
         }
 
         public override string DisplayInfo => "Move $agent to mousePosition";

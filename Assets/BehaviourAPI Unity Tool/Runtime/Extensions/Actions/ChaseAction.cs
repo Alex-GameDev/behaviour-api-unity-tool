@@ -1,3 +1,4 @@
+using BehaviourAPI.Core;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -36,24 +37,25 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
             agent.speed = 0f;
         }
 
-        protected override void OnUpdate()
+        public override Status Update()
         {
             _currentTime += Time.deltaTime;
 
             // Si se ha acabado el tiempo
             if (_currentTime > maxTime)
             {
-                Success();
+                return Status.Success;
             }
             else
             {
                 float distance = Vector3.Distance(agent.transform.position, target.position);
                 // Si ha alcanzado el objetivo
-                if (distance < .3f) Success();
+                if (distance < .3f) return Status.Success;
 
                 // Si el objetivo ha escapado
-                else if (distance > maxDistance) Failure();
+                else if (distance > maxDistance) return Status.Failure;
             }
+            return Status.Running;
         }
 
         public override string DisplayInfo => "Chase $target for $maxTime seconds";

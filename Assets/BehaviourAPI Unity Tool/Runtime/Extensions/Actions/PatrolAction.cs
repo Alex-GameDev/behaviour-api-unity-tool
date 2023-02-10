@@ -51,15 +51,6 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
                 return Status.Running;
         }
 
-        protected override void OnUpdate()
-        {
-            if (!agent.hasPath || agent.velocity.sqrMagnitude == -1f ||
-               Vector3.Distance(agent.transform.position, _target) < .1f)
-            {
-                Success();
-            }
-        }
-
         public override string DisplayInfo => "Move randomly";
     }
 }

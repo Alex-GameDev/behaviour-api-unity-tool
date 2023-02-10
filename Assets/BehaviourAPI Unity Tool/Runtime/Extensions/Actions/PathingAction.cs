@@ -1,3 +1,4 @@
+using BehaviourAPI.Core;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,22 +26,22 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
 
         public override string DisplayInfo => "Move between $positions at $speed";
 
-        protected override void OnStart()
+        public override void Start()
         {
             currentTargetPosId = 0;
         }
 
-        protected override void OnUpdate()
+        public override Status Update()
         {
-            if (positions.Count == 0) return;
+            if (positions.Count == 0) return Status.Failure;
 
             if (Vector3.Distance(transform.position, positions[currentTargetPosId]) < distanceThreshold)
             {
                 currentTargetPosId++;
                 if (currentTargetPosId >= positions.Count)
                 {
-                    Success();
                     currentTargetPosId = 0;
+                    return Status.Success;
                 }
             }
 
@@ -49,6 +50,11 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
             var maxDistance = rawMovement.magnitude;
             var movement = rawMovement.normalized * speed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(currentPos, currentPos + movement, maxDistance);
+            return Status.Running;
+        }
+
+        public override void Stop()
+        {
         }
     }
 }

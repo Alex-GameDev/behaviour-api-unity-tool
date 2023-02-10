@@ -10,6 +10,8 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
     {
         public string message;
 
+        public override string DisplayInfo => "Debug Log $message";
+
         public DebugAction()
         {
         }
@@ -17,14 +19,20 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
         public DebugAction(string message)
         {
             this.message = message;
+        }      
+
+        public override void Start()
+        {
         }
 
-        public override string DisplayInfo => "Debug Log $message";
-
-        protected override void OnUpdate()
+        public override Status Update()
         {
             Debug.Log(message);
-            Success();
+            return Status.Success;
+        }
+
+        public override void Stop()
+        {
         }
     }
 }
