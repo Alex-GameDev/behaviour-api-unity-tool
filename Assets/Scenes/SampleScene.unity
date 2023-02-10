@@ -280,7 +280,7 @@ MonoBehaviour:
   Name: tr2
   node:
     rid: 3601717710546796552
-  position: {x: 340, y: 16}
+  position: {x: 334, y: 16}
   parents:
   - {fileID: 2098964414}
   childs:
@@ -1286,8 +1286,8 @@ MonoBehaviour:
   parents:
   - {fileID: 751975542}
   childs:
-  - {fileID: 392303281}
   - {fileID: 380102707}
+  - {fileID: 392303281}
   references:
     version: 2
     RefIds:

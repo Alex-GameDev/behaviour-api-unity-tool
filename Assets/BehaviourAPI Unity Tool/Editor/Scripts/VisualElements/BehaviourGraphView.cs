@@ -7,9 +7,11 @@ using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Runtime;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Windows;
+using static UnityEditor.PlayerSettings;
 using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Editor
@@ -251,7 +253,23 @@ namespace BehaviourAPI.Unity.Editor
             }
 
             NodeAdded?.Invoke(asset);
-        }        
+        } 
+        
+        public void DuplicateNode(NodeAsset nodeAsset)
+        {
+            NodeAsset assetCopy = GraphAsset.DuplicateNode(nodeAsset);
+            assetCopy.Position += new Vector2(20, 20);
+
+            if (assetCopy != null)
+            {
+                _adapter.DrawNode(assetCopy, this);
+            }
+            else
+            {
+                Debug.LogWarning("Error creating the node");
+            }
+            NodeAdded?.Invoke(assetCopy);
+        }
 
         void ClearGraph()
         {

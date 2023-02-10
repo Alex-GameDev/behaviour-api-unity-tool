@@ -111,5 +111,14 @@ namespace BehaviourAPI.Unity.Framework
             var childNodes = childs.Select(p => p.Node).ToList();
             return childNodes;
         }
+
+        public NodeAsset Clone()
+        {
+            var asset = CreateInstance<NodeAsset>();
+            asset.Name = Name;
+            asset.position = position;
+            asset.Node = (Node)node.Clone();
+            return asset;
+        }
     }
 }

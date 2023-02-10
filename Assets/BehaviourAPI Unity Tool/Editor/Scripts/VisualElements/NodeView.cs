@@ -92,7 +92,8 @@ namespace BehaviourAPI.Unity.Editor
         private void SetUpContextualMenu()
         {
             this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
-            {               
+            {
+                menuEvt.menu.AppendAction("Duplicate node", _ => _graphView.DuplicateNode(Node));
                 menuEvt.menu.AppendAction("Disconnect input ports", _ => DisconnectPorts(inputContainer), _ => Node.Node.MaxInputConnections != 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
                 menuEvt.menu.AppendAction("Disconnect output ports", _ => DisconnectPorts(outputContainer), _ => Node.Node.MaxOutputConnections != 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
             }));

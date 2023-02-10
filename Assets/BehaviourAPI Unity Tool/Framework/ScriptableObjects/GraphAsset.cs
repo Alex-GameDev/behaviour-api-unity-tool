@@ -44,6 +44,17 @@ namespace BehaviourAPI.Unity.Framework
             return nodeasset;
         }
 
+        public NodeAsset DuplicateNode(NodeAsset nodeAsset)
+        {
+            if (Graph == null) return null;
+
+            if (!Nodes.Contains(nodeAsset)) return null;
+
+            var nodeasset = nodeAsset.Clone();
+            Nodes.Add(nodeasset);
+            return nodeasset;
+        }
+
         public void RemoveNode(NodeAsset node)
         {
             Nodes.Remove(node);
@@ -87,6 +98,36 @@ namespace BehaviourAPI.Unity.Framework
 
             //LayoutUtilities.ComputeLayout(graphAsset);
             LayoutUtilities.ComputeLayout(graphAsset);
+            return graphAsset;
+        }
+
+        public GraphAsset Copy()
+        {
+            var graphAsset = CreateInstance<GraphAsset>();
+            graphAsset.graph = (BehaviourGraph) graph.Clone();
+
+            var assetMap = new Dictionary<NodeAsset, NodeAsset>();
+
+            foreach(var node in nodes)
+            {
+                var clone = node.Clone();
+                graphAsset.nodes.Add(clone);
+                assetMap.Add(node, clone);
+            }
+
+            foreach (var node in graphAsset.Nodes)
+            {
+                for (int i = 0; i < node.Node.ParentCount; i++)
+                {
+                    node.Parents.Add(assetMap[node.Parents[i]]);
+                }
+
+                for (int i = 0; i < node.Node.ChildCount; i++)
+                {
+                    node.Childs.Add(assetMap[node.Childs[i]]);
+                }
+            }
+
             return graphAsset;
         }
 
