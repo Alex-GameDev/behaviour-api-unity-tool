@@ -90,10 +90,32 @@ namespace BehaviourAPI.Unity.Framework
             return graphAsset;
         }
 
-        public BehaviourGraph Build()
+        public BehaviourGraph Build(NamingSettings settings)
         {
             var graphBuilder = new BehaviourGraphBuilder(graph);
-            nodes.ForEach(n => graphBuilder.AddNode(n.Build()));
+            if(settings == NamingSettings.TryAddAlways)
+            {
+                nodes.ForEach(n => graphBuilder.AddNode(n.Name, n.Node, n.GetParentNodes(), n.GetChildNodes()));
+            }
+            else if(settings == NamingSettings.IgnoreWhenInvalid)
+            {
+                nodes.ForEach(n =>
+                {
+                    if (string.IsNullOrWhiteSpace(n.Name) || graph.FindNodeOrDefault(n.Name) != null)
+                    {
+                        graphBuilder.AddNode(n.Node, n.GetParentNodes(), n.GetChildNodes());
+                    }
+                    else
+                    {
+                        graphBuilder.AddNode(n.Name, n.Node, n.GetParentNodes(), n.GetChildNodes());
+                    }
+                });
+            }
+            else
+            {
+                nodes.ForEach(n => graphBuilder.AddNode(n.Name, n.Node, n.GetParentNodes(), n.GetChildNodes()));
+            }
+
             graphBuilder.Build();
             return graph;
         }

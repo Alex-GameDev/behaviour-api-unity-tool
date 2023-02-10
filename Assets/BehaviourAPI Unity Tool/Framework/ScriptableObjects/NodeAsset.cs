@@ -49,11 +49,6 @@ namespace BehaviourAPI.Unity.Framework
             childs = childs.OrderBy(shortFunction).ToList();
         }
 
-        internal NodeData Build()
-        {
-            return new NodeData(Node, parents.Select(p => p.Node).ToList(), childs.Select(c => c.Node).ToList());
-        }
-
         /// <summary>
         /// Returns all the child graphMap above this, including itself.
         /// </summary>
@@ -99,6 +94,22 @@ namespace BehaviourAPI.Unity.Framework
                 });
             }
             return visitedNodes;
+        }
+
+        internal List<Node> GetParentNodes()
+        {
+            if (parents == null) return new List<Node>();
+
+            var parentNodes = parents.Select(p => p.Node).ToList();
+            return parentNodes;
+        }
+
+        internal List<Node> GetChildNodes()
+        {
+            if (childs == null) return new List<Node>();
+
+            var childNodes = childs.Select(p => p.Node).ToList();
+            return childNodes;
         }
     }
 }

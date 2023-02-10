@@ -100,7 +100,7 @@ namespace BehaviourAPI.Unity.Framework
 
         void BuildGraphMap(NamingSettings settings)
         {
-            graphs.ForEach(g => g.Build());
+            graphs.ForEach(g => g.Build(settings));
 
             graphMap = new Dictionary<string, BehaviourGraph>();
 
