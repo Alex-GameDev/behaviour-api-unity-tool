@@ -11,10 +11,10 @@ namespace BehaviourAPI.Unity.Runtime
 
         HashSet<BehaviourGraph> allgraphs = new HashSet<BehaviourGraph>();
 
-        protected abstract BehaviourGraph CreateGraph(HashSet<BehaviourGraph> registeredGraphs);
+        protected abstract BehaviourGraph CreateGraph();
         protected override void OnAwake()
         {
-            rootGraph = CreateGraph(allgraphs);
+            rootGraph = CreateGraph();
         }
 
         protected override void OnStart() => rootGraph.Start();
@@ -23,6 +23,11 @@ namespace BehaviourAPI.Unity.Runtime
         public override BehaviourSystemAsset GetBehaviourSystemAsset()
         {
             return BehaviourSystemAsset.CreateSystem(allgraphs);
+        }
+
+        public void RegisterGraph(BehaviourGraph graph)
+        {
+            allgraphs.Add(graph);
         }
     }
 }

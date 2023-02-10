@@ -38,7 +38,7 @@ public class PizzaBoyRunner : CodeBehaviourRunner
         base.OnAwake();
     }
 
-    protected override BehaviourGraph CreateGraph(HashSet<BehaviourGraph> registeredGraphs)
+    protected override BehaviourGraph CreateGraph()
     {
         var bt = new BehaviourTree();
         var us = CreateLookRecipeUtilitySystem();
@@ -51,6 +51,11 @@ public class PizzaBoyRunner : CodeBehaviourRunner
         var seq = bt.CreateComposite<SequencerNode>("pizza seq", false, recipeAction, makePizzaAction, bakeAction);
         var root = bt.CreateDecorator<IteratorNode>("loop", seq).SetIterations(-1);
         bt.SetRootNode(root);
+
+        RegisterGraph(bt);
+        RegisterGraph(us);
+        RegisterGraph(fsm);
+
         return bt;
     }
 
@@ -74,9 +79,9 @@ public class PizzaBoyRunner : CodeBehaviourRunner
         var us = new UtilitySystem();
 
         var pizzafactor = us.CreateVariableFactor("pizzas", () => _pizzasCreated, 10, 0);
-        var pepperoniFactor = us.CreateVariableFactor("peperoni", () => _peperoniUsed, 4, 0);
+        var pepperoniFactor = us.CreateVariableFactor("peperoni_used", () => _peperoniUsed, 4, 0);
 
-        var peperoniSumFactor = us.CreateFusionFactor<WeightedFusionFactor>("a", pizzafactor, pepperoniFactor)
+        var peperoniSumFactor = us.CreateFusionFactor<WeightedFusionFactor>("peperoni", pizzafactor, pepperoniFactor)
             .SetWeights(0.6f, 0.4f);
 
         var pointList = new List<BehaviourAPI.Core.Vector2>();
@@ -118,7 +123,6 @@ public class PizzaBoyRunner : CodeBehaviourRunner
     // Cuando termina la acción:
     void CreateRecipeCompleted()
     {
-        Debug.Log("machine stopped");
         transform.LookAt(_pizzaTransform);
         _recipePaper.Hide();
     }

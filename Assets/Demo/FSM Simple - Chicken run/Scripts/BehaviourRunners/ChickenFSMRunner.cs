@@ -24,7 +24,7 @@ public class ChickenFSMRunner : CodeBehaviourRunner
         base.OnAwake();
     }
 
-    protected override BehaviourGraph CreateGraph(HashSet<BehaviourGraph> registeredGraphs)
+    protected override BehaviourGraph CreateGraph()
     {
         fsm = new BehaviourAPI.StateMachines.FSM();
 
@@ -48,6 +48,7 @@ public class ChickenFSMRunner : CodeBehaviourRunner
         fsm.CreateTransition("idle to runaway", idle, chasing, chickenNear);
         fsm.CreateTransition("moving to runaway", moving, chasing, chickenNear);
 
+        RegisterGraph(fsm);
         return fsm;
     }
 

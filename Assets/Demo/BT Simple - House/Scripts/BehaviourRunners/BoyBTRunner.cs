@@ -29,7 +29,7 @@ public class BoyBTRunner : CodeBehaviourRunner
         base.OnAwake();
     }
 
-    protected override BehaviourGraph CreateGraph(HashSet<BehaviourGraph> registeredGraphs)
+    protected override BehaviourGraph CreateGraph()
     {
         var bt = new BehaviourAPI.BehaviourTrees.BehaviourTree();
         var doorPos = new Vector3(_door.transform.position.x, transform.position.y, _door.transform.position.z);
@@ -58,7 +58,7 @@ public class BoyBTRunner : CodeBehaviourRunner
         var root = bt.CreateComposite<BehaviourAPI.BehaviourTrees.SequencerNode>("root", false, walkToDoor, sel, enter);
 
         bt.SetRootNode(root);
-
+        RegisterGraph(bt);
         return bt;
     }
 

@@ -21,7 +21,7 @@ public class CarFSMRunner : CodeBehaviourRunner
         base.OnAwake();
     }
 
-    protected override BehaviourGraph CreateGraph(HashSet<BehaviourGraph> registeredGraphs)
+    protected override BehaviourGraph CreateGraph()
     {
         var carFSM = new BehaviourAPI.StateMachines.FSM();
 
@@ -38,6 +38,7 @@ public class CarFSMRunner : CodeBehaviourRunner
         carFSM.CreateTransition("speed up", lowSpeedState, highSpeedState, radarIsBroken);
         carFSM.CreateTransition("slow down", highSpeedState, lowSpeedState, radarIsWorking);
 
+        RegisterGraph(carFSM);
         return carFSM;
     }
 

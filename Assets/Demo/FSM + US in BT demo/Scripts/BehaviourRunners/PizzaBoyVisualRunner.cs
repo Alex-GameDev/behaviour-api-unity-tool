@@ -69,7 +69,6 @@ public class PizzaBoyVisualRunner : VisualBehaviourRunner
     [CustomMethod]
     public void CreateRecipeCompleted()
     {
-        Debug.Log("machine stopped");
         transform.LookAt(_pizzaTransform);
         _recipePaper.Hide();
     }

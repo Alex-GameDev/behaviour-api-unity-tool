@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
+using BehaviourAPI.StateMachines;
 using BehaviourAPI.Unity.Runtime;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,11 +14,11 @@ public class RadarFSMRunner : CodeBehaviourRunner
     [SerializeField] private Text speedText;
     [SerializeField] Light radarLight;
 
-    BehaviourAPI.StateMachines.State _brokenState, _workingState;
+    State _brokenState, _workingState;
 
-    protected override BehaviourGraph CreateGraph(HashSet<BehaviourGraph> registeredGraphs)
+    protected override BehaviourGraph CreateGraph()
     {
-        var radarFSM = new BehaviourAPI.StateMachines.FSM();
+        var radarFSM = new FSM();
 
         var fix = new UnityTimePerception(10f);
         var @break = new UnityTimePerception(20f);
@@ -33,12 +34,15 @@ public class RadarFSMRunner : CodeBehaviourRunner
         _brokenState = brokenState;
         _workingState = workingState;
 
+        RegisterGraph(radarFSM);
+        RegisterGraph(subFSM);
+
         return radarFSM;
     }
 
-    private BehaviourAPI.StateMachines.FSM CreateLightSubFSM()
+    private FSM CreateLightSubFSM()
     {
-        var lightSubFSM = new BehaviourAPI.StateMachines.FSM();
+        var lightSubFSM = new FSM();
         var overSpeedPerception = new RadarPerception(pointToLook, transform, (speed) => speed > 20, speedText);
         var underSpeedPerception = new RadarPerception(pointToLook, transform, (speed) => speed <= 20, speedText);
 
@@ -51,15 +55,13 @@ public class RadarFSMRunner : CodeBehaviourRunner
         lightSubFSM.CreateTransition("car under speed", waitingState, underSpeedState, underSpeedPerception);
 
         // Vuelve al estado de espera al acabar la acción
-        lightSubFSM.CreateTransition("over speed to waiting", overSpeedState, waitingState, 
-            new ExecutionStatusPerception(overSpeedState, StatusFlags.Finished));
-        lightSubFSM.CreateTransition("under speed to waiting", underSpeedState, waitingState, 
-            new ExecutionStatusPerception(overSpeedState, StatusFlags.Finished));
+        lightSubFSM.CreateTransition("over speed to waiting", overSpeedState, waitingState, statusFlags: StatusFlags.Finished);
+        lightSubFSM.CreateTransition("under speed to waiting", underSpeedState, waitingState, statusFlags: StatusFlags.Finished);
 
         return lightSubFSM;
     }
 
-    public BehaviourAPI.StateMachines.State GetBrokenState() => _brokenState;
+    public State GetBrokenState() => _brokenState;
 
-    public BehaviourAPI.StateMachines.State GetWorkingState() => _workingState;
+    public State GetWorkingState() => _workingState;
 }

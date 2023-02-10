@@ -221,6 +221,71 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 60152271}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &177048369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: waiting
+  node:
+    rid: 3601717732746985519
+  position: {x: -60, y: 43}
+  parents:
+  - {fileID: 1301125860}
+  - {fileID: 260717357}
+  childs:
+  - {fileID: 1101395834}
+  - {fileID: 453727490}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717732746985519
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        _action:
+          rid: -2
+--- !u!114 &260717357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: over speed to wait
+  node:
+    rid: 3601717732746985525
+  position: {x: 281, y: 103}
+  parents:
+  - {fileID: 1694346995}
+  childs:
+  - {fileID: 177048369}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717732746985525
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        isPulled: 1
+        StatusFlags: 6
+        _action:
+          rid: -2
+        perception: {fileID: 0}
 --- !u!1 &363079224
 GameObject:
   m_ObjectHideFlags: 0
@@ -324,6 +389,39 @@ Light:
   m_CorrespondingSourceObject: {fileID: 2240874905377327616, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}
   m_PrefabInstance: {fileID: 6348232475409769034}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &453727490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: car over speed
+  node:
+    rid: 3601717732746985522
+  position: {x: 265, y: -79}
+  parents:
+  - {fileID: 177048369}
+  childs:
+  - {fileID: 1694346995}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717732746985522
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        isPulled: 1
+        StatusFlags: 7
+        _action:
+          rid: -2
+        perception: {fileID: 0}
 --- !u!1 &565233521
 GameObject:
   m_ObjectHideFlags: 0
@@ -777,6 +875,228 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &892163769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601717732746985513
+  position: {x: 354, y: -76}
+  parents:
+  - {fileID: 1663129390}
+  childs:
+  - {fileID: 1394575150}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717732746985513
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        isPulled: 1
+        StatusFlags: 7
+        _action:
+          rid: -2
+        perception: {fileID: 0}
+--- !u!114 &904345711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db249917b7c50574eaa600c74aff1437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graphs:
+  - {fileID: 1265597479}
+  - {fileID: 2089078290}
+  pushPerceptions: []
+  perceptions: []
+--- !u!1001 &976166221
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 6348232475409769036}
+    m_Modifications:
+    - target: {fileID: 1271630270, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1271630270, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_Color.g
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1271630270, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1271630270, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1369674582665762386, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_Name
+      value: Radar (Visual)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1369674582665762386, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_TagString
+      value: Radar
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978864148198479935, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978864148198479935, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978864148198479935, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978864148198479935, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978864148198479935, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978864148198479935, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.20084961
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978864148198479935, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.172
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978864148198479935, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.6494481
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978864148198479935, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978864148198479935, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.76040596
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978864148198479935, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978864148198479935, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978864148198479935, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -99
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978864148198479935, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7642065385674919360, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99826634
+      objectReference: {fileID: 0}
+    - target: {fileID: 7642065385674919360, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.050574265
+      objectReference: {fileID: 0}
+    - target: {fileID: 7642065385674919360, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.000000119209275
+      objectReference: {fileID: 0}
+    - target: {fileID: 7642065385674919360, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.030110493
+      objectReference: {fileID: 0}
+    - target: {fileID: 7642065385674919360, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 5.795
+      objectReference: {fileID: 0}
+    - target: {fileID: 7642065385674919360, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -0.17500001
+      objectReference: {fileID: 0}
+    - target: {fileID: 7642065385674919360, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -3.4640002
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 1791075581353007693, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+--- !u!1 &976166222 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1369674582665762386, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
+  m_PrefabInstance: {fileID: 976166221}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &976166223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 976166222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 990899258fc02694a97733cf6a1a7568, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nodeNamingSettings: 1
+  perceptionNamingSettings: 1
+  pullPerceptionNamingSettings: 1
+  SystemAsset: {fileID: 904345711}
+--- !u!114 &1018097129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601717732746985514
+  position: {x: 346, y: 109}
+  parents:
+  - {fileID: 1394575150}
+  childs:
+  - {fileID: 1663129390}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717732746985514
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        isPulled: 1
+        StatusFlags: 7
+        _action:
+          rid: -2
+        perception: {fileID: 0}
 --- !u!1 &1050367645
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,6 +1181,69 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 40.894, z: 0}
+--- !u!114 &1101395834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: under speed to wait
+  node:
+    rid: 3601717732746985523
+  position: {x: -285, y: 112}
+  parents:
+  - {fileID: 177048369}
+  childs:
+  - {fileID: 1166431773}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717732746985523
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        isPulled: 1
+        StatusFlags: 6
+        _action:
+          rid: -2
+        perception: {fileID: 0}
+--- !u!114 &1166431773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: under speed
+  node:
+    rid: 3601717732746985521
+  position: {x: -607, y: 32}
+  parents:
+  - {fileID: 1101395834}
+  childs:
+  - {fileID: 1301125860}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717732746985521
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        _action:
+          rid: -2
 --- !u!1 &1256260071
 GameObject:
   m_ObjectHideFlags: 0
@@ -896,6 +1279,64 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1265597479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Main
+  graph:
+    rid: 3601717732746985509
+  nodes:
+  - {fileID: 1663129390}
+  - {fileID: 1394575150}
+  - {fileID: 892163769}
+  - {fileID: 1018097129}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717732746985509
+      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+--- !u!114 &1301125860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: car under speed
+  node:
+    rid: 3601717732746985524
+  position: {x: -277, y: -74}
+  parents:
+  - {fileID: 1166431773}
+  childs:
+  - {fileID: 177048369}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717732746985524
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        isPulled: 1
+        StatusFlags: 7
+        _action:
+          rid: -2
+        perception: {fileID: 0}
 --- !u!1 &1310239756
 GameObject:
   m_ObjectHideFlags: 0
@@ -964,6 +1405,68 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1394575150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: broken_state
+  node:
+    rid: 3601717732746985512
+  position: {x: 600, y: 0}
+  parents:
+  - {fileID: 892163769}
+  childs:
+  - {fileID: 1018097129}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717732746985512
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        _action:
+          rid: -2
+--- !u!114 &1663129390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: working_state
+  node:
+    rid: 3601717732746985511
+  position: {x: 0, y: 0}
+  parents:
+  - {fileID: 1018097129}
+  childs:
+  - {fileID: 892163769}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717732746985511
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        _action:
+          rid: 3601717732746985515
+    - rid: 3601717732746985515
+      type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        subgraph: {fileID: 2089078290}
 --- !u!1 &1692010838
 GameObject:
   m_ObjectHideFlags: 0
@@ -1044,6 +1547,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1692010838}
   m_CullTransparentMesh: 0
+--- !u!114 &1694346995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: over
+  node:
+    rid: 3601717732746985520
+  position: {x: 515, y: 60}
+  parents:
+  - {fileID: 453727490}
+  childs:
+  - {fileID: 260717357}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717732746985520
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        _action:
+          rid: -2
 --- !u!1 &1744644688
 GameObject:
   m_ObjectHideFlags: 0
@@ -1121,6 +1654,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1744644688}
   m_CullTransparentMesh: 0
+--- !u!114 &2089078290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: SubFSM
+  graph:
+    rid: 3601717732746985510
+  nodes:
+  - {fileID: 177048369}
+  - {fileID: 1694346995}
+  - {fileID: 1166431773}
+  - {fileID: 453727490}
+  - {fileID: 1101395834}
+  - {fileID: 1301125860}
+  - {fileID: 260717357}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717732746985510
+      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
 --- !u!1 &2146011418
 GameObject:
   m_ObjectHideFlags: 0
@@ -1344,6 +1905,11 @@ PrefabInstance:
 --- !u!1 &6348232475409769035 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 872326259462198764, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}
+  m_PrefabInstance: {fileID: 6348232475409769034}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6348232475409769036 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6348232475546600072, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}
   m_PrefabInstance: {fileID: 6348232475409769034}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &6348232475409769040

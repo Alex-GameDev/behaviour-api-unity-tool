@@ -24,7 +24,7 @@ public class PlayerFSMRunner : CodeBehaviourRunner
         base.OnAwake();
     }
 
-    protected override BehaviourGraph CreateGraph(HashSet<BehaviourGraph> registeredGraphs)
+    protected override BehaviourGraph CreateGraph()
     {
         var fsm = new BehaviourAPI.StateMachines.FSM();
 
@@ -39,7 +39,7 @@ public class PlayerFSMRunner : CodeBehaviourRunner
         // Las transiciones que pasan al estado "moving" se activan con percepciones Push.
         var idleToMoving = fsm.CreateTransition("idle to moving", idle, moving);
         var movingToMoving = fsm.CreateTransition("moving to moving", moving, moving);
-        _click = new BehaviourAPI.Core.Perceptions.PushPerception(idleToMoving, movingToMoving);
+        _click = new PushPerception(idleToMoving, movingToMoving);
 
         // La transición que pasan al estado "idle" se lanzan cuando la acción de "moving" o "flee" termine.
         fsm.CreateTransition("moving to idle", moving, idle, new ExecutionStatusPerception(moving, StatusFlags.Finished));
@@ -49,6 +49,7 @@ public class PlayerFSMRunner : CodeBehaviourRunner
         fsm.CreateTransition("idle to runaway", idle, flee, chickenNear);
         fsm.CreateTransition("moving to runaway", moving, flee, chickenNear);
 
+        RegisterGraph(fsm);
         return fsm;
     }
 
