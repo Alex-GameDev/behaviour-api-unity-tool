@@ -12,10 +12,6 @@ namespace BehaviourAPI.Unity.Runtime
     {
         [HideInInspector] public BehaviourSystemAsset systemAsset;
 
-        [SerializeField] bool _logGraphStatusChanged;
-        [SerializeField] bool _logNodeStatusChanged;
-        [SerializeField] bool _openDebuggerOnPlay;
-
         public bool IsDebuggerReady { get; private set; } = false;
 
         void Start()
