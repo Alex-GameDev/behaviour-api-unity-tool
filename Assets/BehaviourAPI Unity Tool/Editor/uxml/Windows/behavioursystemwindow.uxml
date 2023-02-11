@@ -20,9 +20,7 @@
             <uie:ToolbarSpacer name="bw-toolbar-spacer" />
             <uie:ToolbarButton display-tooltip-when-elided="true" name="bw-toolbar-save-btn" style="background-image: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/Icons/save.png?fileID=2800000&amp;guid=2ff99cfb9a4585145853394c6e5ca3fd&amp;type=3#save&apos;); min-width: 20px; -unity-background-image-tint-color: rgb(171, 171, 171);" />
         </ui:VisualElement>
-        <ui:VisualElement>
-            <uie:ToolbarToggle label="auto save" name="bw-toolbar-autosave-toggle" />
-        </ui:VisualElement>
+        <ui:VisualElement />
     </uie:Toolbar>
     <ui:VisualElement name="bw-content" style="height: 100%;">
         <ui:VisualElement style="position: absolute; right: 0; top: 0;">

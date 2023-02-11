@@ -35,8 +35,6 @@ namespace BehaviourAPI.Unity.Editor
 
         GraphAsset _currentGraphAsset;
 
-        bool autoSave = false;
-
         VisualElement _emptyPanel;
 
         Label _assetLabel;
@@ -395,12 +393,11 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
                 EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-
-            if (autoSave) SaveSystemData();
         }
 
         void OnRemoveAsset(ScriptableObject asset)
         {
+
             if (IsAsset)
                 AssetDatabase.RemoveObjectFromAsset(asset);
             else
@@ -408,9 +405,6 @@ namespace BehaviourAPI.Unity.Editor
                 DestroyImmediate(asset);
                 EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             }
-
-
-            if (autoSave) SaveSystemData();
         }
 
         #endregion
