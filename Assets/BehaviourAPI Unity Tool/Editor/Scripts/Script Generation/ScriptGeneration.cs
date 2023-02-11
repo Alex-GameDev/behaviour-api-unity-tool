@@ -110,7 +110,7 @@ namespace BehaviourAPI.Unity.Editor
             }
 
             scriptTemplate.OpenMethodDeclaration("CreateGraph", nameof(BehaviourGraph), 
-                "protected override", parameters: $"HashSet<{typeof(BehaviourGraph).Name}> registeredGraphs");
+                "protected override");
 
 
             //Graphs

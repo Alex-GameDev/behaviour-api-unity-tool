@@ -83,33 +83,44 @@ namespace BehaviourAPI.Unity.Editor
 
         /// <summary>
         /// Add a variable to the variable map and change its name to a valid unique identificator.
+        /// If the object is null, get a valid id but dont and it to the map.
         /// Returns true if the variable didn't exist yet.
         private bool AddVariable(object obj, ref string varName)
         {
-            varName = varName.ToValidIdentificatorName();
-
             if(m_variableNamingMap.TryGetValue(obj, out string existingName))
             {
                 varName = existingName;
                 return false;
             }
+            else
+            {
+                varName = GetValidIdentificatorName(varName);
+            }
 
-            if(!m_variableNames.Add(varName))
+            if(obj.ToString() != "null")
+            {
+                m_variableNamingMap.Add(obj, varName);
+            }           
+            
+            return true;
+        }
+
+        private string GetValidIdentificatorName(string varName)
+        {
+            varName = varName.ToValidIdentificatorName();
+            if (m_variableNames.Contains(varName))
             {
                 var i = 2;
                 var fixedName = $"{varName}_{i}";
-                while(!m_variableNames.Add(fixedName))
+                while (m_variableNames.Contains(fixedName))
                 {
                     i++;
                     fixedName = $"{varName}_{i}";
                 }
                 varName = fixedName;
             }
-
-            m_variableNamingMap.Add(obj, varName);
-
-            
-            return true;
+            m_variableNames.Add(varName);
+            return varName;
         }
 
         #region -------------------------- Instructions --------------------------
