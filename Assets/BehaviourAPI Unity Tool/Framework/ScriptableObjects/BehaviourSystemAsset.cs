@@ -10,6 +10,7 @@ using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Framework
 {
+    [CreateAssetMenu(fileName = "newBehaviourSystem", menuName = "BehaviourAPI/BehaviourSystem", order = 0)]
     public class BehaviourSystemAsset : ScriptableObject
     {
         [SerializeField] List<GraphAsset> graphs = new List<GraphAsset>();
@@ -198,6 +199,7 @@ namespace BehaviourAPI.Unity.Framework
                 system.graphs.Add(graphAsset);
             }
             return system;
+
         }
     }
 }

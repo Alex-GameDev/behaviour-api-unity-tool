@@ -36,11 +36,6 @@ namespace BehaviourAPI.Unity.Editor
                     EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
                     Repaint();
                 }
-
-                if (GUILayout.Button("Bind BehaviourSystem from Asset"))
-                {
-
-                }
             }
             else
             {                
