@@ -1,9 +1,12 @@
 ﻿using BehaviourAPI.Unity.Runtime;
+using Codice.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,6 +14,7 @@ namespace BehaviourAPI.Unity.Editor
 {
     public class InspectorView<T> : VisualElement, IHidable where T :ScriptableObject
     {
+        private static string inspectorPath => BehaviourAPISettings.instance.EditorLayoutsPath + "/inspector.uxml";
         public enum Side { Left, Right }
 
         protected VisualElement _inspectorContent;
@@ -22,23 +26,16 @@ namespace BehaviourAPI.Unity.Editor
 
         public InspectorView(string title, Side side)
         {
-            AddLayout();
-            AddStyles();
+            AddLayout();            
 
             _titleLabel.text = title;
             if (side == Side.Left) _root.style.left = new StyleLength(0f);
             else if(side == Side.Right) _root.style.right = new StyleLength(0f);
         }
 
-        protected virtual void AddStyles()
-        {
-            var styleSheet = VisualSettings.GetOrCreateSettings().InspectorStylesheet;
-            styleSheets.Add(styleSheet);
-
-        }
         protected virtual void AddLayout()
         {
-            var inspectorFromUXML = VisualSettings.GetOrCreateSettings().InspectorLayout.Instantiate();
+            var inspectorFromUXML = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(inspectorPath).Instantiate();
             Add(inspectorFromUXML);
             _inspectorContent = this.Q("iw-inspector-container");
             _root = this.Q("iw-root");
@@ -51,6 +48,9 @@ namespace BehaviourAPI.Unity.Editor
         {
             _inspectorContent.Clear();
             _selectedElement = asset;
+
+            if (asset == null) return;
+
             var editor = UnityEditor.Editor.CreateEditor(asset);
             IMGUIContainer container = new IMGUIContainer(() =>
             {

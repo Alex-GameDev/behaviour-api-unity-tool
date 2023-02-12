@@ -1,3 +1,4 @@
+using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Runtime;
 using System;
 using System.Collections;
@@ -8,7 +9,7 @@ using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    [CustomEditor(typeof(NodeAsset))]
+    [CustomEditor(typeof(PushPerceptionAsset))]
     public class PushPerceptionAssetEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()

@@ -1,9 +1,12 @@
 ﻿using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
+using BehaviourAPI.Unity.Runtime;
+using BehaviourAPI.Unity.Runtime.Extensions;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PlayerFSMRunner : BehaviourGraphRunner
+public class PlayerFSMRunner : CodeBehaviourRunner
 {
     #region variables
 
@@ -36,7 +39,7 @@ public class PlayerFSMRunner : BehaviourGraphRunner
         // Las transiciones que pasan al estado "moving" se activan con percepciones Push.
         var idleToMoving = fsm.CreateTransition("idle to moving", idle, moving);
         var movingToMoving = fsm.CreateTransition("moving to moving", moving, moving);
-        _click = new BehaviourAPI.Core.Perceptions.PushPerception(idleToMoving, movingToMoving);
+        _click = new PushPerception(idleToMoving, movingToMoving);
 
         // La transición que pasan al estado "idle" se lanzan cuando la acción de "moving" o "flee" termine.
         fsm.CreateTransition("moving to idle", moving, idle, new ExecutionStatusPerception(moving, StatusFlags.Finished));
@@ -46,6 +49,7 @@ public class PlayerFSMRunner : BehaviourGraphRunner
         fsm.CreateTransition("idle to runaway", idle, flee, chickenNear);
         fsm.CreateTransition("moving to runaway", moving, flee, chickenNear);
 
+        RegisterGraph(fsm);
         return fsm;
     }
 

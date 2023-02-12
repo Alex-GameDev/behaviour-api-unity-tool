@@ -1,9 +1,12 @@
 ﻿using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
+using BehaviourAPI.Unity.Runtime;
+using BehaviourAPI.Unity.Runtime.Extensions;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class ChickenFSMRunner : BehaviourGraphRunner
+public class ChickenFSMRunner : CodeBehaviourRunner
 {
     #region variables
 
@@ -45,6 +48,7 @@ public class ChickenFSMRunner : BehaviourGraphRunner
         fsm.CreateTransition("idle to runaway", idle, chasing, chickenNear);
         fsm.CreateTransition("moving to runaway", moving, chasing, chickenNear);
 
+        RegisterGraph(fsm);
         return fsm;
     }
 

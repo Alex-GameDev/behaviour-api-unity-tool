@@ -1,3 +1,4 @@
+using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Runtime;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,12 +10,16 @@ using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    [CustomEditor(typeof(VisualBehaviourRunner))]
+    [CustomEditor(typeof(VisualBehaviourRunner), true)]
     public class BehaviourSystemVisualRunnerEditor : UnityEditor.Editor
     {
         private UnityEditor.Editor editor;
         public override void OnInspectorGUI()
         {
+            base.OnInspectorGUI();
+
+            EditorGUILayout.Space();
+
             var runner = (VisualBehaviourRunner)target;
             if(runner.SystemAsset == null)
             {
@@ -22,7 +27,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     if (Application.isPlaying)
                     {
-                        EditorWindow.GetWindow<SceneView>().ShowNotification(new GUIContent("Cannot bind behaviour system on runtime"));
+                        EditorWindow.GetWindow<BehaviourSystemEditorWindow>().ShowNotification(new GUIContent("Cannot bind behaviour system on runtime"));
                         return;
                     }
 
@@ -30,11 +35,6 @@ namespace BehaviourAPI.Unity.Editor
                     runner.SystemAsset = CreateInstance<BehaviourSystemAsset>();
                     EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
                     Repaint();
-                }
-
-                if (GUILayout.Button("Bind BehaviourSystem from Asset"))
-                {
-
                 }
             }
             else
@@ -49,7 +49,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     if (Application.isPlaying)
                     {
-                        EditorWindow.GetWindow<SceneView>().ShowNotification(new GUIContent("Cannot delete behaviour system on runtime"));
+                        EditorWindow.GetWindow<BehaviourSystemEditorWindow>().ShowNotification(new GUIContent("Cannot delete behaviour system on runtime"));
                         return;
                     }
 

@@ -5,10 +5,11 @@ using BehaviourAPI.Core;
 using UnityEngine;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
+using BehaviourAPI.Unity.Runtime;
 
 namespace BehaviourAPI.Unity.Demo
 {
-    public class PlayerBTInFSMRunner : BehaviourGraphRunner
+    public class PlayerBTInFSMRunner : CodeBehaviourRunner
     {
         protected override BehaviourGraph CreateGraph()
         {
@@ -34,24 +35,13 @@ namespace BehaviourAPI.Unity.Demo
             // Cuando consigue la llave, vuelve al estado de abrir la puerta
             fsm.CreateTransition("Finish key search", keyState, doorState, new ExecutionStatusPerception(keyState, StatusFlags.Success));
 
+            RegisterGraph(fsm);
             return fsm;
         }
 
         private BehaviourTrees.BehaviourTree CreateFindKeySubBT()
         {
             return null;
-        }
-
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
         }
     }
 

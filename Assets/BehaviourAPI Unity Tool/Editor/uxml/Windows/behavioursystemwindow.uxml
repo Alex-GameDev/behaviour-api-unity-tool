@@ -1,0 +1,34 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <uie:Toolbar name="bw-toolbar-main" class="bw-toolbar" style="justify-content: space-between;">
+        <ui:VisualElement>
+            <ui:VisualElement name="bw-toolbar-main-section">
+                <uie:ToolbarMenu display-tooltip-when-elided="true" name="bw-toolbar-graph-menu" text="graph" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement>
+            <ui:Label text="-" display-tooltip-when-elided="true" name="bw-asset-label" style="margin-right: 10px;" />
+        </ui:VisualElement>
+    </uie:Toolbar>
+    <uie:Toolbar name="bw-toolbar-edit" style="justify-content: space-between;">
+        <ui:VisualElement name="bw-toolbar-editor-section" style="flex-direction: row;">
+            <uie:ToolbarButton text="Main" display-tooltip-when-elided="true" name="bw-toolbar-setroot-btn" tooltip="Convert the selected graph into the main graph" />
+            <uie:ToolbarMenu display-tooltip-when-elided="true" tooltip="Add new graph to the system" name="bw-toolbar-add-menu" style="background-image: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/Icons/add.png?fileID=2800000&amp;guid=3c07e02f0e3586a4caeab8a70e408183&amp;type=3#add&apos;); -unity-background-image-tint-color: rgb(171, 171, 171);" />
+            <uie:ToolbarButton display-tooltip-when-elided="true" name="bw-toolbar-clear-btn" tooltip="remove all nodes from the current graph" style="background-image: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/Icons/clear.png?fileID=2800000&amp;guid=6d180fdd29b902f4aae0c337a9a8b332&amp;type=3#clear&apos;); min-width: 20px; -unity-background-image-tint-color: rgb(171, 171, 171);" />
+            <uie:ToolbarButton display-tooltip-when-elided="true" name="bw-toolbar-delete-btn" tooltip="delete the current graph" style="background-image: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/Icons/delete.png?fileID=2800000&amp;guid=c046d8dc01bd1094a8de02bff5a4ece7&amp;type=3#delete&apos;); min-width: 20px; -unity-background-image-tint-color: rgb(171, 171, 171);" />
+            <uie:ToolbarSpacer name="bw-toolbar-spacer" />
+            <uie:ToolbarButton display-tooltip-when-elided="true" name="bw-toolbar-generatescript-btn" tooltip="remove all nodes from the current graph" style="min-width: 20px; background-image: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/Icons/code.png?fileID=2800000&amp;guid=dd2972ab964903a44817886b07f1fe51&amp;type=3#code&apos;); -unity-background-image-tint-color: rgb(171, 171, 171);" />
+            <uie:ToolbarSpacer name="bw-toolbar-spacer" />
+            <uie:ToolbarButton display-tooltip-when-elided="true" name="bw-toolbar-save-btn" style="background-image: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/Icons/save.png?fileID=2800000&amp;guid=2ff99cfb9a4585145853394c6e5ca3fd&amp;type=3#save&apos;); min-width: 20px; -unity-background-image-tint-color: rgb(171, 171, 171);" />
+        </ui:VisualElement>
+        <ui:VisualElement />
+    </uie:Toolbar>
+    <ui:VisualElement name="bw-content" style="height: 100%;">
+        <ui:VisualElement style="position: absolute; right: 0; top: 0;">
+            <ui:VisualElement name="im-menu-container" style="flex-direction: row; margin-right: 10px;">
+                <ui:Button display-tooltip-when-elided="true" name="im-graph-btn" style="background-image: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/Icons/graph.png?fileID=2800000&amp;guid=852cee5798902d04bab3004ef5cd87d3&amp;type=3#graph&apos;); min-width: 20px; -unity-background-image-tint-color: rgb(171, 171, 171);" />
+                <ui:Button display-tooltip-when-elided="true" name="im-pullperceptions-btn" style="min-width: 20px; background-image: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/Icons/perception.png?fileID=2800000&amp;guid=ade935eed72222947b5e0578d4c2cf7d&amp;type=3#perception&apos;); -unity-background-image-tint-color: rgb(171, 171, 171);" />
+                <ui:Button display-tooltip-when-elided="true" name="im-pushperceptions-btn" style="min-width: 20px; background-image: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/Icons/push.png?fileID=2800000&amp;guid=3a9d8163e372a1243b7ca079740e54df&amp;type=3#push&apos;); -unity-background-image-tint-color: rgb(171, 171, 171);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

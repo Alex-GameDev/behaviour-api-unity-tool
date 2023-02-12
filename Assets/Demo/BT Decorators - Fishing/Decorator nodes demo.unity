@@ -123,6 +123,196 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &8931427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: storeInBasket
+  node:
+    rid: 2511131225754173448
+  position: {x: 300, y: 800}
+  parents:
+  - {fileID: 43033864}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511131225754173448
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        SerializedAction:
+          rid: 2511131225754173453
+    - rid: 2511131225754173453
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        start:
+          component: {fileID: 90416565}
+          methodName: StoreCaptureInBasket
+        update:
+          component: {fileID: 90416565}
+          methodName: CompleteOnSuccess
+        stop:
+          component: {fileID: 0}
+          methodName: 
+--- !u!114 &43033864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: check
+  node:
+    rid: 2511131225754173447
+  position: {x: 300, y: 600}
+  parents:
+  - {fileID: 1909721724}
+  childs:
+  - {fileID: 8931427}
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511131225754173447
+      type: {class: ConditionNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        perception: {fileID: 2117181221}
+--- !u!1001 &90416561
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4600201873981623957, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_Name
+      value: Test boy BT (Visual)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981623957, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -4.8100967
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 270
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 3666773261512135958, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+    - {fileID: 8335097774737004306, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+    - {fileID: 922734696, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+--- !u!1 &90416562 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4600201873981623957, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+  m_PrefabInstance: {fileID: 90416561}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &90416563 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+  m_PrefabInstance: {fileID: 90416561}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &90416564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 90416562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  systemAsset: {fileID: 0}
+  _logGraphStatusChanged: 0
+  _logNodeStatusChanged: 0
+  _openDebuggerOnPlay: 0
+--- !u!114 &90416565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 90416562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e693077d91cc3394791faadbd922de3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nodeNamingSettings: 1
+  perceptionNamingSettings: 1
+  pullPerceptionNamingSettings: 1
+  SystemAsset: {fileID: 308420365}
+  _fishPrefab: {fileID: 5281474623226569190, guid: c63f1f735b851024faf98461c4931367, type: 3}
+  _bootPrefab: {fileID: 2808376287602457127, guid: 273a344fd2f2c1e4984ab8bc8754d7e3, type: 3}
+  _fishDropTarget: {fileID: 1013018739}
+  _bootDropTarget: {fileID: 1847852898}
+  _baitTarget: {fileID: 394313093}
+  _rod: {fileID: 1026007597}
 --- !u!1 &178529728
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,6 +567,159 @@ LightingSettings:
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
   m_PVRFilteringAtrousPositionSigmaAO: 1
   m_PVRTiledBaking: 0
+--- !u!114 &275182123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: returnToWater
+  node:
+    rid: 2511131225754173449
+  position: {x: 600, y: 600}
+  parents:
+  - {fileID: 1909721724}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511131225754173449
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        SerializedAction:
+          rid: 2511131225754173452
+    - rid: 2511131225754173452
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        start:
+          component: {fileID: 90416565}
+          methodName: DropCaptureInWater
+        update:
+          component: {fileID: 90416565}
+          methodName: CompleteOnSuccess
+        stop:
+          component: {fileID: 0}
+          methodName: 
+--- !u!114 &302121898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601717732746985478
+  position: {x: 0, y: 400}
+  parents:
+  - {fileID: 1122302136}
+  childs:
+  - {fileID: 1443121607}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717732746985478
+      type: {class: UnityTimerDecorator, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        TotalTime: 3
+--- !u!114 &308420365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db249917b7c50574eaa600c74aff1437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graphs:
+  - {fileID: 1693644974}
+  pushPerceptions: []
+  perceptions:
+  - {fileID: 2117181221}
+--- !u!114 &322078536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: throwTheRod
+  node:
+    rid: 2511131225754173443
+  position: {x: -300, y: 400}
+  parents:
+  - {fileID: 1122302136}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511131225754173443
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        SerializedAction:
+          rid: 2511131225754173450
+    - rid: 2511131225754173450
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        start:
+          component: {fileID: 90416565}
+          methodName: StartThrow
+        update:
+          component: {fileID: 90416565}
+          methodName: RodThrownStatus
+        stop:
+          component: {fileID: 0}
+          methodName: 
+--- !u!1 &394313092
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 394313093}
+  m_Layer: 0
+  m_Name: Rod end
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &394313093
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 394313092}
+  m_LocalRotation: {x: -0.61342007, y: -0.3517326, z: -0.61342025, w: 0.35173246}
+  m_LocalPosition: {x: -1.7368089, y: -1.0878043, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1026007596}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: -120.34, y: -90, z: 0}
 --- !u!1001 &531314711
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -387,6 +730,10 @@ PrefabInstance:
     - target: {fileID: 4600201873981623957, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
       propertyPath: m_Name
       value: Test boy BT
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981623957, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
       propertyPath: m_RootOrder
@@ -458,23 +805,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4600201873981623957, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
   m_PrefabInstance: {fileID: 531314711}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &531314714
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 531314713}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0094b991d86100549b5e269dc7784fcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fish: {fileID: 5281474623226569190, guid: c63f1f735b851024faf98461c4931367, type: 3}
-  boot: {fileID: 2808376287602457127, guid: 273a344fd2f2c1e4984ab8bc8754d7e3, type: 3}
-  rodPoint: {fileID: 768373028}
-  toWaterPoint: {fileID: 1847852898}
-  toBasketPoint: {fileID: 1013018739}
 --- !u!114 &531314720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -493,6 +823,22 @@ MonoBehaviour:
   _bootDropTarget: {fileID: 1847852898}
   _baitTarget: {fileID: 768373028}
   _rod: {fileID: 1861444848}
+--- !u!114 &531314725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 531314713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  systemAsset: {fileID: 0}
+  _logGraphStatusChanged: 0
+  _logNodeStatusChanged: 0
+  _openDebuggerOnPlay: 0
 --- !u!1 &768373027
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,7 +883,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 474082, guid: 975da3ed9b4e81549a02e5e08d19369b, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 474082, guid: 975da3ed9b4e81549a02e5e08d19369b, type: 3}
       propertyPath: m_LocalScale.x
@@ -621,6 +967,32 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300024, guid: fe9ba93f508bf1849bce40f4ae043ed2, type: 3}
+--- !u!114 &911924050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: loop
+  node:
+    rid: 2511131225754173441
+  position: {x: 75, y: 0}
+  parents: []
+  childs:
+  - {fileID: 1122302136}
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511131225754173441
+      type: {class: IteratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        Iterations: -1
 --- !u!1 &953050417
 GameObject:
   m_ObjectHideFlags: 0
@@ -736,6 +1108,146 @@ Transform:
   m_Father: {fileID: 849420132}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 24.339, z: 0}
+--- !u!1001 &1026007594
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 90416563}
+    m_Modifications:
+    - target: {fileID: 100000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+      propertyPath: m_Name
+      value: Fishing rod
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.6408564
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.29883623
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.64085644
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.2988362
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90.00001
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -50
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+--- !u!1 &1026007595 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+  m_PrefabInstance: {fileID: 1026007594}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1026007596 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400000, guid: 84916bac2b1eef94cb479b1ef2be47f5, type: 3}
+  m_PrefabInstance: {fileID: 1026007594}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1026007597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1026007595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5182ab338e1a10f47b191633e194527b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!95 &1026007598
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1026007595}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9f12ab09c2267e649801b7a70c9fd662, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1122302136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: seq
+  node:
+    rid: 2511131225754173442
+  position: {x: 75, y: 200}
+  parents:
+  - {fileID: 911924050}
+  childs:
+  - {fileID: 322078536}
+  - {fileID: 302121898}
+  - {fileID: 1909721724}
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511131225754173442
+      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
 --- !u!1 &1294133889
 GameObject:
   m_ObjectHideFlags: 0
@@ -769,6 +1281,45 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1443121607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: catchSomething
+  node:
+    rid: 2511131225754173445
+  position: {x: 0, y: 600}
+  parents:
+  - {fileID: 302121898}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511131225754173445
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        SerializedAction:
+          rid: 2511131225754173451
+    - rid: 2511131225754173451
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        start:
+          component: {fileID: 90416565}
+          methodName: StartCatch
+        update:
+          component: {fileID: 90416565}
+          methodName: RodPickedStatus
+        stop:
+          component: {fileID: 0}
+          methodName: 
 --- !u!1 &1507272130
 GameObject:
   m_ObjectHideFlags: 0
@@ -867,6 +1418,36 @@ Transform:
   m_Father: {fileID: 1294133890}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1693644974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  graph:
+    rid: 2511131225754173440
+  nodes:
+  - {fileID: 911924050}
+  - {fileID: 1122302136}
+  - {fileID: 322078536}
+  - {fileID: 1443121607}
+  - {fileID: 1909721724}
+  - {fileID: 43033864}
+  - {fileID: 8931427}
+  - {fileID: 275182123}
+  - {fileID: 302121898}
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511131225754173440
+      type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
 --- !u!1 &1847852897
 GameObject:
   m_ObjectHideFlags: 0
@@ -896,7 +1477,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1861444844
 PrefabInstance:
@@ -1009,3 +1590,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5182ab338e1a10f47b191633e194527b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1909721724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: sel
+  node:
+    rid: 2511131225754173446
+  position: {x: 450, y: 400}
+  parents:
+  - {fileID: 1122302136}
+  childs:
+  - {fileID: 43033864}
+  - {fileID: 275182123}
+  references:
+    version: 2
+    RefIds:
+    - rid: 2511131225754173446
+      type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
+--- !u!114 &2117181221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: new pushperception
+  perception:
+    rid: 3601717732746985477
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717732746985477
+      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        init:
+          component: {fileID: 0}
+          methodName: 
+        check:
+          component: {fileID: 90416565}
+          methodName: IsFishCatched
+        reset:
+          component: {fileID: 0}
+          methodName: 

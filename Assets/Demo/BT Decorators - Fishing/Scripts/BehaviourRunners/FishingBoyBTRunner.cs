@@ -5,11 +5,12 @@ using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Runtime;
+using BehaviourAPI.Unity.Runtime.Extensions;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Demo
 {
-    public class FishingBoyBTRunner : BehaviourGraphRunner
+    public class FishingBoyBTRunner : CodeBehaviourRunner
     {
         [SerializeField] GameObject _fishPrefab, _bootPrefab;
         [SerializeField] Transform _fishDropTarget, _bootDropTarget, _baitTarget;
@@ -19,26 +20,33 @@ namespace BehaviourAPI.Unity.Demo
 
         protected override BehaviourGraph CreateGraph()
         {
-            var action = new FunctionalAction(() => Debug.Log("A"));
+            /* --------------------------- GRAPHS: --------------------------- */
+
+            var bt = new BehaviourTree();
+
+            /* --------------------------- Perceptions: --------------------------- */
+
             var fishPerception = new ConditionPerception(() => _fishCatched);
 
-            var bt = new BehaviourAPI.BehaviourTrees.BehaviourTree();
+            /* --------------------------- Nodes: --------------------------- */
 
+            //bt:
             var throwTheRod = bt.CreateLeafNode("Throw rod", new FunctionalAction(StartThrow, () => _rod.IsThrown() ? Status.Success : Status.Running));
             var catchSomething = bt.CreateLeafNode("Catch sonmething", new FunctionalAction(StartCatch, () => _rod.IsPickedUp() ? Status.Success : Status.Running));
 
             var returnToWater = bt.CreateLeafNode("Return to water", new FunctionalAction(DropCaptureInWater, () => Status.Success));
             var storeInBasket = bt.CreateLeafNode("Store in basket", new FunctionalAction(StoreCaptureInBasket, () => Status.Success));
 
-            var timer = bt.CreateDecorator<UnityTimerDecorator>("Timer", catchSomething).SetTime(3f);
-            var check = bt.CreateDecorator<BehaviourAPI.BehaviourTrees.Decorators.ConditionDecoratorNode>("Cond", storeInBasket).SetPerception(fishPerception);
-            var sel = bt.CreateComposite<BehaviourAPI.BehaviourTrees.SelectorNode>("sel", false, check, returnToWater);
+            var timer = bt.CreateDecorator<UnityTimerDecorator>("Timer", catchSomething).SetTotalTime(3f);
+            var check = bt.CreateDecorator<ConditionNode>("Cond", storeInBasket).SetPerception(fishPerception);
+            var sel = bt.CreateComposite<SelectorNode>("sel", false, check, returnToWater);
             var seq = bt.CreateComposite<SequencerNode>("seq", false, throwTheRod, timer, sel);
 
-            var loop = bt.CreateDecorator<BehaviourAPI.BehaviourTrees.IteratorNode>("loop", seq).SetIterations(-1);
+            var loop = bt.CreateDecorator<IteratorNode>("loop", seq).SetIterations(-1);
 
             bt.SetRootNode(loop);
 
+            RegisterGraph(bt);
             return bt;
         }
 
@@ -58,6 +66,7 @@ namespace BehaviourAPI.Unity.Demo
         }
 
         void DropCaptureInWater() => DropCapture(_bootPrefab, _bootDropTarget, true);
+
         void StoreCaptureInBasket() => DropCapture(_fishPrefab, _fishDropTarget, false);
 
         void DropCapture(GameObject capturePrefab, Transform target, bool destroyAfter)

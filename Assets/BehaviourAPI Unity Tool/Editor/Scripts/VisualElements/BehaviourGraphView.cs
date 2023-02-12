@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using BehaviourAPI.Core;
+using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Runtime;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.Windows;
+using static UnityEditor.PlayerSettings;
 using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Editor
@@ -16,10 +21,16 @@ namespace BehaviourAPI.Unity.Editor
     /// </summary>
     public class BehaviourGraphView : GraphView
     {
+        private static string stylePath => BehaviourAPISettings.instance.EditorStylesPath + "graph.uss";
+
         #region ---------------------------------- Fields ----------------------------------
 
-        NodeCreationSearchWindow _nodeSearchWindow;
-        BehaviourGraphEditorWindow editorWindow;
+        NodeCreationWindow _nodeSearchWindow;
+        BehaviourSystemEditorWindow editorWindow;
+
+        Action<ContextualMenuPopulateEvent> _currentContextualMenuEvent;
+
+        Dictionary<NodeAsset, NodeView> _assetViewMap = new Dictionary<NodeAsset, NodeView>();
 
         #endregion
 
@@ -31,27 +42,28 @@ namespace BehaviourAPI.Unity.Editor
 
         #region -------------------------------- Properties --------------------------------
 
-        public ActionSearchWindow ActionSearchWindow { get; private set; }
-        public PerceptionSearchWindow PerceptionSearchWindow { get; private set; }
+        public ActionCreationWindow ActionCreationWindow { get; private set; }
+        public PerceptionCreationWindow PerceptionCreationWindow { get; private set; }
+
+
         public SubgraphSearchWindow SubgraphSearchWindow { get; private set; }
-
         public NodeSearchWindow NodeSearchWindow { get; private set; }
-        
-        public GraphAsset GraphAsset { get; private set ; }
-        public GraphRenderer Renderer { get; private set; }
+        public PerceptionSearchWindow PerceptionSearchWindow { get; private set; }
 
-        public bool Runtime => BehaviourGraphEditorWindow.IsRuntime;
+        public GraphAsset GraphAsset { get; private set ; }
+
+        public GraphAdapter _adapter;
+
+        public bool Runtime => BehaviourSystemEditorWindow.IsRuntime;
 
         #endregion
 
-        public BehaviourGraphView(BehaviourGraphEditorWindow parentWindow)
+        public BehaviourGraphView(BehaviourSystemEditorWindow parentWindow)
         {
             editorWindow = parentWindow;
             AddDecorators();
             AddManipulators();
             AddSearchWindows();
-
-            AddStyles();
             graphViewChanged = OnGraphViewChanged;
         }
 
@@ -64,9 +76,9 @@ namespace BehaviourAPI.Unity.Editor
             if (Runtime)
             {
                 nodeView.capabilities -= Capabilities.Deletable;
-                nodeView.capabilities -= Capabilities.Movable;
             }
             AddElement(nodeView);
+            _assetViewMap.Add(nodeView.Node, nodeView);
         }
 
         public void AddConnectionView(Edge edge)
@@ -75,10 +87,12 @@ namespace BehaviourAPI.Unity.Editor
             {
                 edge.capabilities -= Capabilities.Selectable;
                 edge.capabilities -= Capabilities.Deletable;
-                edge.capabilities -= Capabilities.Movable;
             }
             AddElement(edge);
         }
+
+        public NodeView GetViewOf(NodeAsset nodeAsset) => _assetViewMap[nodeAsset];
+
         #endregion ------------------------------------------------------------------
 
         #region -------------------------- SET UP -------------------------------
@@ -87,12 +101,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             GridBackground gridBackground = new GridBackground();
             Insert(0, gridBackground);
-        }
 
-        void AddStyles()
-        {
-            StyleSheet styleSheet = VisualSettings.GetOrCreateSettings().GraphStylesheet;
-            styleSheets.Add(styleSheet);
+            styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>(stylePath));
         }
 
         void AddManipulators()
@@ -105,6 +115,10 @@ namespace BehaviourAPI.Unity.Editor
                 this.AddManipulator(new SelectionDragger());
                 this.AddManipulator(new RectangleSelector());
             }
+            this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
+            {
+                _currentContextualMenuEvent?.Invoke(menuEvt);
+            }));
         }
         #endregion ------------------------------------------------------------------
 
@@ -113,18 +127,26 @@ namespace BehaviourAPI.Unity.Editor
         GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
             graphViewChange.movedElements?.ForEach(OnElementMoved);
+
+            if(Runtime)
+            {
+                graphViewChange.elementsToRemove?.Clear();
+                graphViewChange.edgesToCreate?.Clear();
+                return graphViewChange;
+            }
+
             graphViewChange.elementsToRemove?.ForEach(OnElementRemoved);
             graphViewChange.edgesToCreate?.ForEach(OnEdgeCreated);
 
-            return Renderer?.OnGraphViewChanged(graphViewChange) ?? graphViewChange;
+            return _adapter?.OnViewChanged(this, graphViewChange) ?? graphViewChange;
         }
 
         private void OnEdgeCreated(Edge edge)
         {
             var source = (NodeView)edge.output.node;
             var target = (NodeView)edge.input.node;
-            source.OnConnected(Direction.Output, target);
-            target.OnConnected(Direction.Input, source);
+            source.OnConnected(target, edge.output);
+            target.OnConnected(source, edge.input);
         }
 
         void OnElementMoved(GraphElement element)
@@ -140,14 +162,15 @@ namespace BehaviourAPI.Unity.Editor
             if (element is NodeView nodeView)
             {
                 GraphAsset.RemoveNode(nodeView.Node);
+                _assetViewMap.Remove(nodeView.Node);
                 NodeRemoved?.Invoke(nodeView.Node);
             }
             if (element is Edge edge)
             {
                 var source = (NodeView)edge.output.node;
                 var target = (NodeView)edge.input.node;
-                source.OnDisconnected(Direction.Output, target);
-                target.OnDisconnected(Direction.Input, source);
+                source.OnDisconnected(target, edge.output);
+                target.OnDisconnected(source, edge.input);
             }
         }
 
@@ -155,41 +178,50 @@ namespace BehaviourAPI.Unity.Editor
 
         #region --------------------------- CHANGE GRAPH ----------------------------
 
+        public void SetSystem(BehaviourSystemAsset systemAsset)
+        {
+            SubgraphSearchWindow = SubgraphSearchWindow.Create(systemAsset);
+            NodeSearchWindow = NodeSearchWindow.Create(systemAsset);
+            PerceptionSearchWindow = PerceptionSearchWindow.Create(systemAsset);
+        }
+
         public void SetGraph(GraphAsset graph)
         {
             ClearGraph();
             GraphAsset = graph;
 
-            Renderer = GraphRenderer.FindRenderer(graph.Graph);
-            Renderer.graphView = this;
-            Renderer.DrawGraph(graph);
+            _adapter = GraphAdapter.FindAdapter(graph.Graph);
+            _adapter.DrawGraph(graph, this);
+            _currentContextualMenuEvent = (menuEvt) => _adapter.BuildGraphContextualMenu(menuEvt, this);
 
-            _nodeSearchWindow.SetRootType(graph.Graph.NodeType);
+            _nodeSearchWindow.SetEntryHierarchy(_adapter.GetNodeHierarchyEntries());
         }
 
         #endregion ------------------------------------------------------------------
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
-            if (Renderer == null) return new List<Port>();
-            return Renderer.GetValidPorts(ports, startPort);
+            if (_adapter == null) return new List<Port>();
+            return _adapter.GetValidPorts(ports, startPort, GraphAsset.Graph.CanCreateLoops);
         }
 
         #region -------------------------- SEARCH WINDOWS ---------------------------
 
         void AddSearchWindows()
         {
+            _nodeSearchWindow = NodeCreationWindow.Create(CreateNode);
 
-            _nodeSearchWindow = NodeCreationSearchWindow.Create(CreateNode);
-
-            ActionSearchWindow = ActionSearchWindow.Create();
-            PerceptionSearchWindow = PerceptionSearchWindow.Create();
-            SubgraphSearchWindow = SubgraphSearchWindow.Create(BehaviourGraphEditorWindow.SystemAsset);
-            NodeSearchWindow = NodeSearchWindow.Create(BehaviourGraphEditorWindow.SystemAsset);
+            ActionCreationWindow = ActionCreationWindow.Create();
+            PerceptionCreationWindow = PerceptionCreationWindow.Create();
 
             nodeCreationRequest = context =>
             {
                 if (GraphAsset == null) return;
+                if (Runtime)
+                {
+                    //Debug.LogWarning("Can't create nodes runtime");
+                    return;
+                }
 
                 var searchContext = new SearchWindowContext(context.screenMousePosition);
                 SearchWindow.Open(searchContext, _nodeSearchWindow);
@@ -211,7 +243,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if(asset != null)
             {
-                Renderer.DrawNode(asset);
+                _adapter.DrawNode(asset, this);
             }
             else
             {
@@ -219,15 +251,36 @@ namespace BehaviourAPI.Unity.Editor
             }
 
             NodeAdded?.Invoke(asset);
-        }
-
+        } 
         
+        public void DuplicateNode(NodeAsset nodeAsset)
+        {
+            NodeAsset assetCopy = GraphAsset.DuplicateNode(nodeAsset);
+            assetCopy.Position += new Vector2(20, 20);
+
+            if (assetCopy != null)
+            {
+                _adapter.DrawNode(assetCopy, this);
+            }
+            else
+            {
+                Debug.LogWarning("Error creating the node");
+            }
+            NodeAdded?.Invoke(assetCopy);
+        }
 
         void ClearGraph()
         {
+            _assetViewMap.Clear();
             graphElements.ForEach(RemoveElement);
         }
 
         public void ClearView() => ClearGraph();
+
+        public void RefreshView()
+        {
+            ClearGraph();
+            _adapter.DrawGraph(GraphAsset, this);
+        }
     }
 }

@@ -2,10 +2,12 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
+using BehaviourAPI.Unity.Runtime;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CarFSMRunner : BehaviourGraphRunner
+public class CarFSMRunner : CodeBehaviourRunner
 {
     Rigidbody _rb;
     RadarFSMRunner _radar;
@@ -36,6 +38,7 @@ public class CarFSMRunner : BehaviourGraphRunner
         carFSM.CreateTransition("speed up", lowSpeedState, highSpeedState, radarIsBroken);
         carFSM.CreateTransition("slow down", highSpeedState, lowSpeedState, radarIsWorking);
 
+        RegisterGraph(carFSM);
         return carFSM;
     }
 

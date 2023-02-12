@@ -1,13 +1,17 @@
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
+using BehaviourAPI.Unity.Framework;
+using BehaviourAPI.Unity.Framework.Adaptations;
 using BehaviourAPI.Unity.Runtime;
+using BehaviourAPI.Unity.Runtime.Extensions;
 using System;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Action = BehaviourAPI.Core.Actions.Action;
-using CompoundPerception = BehaviourAPI.Unity.Runtime.CompoundPerception;
+using Object = UnityEngine.Object;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -17,17 +21,17 @@ namespace BehaviourAPI.Unity.Editor
     public class PerceptionContainerView : VisualElement
     {
         NodeAsset nodeAsset;
-        SerializedProperty _perceptionProperty;
+        string propertyPath;
 
         NodeView _nodeView;
-        VisualElement _emptyDiv, _assignedDiv;
 
-        Button _assignBtn;
+        Button _assignButton;
+        VisualElement _container;
 
         public PerceptionContainerView(NodeAsset asset, SerializedProperty perceptionProperty, NodeView nodeView)
         {
             nodeAsset = asset;
-            _perceptionProperty = perceptionProperty;
+            propertyPath = perceptionProperty.propertyPath;
 
             _nodeView = nodeView;
             AddLayout();
@@ -37,16 +41,11 @@ namespace BehaviourAPI.Unity.Editor
 
         void AddLayout()
         {
-            var visualTree = VisualSettings.GetOrCreateSettings().ContainerLayout;
-            var inspectorFromUXML = visualTree.Instantiate();
-            Add(inspectorFromUXML);
+            _container = new VisualElement();
+            Add(_container);
 
-            _emptyDiv = this.Q("tc-empty-div");
-            _assignedDiv = this.Q("tc-assigned-div");
-
-            _assignBtn = this.Q<Button>("tc-assign-button");
-            _assignBtn.text = "Assign perception";
-            _assignBtn.clicked += OnAssignPerception;
+            _assignButton = new Button(OnAssignPerception) { text = "Assign perception" };
+            Add(_assignButton);
         }
 
         private void SetUpContextualMenu()
@@ -54,62 +53,95 @@ namespace BehaviourAPI.Unity.Editor
             this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
             {
                 menuEvt.menu.AppendAction("Clear perception", dd => ClearPerception(),
-                    (_) => _perceptionProperty.managedReferenceValue != null ?
+                    (_) => GetSerializedProperty().objectReferenceValue != null ?
                     DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
             }));
         }
 
         void OnAssignPerception()
         {
-            _nodeView.GraphView.PerceptionSearchWindow.Open(SetPerceptionType);
+            _nodeView.GraphView.PerceptionSearchWindow.Open(SetPerception);
         }
 
         private void ClearPerception()
         {
-            _perceptionProperty.managedReferenceValue = null;
-            _perceptionProperty.serializedObject.ApplyModifiedProperties();
+            UpdatePerceptionValue(null);
             UpdateView();
         }
 
-        void SetPerceptionType(Type perceptionType)
+        void SetPerception(PerceptionAsset perceptionAsset)
         {
-            if (!perceptionType.IsSubclassOf(typeof(Perception))) return;
-
-            _perceptionProperty.managedReferenceValue = Activator.CreateInstance(perceptionType);
-            _perceptionProperty.serializedObject.ApplyModifiedProperties();
+            UpdatePerceptionValue(perceptionAsset);
             UpdateView();
+        }
+
+        void UpdatePerceptionValue(Object perceptionAsset)
+        {
+            var obj = new SerializedObject(nodeAsset);
+            obj.FindProperty(propertyPath).objectReferenceValue = perceptionAsset;
+            obj.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        SerializedProperty GetSerializedProperty()
+        {
+            var obj = new SerializedObject(nodeAsset);
+            return obj.FindProperty(propertyPath);
         }
 
         void UpdateView()
         {
-            if (_perceptionProperty.managedReferenceValue == null)
+            var perceptionProperty = GetSerializedProperty();
+            if (perceptionProperty.objectReferenceValue == null)
             {
-                _emptyDiv.style.display = DisplayStyle.Flex;
-                _assignedDiv.style.display = DisplayStyle.None;
-                _assignedDiv.Clear();
+                _assignButton.Enable();
+                _container.Clear();
+                _container.Disable();
             }
             else
             {
-                _emptyDiv.style.display = DisplayStyle.None;
-                _assignedDiv.style.display = DisplayStyle.Flex;
-                Perception perception = _perceptionProperty.managedReferenceValue as Perception;
+                _assignButton.Disable();
+                _container.Enable();
 
-                if (perception is CustomPerception customAction)
+                var perceptionAsset = perceptionProperty.objectReferenceValue as PerceptionAsset;
+
+                var label = new Label($"if {GetPerceptionDescription(perceptionAsset)}");
+                label.AddToClassList("node-text");
+                _container.Add(label);
+            }
+        }
+
+        public void RefreshView() => UpdateView();
+
+        public static string GetPerceptionDescription(PerceptionAsset perceptionAsset)
+        {
+            if (perceptionAsset == null || perceptionAsset.perception == null) return "";
+            else
+            {
+                if(perceptionAsset is CompoundPerceptionAsset cpa)
                 {
-                    _assignedDiv.Add(new CustomPerceptionView(customAction));
+                    if (cpa.subperceptions.Count == 0) return "false";
+
+                    string separator = (cpa.perception is AndPerception ? " && " : " || ");
+                    return $"({cpa.subperceptions.Select(sub => GetPerceptionDescription(sub)).Join(separator)})";
                 }
-                else if (perception is UnityPerception unityAction)
+                else if(perceptionAsset is StatusPerceptionAsset spa)
                 {
-                    _assignedDiv.Add(new UnityPerceptionView(unityAction));
+                    if (spa.target != null) return $"check {spa.target.Name} status";
+                    else return "check node status";
                 }
-                else if (perception is CompoundPerception compoundPerception)
+                else
                 {
-                    _assignedDiv.Add(new CompoundPerceptionView(compoundPerception));
-                }
-                else if (perception is StatusPerception statusPerception)
-                {
-                    _assignedDiv.Add(new StatusPerceptionView(statusPerception));
-                }
+                    var perception = perceptionAsset.perception;
+                    
+                    if (perception is UnityPerception up)
+                    {
+                        return up.DisplayInfo;
+                    }
+                    else
+                    {
+                        return "custom perception";
+                    }
+                }              
             }
         }
     }

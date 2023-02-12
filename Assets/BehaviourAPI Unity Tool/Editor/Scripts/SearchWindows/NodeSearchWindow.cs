@@ -1,4 +1,5 @@
 using BehaviourAPI.Core;
+using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Runtime;
 using System;
 using System.Collections;
@@ -57,8 +58,10 @@ namespace BehaviourAPI.Unity.Editor
         public void Open(Func<NodeAsset, bool> filter, Action<NodeAsset> callback)
         {
             _callback = callback;
-            _filter = filter; 
-            SearchWindow.Open(new SearchWindowContext(), this);
+            _filter = filter;
+            var mousePos = Event.current.mousePosition;
+            mousePos += BehaviourSystemEditorWindow.Instance.position.position;
+            SearchWindow.Open(new SearchWindowContext(mousePos), this);
         }
     }
 }

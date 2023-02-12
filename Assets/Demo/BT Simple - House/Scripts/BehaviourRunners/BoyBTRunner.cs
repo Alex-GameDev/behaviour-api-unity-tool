@@ -5,8 +5,9 @@ using BehaviourAPI.BehaviourTrees;
 using UnityEngine;
 using UnityEngine.AI;
 using BehaviourAPI.Core.Actions;
+using BehaviourAPI.Unity.Runtime;
 
-public class BoyBTRunner : BehaviourGraphRunner
+public class BoyBTRunner : CodeBehaviourRunner
 {
     Door _door;
     [SerializeField] AudioClip doorOpenClip;
@@ -57,7 +58,7 @@ public class BoyBTRunner : BehaviourGraphRunner
         var root = bt.CreateComposite<BehaviourAPI.BehaviourTrees.SequencerNode>("root", false, walkToDoor, sel, enter);
 
         bt.SetRootNode(root);
-
+        RegisterGraph(bt);
         return bt;
     }
 

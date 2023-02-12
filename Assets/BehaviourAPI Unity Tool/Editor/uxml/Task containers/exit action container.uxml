@@ -1,7 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/BehaviourAPI%20Unity%20Tool/Editor/Styles/node.uss?fileID=7433441132597879392&amp;guid=81512d53a4bea9b4494135dc1f99b76f&amp;type=3#node" />
-    <ui:VisualElement name="ec-div" style="flex-direction: column; justify-content: space-between; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px;">
-        <ui:Label text="Exit graph with" display-tooltip-when-elided="true" style="-unity-text-align: upper-center;" />
-        <ui:DropdownField index="-1" choices="System.Collections.Generic.List`1[System.String]" name="ec-status-dropdown" />
-    </ui:VisualElement>
-</ui:UXML>

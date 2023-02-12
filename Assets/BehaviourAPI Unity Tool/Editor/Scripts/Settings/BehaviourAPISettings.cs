@@ -14,60 +14,48 @@ namespace BehaviourAPI.Unity.Editor
     [FilePath("Config/StateFile.foo", FilePathAttribute.Location.PreferencesFolder)]
     public class BehaviourAPISettings : ScriptableSingleton<BehaviourAPISettings>
     {
-        [Header("Layout")]
-        public VisualTreeAsset BehaviourGraphEditorWindowLayout;
+        #region ----------------------- Script generation -----------------------
 
-        public VisualTreeAsset AlertWindowLayout;
-        public VisualTreeAsset GraphCreationWindowLayout;
+        public string GenerateScriptDefaultPath = "Assets/Scripts/";
+        public string GenerateScriptDefaultName = "NewBehaviourRunner";
 
+        #endregion
 
-        public VisualTreeAsset NodeLayout;
-        public VisualTreeAsset ContainerLayout;
-        public VisualTreeAsset InspectorLayout;
-        public VisualTreeAsset EmptyGraphPanel;
+        public string RootPath = "Assets/BehaviourAPI Unity Tool";
+        public string EditorLayoutsPath => $"{RootPath}/Editor/uxml/";
+        public string EditorStylesPath => $"{RootPath}/Editor/uss/";
 
-        public VisualTreeAsset ListItemLayout;
-
-        [Header("Containers")]
-        public VisualTreeAsset UnityTaskLayout;
-        public VisualTreeAsset CustomTaskLayout;
-
-        public VisualTreeAsset SubgraphActionLayout;
-        public VisualTreeAsset ExitActionLayout;
-
-        public VisualTreeAsset StatusPerceptionLayout;
-        public VisualTreeAsset CompoundPerceptionLayout;
-
-
-        [Header("Style")]
-        public StyleSheet BehaviourGraphEditorWindowStylesheet;
-        public StyleSheet GraphStylesheet;
-        public StyleSheet NodeStylesheet;
-        public StyleSheet InspectorStylesheet;
-
-        public string Assemblies;
+        public string CustomAssemblies;
 
         public readonly string[] DefaultAssemblies = new[]
         {
             "Assembly-CSharp",
-            "BehaviourAPI.Unity.Runtime",
-            "BehaviourAPI.Unity.Editor",
             "BehaviourAPI.Core",
             "BehaviourAPI.StateMachines",
             "BehaviourAPI.BehaviourTrees",
-            "BehaviourAPI.UtilitySystems"
+            "BehaviourAPI.UtilitySystems",
+            "BehaviourAPI.Unity.Runtime",
+            "BehaviourAPI.Unity.Framework",
+            "BehaviourAPI.Unity.Editor"
         };
+
+        List<Assembly> assemblies = new List<Assembly>();
 
         public void Save() => Save(true);
 
-        public List<Assembly> GetAssemblies()
-        {
-            return DefaultAssemblies.Select(assemblyName => Assembly.Load(assemblyName)).ToList();
-        }
+        public List<Assembly> GetAssemblies() => assemblies;
 
         public List<Type> GetTypes()
         {
-            return DefaultAssemblies.Select(assemblyName => Assembly.Load(assemblyName)).SelectMany(a => a.GetTypes()).ToList();
+            return GetAssemblies().SelectMany(a => a.GetTypes()).ToList();
+        }
+
+        public void ReloadAssemblies()
+        {
+            var customAssemblies = CustomAssemblies.Split(';').ToList();
+            var allAssemblyNames = customAssemblies.Union(DefaultAssemblies).ToHashSet();
+            assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList().FindAll(assembly =>
+                allAssemblyNames.Contains(assembly.GetName().Name));
         }
     }
 }
