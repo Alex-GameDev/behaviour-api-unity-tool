@@ -75,5 +75,26 @@ namespace BehaviourAPI.Unity.Editor
             return methodInfo.ReturnParameter.ParameterType == typeof(bool) &&
                 methodInfo.GetParameters().Length == 0;
         }
-    }   
+    }
+
+    [CustomPropertyDrawer(typeof(SerializedFloatFunction))]
+    public class SerializedFloatFunctionPropertyDrawer : CustomMethodPropertyDrawer
+    {
+        protected override bool ValidateMethod(MethodInfo methodInfo)
+        {
+            return methodInfo.ReturnParameter.ParameterType == typeof(float) &&
+               methodInfo.GetParameters().Length == 0;
+        }
+    }
+
+    [CustomPropertyDrawer(typeof(SerializedFloatFloatFunction))]
+    public class SerializedFloatFloatFunctionPropertyDrawer : CustomMethodPropertyDrawer
+    {
+        protected override bool ValidateMethod(MethodInfo methodInfo)
+        {
+            return methodInfo.ReturnParameter.ParameterType == typeof(float) &&
+               methodInfo.GetParameters().Length == 1 &&
+               methodInfo.GetParameters()[0].ParameterType == typeof(float);
+        }
+    }
 }
