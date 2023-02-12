@@ -12,7 +12,6 @@ namespace BehaviourAPI.Unity.Editor
     public class NodeCreationWindow : ScriptableObject, ISearchWindowProvider
     {
         List<SearchTreeEntry> entries;
-        HierarchicalTypeNode rootTypeNode;
         public Action<Type, Vector2> TreeEntrySelected;
 
         public void SetEntryHierarchy(List<SearchTreeEntry> entries)
@@ -20,39 +19,9 @@ namespace BehaviourAPI.Unity.Editor
             this.entries = entries;
         }
 
-        public void SetRootType(Type rootType)
-        {
-            var types = rootType.GetSubClasses();
-            rootTypeNode = new HierarchicalTypeNode(rootType, types);
-        }
-
         public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
         {
-            return entries ?? GetSubSearchTree(rootTypeNode, 0);
-        }
-
-        List<SearchTreeEntry> GetSubSearchTree(HierarchicalTypeNode typeNode, int level)
-        {
-            var list = new List<SearchTreeEntry>();
-            if(typeNode.Childs.Count != 0)
-            {
-                list.Add(new SearchTreeGroupEntry(new GUIContent(typeNode.Type.Name), level));
-                if (!typeNode.Type.IsAbstract) list.Add(new SearchTreeEntry(new GUIContent(typeNode.Type.Name))
-                {
-                    level = level + 1,
-                    userData = typeNode.Type
-                });
-                typeNode.Childs.ForEach(child => list.AddRange(GetSubSearchTree(child, level + 1)));
-            }
-            else
-            {
-                list.Add(new SearchTreeEntry(new GUIContent($"      {typeNode.Type.Name}"))
-                {
-                    level = level,
-                    userData = typeNode.Type
-                });
-            }
-            return list;
+            return entries ?? new List<SearchTreeEntry>();
         }
 
         public bool OnSelectEntry(SearchTreeEntry SearchTreeEntry, SearchWindowContext context)

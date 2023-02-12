@@ -52,7 +52,9 @@ namespace BehaviourAPI.Unity.Editor
         {
             _currentGraph = currentAsset;
             _callback = callback;
-            SearchWindow.Open(new SearchWindowContext(), this);
+            var mousePos = Event.current.mousePosition;
+            mousePos += BehaviourSystemEditorWindow.Instance.position.position;
+            SearchWindow.Open(new SearchWindowContext(mousePos), this);
         }
     }
 }

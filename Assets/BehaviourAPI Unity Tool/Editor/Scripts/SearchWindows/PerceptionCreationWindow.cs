@@ -69,9 +69,10 @@ namespace BehaviourAPI.Unity.Editor
 
         public void Open(Action<Type> callback)
         {
-            var searchContext = new SearchWindowContext();
             _entrySelected = callback;
-            SearchWindow.Open(searchContext, this);
+            var mousePos = Event.current.mousePosition;
+            mousePos += BehaviourSystemEditorWindow.Instance.position.position;
+            SearchWindow.Open(new SearchWindowContext(mousePos), this);
         }
 
         public static PerceptionCreationWindow Create() => CreateInstance<PerceptionCreationWindow>();

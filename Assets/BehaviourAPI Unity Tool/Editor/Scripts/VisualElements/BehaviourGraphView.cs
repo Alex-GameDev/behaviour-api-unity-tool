@@ -195,8 +195,6 @@ namespace BehaviourAPI.Unity.Editor
             _currentContextualMenuEvent = (menuEvt) => _adapter.BuildGraphContextualMenu(menuEvt, this);
 
             _nodeSearchWindow.SetEntryHierarchy(_adapter.GetNodeHierarchyEntries());
-
-            _nodeSearchWindow.SetRootType(graph.Graph.NodeType);
         }
 
         #endregion ------------------------------------------------------------------

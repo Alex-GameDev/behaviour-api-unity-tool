@@ -1,6 +1,7 @@
 using BehaviourAPI.Unity.Framework;
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -49,7 +50,9 @@ namespace BehaviourAPI.Unity.Editor
         {
             _callback = callback;
             _filter = filter ?? (_ => true);
-            SearchWindow.Open(new SearchWindowContext(), this);
+            var mousePos = Event.current.mousePosition;
+            mousePos += BehaviourSystemEditorWindow.Instance.position.position;
+            SearchWindow.Open(new SearchWindowContext(mousePos), this);
         }
     }
 }
