@@ -1,12 +1,13 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
+using BehaviourAPI.Unity.Runtime.Extensions;
 using UnityEngine;
 using UnityEngine.AI;
 
 /// <summary>
 /// Custom action that changes the color of a light.
 /// </summary>
-public class LightAction : Action
+public class LightAction : UnityAction
 {
     public Light Light;
     public Color Color;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using BehaviourAPI.Core;
@@ -7,7 +8,9 @@ using BehaviourAPI.StateMachines;
 using BehaviourAPI.Unity.Runtime;
 using BehaviourAPI.Unity.Runtime.Extensions;
 using UnityEngine;
+using UnityEngine.Timeline;
 using UnityEngine.UI;
+using static UnityEngine.UI.Image;
 
 public class RadarFSMRunner : CodeBehaviourRunner, IRadar
 {
@@ -44,8 +47,8 @@ public class RadarFSMRunner : CodeBehaviourRunner, IRadar
     private FSM CreateLightSubFSM()
     {
         var lightSubFSM = new FSM();
-        var overSpeedPerception = new RadarPerception(pointToLook, transform, (speed) => speed > 20, speedText);
-        var underSpeedPerception = new RadarPerception(pointToLook, transform, (speed) => speed <= 20, speedText);
+        var overSpeedPerception = new ConditionPerception(() => CheckRadar((speed) => speed > 20));
+        var underSpeedPerception = new ConditionPerception(() => CheckRadar((speed) => speed <= 20));
 
         var waitingState = lightSubFSM.CreateState("waiting", new LightAction(radarLight, Color.blue));
         var overSpeedState = lightSubFSM.CreateState("over", new LightAction(radarLight, Color.red, 1f));
@@ -65,5 +68,24 @@ public class RadarFSMRunner : CodeBehaviourRunner, IRadar
     public State GetBrokenState() => _brokenState;
 
     public State GetWorkingState() => _workingState;
+
+    private bool CheckRadar(Func<float, bool> speecCheckFunction)
+    {
+        Ray ray = new Ray(transform.position, -transform.TransformPoint(pointToLook));
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 50) && hit.collider.tag == "Car")
+        {
+            var carSpeed = hit.collider.gameObject.GetComponent<CarFSMRunner>().GetSpeed();
+
+            bool trigger = speecCheckFunction?.Invoke(carSpeed) ?? false;
+            if (trigger)
+            {
+                speedText.text = $"{Mathf.RoundToInt(carSpeed) + 100}";
+            }
+            return trigger;
+
+        }
+        return false;
+    }
 
 }

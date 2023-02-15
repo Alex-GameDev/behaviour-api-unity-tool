@@ -1,13 +1,12 @@
 using BehaviourAPI.Core;
-using BehaviourAPI.Core.Actions;
+using BehaviourAPI.Unity.Runtime.Extensions;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.UI;
 
 /// <summary>
 /// Custom action that makes a light blink.
 /// </summary>
-public class BlinkAction : Action
+public class BlinkAction : UnityAction
 {
     public Light Light;
     public Color Color;
