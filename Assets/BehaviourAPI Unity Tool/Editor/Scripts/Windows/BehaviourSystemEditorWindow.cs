@@ -11,6 +11,7 @@ using System.Reflection;
 using BehaviourAPI.Core;
 using Vector2 = UnityEngine.Vector2;
 using System.Linq;
+using UnityEditor.Graphs;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -282,10 +283,13 @@ namespace BehaviourAPI.Unity.Editor
 
             if (SystemAsset == null) return;
 
-            foreach (var graph in SystemAsset.Graphs)
+            for(int i = 0; i < SystemAsset.Graphs.Count; i++)
             {
+                var graph = SystemAsset.Graphs[i];
+                var id = i;
+
                 _selectGraphMenu.menu.AppendAction(
-                    actionName: $"{graph.Name} ({graph.Graph.GetType().Name}) {(SystemAsset.MainGraph == graph ? "- root" : "")}",
+                    actionName: $"{i + 1} - {graph.Name} ({graph.Graph.GetType().Name})",
                     action: _ => DisplayGraph(graph),
                     status: _currentGraphAsset == graph ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal
                 );
