@@ -95,11 +95,11 @@ public class PizzaBoyRunner : CodeBehaviourRunner
 
         var hawaiianFactor = us.CreateFunctionFactor<ExponentialFunction>("hawaiian", pizzafactor).SetExponent(.7f);
 
-        var peperoniAction = us.CreateUtilityAction("choose ham and cheese", peperoniSumFactor,
+        var peperoniAction = us.CreateAction("choose ham and cheese", peperoniSumFactor,
             new FunctionalAction(() => CreateRecipe(0), RecipeCreated, CreateRecipeCompleted), finishOnComplete: true);
-        var vegetarianAction = us.CreateUtilityAction("choose vegetarian", vegetarianFactor,
+        var vegetarianAction = us.CreateAction("choose vegetarian", vegetarianFactor,
             new FunctionalAction(() => CreateRecipe(1), RecipeCreated, CreateRecipeCompleted), finishOnComplete: true);
-        var hawaiianAction = us.CreateUtilityAction("choose hawaiian", hawaiianFactor,
+        var hawaiianAction = us.CreateAction("choose hawaiian", hawaiianFactor,
             new FunctionalAction(() => CreateRecipe(2), RecipeCreated, CreateRecipeCompleted), finishOnComplete: true);
         return us;
     }

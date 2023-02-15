@@ -196,7 +196,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (graph is UtilitySystem us)
             {
-                graphName = template.AddVariableInstantiationLine(type, graphName, graphAsset, us.Inertia, us.UtilityThreshold);
+                graphName = template.AddVariableInstantiationLine(type, graphName, graphAsset, us.Inertia);
             }
             else
             {
@@ -426,15 +426,6 @@ namespace BehaviourAPI.Unity.Editor
                         GenerateCodeForSelectableNode(selectableAsset, scriptTemplate, graphName, includeNodeName);
                     }
                 }
-
-                if (selectables.Count > 0)
-                {
-                    var defaultElement = scriptTemplate.FindVariableName(selectables[0]);
-                    if (defaultElement != null)
-                    {
-                        scriptTemplate.AddLine($"{graphName}.SetDefaultUtilityElement({defaultElement});");
-                    }
-                }
             }
         }
         #endregion
@@ -513,7 +504,6 @@ namespace BehaviourAPI.Unity.Editor
             }
 
             var nodeName = !string.IsNullOrEmpty(asset.Name) ? asset.Name : selectableNode.TypeName().ToLower();
-            string typeName = selectableNode.TypeName();
 
             var method = "";
             var args = new List<string>();
@@ -527,33 +517,34 @@ namespace BehaviourAPI.Unity.Editor
 
                 if (action.Action != null) args.Add(GenerateActionCode(action.Action, template));
                 if (action.FinishSystemOnComplete) args.Add("finishOnComplete: true");
-                if (selectableNode.IsRoot) args.Add("root: true");
-                method = $"CreateUtilityAction({args.Join()})";
+                method = $"CreateAction";
             }
             // If is an utility exit node, generates code for the child factor and the exit status.
             else if (selectableNode is UtilityExitNode exitNode)
             {
                 args.Add(template.FindVariableName(asset.Childs.FirstOrDefault()) ?? k_CodeForMissingNode);
                 args.Add(exitNode.ExitStatus.ToCodeFormat());
-                if (selectableNode.IsRoot) args.Add("root: true");
-                method = $"CreateUtilityExitNode({args.Join()})";
+                method = $"CreateExitNode";
             }
-            // Us is an utility bucket, generates code for the properties and all the childs.
+            // If is an utility bucket, only generates code for the variables
             else if (selectableNode is UtilityBucket bucket)
             {
-                args.Add($"{bucket.IsRoot.ToCodeFormat()}");
-                args.Add($"{bucket.UtilityThreshold.ToCodeFormat()}");
                 args.Add($"{bucket.Inertia.ToCodeFormat()}");
                 args.Add($"{bucket.BucketThreshold.ToCodeFormat()}");
-
-                asset.Childs.ForEach(child =>
-                {
-                    string childName = template.FindVariableName(child) ?? GenerateCodeForSelectableNode(child, template, graphName, includeNodeName);
-                    if (childName != null) args.Add(childName);
-                });
-                method = $"CreateUtilityBucket({args.Join()})";
+                method = $"CreateBucket";
             }
-            return template.AddVariableDeclarationLine(selectableNode.GetType(), nodeName, asset, $"{graphName}.{method}");
+
+            // If the element is part of a group, the group must be created before it
+            if (asset.Parents.Count > 0)
+            {
+                var groupAsset = asset.Parents.First();
+                string group = template.FindVariableName(groupAsset) ?? GenerateCodeForSelectableNode(asset.Parents.First(), template, graphName, includeNodeName);
+                args.Add("group: " + group);
+            }
+
+            return template.AddVariableDeclarationLine(selectableNode.GetType(), nodeName, asset, $"{graphName}.{method}({args.Join()})");
+        
+        
         }
         #endregion
 
