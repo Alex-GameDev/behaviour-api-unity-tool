@@ -74,12 +74,19 @@ namespace BehaviourAPI.Unity.Framework
             graphAsset.Graph = behaviourGraph;
             graphAsset.Name = name;
 
+            var nodeNameMap = behaviourGraph.GetNodeNames();
+
             var nodeAssetMap = new Dictionary<Node, NodeAsset>();
 
             foreach (var node in behaviourGraph.NodeList)
             {
                 var nodeAsset = NodeAsset.Create(node, Vector2.zero);
                 nodeAssetMap[node] = nodeAsset;
+
+                if(nodeNameMap.TryGetValue(node, out var nodeName))
+                {
+                    nodeAsset.Name = nodeName;
+                }
                 graphAsset.Nodes.Add(nodeAsset);
             }
 
