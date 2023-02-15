@@ -78,8 +78,8 @@ public class PizzaBoyRunner : CodeBehaviourRunner
     {
         var us = new UtilitySystem();
 
-        var pizzafactor = us.CreateVariableFactor("pizzas", () => _pizzasCreated, 10, 0);
-        var pepperoniFactor = us.CreateVariableFactor("peperoni_used", () => _peperoniUsed, 4, 0);
+        var pizzafactor = us.CreateVariableFactor("pizzas", () => _pizzasCreated % 10, 10, 0);
+        var pepperoniFactor = us.CreateVariableFactor("peperoni_used", () => _peperoniUsed % 4, 4, 0);  
 
         var peperoniSumFactor = us.CreateFusionFactor<WeightedFusionFactor>("peperoni", pizzafactor, pepperoniFactor)
             .SetWeights(0.6f, 0.4f);

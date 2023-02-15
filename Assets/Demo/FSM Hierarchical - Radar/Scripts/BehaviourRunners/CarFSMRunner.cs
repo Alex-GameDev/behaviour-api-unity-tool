@@ -10,13 +10,13 @@ using UnityEngine.UI;
 public class CarFSMRunner : CodeBehaviourRunner
 {
     Rigidbody _rb;
-    RadarFSMRunner _radar;
+    IRadar _radar;
 
     float _speed;
     protected override void OnAwake()
     {
         _rb = GetComponent<Rigidbody>();
-        _radar = FindObjectOfType<RadarFSMRunner>();
+        _radar = GameObject.FindGameObjectWithTag("Radar").GetComponent<IRadar>();
         _speed = Random.Range(15f, 30f);
         base.OnAwake();
     }

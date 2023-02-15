@@ -8,30 +8,38 @@ using UnityEngine.AI;
 /// <summary>
 /// Perception triggered when a time passes, asuming its executing on Update
 /// </summary>
-public class UnityTimePerception : BehaviourAPI.Core.Perceptions.Perception
-{
-    public float TotalTime;
-
-    float _currentTime;
-
-    public UnityTimePerception(float time)
+namespace BehaviourAPI.Unity.Runtime.Extensions
+{    public class UnityTimePerception : UnityPerception
     {
-        TotalTime = time;
-    }
+        public float TotalTime;
 
-    public override void Initialize()
-    {
-        _currentTime = 0f;
-    }
+        float _currentTime;
 
-    public override void Reset()
-    {
-        _currentTime = 0f;
-    }
+        public UnityTimePerception()
+        {
+        }
 
-    public override bool Check()
-    {
-        _currentTime += Time.deltaTime;
-        return _currentTime >= TotalTime;
+        public UnityTimePerception(float time)
+        {
+            TotalTime = time;
+        }
+
+        public override void Initialize()
+        {
+            _currentTime = 0f;
+        }
+
+        public override void Reset()
+        {
+            _currentTime = 0f;
+        }
+
+        public override bool Check()
+        {
+            _currentTime += Time.deltaTime;
+            return _currentTime >= TotalTime;
+        }
+
+        public override string DisplayInfo => "$TotalTime passes"; 
     }
 }

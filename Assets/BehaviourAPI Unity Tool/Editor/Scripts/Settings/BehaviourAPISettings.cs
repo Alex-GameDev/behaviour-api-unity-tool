@@ -11,6 +11,7 @@ using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
+
     [FilePath("Config/StateFile.foo", FilePathAttribute.Location.PreferencesFolder)]
     public class BehaviourAPISettings : ScriptableSingleton<BehaviourAPISettings>
     {

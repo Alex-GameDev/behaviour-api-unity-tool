@@ -27,11 +27,11 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
 
         public override void Start()
         {
-            Debug.Log("Start moving");
             agent.speed = speed;
             Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(cameraRay, out RaycastHit hit, 100f))
             {
+                Debug.Log("PATH"); 
                 agent.destination = new Vector3(hit.point.x, agent.transform.position.y, hit.point.z);
             }
         }
@@ -39,12 +39,22 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
         public override void Stop()
         {
             agent.speed = 0f;
+            Debug.Log("STOP");
         }
 
         public override Status Update()
         {
-            if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f) return Status.Success;
-            else return Status.Failure;
+            if (!agent.hasPath)
+            {
+                Debug.Log("No path");
+                return Status.Success;
+            }
+            else
+            {
+                Debug.Log("Path");
+                return Status.Running;
+            }
+
         }
 
         public override string DisplayInfo => "Move $agent to mousePosition";

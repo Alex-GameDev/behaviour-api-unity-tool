@@ -1,4 +1,5 @@
 ﻿using BehaviourAPI.Core;
+using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Runtime;
 using BehaviourAPI.Unity.Runtime.Extensions;
@@ -14,7 +15,7 @@ public class PlayerFSMRunner : CodeBehaviourRunner
     [SerializeField] private Transform chicken;
 
     private NavMeshAgent meshAgent;
-    private BehaviourAPI.Core.Perceptions.PushPerception _click;
+    private PushPerception _click;
 
     #endregion variables
 
@@ -37,13 +38,13 @@ public class PlayerFSMRunner : CodeBehaviourRunner
         var flee = fsm.CreateState("Flee", new FleeAction(meshAgent, 7f, 13f, 3f));
 
         // Las transiciones que pasan al estado "moving" se activan con percepciones Push.
-        var idleToMoving = fsm.CreateTransition("idle to moving", idle, moving);
-        var movingToMoving = fsm.CreateTransition("moving to moving", moving, moving);
+        var idleToMoving = fsm.CreateTransition("idle to moving", idle, moving, action: new FunctionalAction(() => Debug.Log("MOVE")), statusFlags: StatusFlags.None);
+        var movingToMoving = fsm.CreateTransition("moving to moving", moving, moving, action: new FunctionalAction(() => Debug.Log("MOVE AGAIN")), statusFlags: StatusFlags.None);
         _click = new PushPerception(idleToMoving, movingToMoving);
 
         // La transición que pasan al estado "idle" se lanzan cuando la acción de "moving" o "flee" termine.
-        fsm.CreateTransition("moving to idle", moving, idle, new ExecutionStatusPerception(moving, StatusFlags.Finished));
-        fsm.CreateTransition("runaway to idle", flee, idle, new ExecutionStatusPerception(flee, StatusFlags.Finished));
+        fsm.CreateTransition("moving to idle", moving, idle, statusFlags: StatusFlags.Finished);
+        fsm.CreateTransition("runaway to idle", flee, idle, statusFlags: StatusFlags.Finished);
 
         // Las transiciones que pasan al estado "flee" se activan con la percepción "chicken near"
         fsm.CreateTransition("idle to runaway", idle, flee, chickenNear);
@@ -58,6 +59,7 @@ public class PlayerFSMRunner : CodeBehaviourRunner
     {
         if (Input.GetMouseButtonDown(0))
         {
+            Debug.Log("Fire");
             _click.Fire();
         }
         base.OnUpdate();

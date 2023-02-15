@@ -31,7 +31,7 @@ public class BoyBTRunner : CodeBehaviourRunner
 
     protected override BehaviourGraph CreateGraph()
     {
-        var bt = new BehaviourAPI.BehaviourTrees.BehaviourTree();
+        var bt = new BehaviourTree();
         var doorPos = new Vector3(_door.transform.position.x, transform.position.y, _door.transform.position.z);
 
         var walkToDoorAction = new WalkAction(meshAgent, doorPos, 5f);
@@ -53,9 +53,9 @@ public class BoyBTRunner : CodeBehaviourRunner
 
         var enter = bt.CreateLeafNode("enter", enterAction); // Entra a la casa
 
-        var seq = bt.CreateComposite<BehaviourAPI.BehaviourTrees.SequencerNode>("key seq", false, findKey, returnToDoor, useKey);
-        var sel = bt.CreateComposite<BehaviourAPI.BehaviourTrees.SelectorNode>("sel", false, openDoor, seq, explode);
-        var root = bt.CreateComposite<BehaviourAPI.BehaviourTrees.SequencerNode>("root", false, walkToDoor, sel, enter);
+        var seq = bt.CreateComposite<SequencerNode>("key seq", false, findKey, returnToDoor, useKey);
+        var sel = bt.CreateComposite<SelectorNode>("sel", false, openDoor, seq, explode);
+        var root = bt.CreateComposite<SequencerNode>("root", false, walkToDoor, sel, enter);
 
         bt.SetRootNode(root);
         RegisterGraph(bt);
@@ -86,7 +86,7 @@ public class BoyBTRunner : CodeBehaviourRunner
     private void EnterTheHouse()
     {
         Debug.Log("Entering the house");
-        Destroy(this.gameObject, 2);
+        Destroy(gameObject, 2);
     }
 
     private void FindKey()
@@ -116,6 +116,7 @@ public class BoyBTRunner : CodeBehaviourRunner
         }
         else
         {
+            Debug.Log("Moving to key");
             return Status.Running;
         }
     }

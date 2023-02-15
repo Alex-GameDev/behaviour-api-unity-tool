@@ -5,10 +5,11 @@ using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.StateMachines;
 using BehaviourAPI.Unity.Runtime;
+using BehaviourAPI.Unity.Runtime.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RadarFSMRunner : CodeBehaviourRunner
+public class RadarFSMRunner : CodeBehaviourRunner, IRadar
 {
     [SerializeField] private Vector3 pointToLook;
     [SerializeField] private Text speedText;
@@ -64,4 +65,5 @@ public class RadarFSMRunner : CodeBehaviourRunner
     public State GetBrokenState() => _brokenState;
 
     public State GetWorkingState() => _workingState;
+
 }

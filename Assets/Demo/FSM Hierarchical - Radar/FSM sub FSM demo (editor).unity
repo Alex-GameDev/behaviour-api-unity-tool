@@ -281,7 +281,6 @@ MonoBehaviour:
     - rid: 3601717732746985525
       type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        isPulled: 1
         StatusFlags: 6
         _action:
           rid: -2
@@ -384,6 +383,28 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 363079224}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &370248092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: timetobreak
+  perception:
+    rid: 3601717821731766338
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717821731766338
+      type: {class: UnityTimePerception, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: Assembly-CSharp}
+      data:
+        TotalTime: 20
 --- !u!108 &424541224 stripped
 Light:
   m_CorrespondingSourceObject: {fileID: 2240874905377327616, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}
@@ -417,7 +438,6 @@ MonoBehaviour:
     - rid: 3601717732746985522
       type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        isPulled: 1
         StatusFlags: 7
         _action:
           rid: -2
@@ -903,11 +923,10 @@ MonoBehaviour:
     - rid: 3601717732746985513
       type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        isPulled: 1
         StatusFlags: 7
         _action:
           rid: -2
-        perception: {fileID: 0}
+        perception: {fileID: 370248092}
 --- !u!114 &904345711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -924,7 +943,9 @@ MonoBehaviour:
   - {fileID: 1265597479}
   - {fileID: 2089078290}
   pushPerceptions: []
-  perceptions: []
+  perceptions:
+  - {fileID: 1873486825}
+  - {fileID: 370248092}
 --- !u!1001 &976166221
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1064,6 +1085,19 @@ MonoBehaviour:
   perceptionNamingSettings: 1
   pullPerceptionNamingSettings: 1
   SystemAsset: {fileID: 904345711}
+--- !u!114 &976166225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 976166222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  systemAsset: {fileID: 0}
 --- !u!114 &1018097129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1092,11 +1126,10 @@ MonoBehaviour:
     - rid: 3601717732746985514
       type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        isPulled: 1
         StatusFlags: 7
         _action:
           rid: -2
-        perception: {fileID: 0}
+        perception: {fileID: 1873486825}
 --- !u!1 &1050367645
 GameObject:
   m_ObjectHideFlags: 0
@@ -1209,7 +1242,6 @@ MonoBehaviour:
     - rid: 3601717732746985523
       type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        isPulled: 1
         StatusFlags: 6
         _action:
           rid: -2
@@ -1332,7 +1364,6 @@ MonoBehaviour:
     - rid: 3601717732746985524
       type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        isPulled: 1
         StatusFlags: 7
         _action:
           rid: -2
@@ -1654,6 +1685,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1744644688}
   m_CullTransparentMesh: 0
+--- !u!114 &1873486825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: timetofix
+  perception:
+    rid: 3601717821731766337
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601717821731766337
+      type: {class: UnityTimePerception, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: Assembly-CSharp}
+      data:
+        TotalTime: 10
 --- !u!114 &2089078290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1787,6 +1840,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 872326259462198764, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 872326259462198764, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}
       propertyPath: m_TagString
       value: Radar
