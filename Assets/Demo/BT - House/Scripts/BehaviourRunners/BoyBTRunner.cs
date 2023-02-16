@@ -64,7 +64,6 @@ public class BoyBTRunner : CodeBehaviourRunner
 
     private void SmashDoor()
     {
-        Debug.Log("Exploding");
         GameObject explosion = Instantiate(explosionFX, _door.transform);
         _audioSource.clip = explosionClip;
         _audioSource.Play();
@@ -75,17 +74,13 @@ public class BoyBTRunner : CodeBehaviourRunner
     {
         if (!_door.IsClosed)
         {
-            Debug.Log("Door is open");
             _audioSource.clip = doorOpenClip;
             _audioSource.Play();
         }
-        else
-            Debug.Log("Door is closed");
     }
 
     private void EnterTheHouse()
     {
-        Debug.Log("Entering the house");
         Destroy(gameObject, 2);
     }
 
@@ -96,27 +91,22 @@ public class BoyBTRunner : CodeBehaviourRunner
         if (key != null)
         {
             _keyFound = true;
-            Debug.Log("Key found");
             meshAgent.destination = new Vector3(key.transform.position.x, transform.position.y, key.transform.position.z);
         }
-
     }
 
     private Status IsKeyObtained()
     {
         if (_hasKey)
         {
-            Debug.Log("Key obtained");
             return Status.Success;
         }
         else if (!_keyFound)
         {
-            Debug.Log("Key didn't found");
             return Status.Failure;
         }
         else
         {
-            Debug.Log("Moving to key");
             return Status.Running;
         }
     }

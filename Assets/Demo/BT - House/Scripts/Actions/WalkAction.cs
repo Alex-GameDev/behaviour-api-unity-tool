@@ -30,7 +30,6 @@ public class WalkAction : UnityAction
 
     public override void Stop()
     {
-        Agent.speed = 0f;
     }
 
     public override Status Update()

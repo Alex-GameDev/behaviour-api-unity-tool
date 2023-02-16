@@ -12,4 +12,9 @@ public class Door : MonoBehaviour
     {
         IsClosed = toggle.isOn;
     }
+
+    public void OnReset()
+    {
+        IsClosed = toggle.isOn;
+    }
 }

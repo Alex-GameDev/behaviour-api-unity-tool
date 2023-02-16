@@ -379,6 +379,7 @@ GameObject:
   - component: {fileID: 530351811942559551}
   - component: {fileID: 922734696}
   - component: {fileID: 8335097774737004306}
+  - component: {fileID: 7384330381591330207}
   m_Layer: 0
   m_Name: Test boy BT
   m_TagString: Player
@@ -569,6 +570,19 @@ MonoBehaviour:
   keyFoundClip: {fileID: 8300000, guid: 69994e2ff543a7c40ba881ddacb0c0dc, type: 3}
   explosionClip: {fileID: 8300000, guid: 2638340574fe08e4ca49b88174dda3a1, type: 3}
   explosionFX: {fileID: 100004, guid: 6e8c7c425e5bc374daf95a774767b1e3, type: 3}
+--- !u!114 &7384330381591330207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4600201873981623957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  systemAsset: {fileID: 0}
 --- !u!1 &4600201873981623967
 GameObject:
   m_ObjectHideFlags: 0
