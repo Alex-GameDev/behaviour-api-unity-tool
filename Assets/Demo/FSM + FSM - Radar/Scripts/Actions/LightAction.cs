@@ -15,6 +15,10 @@ public class LightAction : UnityAction
 
     float _currentTime;
 
+    public LightAction()
+    {
+    }
+
     public LightAction(Light light, Color color, float timeToEnd = -1f)
     {
         Light = light;

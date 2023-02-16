@@ -10,9 +10,13 @@ public class BlinkAction : UnityAction
 {
     public Light Light;
     public Color Color;
-    Text Marker;
+    public Text Marker;
 
     bool _intensityIncreasing;
+
+    public BlinkAction()
+    {
+    }
 
     public BlinkAction(Light light, Text marker, Color color)
     {
@@ -48,4 +52,6 @@ public class BlinkAction : UnityAction
         Light.intensity += (_intensityIncreasing) ? 0.1f : -0.1f;
         return Status.Running;
     }
+
+    public override string DisplayInfo => "Make light blink in $Color";
 }
