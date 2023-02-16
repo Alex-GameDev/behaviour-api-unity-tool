@@ -31,7 +31,6 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
             Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(cameraRay, out RaycastHit hit, 100f))
             {
-                Debug.Log("PATH"); 
                 agent.destination = new Vector3(hit.point.x, agent.transform.position.y, hit.point.z);
             }
         }
@@ -39,19 +38,16 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
         public override void Stop()
         {
             agent.speed = 0f;
-            Debug.Log("STOP");
         }
 
         public override Status Update()
         {
-            if (!agent.hasPath)
+            if (!agent.hasPath || agent.speed == -1)
             {
-                Debug.Log("No path");
                 return Status.Success;
             }
             else
             {
-                Debug.Log("Path");
                 return Status.Running;
             }
 

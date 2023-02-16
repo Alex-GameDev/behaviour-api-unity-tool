@@ -658,13 +658,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60ff844eb7699694ea1e0a37060a785f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  routePoints:
-  - {fileID: 2128227414}
-  - {fileID: 317209092}
-  - {fileID: 1662701903}
-  - {fileID: 1193483298}
-  - {fileID: 1392549}
-  - {fileID: 1604960911}
 --- !u!1 &1193483297
 GameObject:
   m_ObjectHideFlags: 0
@@ -993,7 +986,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 48, y: -35.31}
+  m_AnchoredPosition: {x: 48, y: -35.31006}
   m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1835806186
@@ -1353,5 +1346,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5000012665791813599, guid: 4eeb4b6c02c750944a046c003d6150ec, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 4eeb4b6c02c750944a046c003d6150ec, type: 3}
