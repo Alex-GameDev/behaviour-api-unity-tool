@@ -38,9 +38,9 @@ public class PlayerFSMRunner : CodeBehaviourRunner
         var flee = fsm.CreateState("Flee", new FleeAction(meshAgent, 7f, 13f, 3f));
 
         // Las transiciones que pasan al estado "moving" se activan con percepciones Push.
-        var idleToMoving = fsm.CreateTransition("idle to moving", idle, moving, action: new FunctionalAction(() => Debug.Log("MOVE")), statusFlags: StatusFlags.None);
-        var movingToMoving = fsm.CreateTransition("moving to moving", moving, moving, action: new FunctionalAction(() => Debug.Log("MOVE AGAIN")), statusFlags: StatusFlags.None);
-        _click = new PushPerception(idleToMoving, movingToMoving);
+        var idleToMoving = fsm.CreateTransition("idle to moving", idle, moving, statusFlags: StatusFlags.None);
+        var movingToMoving = fsm.CreateTransition("moving to moving", moving, moving, statusFlags: StatusFlags.None);
+        _click = new PushPerception(movingToMoving, idleToMoving);
 
         // La transición que pasan al estado "idle" se lanzan cuando la acción de "moving" o "flee" termine.
         fsm.CreateTransition("moving to idle", moving, idle, statusFlags: StatusFlags.Finished);
@@ -54,12 +54,10 @@ public class PlayerFSMRunner : CodeBehaviourRunner
         return fsm;
     }
 
-    // Update is called once per frame
     protected override void OnUpdate()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log("Fire");
             _click.Fire();
         }
         base.OnUpdate();

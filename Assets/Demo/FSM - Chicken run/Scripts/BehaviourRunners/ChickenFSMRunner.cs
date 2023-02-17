@@ -14,8 +14,6 @@ public class ChickenFSMRunner : CodeBehaviourRunner
     [SerializeField] Collider _visionCollider;
     NavMeshAgent _agent;
 
-    BehaviourAPI.StateMachines.FSM fsm;
-
     #endregion variables
 
     protected override void OnAwake()
@@ -26,7 +24,7 @@ public class ChickenFSMRunner : CodeBehaviourRunner
 
     protected override BehaviourGraph CreateGraph()
     {
-        fsm = new BehaviourAPI.StateMachines.FSM();
+        var fsm = new BehaviourAPI.StateMachines.FSM();
 
         // Percepciones pull
         var chickenNear = new ConditionPerception(CheckWatchTarget);
@@ -41,8 +39,8 @@ public class ChickenFSMRunner : CodeBehaviourRunner
         var idleToMoving = fsm.CreateTransition("idle to moving", idle, moving, timeToStartMoving);
 
         // Las transiciones que pasan al estado "idle" se lanzan cuando la acción "moving" o "chase" termine.
-        fsm.CreateTransition("moving to idle", moving, idle, new ExecutionStatusPerception(moving, StatusFlags.Finished));
-        fsm.CreateTransition("runaway to idle", chasing, idle, new ExecutionStatusPerception(moving, StatusFlags.Finished));
+        fsm.CreateTransition("moving to idle", moving, idle, statusFlags: StatusFlags.Finished);
+        fsm.CreateTransition("runaway to idle", chasing, idle, statusFlags: StatusFlags.Finished);
 
         // Las transiciones que pasan al estado "chasing" se activan con la percepción "watchPlayer".
         fsm.CreateTransition("idle to runaway", idle, chasing, chickenNear);
@@ -60,8 +58,6 @@ public class ChickenFSMRunner : CodeBehaviourRunner
             Ray ray = new Ray(transform.position + transform.up, direction * 20);
 
             bool watchPlayer = Physics.Raycast(ray, out RaycastHit hit, 20) && hit.collider.gameObject.transform == _target;
-
-            if (watchPlayer) Debug.Log("Player watched");
 
             return watchPlayer;
         }
