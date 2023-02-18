@@ -46,6 +46,8 @@ namespace BehaviourAPI.Unity.Editor
         Toolbar _editToolbar;
         ToolbarMenu _selectGraphMenu;
 
+        IHidable _currentInspector;
+
         public static void Open()
         {
             BehaviourEditorWindow window = GetWindow<BehaviourEditorWindow>();
@@ -87,64 +89,45 @@ namespace BehaviourAPI.Unity.Editor
 
             _container = rootVisualElement.Q("bw-content");
 
+            // Graphs:
             _noGraphPanel = AddEmptyPanel();
             _graphView = AddGraphView();
 
-            _nodeInspector = AddNodeInspectorView();
+            // Inspectors:
+            _nodeInspector = AddInspector<NodeInspectorView>();
+            _graphInspector = AddInspector<BehaviourGraphInspectorView>(swapable: true);
+            _pullPerceptionInspector = AddInspector<PullPerceptionInspectorView>(swapable: true);
+            _pushPerceptionInspector = AddInspector<PushPerceptionInspectorView>(swapable: true);
 
-            _graphInspector = AddGraphInspectorView();
-            _pullPerceptionInspector = AddPullPerceptionInspectorView();
-            _pushPerceptionInspector = AddPushPerceptionInspectorView();
+            _graphView.NodeSelected += _nodeInspector.UpdateInspector;
+            _graphView.NodeAdded += OnAddAsset;
+            _graphView.NodeRemoved += OnRemoveAsset;
 
-            SetUpMainToolbar();
-            SetUpEditToolbar();
+            _pushPerceptionInspector.PushPerceptionCreated += OnAddAsset;
+            _pushPerceptionInspector.PushPerceptionRemoved += OnRemoveAsset;
+
+            _pullPerceptionInspector.PerceptionCreated += OnAddPerception;
+            _pullPerceptionInspector.PerceptionRemoved += OnRemovePerception;
+
+            rootVisualElement.Q<Button>("im-pullperceptions-btn").clicked += () => ChangeInspector(_pullPerceptionInspector);
+            rootVisualElement.Q<Button>("im-graph-btn").clicked += () => ChangeInspector(_graphInspector);
+            rootVisualElement.Q<Button>("im-pushperceptions-btn").clicked += () => ChangeInspector(_pushPerceptionInspector);
+
+            // Toolbar:
+            SetUpToolbar();
         }
 
-        private NodeInspectorView AddNodeInspectorView()
+        private T AddInspector<T>(bool swapable = false) where T : VisualElement, new()
         {
-            var nodeInspector = new NodeInspectorView();
-            _container.Add(nodeInspector);
-            return nodeInspector;
-        }
+            var inspector = new T();
+            _container.Add(inspector);
 
-        private PushPerceptionInspectorView AddPushPerceptionInspectorView()
-        {
-            var pushPerceptionInspector = new PushPerceptionInspectorView();
-            _container.Add(pushPerceptionInspector);
-            pushPerceptionInspector.Disable();
-            pushPerceptionInspector.PushPerceptionCreated += OnAddAsset;
-            pushPerceptionInspector.PushPerceptionRemoved += OnRemoveAsset;
-            return pushPerceptionInspector;
-        }
-
-        private PullPerceptionInspectorView AddPullPerceptionInspectorView()
-        {
-            var pullPerceptionWindow = new PullPerceptionInspectorView();
-            _container.Add(pullPerceptionWindow);
-            pullPerceptionWindow.Disable();
-            pullPerceptionWindow.PerceptionCreated += OnAddPerception;
-            pullPerceptionWindow.PerceptionRemoved += OnRemovePerception;
-            return pullPerceptionWindow;
-        }
-
-        private BehaviourGraphInspectorView AddGraphInspectorView()
-        {
-            var graphInspector = new BehaviourGraphInspectorView();
-            _container.Add(graphInspector);
-            return graphInspector;
-        }
-
-        void Refresh()
-        {
-            if(System != null)
+            if(swapable)
             {
-                DisplayGraph(System.MainGraph, forceRefresh: true);
+                inspector.Disable();
             }
-            else
-            {
-                _graphView.ClearView();
-            }
-            UpdateGraphSelectionToolbar();
+
+            return inspector;
         }
 
         BehaviourGraphView AddGraphView()
@@ -162,14 +145,11 @@ namespace BehaviourAPI.Unity.Editor
             return emptyPanel;
         }
 
-        void SetUpMainToolbar()
+        void SetUpToolbar()
         {
             var mainToolbar = rootVisualElement.Q<Toolbar>("bw-toolbar-main");
             _selectGraphMenu = mainToolbar.Q<ToolbarMenu>("bw-toolbar-graph-menu");
-        }
 
-        void SetUpEditToolbar()
-        {
             _editToolbar = rootVisualElement.Q<Toolbar>("bw-toolbar-edit");
 
             //_editToolbar.Q<ToolbarButton>("bw-toolbar-setroot-btn").clicked += ChangeMainGraph;
@@ -197,6 +177,33 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (System == null || System.Graphs.Count == 0) return;
             AlertWindow.CreateAlertWindow("Are you sure to delete the current graph?", DeleteCurrentGraph);
+        }
+
+        void Refresh()
+        {
+            if (System != null)
+            {
+                DisplayGraph(System.MainGraph, forceRefresh: true);
+            }
+            else
+            {
+                _graphView.ClearView();
+            }
+            UpdateGraphSelectionToolbar();
+        }
+
+        void ChangeInspector(IHidable inspector)
+        {
+            _currentInspector?.Hide();
+            if (_currentInspector == inspector)
+            {
+                _currentInspector = null;
+            }
+            else
+            {
+                _currentInspector = inspector;
+                _currentInspector?.Show();
+            }
         }
 
         #endregion
