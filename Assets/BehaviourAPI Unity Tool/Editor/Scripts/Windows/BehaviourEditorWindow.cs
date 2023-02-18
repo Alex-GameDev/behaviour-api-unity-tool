@@ -152,7 +152,7 @@ namespace BehaviourAPI.Unity.Editor
 
             _editToolbar = rootVisualElement.Q<Toolbar>("bw-toolbar-edit");
 
-            //_editToolbar.Q<ToolbarButton>("bw-toolbar-setroot-btn").clicked += ChangeMainGraph;
+            _editToolbar.Q<ToolbarButton>("bw-toolbar-setroot-btn").clicked += ChangeMainGraph;
             //_editToolbar.Q<ToolbarButton>("bw-toolbar-clear-btn").clicked += OpenClearGraphWindow;
             _editToolbar.Q<ToolbarButton>("bw-toolbar-delete-btn").clicked += DisplayDeleteGraphAlertWindow;
             //_editToolbar.Q<ToolbarButton>("bw-toolbar-save-btn").clicked += SaveSystemData;
@@ -257,7 +257,7 @@ namespace BehaviourAPI.Unity.Editor
 
         #endregion
 
-        #region -------------------------- Modify system --------------------------
+        #region --------------------------------- Modify system ---------------------------------
 
         void CreateGraph(string name, Type type)
         {
@@ -288,6 +288,14 @@ namespace BehaviourAPI.Unity.Editor
             DisplayGraph(System.MainGraph);
 
             Toast("Graph deleted");
+        }
+
+        private void ChangeMainGraph()
+        {
+            if (System == null || System.MainGraph == _currentGraphAsset) return;
+            System.MainGraph = _currentGraphAsset;
+            UpdateGraphSelectionToolbar();
+            Toast("Main graph changed");
         }
 
         private void OnAddPerception(PerceptionAsset obj)
