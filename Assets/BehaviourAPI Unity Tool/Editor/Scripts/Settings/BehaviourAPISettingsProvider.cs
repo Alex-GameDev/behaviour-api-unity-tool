@@ -12,10 +12,10 @@ namespace BehaviourAPI.Unity.Editor
     {
         class Styles
         {
-            public static GUIContent RootPath = new GUIContent("Package root path");
+            public static GUIContent RootPath = new GUIContent("Package root PATH");
             public static GUIContent Assemblies = new GUIContent("Assemblies");
 
-            public static GUIContent ScriptPath = new GUIContent("Default script path");
+            public static GUIContent ScriptPath = new GUIContent("Default script PATH");
             public static GUIContent ScriptName = new GUIContent("Default script name");
         }
 

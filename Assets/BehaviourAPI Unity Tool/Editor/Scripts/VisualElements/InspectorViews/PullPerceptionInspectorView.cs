@@ -19,10 +19,8 @@ namespace BehaviourAPI.Unity.Editor
 
         ListView _compoundPerceptionListView;
 
-        public PullPerceptionInspectorView(BehaviourSystemAsset systemAsset, BehaviourGraphView graphView) : base("Perceptions", Side.Right)
+        public PullPerceptionInspectorView() : base("Perceptions", Side.Right)
         {
-            _systemAsset = systemAsset;
-            _graphView = graphView;
         }
 
         public override void AddElement()

@@ -20,10 +20,8 @@ namespace BehaviourAPI.Unity.Editor
 
         BehaviourSystemAsset _systemAsset;
 
-        public PushPerceptionInspectorView(BehaviourSystemAsset systemAsset, NodeSearchWindow searchWindow) : base("Push Perceptions", Side.Right)
+        public PushPerceptionInspectorView() : base("Push Perceptions", Side.Right)
         {
-            _systemAsset = systemAsset;
-            nodeSearchWindow = searchWindow;
         }
 
         public override void AddElement()

@@ -42,7 +42,7 @@ public class PlayerFSMRunner : CodeBehaviourRunner
         var movingToMoving = fsm.CreateTransition("moving to moving", moving, moving, statusFlags: StatusFlags.None);
         _click = new PushPerception(movingToMoving, idleToMoving);
 
-        // La transición que pasan al estado "idle" se lanzan cuando la acción de "moving" o "flee" termine.
+        // La transición que pasan al estado "idle" se lanzan cuando la acción del estado anterior termine.
         fsm.CreateTransition("moving to idle", moving, idle, statusFlags: StatusFlags.Finished);
         fsm.CreateTransition("runaway to idle", flee, idle, statusFlags: StatusFlags.Finished);
 

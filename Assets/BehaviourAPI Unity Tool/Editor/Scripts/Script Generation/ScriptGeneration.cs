@@ -61,7 +61,7 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Create a script for a <see cref="BehaviourRunner"/> with all the data stored in <paramref name="asset"/>
         /// </summary>
-        /// <param name="path">The destination path to the script.</param>
+        /// <param name="path">The destination PATH to the script.</param>
         /// <param name="name">The script class name.</param>
         /// <param name="asset">The system asset.</param>
         public static void GenerateScript(string path, string name, BehaviourSystemAsset asset, bool useFullNameVar = true, bool includeNodeNames = true)

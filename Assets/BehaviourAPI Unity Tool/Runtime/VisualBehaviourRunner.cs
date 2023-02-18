@@ -17,12 +17,6 @@ namespace BehaviourAPI.Unity.Runtime
 
         BehaviourGraph _rootGraph;
 
-        private void Awake() => OnAwake();
-
-        private void Start() => OnStart();
-
-        private void Update() => OnUpdate();
-
         protected override void OnAwake()
         {
             if(SystemAsset == null )

@@ -26,7 +26,7 @@ namespace BehaviourAPI.Unity.Editor
         #region ---------------------------------- Fields ----------------------------------
 
         NodeCreationWindow _nodeSearchWindow;
-        BehaviourSystemEditorWindow editorWindow;
+        BehaviourEditorWindow editorWindow;
 
         Action<ContextualMenuPopulateEvent> _currentContextualMenuEvent;
 
@@ -58,7 +58,7 @@ namespace BehaviourAPI.Unity.Editor
 
         #endregion
 
-        public BehaviourGraphView(BehaviourSystemEditorWindow parentWindow)
+        public BehaviourGraphView(BehaviourEditorWindow parentWindow)
         {
             editorWindow = parentWindow;
             AddDecorators();

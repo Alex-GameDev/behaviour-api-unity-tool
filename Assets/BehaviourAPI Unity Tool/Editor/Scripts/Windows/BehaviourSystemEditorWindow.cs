@@ -94,18 +94,18 @@ namespace BehaviourAPI.Unity.Editor
             _assetLabel = rootVisualElement.Q<Label>("bw-asset-label");
 
             _container = rootVisualElement.Q("bw-content");
-            _graphView = AddGraphView();
-            _nodeInspector = AddNodeInspectorView();
-            _graphInspector = AddGraphInspectorView();
-            _pullPerceptionInspector = AddPullPerceptionInspectorView();
-            _pushPerceptionInspector = AddPushPerceptionInspectorView();
+            //_graphView = AddGraphView();
+            //_nodeInspector = AddNodeInspectorView();
+            //_graphInspector = AddGraphInspectorView();
+            //_pullPerceptionInspector = AddPullPerceptionInspectorView();
+            //_pushPerceptionInspector = AddPushPerceptionInspectorView();
 
-            _graphView.NodeSelected += _nodeInspector.UpdateInspector;
-            _graphView.NodeAdded += OnAddNode;
-            _graphView.NodeRemoved += OnRemoveNode;
+            //_graphView.NodeSelected += _nodeInspector.UpdateInspector;
+            //_graphView.NodeAdded += OnAddNode;
+            //_graphView.NodeRemoved += OnRemoveNode;
 
-            _emptyGraphPanel = AddEmptyGraphPanel();
-            _emptyGraphPanel.style.display = DisplayStyle.None;
+            //_emptyGraphPanel = AddEmptyGraphPanel();
+            //_emptyGraphPanel.style.display = DisplayStyle.None;
 
             SetUpInspectorMenu();
 
@@ -137,13 +137,13 @@ namespace BehaviourAPI.Unity.Editor
             return emptyPanel;
         }
 
-        BehaviourGraphView AddGraphView()
-        {
-            var graphView = new BehaviourGraphView(this);
-            graphView.StretchToParentSize();
-            rootVisualElement.Insert(0, graphView);
-            return graphView;
-        }
+        //BehaviourGraphView AddGraphView()
+        //{
+        //    var graphView = new BehaviourGraphView(this);
+        //    graphView.StretchToParentSize();
+        //    rootVisualElement.Insert(0, graphView);
+        //    return graphView;
+        //}
 
         NodeInspectorView AddNodeInspectorView()
         {
@@ -159,25 +159,25 @@ namespace BehaviourAPI.Unity.Editor
             return graphInspector;
         }
 
-        PullPerceptionInspectorView AddPullPerceptionInspectorView()
-        {
-            var pullPerceptionWindow = new PullPerceptionInspectorView(SystemAsset, _graphView);
-            _container.Add(pullPerceptionWindow);
-            pullPerceptionWindow.Disable();
-            pullPerceptionWindow.PerceptionCreated += OnAddPerception;
-            pullPerceptionWindow.PerceptionRemoved += OnRemovePerception;
-            return pullPerceptionWindow;
-        }
+        //PullPerceptionInspectorView AddPullPerceptionInspectorView()
+        //{
+        //    var pullPerceptionWindow = new PullPerceptionInspectorView(SystemAsset, _graphView);
+        //    _container.Add(pullPerceptionWindow);
+        //    pullPerceptionWindow.Disable();
+        //    pullPerceptionWindow.PerceptionCreated += OnAddPerception;
+        //    pullPerceptionWindow.PerceptionRemoved += OnRemovePerception;
+        //    return pullPerceptionWindow;
+        //}
 
-        PushPerceptionInspectorView AddPushPerceptionInspectorView()
-        {
-            var pushPerceptionInspector = new PushPerceptionInspectorView(SystemAsset, _graphView.NodeSearchWindow);
-            _container.Add(pushPerceptionInspector);
-            pushPerceptionInspector.Disable();
-            pushPerceptionInspector.PushPerceptionCreated += OnAddAsset;
-            pushPerceptionInspector.PushPerceptionRemoved += OnRemoveAsset;
-            return pushPerceptionInspector;
-        }
+        //PushPerceptionInspectorView AddPushPerceptionInspectorView()
+        //{
+        //    var pushPerceptionInspector = new PushPerceptionInspectorView(SystemAsset, _graphView.NodeSearchWindow);
+        //    _container.Add(pushPerceptionInspector);
+        //    pushPerceptionInspector.Disable();
+        //    pushPerceptionInspector.PushPerceptionCreated += OnAddAsset;
+        //    pushPerceptionInspector.PushPerceptionRemoved += OnRemoveAsset;
+        //    return pushPerceptionInspector;
+        //}
 
         private void SetUpInspectorMenu()
         {
@@ -305,7 +305,6 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (_currentGraphAsset == null) return;
             AlertWindow.CreateAlertWindow("¿Clear current graph?", ClearCurrentGraph);
-
         }
 
         void DisplayGraph(GraphAsset graphAsset, bool forceRefresh = false)
