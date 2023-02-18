@@ -12,5 +12,7 @@ namespace BehaviourAPI.Unity.Framework
         public GraphAsset CreateGraph(string name, Type graphType);
 
         public void RemoveGraph(GraphAsset graphAsset);
+
+        public void Save();
     }
 }

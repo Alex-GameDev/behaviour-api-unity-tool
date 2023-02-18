@@ -115,6 +115,13 @@ namespace BehaviourAPI.Unity.Editor
 
             // Toolbar:
             SetUpToolbar();
+
+            Undo.undoRedoPerformed += OnUndoRedoPerformed;
+        }
+
+        void OnUndoRedoPerformed()
+        {
+            Refresh();
         }
 
         private T AddInspector<T>(bool swapable = false) where T : VisualElement, new()
@@ -155,7 +162,7 @@ namespace BehaviourAPI.Unity.Editor
             _editToolbar.Q<ToolbarButton>("bw-toolbar-setroot-btn").clicked += ChangeMainGraph;
             //_editToolbar.Q<ToolbarButton>("bw-toolbar-clear-btn").clicked += OpenClearGraphWindow;
             _editToolbar.Q<ToolbarButton>("bw-toolbar-delete-btn").clicked += DisplayDeleteGraphAlertWindow;
-            //_editToolbar.Q<ToolbarButton>("bw-toolbar-save-btn").clicked += SaveSystemData;
+            _editToolbar.Q<ToolbarButton>("bw-toolbar-save-btn").clicked += SaveSystemData;
             //_editToolbar.Q<ToolbarButton>("bw-toolbar-generatescript-btn").clicked += OpenCreateScriptWindow;
 
             var addGraphMenu = _editToolbar.Q<ToolbarMenu>("bw-toolbar-add-menu");
@@ -171,6 +178,11 @@ namespace BehaviourAPI.Unity.Editor
                     );
                 }
             }
+        }
+
+        private void SaveSystemData()
+        {
+            if (System != null) System.Save();
         }
 
         void DisplayDeleteGraphAlertWindow()

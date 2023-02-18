@@ -28,7 +28,6 @@ namespace BehaviourAPI.Unity.Runtime
 
         public GraphAsset MainGraph
         {
-
             get
             {
                 if (graphs.Count == 0) return null;
@@ -37,7 +36,10 @@ namespace BehaviourAPI.Unity.Runtime
             set
             {
                 if (graphs.Contains(value))
+                {
                     graphs.MoveAtFirst(value);
+                    EditorUtility.SetDirty(this);
+                }
             }
         }
 
@@ -163,6 +165,18 @@ namespace BehaviourAPI.Unity.Runtime
             pullPerceptions.Remove(pushPerception);
         }
 
+        public void Save()
+        {
+            if(!PrefabUtility.IsPartOfAnyPrefab(this))
+            {
+                if(!EditorSceneManager.IsPreviewScene(gameObject.scene))
+                {
+                    EditorSceneManager.SaveScene(gameObject.scene);
+                }
+            }
+            AssetDatabase.SaveAssetIfDirty(gameObject);
+            Debug.Log("Saved");
+        }
 #endif
         #endregion
 
