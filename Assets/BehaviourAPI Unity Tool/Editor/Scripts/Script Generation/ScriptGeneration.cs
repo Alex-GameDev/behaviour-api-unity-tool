@@ -139,7 +139,7 @@ namespace BehaviourAPI.Unity.Editor
             scriptTemplate.AddLine("/* --------------------------- Perceptions: --------------------------- */");
             scriptTemplate.AddLine("");
 
-            foreach(var perceptionAsset in asset.Perceptions)
+            foreach(var perceptionAsset in asset.PullPerceptions)
             {
                 GenerateCodeForPullPerception(perceptionAsset, scriptTemplate);
             }

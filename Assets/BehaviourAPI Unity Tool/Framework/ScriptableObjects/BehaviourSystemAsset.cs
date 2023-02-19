@@ -11,7 +11,7 @@ using Vector2 = UnityEngine.Vector2;
 namespace BehaviourAPI.Unity.Framework
 {
     [CreateAssetMenu(fileName = "newBehaviourSystem", menuName = "BehaviourAPI/BehaviourSystem", order = 0)]
-    public class BehaviourSystemAsset : ScriptableObject
+    public class BehaviourSystemAsset : ScriptableObject, IBehaviourSystem
     {
         [SerializeField] List<GraphAsset> graphs = new List<GraphAsset>();
         [SerializeField] List<PushPerceptionAsset> pushPerceptions = new List<PushPerceptionAsset>();
@@ -37,7 +37,7 @@ namespace BehaviourAPI.Unity.Framework
 
         public List<GraphAsset> Graphs => graphs;
         public List<PushPerceptionAsset> PushPerceptions => pushPerceptions;
-        public List<PerceptionAsset> Perceptions => perceptions;
+        public List<PerceptionAsset> PullPerceptions => perceptions;
 
         public GraphAsset CreateGraph(string name, Type type)
         {
@@ -46,6 +46,7 @@ namespace BehaviourAPI.Unity.Framework
             if (graphAsset != null)
             {
                 Graphs.Add(graphAsset);
+                OnSubAssetCreated(graphAsset);
             }
             return graphAsset;
         }
@@ -57,6 +58,7 @@ namespace BehaviourAPI.Unity.Framework
             if (pushPerceptionAsset != null)
             {
                 PushPerceptions.Add(pushPerceptionAsset);
+                OnSubAssetCreated(pushPerceptionAsset);
             }
             return pushPerceptionAsset;
         }
@@ -67,7 +69,8 @@ namespace BehaviourAPI.Unity.Framework
 
             if (perceptionAsset != null)
             {
-                Perceptions.Add(perceptionAsset);
+                PullPerceptions.Add(perceptionAsset);
+                OnSubAssetCreated(perceptionAsset);
             }
             return perceptionAsset;
         }
@@ -75,119 +78,146 @@ namespace BehaviourAPI.Unity.Framework
         public void RemoveGraph(GraphAsset graph)
         {
             Graphs.Remove(graph);
+            OnSubAssetRemoved(graph);
         }
 
         public void RemovePushPerception(PushPerceptionAsset pushPerception)
         {
-            PushPerceptions.Remove(pushPerception);
+            if (pushPerceptions.Remove(pushPerception))
+            {
+                OnSubAssetRemoved(pushPerception);
+            }
         }
 
-        public void RemovePerception(PerceptionAsset pushPerception)
+        public void RemovePerception(PerceptionAsset pullPerception)
         {
-            Perceptions.Remove(pushPerception);
+            if (PullPerceptions.Remove(pullPerception))
+            {
+                OnSubAssetRemoved(pullPerception);
+            }
+        }
+        public void OnSubAssetCreated(ScriptableObject asset)
+        {
+            asset.name = asset.GetType().Name;
+            AssetDatabase.AddObjectToAsset(asset, this);
+        }
+
+        public void OnSubAssetRemoved(ScriptableObject asset)
+        {
+            AssetDatabase.RemoveObjectFromAsset(asset);
+        }
+
+        public void OnModifyAsset()
+        {
+            EditorUtility.SetDirty(this);
+        }
+
+        public void Save()
+        {            
         }
 
         public BehaviourGraph Build(NamingSettings nodeSettings, NamingSettings perceptionSettings, NamingSettings pushSettings)
         {
-            BuildPullPerceptionMap(perceptionSettings);
-            BuildGraphMap(nodeSettings);
-            BuildPushPerceptionMap(pushSettings);
-            return MainGraph?.Graph ?? null;
+            //BuildPullPerceptionMap(perceptionSettings);
+            //BuildGraphMap(nodeSettings);
+            //BuildPushPerceptionMap(pushSettings);
+            //return MainGraph?.Graph ?? null;
+            return null;
         }
 
-        void BuildGraphMap(NamingSettings settings)
-        {
-            graphs.ForEach(g => g.Build(settings));
+        //void BuildGraphMap(NamingSettings settings)
+        //{
+        //    graphs.ForEach(g => g.Build(settings));
 
-            graphMap = new Dictionary<string, BehaviourGraph>();
+        //    graphMap = new Dictionary<string, BehaviourGraph>();
 
-            if(settings == NamingSettings.TryAddAlways)
-            { 
-                foreach(var graph in graphs)
-                {
-                    graphMap.Add(graph.Name, graph.Graph);
-                }
-            }
-            else if(settings == NamingSettings.IgnoreWhenInvalid)
-            {
-                foreach (var graph in graphs)
-                {
-                    if (graph.Graph != null)
-                    {
-                        if (!graphMap.TryAdd(graph.Name, graph.Graph))
-                        {
-                            Debug.LogWarning($"Graph with name \"{graph.Name}\" cannot be added to map. Another graph with the same name was already added");
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"Graph \"{graph.Name}\" wasn't added because it's empty.");
-                    }
-                }
-            }
-        }
+        //    if(settings == NamingSettings.TryAddAlways)
+        //    { 
+        //        foreach(var graph in graphs)
+        //        {
+        //            graphMap.Add(graph.Name, graph.Graph);
+        //        }
+        //    }
+        //    else if(settings == NamingSettings.IgnoreWhenInvalid)
+        //    {
+        //        foreach (var graph in graphs)
+        //        {
+        //            if (graph.Graph != null)
+        //            {
+        //                if (!graphMap.TryAdd(graph.Name, graph.Graph))
+        //                {
+        //                    Debug.LogWarning($"Graph with name \"{graph.Name}\" cannot be added to map. Another graph with the same name was already added");
+        //                }
+        //            }
+        //            else
+        //            {
+        //                Debug.LogWarning($"Graph \"{graph.Name}\" wasn't added because it's empty.");
+        //            }
+        //        }
+        //    }
+        //}
 
-        void BuildPushPerceptionMap(NamingSettings settings)
-        {
-            pushPerceptions.ForEach(pp => pp.Build());
+        //void BuildPushPerceptionMap(NamingSettings settings)
+        //{
+        //    pushPerceptions.ForEach(pp => pp.Build());
 
-            pushPerceptionMap = new Dictionary<string, PushPerception>();
-            if (settings == NamingSettings.TryAddAlways)
-            {
-                foreach (var pushPerception in pushPerceptions)
-                {
-                    pushPerceptionMap.Add(pushPerception.Name, pushPerception.pushPerception);
-                }
-            }
-            else if (settings == NamingSettings.IgnoreWhenInvalid)
-            {
-                foreach (var pushPerception in pushPerceptions)
-                {
-                    if (pushPerception.Targets.Count > 0)
-                    {
-                        if (!pushPerceptionMap.TryAdd(pushPerception.Name, pushPerception.pushPerception))
-                        {
-                            Debug.LogWarning($"Push perception with name \"{pushPerception.Name}\" cannot be added. Another push perception with the same name was already added");
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log($"Push perception \"{pushPerception.Name}\" wasn't added because it has no targets.");
-                    }
-                }
-            }
-        }
+        //    pushPerceptionMap = new Dictionary<string, PushPerception>();
+        //    if (settings == NamingSettings.TryAddAlways)
+        //    {
+        //        foreach (var pushPerception in pushPerceptions)
+        //        {
+        //            pushPerceptionMap.Add(pushPerception.Name, pushPerception.pushPerception);
+        //        }
+        //    }
+        //    else if (settings == NamingSettings.IgnoreWhenInvalid)
+        //    {
+        //        foreach (var pushPerception in pushPerceptions)
+        //        {
+        //            if (pushPerception.Targets.Count > 0)
+        //            {
+        //                if (!pushPerceptionMap.TryAdd(pushPerception.Name, pushPerception.pushPerception))
+        //                {
+        //                    Debug.LogWarning($"Push perception with name \"{pushPerception.Name}\" cannot be added. Another push perception with the same name was already added");
+        //                }
+        //            }
+        //            else
+        //            {
+        //                Debug.Log($"Push perception \"{pushPerception.Name}\" wasn't added because it has no targets.");
+        //            }
+        //        }
+        //    }
+        //}
 
-        void BuildPullPerceptionMap(NamingSettings settings)
-        {
-            perceptions.ForEach(p => p.Build());
+        //void BuildPullPerceptionMap(NamingSettings settings)
+        //{
+        //    perceptions.ForEach(p => p.Build());
 
-            pullPerceptionMap = new Dictionary<string, Perception>();
-            if (settings == NamingSettings.TryAddAlways)
-            {
-                foreach (var perception in perceptions)
-                {
-                    pullPerceptionMap.Add(perception.Name, perception.perception);
-                }
-            }
-            else if (settings == NamingSettings.IgnoreWhenInvalid)
-            {
-                foreach (var perception in perceptions)
-                {
-                    if (perception.perception != null)
-                    {
-                        if (!pullPerceptionMap.TryAdd(perception.Name, perception.perception))
-                        {
-                            Debug.LogWarning($"Perception with name \"{perception.Name}\" cannot be added. Another perception with the same name was already addeds");
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log($"Push perception \"{perception.Name}\" wasn't added because it's empty.");
-                    }
-                }
-            }
-        }
+        //    pullPerceptionMap = new Dictionary<string, Perception>();
+        //    if (settings == NamingSettings.TryAddAlways)
+        //    {
+        //        foreach (var perception in perceptions)
+        //        {
+        //            pullPerceptionMap.Add(perception.Name, perception.perception);
+        //        }
+        //    }
+        //    else if (settings == NamingSettings.IgnoreWhenInvalid)
+        //    {
+        //        foreach (var perception in perceptions)
+        //        {
+        //            if (perception.perception != null)
+        //            {
+        //                if (!pullPerceptionMap.TryAdd(perception.Name, perception.perception))
+        //                {
+        //                    Debug.LogWarning($"Perception with name \"{perception.Name}\" cannot be added. Another perception with the same name was already addeds");
+        //                }
+        //            }
+        //            else
+        //            {
+        //                Debug.Log($"Push perception \"{perception.Name}\" wasn't added because it's empty.");
+        //            }
+        //        }
+        //    }
+        //}
 
         public static BehaviourSystemAsset CreateSystem(HashSet<BehaviourGraph> behaviourGraphs)
         {

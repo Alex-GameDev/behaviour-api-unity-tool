@@ -63,11 +63,11 @@ namespace BehaviourAPI.Unity.Editor
                 }
 
                 if(isPartOfAPrefab && !isOnPreviewScene)
-                    EditorGUILayout.HelpBox("If you edit the behaviourSystem in a prefab instance, the original system will be override", MessageType.Warning);
+                    EditorGUILayout.HelpBox("If you edit the behaviourSystem in a prefab instance, the original system will be override", MessageType.Info);
             }
             else
             {
-                EditorGUILayout.HelpBox("BehaviourSystems that belongs to a prefab can only be edited from the prefab in asset mode.", MessageType.Info);
+                EditorGUILayout.HelpBox("BehaviourSystems that belongs to a prefab can only be edited from the prefab in asset mode.", MessageType.Warning);
             }
 
 

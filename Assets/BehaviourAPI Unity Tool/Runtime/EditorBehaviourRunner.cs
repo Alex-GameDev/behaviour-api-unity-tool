@@ -92,6 +92,7 @@ namespace BehaviourAPI.Unity.Runtime
             pullPerceptions.ForEach(p => p.Build());
             graphs.ForEach(p => p.Build(nodeNamingSettings));
             pushPerceptions.ForEach(p => p.Build());
+            _buildedMainGraph = MainGraph.Graph;
         }
 
         #region --------------------------- Create elements ---------------------------
@@ -149,8 +150,9 @@ namespace BehaviourAPI.Unity.Runtime
 
         public void RemoveGraph(GraphAsset graph)
         {
-            if(graphs.Remove(graph))
+            if (graphs.Remove(graph))
             {
+                graph.Nodes.ForEach(n => RemoveSubElement(n));
                 RemoveSubElement(graph);
             }
         }
@@ -189,6 +191,7 @@ namespace BehaviourAPI.Unity.Runtime
             Debug.Log("Add subelement");
             if (gameObject.scene.name == null)
             {
+                scriptable.name = scriptable.GetType().Name;
                 AssetDatabase.AddObjectToAsset(scriptable, gameObject);
             }
             EditorUtility.SetDirty(this);
@@ -214,13 +217,14 @@ namespace BehaviourAPI.Unity.Runtime
 
         public void OnBeforeSerialize()
         {
-            graphs.RemoveAll(g => g == null);
-            pushPerceptions.RemoveAll(p => p == null);
-            pullPerceptions.RemoveAll(p => p == null);
+            return;
         }
 
         public void OnAfterDeserialize()
         {
+            graphs.RemoveAll(g => g == null);
+            pushPerceptions.RemoveAll(p => p == null);
+            pullPerceptions.RemoveAll(p => p == null);
         }
     }
 }

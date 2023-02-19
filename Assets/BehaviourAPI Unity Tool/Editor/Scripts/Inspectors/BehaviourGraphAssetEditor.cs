@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEditor;
-using BehaviourAPI.Unity.Runtime;
 using System.Linq;
 using BehaviourAPI.Unity.Framework;
 
@@ -29,11 +28,11 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (Application.isPlaying && !AssetDatabase.Contains(asset))
                 {
-                    EditorWindow.GetWindow<BehaviourSystemEditorWindow>().ShowNotification(new GUIContent("Cannot edit binded behaviour system on runtime"));
+                    EditorWindow.GetWindow<BehaviourEditorWindow>().ShowNotification(new GUIContent("Cannot edit binded behaviour system on runtime"));
                     return;
                 }
 
-                BehaviourSystemEditorWindow.OpenSystem(asset);
+                BehaviourEditorWindow.OpenSystem(asset);
             }
         }
     }

@@ -376,7 +376,7 @@ namespace BehaviourAPI.Unity.Editor
         void OnRemovePerception(PerceptionAsset perception)
         {
             bool isChanged = false;
-            foreach(var p in SystemAsset.Perceptions)
+            foreach(var p in SystemAsset.PullPerceptions)
             {
                 if (p is CompoundPerceptionAsset cpa && cpa.subperceptions.Remove(perception)) isChanged = true;
             }

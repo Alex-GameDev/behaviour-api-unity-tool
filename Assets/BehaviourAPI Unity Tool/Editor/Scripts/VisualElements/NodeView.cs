@@ -205,8 +205,6 @@ namespace BehaviourAPI.Unity.Editor
                 Node.Parents.Add(other.Node);
             else
                 Node.Childs.Add(other.Node);
-
-            EditorUtility.SetDirty(Node);
         }
 
         public void OnMoved(Vector2 pos)

@@ -165,6 +165,7 @@ namespace BehaviourAPI.Unity.Editor
             if (element is NodeView nodeView)
             {
                 nodeView.OnMoved(element.GetPosition().position);
+                BehaviourEditorWindow.Instance.OnModifyAsset();
             }
         }
 
