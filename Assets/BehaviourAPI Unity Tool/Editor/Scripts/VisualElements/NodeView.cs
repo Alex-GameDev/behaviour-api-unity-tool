@@ -205,6 +205,8 @@ namespace BehaviourAPI.Unity.Editor
                 Node.Parents.Add(other.Node);
             else
                 Node.Childs.Add(other.Node);
+
+            EditorUtility.SetDirty(Node);
         }
 
         public void OnMoved(Vector2 pos)
@@ -219,7 +221,7 @@ namespace BehaviourAPI.Unity.Editor
             if (port.direction == Direction.Input)
                 Node.Parents.Remove(other.Node);
             else
-                Node.Childs.Remove(other.Node);           
+                Node.Childs.Remove(other.Node);
         }
 
         public void DisconnectPorts(VisualElement portContainer)

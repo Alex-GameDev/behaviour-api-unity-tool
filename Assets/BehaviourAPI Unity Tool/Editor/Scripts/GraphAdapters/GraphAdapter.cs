@@ -25,8 +25,8 @@ namespace BehaviourAPI.Unity.Editor
     {
         #region ------------------- Rendering -------------------
 
-        protected abstract List<Type> MainTypes { get; }
-        protected abstract List<Type> ExcludedTypes { get; }
+        public abstract List<Type> MainTypes { get; }
+        public abstract List<Type> ExcludedTypes { get; }
         protected abstract NodeView GetLayout(NodeAsset asset, BehaviourGraphView graphView);
         protected abstract void SetUpDetails(NodeView node);
         protected abstract void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt);

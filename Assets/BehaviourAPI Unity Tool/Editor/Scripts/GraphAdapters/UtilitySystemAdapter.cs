@@ -20,7 +20,7 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ------------------- Rendering -------------------
 
-        protected override List<Type> MainTypes => new List<Type>
+        public override List<Type> MainTypes => new List<Type>
         {
             typeof(UtilityAction),
             typeof(UtilityBucket),
@@ -29,7 +29,7 @@ namespace BehaviourAPI.Unity.Editor
             typeof(FunctionFactor),
             typeof(VariableFactor)
         };
-        protected override List<Type> ExcludedTypes => new List<Type>
+        public override List<Type> ExcludedTypes => new List<Type>
         {
             typeof(UtilitySystems.UtilityAction),
             typeof(UtilitySystems.PointedFunction),

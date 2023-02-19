@@ -11,67 +11,11 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    public class ActionCreationWindow : ScriptableObject, ISearchWindowProvider
+    public class ActionCreationWindow : CreationWindow
     {
-        Action<Type> _entrySelected;
-
-        Texture2D _defaultIdentationIcon;
-
-        public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
+        protected override EditorHierarchyNode GetHierarchyNode()
         {
-            var list = new List<SearchTreeEntry>();
-            list.Add(CreateGroup("Actions", 0));
-            list.Add(CreateEntry(typeof(CustomAction), 1));
-
-            list.Add(CreateGroup("UnityActions", 1));
-            var unityActionTypes = typeof(UnityAction).GetSubClasses().FindAll(t => !t.IsAbstract);
-            unityActionTypes.ForEach(t => list.Add(CreateEntry(t, 2)));
-
-            list.Add(CreateEntry(typeof(SubgraphAction), 1));
-            return list;
+            return BehaviourAPISettings.instance.ActionHierarchy;
         }
-
-        public bool OnSelectEntry(SearchTreeEntry SearchTreeEntry, SearchWindowContext context)
-        {
-            _entrySelected?.Invoke((Type)SearchTreeEntry.userData);
-            _entrySelected = null;
-            return true;
-        }
-
-
-        SearchTreeEntry CreateEntry(Type type, int level)
-        {
-            return new SearchTreeEntry(new GUIContent($" {type.Name}", GetDefaultIdentationIcon()))
-            {
-                level = level,
-                userData = type
-            };
-        }
-
-        SearchTreeGroupEntry CreateGroup(string name, int level)
-        {
-            return new SearchTreeGroupEntry(new GUIContent(name), level);
-        }
-
-        Texture2D GetDefaultIdentationIcon()
-        {
-            if(_defaultIdentationIcon == null)
-            {
-                _defaultIdentationIcon = new Texture2D(1, 1);
-                _defaultIdentationIcon.SetPixel(0, 0, Color.clear);
-                _defaultIdentationIcon.Apply();
-            }
-            return _defaultIdentationIcon;
-        }
-
-        public void Open(Action<Type> callback)
-        {
-            _entrySelected = callback;
-            var mousePos = Event.current.mousePosition;
-            mousePos += BehaviourSystemEditorWindow.Instance.position.position;
-            SearchWindow.Open(new SearchWindowContext(mousePos), this);
-        }
-
-        public static ActionCreationWindow Create() => CreateInstance<ActionCreationWindow>();
     }
 }

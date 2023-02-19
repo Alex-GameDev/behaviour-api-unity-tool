@@ -73,7 +73,7 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ------------------- Rendering -------------------
 
-        protected override List<Type> MainTypes => new List<Type>
+        public override List<Type> MainTypes => new List<Type>
         {
             typeof(State),
             typeof(StateTransition),
@@ -81,7 +81,7 @@ namespace BehaviourAPI.Unity.Editor
             typeof(StackTransition)
         };
 
-        protected override List<Type> ExcludedTypes => new List<Type> {
+        public override List<Type> ExcludedTypes => new List<Type> {
             typeof(State),
             typeof(ExitTransition),
             typeof(StateTransition),

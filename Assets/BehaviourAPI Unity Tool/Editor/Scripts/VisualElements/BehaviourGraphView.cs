@@ -25,7 +25,7 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ---------------------------------- Fields ----------------------------------
 
-        NodeCreationWindow _nodeSearchWindow;
+        NodeCreationWindow _nodeCreationWindow;
         BehaviourEditorWindow editorWindow;
 
         Action<ContextualMenuPopulateEvent> _currentContextualMenuEvent;
@@ -38,13 +38,14 @@ namespace BehaviourAPI.Unity.Editor
 
         public Action<NodeAsset> NodeSelected, NodeAdded, NodeRemoved;
 
+        public Action ConnectionChanged { get; set; }
+
         #endregion
 
         #region -------------------------------- Properties --------------------------------
 
         public ActionCreationWindow ActionCreationWindow { get; private set; }
         public PerceptionCreationWindow PerceptionCreationWindow { get; private set; }
-
 
         public SubgraphSearchWindow SubgraphSearchWindow { get; private set; }
         public NodeSearchWindow NodeSearchWindow { get; private set; }
@@ -55,6 +56,8 @@ namespace BehaviourAPI.Unity.Editor
         public GraphAdapter _adapter;
 
         public bool Runtime => BehaviourSystemEditorWindow.IsRuntime;
+
+
 
         #endregion
 
@@ -147,6 +150,7 @@ namespace BehaviourAPI.Unity.Editor
             var target = (NodeView)edge.input.node;
             source.OnConnected(target, edge.output);
             target.OnConnected(source, edge.input);
+            ConnectionChanged?.Invoke();
         }
 
         void OnElementMoved(GraphElement element)
@@ -171,6 +175,7 @@ namespace BehaviourAPI.Unity.Editor
                 var target = (NodeView)edge.input.node;
                 source.OnDisconnected(target, edge.output);
                 target.OnDisconnected(source, edge.input);
+                ConnectionChanged?.Invoke();
             }
         }
 
@@ -194,7 +199,7 @@ namespace BehaviourAPI.Unity.Editor
             _adapter.DrawGraph(graph, this);
             _currentContextualMenuEvent = (menuEvt) => _adapter.BuildGraphContextualMenu(menuEvt, this);
 
-            _nodeSearchWindow.SetEntryHierarchy(_adapter.GetNodeHierarchyEntries());
+            _nodeCreationWindow.SetAdapterType(_adapter.GetType());
         }
 
         #endregion ------------------------------------------------------------------
@@ -209,22 +214,21 @@ namespace BehaviourAPI.Unity.Editor
 
         void AddSearchWindows()
         {
-            _nodeSearchWindow = NodeCreationWindow.Create(CreateNode);
+            _nodeCreationWindow = ScriptableObject.CreateInstance<NodeCreationWindow>();
 
-            ActionCreationWindow = ActionCreationWindow.Create();
-            PerceptionCreationWindow = PerceptionCreationWindow.Create();
+            ActionCreationWindow = ScriptableObject.CreateInstance<ActionCreationWindow>();
+            PerceptionCreationWindow = ScriptableObject.CreateInstance<PerceptionCreationWindow>();
 
             nodeCreationRequest = context =>
             {
                 if (GraphAsset == null) return;
                 if (Runtime)
                 {
-                    //Debug.LogWarning("Can't create nodes runtime");
                     return;
                 }
 
                 var searchContext = new SearchWindowContext(context.screenMousePosition);
-                SearchWindow.Open(searchContext, _nodeSearchWindow);
+                _nodeCreationWindow.Open((type) => CreateNode(type, context.screenMousePosition), searchContext);
             };
         }
 

@@ -107,15 +107,7 @@ namespace BehaviourAPI.Unity.Runtime
                 graphs.Add(graphAsset);
             }
 
-            if(gameObject.scene.name == null)
-            {
-                AssetDatabase.AddObjectToAsset(graphAsset, gameObject);
-            }
-            else
-            {
-                EditorSceneManager.MarkSceneDirty(gameObject.scene);
-            }
-
+            AddSubElement(graphAsset);
             return graphAsset;
         }
 
@@ -127,6 +119,8 @@ namespace BehaviourAPI.Unity.Runtime
             {
                 pushPerceptions.Add(pushPerceptionAsset);
             }
+
+            AddSubElement(pushPerceptionAsset);
             return pushPerceptionAsset;
         }
 
@@ -138,31 +132,43 @@ namespace BehaviourAPI.Unity.Runtime
             {
                 pullPerceptions.Add(perceptionAsset);
             }
+
+            AddSubElement(perceptionAsset);
             return perceptionAsset;
+        }
+
+        public void OnSubAssetCreated(ScriptableObject asset)
+        {
+            AddSubElement(asset);
+        }
+
+        public void OnSubAssetRemoved(ScriptableObject asset)
+        {
+            RemoveSubElement(asset);
         }
 
         public void RemoveGraph(GraphAsset graph)
         {
-            if (gameObject.scene.name == null)
+            if(graphs.Remove(graph))
             {
-                AssetDatabase.RemoveObjectFromAsset(graph);
+                RemoveSubElement(graph);
             }
-            else
-            {
-                EditorSceneManager.MarkSceneDirty(gameObject.scene);
-            }
-
-            graphs.Remove(graph);
         }
 
         public void RemovePushPerception(PushPerceptionAsset pushPerception)
         {
-            pushPerceptions.Remove(pushPerception);
+            if(pushPerceptions.Remove(pushPerception))
+            {
+                RemoveSubElement(pushPerception);
+            };
         }
 
         public void RemovePerception(PerceptionAsset pushPerception)
         {
-            pullPerceptions.Remove(pushPerception);
+            if (pullPerceptions.Remove(pushPerception))
+            {
+                RemoveSubElement(pushPerception);
+            }
         }
 
         public void Save()
@@ -177,6 +183,31 @@ namespace BehaviourAPI.Unity.Runtime
             AssetDatabase.SaveAssetIfDirty(gameObject);
             Debug.Log("Saved");
         }
+
+        private void AddSubElement(ScriptableObject scriptable)
+        {
+            if (gameObject.scene.name == null)
+            {
+                AssetDatabase.AddObjectToAsset(scriptable, gameObject);
+            }
+            EditorUtility.SetDirty(this);
+        }
+
+        private void RemoveSubElement(ScriptableObject scriptable)
+        {
+            if (gameObject.scene.name == null)
+            {
+                AssetDatabase.RemoveObjectFromAsset(scriptable);
+            }
+            EditorUtility.SetDirty(this);
+        }
+
+        public void OnModifyAsset()
+        {
+            EditorUtility.SetDirty(this);
+        }
+
+
 #endif
         #endregion
 

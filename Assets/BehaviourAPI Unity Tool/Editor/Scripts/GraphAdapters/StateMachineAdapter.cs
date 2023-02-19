@@ -27,14 +27,14 @@ namespace BehaviourAPI.Unity.Editor
         #region ------------------- Rendering -------------------
 
         NodeView _entryStateView;
-        protected override List<Type> MainTypes => new List<Type>
+        public override List<Type> MainTypes => new List<Type>
         {
             typeof(State),
             typeof(StateTransition),
             typeof(ExitTransition)
         };
 
-        protected override List<Type> ExcludedTypes => new List<Type> { 
+        public override List<Type> ExcludedTypes => new List<Type> { 
             typeof(State), 
             typeof(ExitTransition), 
             typeof(StateTransition), 

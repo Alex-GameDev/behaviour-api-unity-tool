@@ -36,9 +36,6 @@ namespace BehaviourAPI.Unity.Editor
         PullPerceptionInspectorView _pullPerceptionInspector;
         PushPerceptionInspectorView _pushPerceptionInspector;
 
-        ActionCreationWindow _actionCreationWindow;
-        PerceptionCreationWindow _perceptionCreationWindow;
-
         SubgraphSearchWindow _subgraphSearchWindow;
         PerceptionSearchWindow _perceptionSearchWindow;
         NodeSearchWindow nodeSearchWindow;
@@ -101,6 +98,7 @@ namespace BehaviourAPI.Unity.Editor
 
             _graphView.NodeSelected += _nodeInspector.UpdateInspector;
             _graphView.NodeAdded += OnAddAsset;
+            _graphView.ConnectionChanged += OnModifyAsset;
             _graphView.NodeRemoved += OnRemoveAsset;
 
             _pushPerceptionInspector.PushPerceptionCreated += OnAddAsset;
@@ -312,22 +310,27 @@ namespace BehaviourAPI.Unity.Editor
 
         private void OnAddPerception(PerceptionAsset obj)
         {
-            throw new System.NotImplementedException();
+
         }
 
         private void OnRemovePerception(PerceptionAsset obj)
         {
-            throw new System.NotImplementedException();
+
         }
 
         private void OnRemoveAsset(ScriptableObject obj)
         {
-            throw new System.NotImplementedException();
+            System.OnSubAssetRemoved(obj);
         }
 
         private void OnAddAsset(ScriptableObject obj)
         {
-            throw new System.NotImplementedException();
+            System.OnSubAssetCreated(obj);
+        }
+
+        void OnModifyAsset()
+        {
+            System.OnModifyAsset();
         }
 
         #endregion

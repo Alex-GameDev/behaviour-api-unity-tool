@@ -22,13 +22,13 @@ namespace BehaviourAPI.Unity.Editor
 
         NodeView _rootView;
 
-        protected override List<Type> ExcludedTypes => new List<Type> { 
+        public override List<Type> ExcludedTypes => new List<Type> { 
             typeof(BehaviourTrees.ConditionNode), 
             typeof(BehaviourTrees.LeafNode),
             typeof(BehaviourTrees.SwitchDecoratorNode) 
         };
 
-        protected override List<Type> MainTypes => new List<Type> { 
+        public override List<Type> MainTypes => new List<Type> { 
             typeof(CompositeNode), 
             typeof(DecoratorNode), 
             typeof(LeafNode) 
