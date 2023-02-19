@@ -200,7 +200,7 @@ namespace BehaviourAPI.Unity.Runtime
             {
                 AssetDatabase.RemoveObjectFromAsset(scriptable);
             }
-            DestroyImmediate(scriptable);
+            DestroyImmediate(scriptable, true);
             EditorUtility.SetDirty(this);
         }
 

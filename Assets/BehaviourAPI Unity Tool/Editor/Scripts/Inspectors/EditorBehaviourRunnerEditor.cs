@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
+using UnityEditor.IMGUI.Controls;
+using UnityEditor.SceneManagement;
 using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -27,24 +29,47 @@ namespace BehaviourAPI.Unity.Editor
             if(runner.Graphs.Count != 0)
             {
                 EditorGUILayout.LabelField($"Graphs: \t {runner.Graphs.Count}");
+                EditorGUILayout.Space(5f);
+                foreach (var graph in runner.Graphs)
+                {
+                    EditorGUILayout.LabelField($"\t- {(string.IsNullOrWhiteSpace(graph.Name) ? "unnamed" : graph.Name)}({graph.Graph?.TypeName() ?? "null"}, {graph.Nodes.Count} node(s))");
+                }
+                EditorGUILayout.Space(5f);
+                EditorGUILayout.LabelField($"Pull perceptions: \t {runner.PullPerceptions.Count}");
+                EditorGUILayout.LabelField($"Push Perceptions: \t {runner.PushPerceptions.Count}");
             }
             else
             {
                 EditorGUILayout.LabelField($"Empty", centeredLabelstyle);
             }
 
-            if (GUILayout.Button("EDIT"))
-            {
+            bool isPartOfAPrefab = PrefabUtility.IsPartOfAnyPrefab(runner);
+            bool isOnScene = runner.gameObject.scene.name != null;
+            bool isOnPreviewScene = isOnScene && EditorSceneManager.IsPreviewScene(runner.gameObject.scene);
 
-                if (Application.isPlaying)
+            if (!isOnPreviewScene)
+            {
+                if (GUILayout.Button("EDIT"))
                 {
-                    EditorWindow.GetWindow<BehaviourSystemEditorWindow>().ShowNotification(new GUIContent("Cannot bind behaviour system on runtime"));
-                    return;
+
+                    if (Application.isPlaying)
+                    {
+                        EditorWindow.GetWindow<BehaviourSystemEditorWindow>().ShowNotification(new GUIContent("Cannot bind behaviour system on runtime"));
+                        return;
+                    }
+
+                    //Debug.Log("OpenWindow editor");
+                    BehaviourEditorWindow.OpenSystem(runner);
                 }
 
-                //Debug.Log("OpenWindow editor");
-                BehaviourEditorWindow.OpenSystem(runner);
+                if(isPartOfAPrefab && !isOnPreviewScene)
+                    EditorGUILayout.HelpBox("If you edit the behaviourSystem in a prefab instance, the original system will be override", MessageType.Warning);
             }
+            else
+            {
+                EditorGUILayout.HelpBox("BehaviourSystems that belongs to a prefab can only be edited from the prefab in asset mode.", MessageType.Info);
+            }
+
 
             GUILayout.EndVertical();
         }

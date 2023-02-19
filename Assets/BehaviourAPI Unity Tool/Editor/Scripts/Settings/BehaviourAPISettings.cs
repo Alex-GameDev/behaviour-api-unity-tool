@@ -148,7 +148,7 @@ namespace BehaviourAPI.Unity.Editor
                 return new EditorHierarchyNode($"{graphType.Name} nodes", graphType, list);
             });
 
-            Debug.Log($"Time to create hierarchies: {(System.DateTime.Now - time).TotalMilliseconds}");
+            //Debug.Log($"Time to create hierarchies: {(System.DateTime.Now - time).TotalMilliseconds}");
             //Debug.Log($"Number of adapters: {_graphAdapterMap.Count()}");
             //Debug.Log($"Number of main nodes per type: {_nodeHierarchyMap.Select(kvp => kvp.Value.Childs.Count().ToString()).Join()}");
         }
