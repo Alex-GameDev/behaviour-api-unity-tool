@@ -104,8 +104,8 @@ namespace BehaviourAPI.Unity.Editor
 
             _perceptionHierarchy = new EditorHierarchyNode("Perceptions", typeof(Perception), new List<EditorHierarchyNode>()
             {
-                new EditorHierarchyNode("Custom Perception", typeof(CustomAction)),
-                new EditorHierarchyNode("Unity Perception(s)",typeof(UnityPerception), unityActionTypes),
+                new EditorHierarchyNode("Custom Perception", typeof(CustomPerception)),
+                new EditorHierarchyNode("Unity Perception(s)",typeof(UnityPerception), unityPerceptionTypes),
                 new EditorHierarchyNode("Compound Perception(s)", typeof(CompoundPerception), compoundPerceptionTypes),
                 new EditorHierarchyNode("Status Perception", typeof(ExecutionStatusPerception))
             });
