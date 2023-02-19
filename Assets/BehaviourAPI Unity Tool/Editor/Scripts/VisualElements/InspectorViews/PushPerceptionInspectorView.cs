@@ -18,7 +18,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public Action<PushPerceptionAsset> PushPerceptionCreated, PushPerceptionRemoved;
 
-        BehaviourSystemAsset _systemAsset;
+        IBehaviourSystem System => BehaviourEditorWindow.Instance.System;
 
         public PushPerceptionInspectorView() : base("Push Perceptions", Side.Right)
         {
@@ -26,22 +26,22 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void AddElement()
         {
-            if (_systemAsset == null) return;
+            if (System == null) return;
 
-            var asset = _systemAsset.CreatePushPerception("new pushperception");
+            var asset = System.CreatePushPerception("new pushperception");
             RefreshList();
             PushPerceptionCreated?.Invoke(asset);
         }
 
         protected override List<PushPerceptionAsset> GetList()
         {
-           if (_systemAsset == null) return new List<PushPerceptionAsset>();
-           return _systemAsset.PushPerceptions;
+           if (System == null) return new List<PushPerceptionAsset>();
+           return System.PushPerceptions;
         }
 
         protected override void RemoveElement(PushPerceptionAsset asset)
         {
-            _systemAsset.RemovePushPerception(asset);
+            System.RemovePushPerception(asset);
             PushPerceptionRemoved?.Invoke(asset);
         }
 
@@ -66,12 +66,13 @@ namespace BehaviourAPI.Unity.Editor
         private void OpenNodeSearchWindow()
         {
             if (nodeSearchWindow == null) Debug.Log("Error");
-            nodeSearchWindow.Open(nodeAsset => nodeAsset.Node is IPushActivable && !_selectedElement.Targets.Contains(nodeAsset), AddPushHandler);
+            nodeSearchWindow.OpenWindow(AddPushHandler, nodeAsset => nodeAsset.Node is IPushActivable && !_selectedElement.Targets.Contains(nodeAsset));
         }
 
         void AddPushHandler(NodeAsset obj)
         {
             _selectedElement.Targets.Add(obj);
+            BehaviourEditorWindow.Instance.OnModifyAsset();
             _pushHandlerListView.RefreshItems();
         }
 
@@ -94,6 +95,7 @@ namespace BehaviourAPI.Unity.Editor
         void RemovePushHandlerListItem(NodeAsset asset)
         {
             _selectedElement.Targets.Remove(asset);
+            BehaviourEditorWindow.Instance.OnModifyAsset();
             _pushHandlerListView.RefreshItems();
         }
 
@@ -101,14 +103,6 @@ namespace BehaviourAPI.Unity.Editor
         {
             RefreshList();
             UpdateInspector(_selectedElement);
-        }
-
-        public void SetSystem(BehaviourSystemAsset systemAsset)
-        {
-            _systemAsset = systemAsset;
-            _selectedElement = null;
-            ResetList();
-            UpdateInspector(null);
         }
     }
 }

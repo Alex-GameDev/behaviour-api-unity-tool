@@ -12,10 +12,9 @@ namespace BehaviourAPI.Unity.Editor
 {
     public class PullPerceptionInspectorView : ListInspectorView<PerceptionAsset>
     {
-        BehaviourSystemAsset _systemAsset;
-        public BehaviourGraphView _graphView { get; set; }
+        IBehaviourSystem System => BehaviourEditorWindow.Instance.System;
 
-        public Action<PerceptionAsset> PerceptionCreated, PerceptionRemoved;
+        public BehaviourGraphView _graphView { get; set; }
 
         ListView _compoundPerceptionListView;
 
@@ -25,28 +24,26 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void AddElement()
         {
-            if (_systemAsset == null) return;
+            if (System == null) return;
 
             _graphView.PerceptionCreationWindow.Open(AddElement);
         }
 
         void AddElement(Type type)
         {
-            var asset = _systemAsset.CreatePerception("new pushperception", type);
+            System.CreatePerception("new pushperception", type);
             RefreshList();
-            PerceptionCreated?.Invoke(asset);
         }
 
         protected override List<PerceptionAsset> GetList()
         {
-            if (_systemAsset == null) return new List<PerceptionAsset>();
-            return _systemAsset.Perceptions;
+            if (System == null) return new List<PerceptionAsset>();
+            return System.PullPerceptions;
         }
 
         protected override void RemoveElement(PerceptionAsset asset)
         {
-            _systemAsset.RemovePerception(asset);
-            PerceptionRemoved?.Invoke(asset);
+            System.RemovePerception(asset);
         }
 
         public override void UpdateInspector(PerceptionAsset asset)
@@ -73,12 +70,13 @@ namespace BehaviourAPI.Unity.Editor
         private void OpenPerceptionSearchWindow(CompoundPerceptionAsset cpa)
         {
             if (_graphView.PerceptionSearchWindow == null) Debug.Log("Error");
-            _graphView.PerceptionSearchWindow.Open((p) => AddSubPerceptionAsset(cpa, p), p => p != cpa && !cpa.subperceptions.Contains(p));
+            _graphView.PerceptionSearchWindow.OpenWindow((p) => AddSubPerceptionAsset(cpa, p), p => p != cpa && !cpa.subperceptions.Contains(p));
         }
 
         private void AddSubPerceptionAsset(CompoundPerceptionAsset cpa, PerceptionAsset perception)
         {
             cpa.subperceptions.Add(perception);
+            BehaviourEditorWindow.Instance.OnModifyAsset();
             _compoundPerceptionListView.RefreshItems();
         }
 
@@ -104,6 +102,7 @@ namespace BehaviourAPI.Unity.Editor
         void RemovePushHandlerListItem(CompoundPerceptionAsset cpa, PerceptionAsset asset)
         {
             cpa.subperceptions.Remove(asset);
+            BehaviourEditorWindow.Instance.OnModifyAsset();
             _compoundPerceptionListView.RefreshItems();
         }
 
@@ -111,13 +110,6 @@ namespace BehaviourAPI.Unity.Editor
         {
             RefreshList();
             UpdateInspector(_selectedElement);
-        }
-
-        public void SetSystem(BehaviourSystemAsset systemAsset)
-        {
-            _systemAsset = systemAsset;
-            ResetList();
-            UpdateInspector(null);
         }
     }
 }

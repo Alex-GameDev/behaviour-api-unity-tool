@@ -43,6 +43,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (_listView != null) _mainContainer.Remove(_listView);
             _listView = AddListView();
+
+            UpdateInspector(null);
         }
 
         VisualElement MakeItem()

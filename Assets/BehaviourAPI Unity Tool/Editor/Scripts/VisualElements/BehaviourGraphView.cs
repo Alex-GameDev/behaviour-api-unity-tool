@@ -38,8 +38,6 @@ namespace BehaviourAPI.Unity.Editor
 
         public Action<NodeAsset> NodeSelected, NodeAdded, NodeRemoved;
 
-        public Action ConnectionChanged { get; set; }
-
         #endregion
 
         #region -------------------------------- Properties --------------------------------
@@ -68,6 +66,15 @@ namespace BehaviourAPI.Unity.Editor
             AddManipulators();
             AddSearchWindows();
             graphViewChanged = OnGraphViewChanged;
+
+            SubgraphSearchWindow = ScriptableObject.CreateInstance<SubgraphSearchWindow>();
+            SubgraphSearchWindow.SetEditorWindow(editorWindow);
+
+            NodeSearchWindow = ScriptableObject.CreateInstance<NodeSearchWindow>();
+            NodeSearchWindow.SetEditorWindow(editorWindow);
+
+            PerceptionSearchWindow = ScriptableObject.CreateInstance<PerceptionSearchWindow>();
+            PerceptionSearchWindow.SetEditorWindow(editorWindow);
         }
 
 
@@ -150,7 +157,7 @@ namespace BehaviourAPI.Unity.Editor
             var target = (NodeView)edge.input.node;
             source.OnConnected(target, edge.output);
             target.OnConnected(source, edge.input);
-            ConnectionChanged?.Invoke();
+            BehaviourEditorWindow.Instance.OnModifyAsset();
         }
 
         void OnElementMoved(GraphElement element)
@@ -175,20 +182,13 @@ namespace BehaviourAPI.Unity.Editor
                 var target = (NodeView)edge.input.node;
                 source.OnDisconnected(target, edge.output);
                 target.OnDisconnected(source, edge.input);
-                ConnectionChanged?.Invoke();
+                BehaviourEditorWindow.Instance.OnModifyAsset();
             }
         }
 
         #endregion ------------------------------------------------------------------
 
         #region --------------------------- CHANGE GRAPH ----------------------------
-
-        public void SetSystem(BehaviourSystemAsset systemAsset)
-        {
-            SubgraphSearchWindow = SubgraphSearchWindow.Create(systemAsset);
-            NodeSearchWindow = NodeSearchWindow.Create(systemAsset);
-            PerceptionSearchWindow = PerceptionSearchWindow.Create(systemAsset);
-        }
 
         public void SetGraph(GraphAsset graph)
         {

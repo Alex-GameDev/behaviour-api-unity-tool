@@ -18,7 +18,7 @@ namespace BehaviourAPI.Unity.Editor
             var hierarchyNode = GetHierarchyNode();
 
             list.AddGroup(hierarchyNode.name, 0);
-            foreach(var subNode in hierarchyNode.Childs)
+            foreach (var subNode in hierarchyNode.Childs)
             {
                 GetSubSearchTreeEntry(subNode, list, 1);
             }
@@ -27,7 +27,7 @@ namespace BehaviourAPI.Unity.Editor
 
         void GetSubSearchTreeEntry(EditorHierarchyNode node, List<SearchTreeEntry> list, int level)
         {
-            if(node.Childs.Count() == 0)
+            if (node.Childs.Count() == 0)
             {
                 list.AddEntry(node.name, level, node.Type);
             }
@@ -64,5 +64,43 @@ namespace BehaviourAPI.Unity.Editor
             _selectEntryCallback = null;
             return true;
         }
+    }
+
+    /// <summary>
+    /// Creation window for actions
+    /// </summary>
+    public class ActionCreationWindow : CreationWindow
+    {
+        protected override EditorHierarchyNode GetHierarchyNode()
+        {
+            return BehaviourAPISettings.instance.ActionHierarchy;
+
+        }
+    }
+
+    /// <summary>
+    /// Creation window for perceptions
+    /// </summary>
+    public class PerceptionCreationWindow : CreationWindow
+    {
+        protected override EditorHierarchyNode GetHierarchyNode()
+        {
+            return BehaviourAPISettings.instance.PerceptionHierarchy;
+        }
+    }
+
+    /// <summary>
+    /// Creation window for nodes
+    /// </summary>
+    public class NodeCreationWindow : CreationWindow
+    {
+        private Type _adapterType;
+
+        protected override EditorHierarchyNode GetHierarchyNode()
+        {
+            return BehaviourAPISettings.instance.NodeHierarchy(_adapterType);
+        }
+
+        public void SetAdapterType(Type type) => _adapterType = type;
     }
 }

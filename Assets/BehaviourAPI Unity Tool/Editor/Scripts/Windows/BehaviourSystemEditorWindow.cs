@@ -40,7 +40,7 @@ namespace BehaviourAPI.Unity.Editor
 
         Label _assetLabel;
 
-        [MenuItem("BehaviourAPI/Open window")]
+        [MenuItem("BehaviourAPI/OpenWindow window")]
         public static void Open()
         {
             BehaviourSystemEditorWindow window = GetWindow<BehaviourSystemEditorWindow>();
@@ -249,7 +249,6 @@ namespace BehaviourAPI.Unity.Editor
                 if (IsAsset) _assetLabel.text = AssetDatabase.GetAssetPath(SystemAsset);
                 else _assetLabel.text = "Scene";
 
-                _graphView.SetSystem(SystemAsset);
                 _pushPerceptionInspector.nodeSearchWindow = _graphView.NodeSearchWindow;
 
                 if (SystemAsset.Graphs.Count > 0)
@@ -267,8 +266,8 @@ namespace BehaviourAPI.Unity.Editor
                 _emptyPanel.Enable();
             }
 
-            _pullPerceptionInspector.SetSystem(SystemAsset);
-            _pushPerceptionInspector.SetSystem(SystemAsset);
+            _pullPerceptionInspector.ResetList();
+            _pushPerceptionInspector.ResetList();
 
             if (IsRuntime) _editToolbar.Hide();
             else _editToolbar.Show();

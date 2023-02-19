@@ -42,7 +42,7 @@ namespace BehaviourAPI.Unity.Editor
                     return;
                 }
 
-                //Debug.Log("Open editor");
+                //Debug.Log("OpenWindow editor");
                 BehaviourEditorWindow.OpenSystem(runner);
             }
 

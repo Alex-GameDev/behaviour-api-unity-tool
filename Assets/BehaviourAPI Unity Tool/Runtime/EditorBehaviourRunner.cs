@@ -24,7 +24,7 @@ namespace BehaviourAPI.Unity.Runtime
         private BehaviourGraph _buildedMainGraph;
         public List<GraphAsset> Graphs => graphs;
         public List<PushPerceptionAsset> PushPerceptions => pushPerceptions;
-        public List<PerceptionAsset> PullPerceptions => PullPerceptions;
+        public List<PerceptionAsset> PullPerceptions => pullPerceptions;
 
         public GraphAsset MainGraph
         {
@@ -105,9 +105,9 @@ namespace BehaviourAPI.Unity.Runtime
             if (graphAsset != null)
             {
                 graphs.Add(graphAsset);
+                AddSubElement(graphAsset);
             }
 
-            AddSubElement(graphAsset);
             return graphAsset;
         }
 
@@ -118,9 +118,9 @@ namespace BehaviourAPI.Unity.Runtime
             if (pushPerceptionAsset != null)
             {
                 pushPerceptions.Add(pushPerceptionAsset);
+                AddSubElement(pushPerceptionAsset);
             }
 
-            AddSubElement(pushPerceptionAsset);
             return pushPerceptionAsset;
         }
 
@@ -131,20 +131,20 @@ namespace BehaviourAPI.Unity.Runtime
             if (perceptionAsset != null)
             {
                 pullPerceptions.Add(perceptionAsset);
+                AddSubElement(perceptionAsset);
             }
 
-            AddSubElement(perceptionAsset);
             return perceptionAsset;
         }
 
         public void OnSubAssetCreated(ScriptableObject asset)
         {
-            AddSubElement(asset);
+            if(asset != null) AddSubElement(asset);
         }
 
         public void OnSubAssetRemoved(ScriptableObject asset)
         {
-            RemoveSubElement(asset);
+            if (asset != null) RemoveSubElement(asset);
         }
 
         public void RemoveGraph(GraphAsset graph)
@@ -186,6 +186,7 @@ namespace BehaviourAPI.Unity.Runtime
 
         private void AddSubElement(ScriptableObject scriptable)
         {
+            Debug.Log("Add subelement");
             if (gameObject.scene.name == null)
             {
                 AssetDatabase.AddObjectToAsset(scriptable, gameObject);
@@ -199,6 +200,7 @@ namespace BehaviourAPI.Unity.Runtime
             {
                 AssetDatabase.RemoveObjectFromAsset(scriptable);
             }
+            DestroyImmediate(scriptable);
             EditorUtility.SetDirty(this);
         }
 
@@ -206,7 +208,6 @@ namespace BehaviourAPI.Unity.Runtime
         {
             EditorUtility.SetDirty(this);
         }
-
 
 #endif
         #endregion

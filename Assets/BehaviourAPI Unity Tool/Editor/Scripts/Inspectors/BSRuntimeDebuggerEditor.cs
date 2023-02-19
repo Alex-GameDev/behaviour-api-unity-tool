@@ -16,7 +16,7 @@ namespace BehaviourAPI.Unity.Editor
 
             var editor = (BSRuntimeDebugger)target;
 
-            if (GUILayout.Button("Open debugger"))
+            if (GUILayout.Button("OpenWindow debugger"))
             {
                 if(!Application.isPlaying)
                 {

@@ -21,11 +21,11 @@ namespace BehaviourAPI.Unity.Editor
 
         public static BehaviourEditorWindow Instance;
 
-        public IBehaviourSystem System;
-        public bool IsRuntime;
-        public bool IsAsset;
+        public IBehaviourSystem System { get; private set; }
+        public bool IsRuntime { get; private set; }
+        public bool IsAsset { get; private set; }
 
-        GraphAsset _currentGraphAsset;
+        public GraphAsset CurrentGraphAsset { get; private set; }
 
         BehaviourGraphView _graphView;
         VisualElement _noGraphPanel, _container;
@@ -95,17 +95,13 @@ namespace BehaviourAPI.Unity.Editor
             _graphInspector = AddInspector<BehaviourGraphInspectorView>(swapable: true);
             _pullPerceptionInspector = AddInspector<PullPerceptionInspectorView>(swapable: true);
             _pushPerceptionInspector = AddInspector<PushPerceptionInspectorView>(swapable: true);
+            
+            _pullPerceptionInspector._graphView = _graphView;
+            _pushPerceptionInspector.nodeSearchWindow = _graphView.NodeSearchWindow;
 
             _graphView.NodeSelected += _nodeInspector.UpdateInspector;
             _graphView.NodeAdded += OnAddAsset;
-            _graphView.ConnectionChanged += OnModifyAsset;
             _graphView.NodeRemoved += OnRemoveAsset;
-
-            _pushPerceptionInspector.PushPerceptionCreated += OnAddAsset;
-            _pushPerceptionInspector.PushPerceptionRemoved += OnRemoveAsset;
-
-            _pullPerceptionInspector.PerceptionCreated += OnAddPerception;
-            _pullPerceptionInspector.PerceptionRemoved += OnRemovePerception;
 
             rootVisualElement.Q<Button>("im-pullperceptions-btn").clicked += () => ChangeInspector(_pullPerceptionInspector);
             rootVisualElement.Q<Button>("im-graph-btn").clicked += () => ChangeInspector(_graphInspector);
@@ -199,6 +195,9 @@ namespace BehaviourAPI.Unity.Editor
             {
                 _graphView.ClearView();
             }
+
+            _pushPerceptionInspector.ResetList();
+            _pullPerceptionInspector.ResetList();
             UpdateGraphSelectionToolbar();
         }
 
@@ -222,7 +221,6 @@ namespace BehaviourAPI.Unity.Editor
 
         void UpdateGraphSelectionToolbar()
         {
-            Debug.Log("Update toolbar");
             _selectGraphMenu.menu.MenuItems().Clear();
 
             if (System == null) return;
@@ -237,7 +235,7 @@ namespace BehaviourAPI.Unity.Editor
                     _selectGraphMenu.menu.AppendAction(
                         actionName: $"{i + 1} - {graph.Name} ({graph.Graph.GetType().Name})",
                         action: _ => DisplayGraph(graph),
-                        status: _currentGraphAsset == graph ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal
+                        status: CurrentGraphAsset == graph ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal
                     );
                 }                
             }
@@ -245,9 +243,9 @@ namespace BehaviourAPI.Unity.Editor
 
         void DisplayGraph(GraphAsset graphAsset, bool forceRefresh = false)
         {
-            if (graphAsset != null && _currentGraphAsset == graphAsset && !forceRefresh) return;
+            if (graphAsset != null && CurrentGraphAsset == graphAsset && !forceRefresh) return;
 
-            _currentGraphAsset = graphAsset;
+            CurrentGraphAsset = graphAsset;
 
             if (graphAsset != null)
             {
@@ -278,10 +276,7 @@ namespace BehaviourAPI.Unity.Editor
             }
 
             var graphAsset = System.CreateGraph(name, type);
-            //OnAddAsset(graphAsset);
-
             DisplayGraph(graphAsset);
-
             Toast("Graph created");
         }
 
@@ -293,7 +288,7 @@ namespace BehaviourAPI.Unity.Editor
                 return;
             }
 
-            System.RemoveGraph(_currentGraphAsset);
+            System.RemoveGraph(CurrentGraphAsset);
 
             DisplayGraph(System.MainGraph);
 
@@ -302,20 +297,10 @@ namespace BehaviourAPI.Unity.Editor
 
         private void ChangeMainGraph()
         {
-            if (System == null || System.MainGraph == _currentGraphAsset) return;
-            System.MainGraph = _currentGraphAsset;
+            if (System == null || System.MainGraph == CurrentGraphAsset) return;
+            System.MainGraph = CurrentGraphAsset;
             UpdateGraphSelectionToolbar();
             Toast("Main graph changed");
-        }
-
-        private void OnAddPerception(PerceptionAsset obj)
-        {
-
-        }
-
-        private void OnRemovePerception(PerceptionAsset obj)
-        {
-
         }
 
         private void OnRemoveAsset(ScriptableObject obj)
@@ -328,7 +313,7 @@ namespace BehaviourAPI.Unity.Editor
             System.OnSubAssetCreated(obj);
         }
 
-        void OnModifyAsset()
+        public void OnModifyAsset()
         {
             System.OnModifyAsset();
         }

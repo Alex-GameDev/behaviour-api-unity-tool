@@ -85,7 +85,7 @@ namespace BehaviourAPI.Unity.Editor
             var time = System.DateTime.Now;
             var types = GetTypes();
 
-            var unityActionTypes = GetValidSubTypes(typeof(UtilityAction), types)
+            var unityActionTypes = GetValidSubTypes(typeof(UnityAction), types)
                 .Select(t => new EditorHierarchyNode(t.Name.CamelCaseToSpaced(), t));
 
             _actionHierarchy = new EditorHierarchyNode("Actions", typeof(Action), new List<EditorHierarchyNode>()

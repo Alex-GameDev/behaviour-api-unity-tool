@@ -60,7 +60,7 @@ namespace BehaviourAPI.Unity.Editor
 
         void OnAssignPerception()
         {
-            _nodeView.GraphView.PerceptionSearchWindow.Open(SetPerception);
+            _nodeView.GraphView.PerceptionSearchWindow.OpenWindow(SetPerception);
         }
 
         private void ClearPerception()
@@ -80,6 +80,7 @@ namespace BehaviourAPI.Unity.Editor
             var obj = new SerializedObject(nodeAsset);
             obj.FindProperty(propertyPath).objectReferenceValue = perceptionAsset;
             obj.ApplyModifiedPropertiesWithoutUndo();
+            BehaviourEditorWindow.Instance.OnModifyAsset();
         }
 
         SerializedProperty GetSerializedProperty()

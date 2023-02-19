@@ -85,6 +85,8 @@ namespace BehaviourAPI.Unity.Editor
             var obj = new SerializedObject(nodeAsset);
             obj.FindProperty(propertyPath).managedReferenceValue = action;
             obj.ApplyModifiedPropertiesWithoutUndo();
+
+            BehaviourEditorWindow.Instance.OnModifyAsset();
         }
 
         SerializedProperty GetSerializedProperty()
@@ -148,19 +150,21 @@ namespace BehaviourAPI.Unity.Editor
         void OpenGraphSelectionMenu(SubgraphAction subgraphAction)
         {
             // TODO: Añadir menú para elegir subgrafo y llamar al método SetSubgraph
-            _nodeView.GraphView.SubgraphSearchWindow.Open(_nodeView.GraphView.GraphAsset, (g) => SetSubgraph(g, subgraphAction));
+            _nodeView.GraphView.SubgraphSearchWindow.OpenWindow((g) => SetSubgraph(g, subgraphAction), (g) => g != _nodeView.GraphView.GraphAsset);
         }
 
         void SetSubgraph(GraphAsset graphAsset, SubgraphAction subgraphAction)
         {
             subgraphAction.Subgraph = graphAsset;
             UpdateSubgraphLayout(subgraphAction);
+            BehaviourEditorWindow.Instance.OnModifyAsset();
         }
 
         void RemoveSubgraph(SubgraphAction subgraphAction)
         {
             subgraphAction.Subgraph = null;
             UpdateSubgraphLayout(subgraphAction);
+            BehaviourEditorWindow.Instance.OnModifyAsset();
         }
 
         void UpdateSubgraphLayout(SubgraphAction subgraphAction)
