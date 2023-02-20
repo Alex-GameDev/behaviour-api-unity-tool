@@ -77,8 +77,12 @@ namespace BehaviourAPI.Unity.Framework
 
         public void RemoveGraph(GraphAsset graph)
         {
-            Graphs.Remove(graph);
-            OnSubAssetRemoved(graph);
+            if(graphs.Remove(graph))
+            {
+                Graphs.Remove(graph);
+                graph.Nodes.ForEach(n => OnSubAssetRemoved(n));
+                OnSubAssetRemoved(graph);
+            }
         }
 
         public void RemovePushPerception(PushPerceptionAsset pushPerception)
@@ -100,11 +104,13 @@ namespace BehaviourAPI.Unity.Framework
         {
             asset.name = asset.GetType().Name;
             AssetDatabase.AddObjectToAsset(asset, this);
+            AssetDatabase.SaveAssetIfDirty(this);
         }
 
         public void OnSubAssetRemoved(ScriptableObject asset)
         {
             AssetDatabase.RemoveObjectFromAsset(asset);
+            AssetDatabase.SaveAssetIfDirty(this);
         }
 
         public void OnModifyAsset()
@@ -113,7 +119,8 @@ namespace BehaviourAPI.Unity.Framework
         }
 
         public void Save()
-        {            
+        {
+            AssetDatabase.SaveAssetIfDirty(this);
         }
 
         public BehaviourGraph Build(NamingSettings nodeSettings, NamingSettings perceptionSettings, NamingSettings pushSettings)
@@ -229,7 +236,15 @@ namespace BehaviourAPI.Unity.Framework
                 system.graphs.Add(graphAsset);
             }
             return system;
+        }
 
+        public static BehaviourSystemAsset CreateSystem(List<GraphAsset> graphs, List<PerceptionAsset> pullPerceptions, List<PushPerceptionAsset> pushPerceptions)
+        {
+            var system = CreateInstance<BehaviourSystemAsset>();
+            system.graphs = graphs;
+            system.pushPerceptions = pushPerceptions;
+            system.perceptions = pullPerceptions;
+            return system;
         }
     }
 }

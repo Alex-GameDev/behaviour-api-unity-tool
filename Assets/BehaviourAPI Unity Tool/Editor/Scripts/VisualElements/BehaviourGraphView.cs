@@ -53,7 +53,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public GraphAdapter _adapter;
 
-        public bool Runtime => BehaviourSystemEditorWindow.IsRuntime;
+        public bool Runtime => BehaviourEditorWindow.Instance.IsRuntime;
 
 
 

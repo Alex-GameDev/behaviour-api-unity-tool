@@ -75,6 +75,8 @@ namespace BehaviourAPI.Unity.Editor
         void OnDisable()
         {
             Instance = null;
+            System = null;
+            IsRuntime = false;
         }
 
         #region ----------------------------- Create GUI -----------------------------
@@ -154,10 +156,10 @@ namespace BehaviourAPI.Unity.Editor
             _editToolbar = rootVisualElement.Q<Toolbar>("bw-toolbar-edit");
 
             _editToolbar.Q<ToolbarButton>("bw-toolbar-setroot-btn").clicked += ChangeMainGraph;
-            //_editToolbar.Q<ToolbarButton>("bw-toolbar-clear-btn").clicked += OpenClearGraphWindow;
+            _editToolbar.Q<ToolbarButton>("bw-toolbar-clear-btn").clicked += OpenClearGraphWindow;
             _editToolbar.Q<ToolbarButton>("bw-toolbar-delete-btn").clicked += DisplayDeleteGraphAlertWindow;
             _editToolbar.Q<ToolbarButton>("bw-toolbar-save-btn").clicked += SaveSystemData;
-            //_editToolbar.Q<ToolbarButton>("bw-toolbar-generatescript-btn").clicked += OpenCreateScriptWindow;
+            _editToolbar.Q<ToolbarButton>("bw-toolbar-generatescript-btn").clicked += OpenCreateScriptWindow;
 
             var addGraphMenu = _editToolbar.Q<ToolbarMenu>("bw-toolbar-add-menu");
 
@@ -172,6 +174,18 @@ namespace BehaviourAPI.Unity.Editor
                     );
                 }
             }
+        }
+
+        void OpenCreateScriptWindow()
+        {
+            ScriptCreationWindow.Create();
+        }
+
+
+        void OpenClearGraphWindow()
+        {
+            if (CurrentGraphAsset == null) return;
+            AlertWindow.CreateAlertWindow("¿Clear current graph?", ClearCurrentGraph);
         }
 
         private void SaveSystemData()
@@ -199,6 +213,9 @@ namespace BehaviourAPI.Unity.Editor
             _pushPerceptionInspector.ResetList();
             _pullPerceptionInspector.ResetList();
             UpdateGraphSelectionToolbar();
+
+            if (IsRuntime) _editToolbar.Hide();
+            else _editToolbar.Show();
         }
 
         void ChangeInspector(IHidable inspector)
@@ -318,11 +335,39 @@ namespace BehaviourAPI.Unity.Editor
             System.OnModifyAsset();
         }
 
+        void ClearCurrentGraph()
+        {
+            if (System == null || CurrentGraphAsset == null) return;
+
+            _graphView.ClearView();
+
+            if (IsAsset) CurrentGraphAsset.Nodes.ForEach(AssetDatabase.RemoveObjectFromAsset);
+
+            foreach(var nodeasset in CurrentGraphAsset.Nodes)
+            {
+                System.OnSubAssetRemoved(nodeasset);
+            }
+
+            CurrentGraphAsset.Nodes.Clear();
+            Toast("Graph clean");
+        }
+
         #endregion
 
         public void Toast(string message, float timeout = .5f)
         {
             ShowNotification(new GUIContent(message), timeout);
+        }
+
+        public void OnChangePlayModeState(PlayModeStateChange playModeStateChange)
+        {
+            if (playModeStateChange == PlayModeStateChange.ExitingPlayMode)
+            {
+                System = null;
+                IsAsset = false;
+                IsRuntime = false;
+                Refresh();
+            }
         }
     }
 }

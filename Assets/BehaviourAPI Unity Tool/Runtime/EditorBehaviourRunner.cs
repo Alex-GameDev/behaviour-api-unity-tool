@@ -45,7 +45,7 @@ namespace BehaviourAPI.Unity.Runtime
 
         public override BehaviourSystemAsset GetBehaviourSystemAsset()
         {
-            return null;
+            return BehaviourSystemAsset.CreateSystem(graphs, pullPerceptions, PushPerceptions);
         }
 
         protected override void OnAwake()
@@ -183,16 +183,15 @@ namespace BehaviourAPI.Unity.Runtime
                 }
             }
             AssetDatabase.SaveAssetIfDirty(gameObject);
-            Debug.Log("Saved");
         }
 
         private void AddSubElement(ScriptableObject scriptable)
         {
-            Debug.Log("Add subelement");
             if (gameObject.scene.name == null)
             {
                 scriptable.name = scriptable.GetType().Name;
                 AssetDatabase.AddObjectToAsset(scriptable, gameObject);
+                AssetDatabase.Refresh();
             }
             EditorUtility.SetDirty(this);
         }
@@ -202,6 +201,7 @@ namespace BehaviourAPI.Unity.Runtime
             if (gameObject.scene.name == null)
             {
                 AssetDatabase.RemoveObjectFromAsset(scriptable);
+                AssetDatabase.Refresh();
             }
             DestroyImmediate(scriptable, true);
             EditorUtility.SetDirty(this);

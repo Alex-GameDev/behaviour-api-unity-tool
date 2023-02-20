@@ -1,3 +1,4 @@
+using BehaviourAPI.Unity.Framework;
 using UnityEditor;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
@@ -44,7 +45,8 @@ namespace BehaviourAPI.Unity.Editor
             string path = pathTextField.text;
             string scriptName = scriptNameTextField.text;
 
-            var systemAsset = BehaviourSystemEditorWindow.SystemAsset;
+            var system = BehaviourEditorWindow.Instance.System;
+            var systemAsset = BehaviourSystemAsset.CreateSystem(system.Graphs, system.PullPerceptions, system.PushPerceptions);
 
             bool useFullNameVar = useFullNameVarToggle.value;
             bool includeNodeNames = includeNodeNamesToggle.value;

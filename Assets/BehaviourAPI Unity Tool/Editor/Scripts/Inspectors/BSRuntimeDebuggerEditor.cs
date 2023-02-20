@@ -14,18 +14,18 @@ namespace BehaviourAPI.Unity.Editor
         {
             base.OnInspectorGUI();
 
-            var editor = (BSRuntimeDebugger)target;
+            var runtimeDebugger = (BSRuntimeDebugger)target;
 
-            if (GUILayout.Button("OpenWindow debugger"))
+            if (GUILayout.Button("Open Window debugger"))
             {
                 if(!Application.isPlaying)
                 {
-                    EditorWindow.GetWindow<BehaviourSystemEditorWindow>().ShowNotification(new GUIContent("Runtime debugger must be opened in play mode"));
+                    EditorWindow.GetWindow<BehaviourEditorWindow>().ShowNotification(new GUIContent("Runtime debugger must be opened in play mode"));
                 }
                 else
                 {
-                    if(editor.IsDebuggerReady) BehaviourSystemEditorWindow.OpenSystem(editor.systemAsset, runtime: true);
-                    else EditorWindow.GetWindow<BehaviourSystemEditorWindow>().ShowNotification(new GUIContent("Runtime debugger is not ready"));
+                    if(runtimeDebugger.IsDebuggerReady) BehaviourEditorWindow.OpenSystem(runtimeDebugger.systemAsset, runtime: true);
+                    else EditorWindow.GetWindow<BehaviourEditorWindow>().ShowNotification(new GUIContent("Runtime debugger is not ready"));
                 }
             }
         }

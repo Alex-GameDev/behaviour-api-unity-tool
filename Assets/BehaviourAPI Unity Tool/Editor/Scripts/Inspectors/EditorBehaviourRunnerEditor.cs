@@ -54,7 +54,7 @@ namespace BehaviourAPI.Unity.Editor
 
                     if (Application.isPlaying)
                     {
-                        EditorWindow.GetWindow<BehaviourSystemEditorWindow>().ShowNotification(new GUIContent("Cannot bind behaviour system on runtime"));
+                        EditorWindow.GetWindow<BehaviourEditorWindow>().ShowNotification(new GUIContent("Cannot bind behaviour system on runtime"));
                         return;
                     }
 
