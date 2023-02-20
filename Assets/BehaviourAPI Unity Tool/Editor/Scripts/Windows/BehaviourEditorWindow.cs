@@ -17,8 +17,7 @@ namespace BehaviourAPI.Unity.Editor
 {
     public class BehaviourEditorWindow : EditorWindow
     {
-        static string PATH => BehaviourAPISettings.instance.EditorLayoutsPath + "windows/behavioursystemwindow.uxml";        
-        static string EMPTYPANELPATH => BehaviourAPISettings.instance.EditorLayoutsPath + "emptygraphpanel.uxml";
+        static string PATH => BehaviourAPISettings.instance.EditorLayoutsPath + "windows/behavioursystemwindow.uxml";        static string EMPTYPANELPATH => BehaviourAPISettings.instance.EditorLayoutsPath + "emptygraphpanel.uxml";
 
         public static BehaviourEditorWindow Instance;
 
