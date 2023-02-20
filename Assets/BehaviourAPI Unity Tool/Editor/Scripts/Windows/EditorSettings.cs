@@ -18,7 +18,6 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (BehaviourSystemEditorWindow.Instance != null)
                 BehaviourSystemEditorWindow.Instance.OnChangePlayModeState(playModeStateChange);
-
         }
     }
 }

@@ -14,43 +14,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   graphs:
   - graph:
-      rid: 3601717966928085000
+      rid: 3601717966928085006
     nodes:
     - Id: 1
       node:
-        rid: 3601717966928085001
+        rid: 3601717966928085007
       parentIds: 
       childrenIds: 
     - Id: 2
       node:
-        rid: 3601717966928085002
-      parentIds: 
-      childrenIds: 
-  - graph:
-      rid: 3601717966928085003
-    nodes:
-    - Id: 1
-      node:
-        rid: 3601717966928085004
-      parentIds: 
-      childrenIds: 
-    - Id: 2
-      node:
-        rid: 3601717966928085005
+        rid: 3601717966928085008
       parentIds: 
       childrenIds: 
   references:
     version: 2
     RefIds:
-    - rid: 3601717966928085000
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601717966928085006
       type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-    - rid: 3601717966928085001
-      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-    - rid: 3601717966928085002
-      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-    - rid: 3601717966928085003
-      type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-    - rid: 3601717966928085004
-      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-    - rid: 3601717966928085005
-      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+    - rid: 3601717966928085007
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        SerializedAction:
+          rid: -2
+    - rid: 3601717966928085008
+      type: {class: IteratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        Iterations: 5
