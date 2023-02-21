@@ -91,6 +91,7 @@ namespace BehaviourAPI.Unity.Editor
             _actionHierarchy = new EditorHierarchyNode("Actions", typeof(Action), new List<EditorHierarchyNode>()
             {
                 new EditorHierarchyNode("Custom Action", typeof(CustomAction)),
+                new EditorHierarchyNode("Custom Action (Context)", typeof(ContextCustomAction)),
                 new EditorHierarchyNode("Unity Action(s)",typeof(UnityAction), unityActionTypes),
                 new EditorHierarchyNode("Subgraph Action", typeof(SubgraphAction))
             });
@@ -105,6 +106,7 @@ namespace BehaviourAPI.Unity.Editor
             _perceptionHierarchy = new EditorHierarchyNode("Perceptions", typeof(Perception), new List<EditorHierarchyNode>()
             {
                 new EditorHierarchyNode("Custom Perception", typeof(CustomPerception)),
+                new EditorHierarchyNode("Custom Perception (Context)", typeof(ContextCustomAction)),
                 new EditorHierarchyNode("Unity Perception(s)",typeof(UnityPerception), unityPerceptionTypes),
                 new EditorHierarchyNode("Compound Perception(s)", typeof(CompoundPerception), compoundPerceptionTypes),
                 new EditorHierarchyNode("Status Perception", typeof(ExecutionStatusPerception))
@@ -148,9 +150,9 @@ namespace BehaviourAPI.Unity.Editor
                 return new EditorHierarchyNode($"{graphType.Name} nodes", graphType, list);
             });
 
-            //Debug.Log($"Time to create hierarchies: {(System.DateTime.Now - time).TotalMilliseconds}");
-            //Debug.Log($"Number of adapters: {_graphAdapterMap.Count()}");
-            //Debug.Log($"Number of main nodes per type: {_nodeHierarchyMap.Select(kvp => kvp.Value.Childs.Count().ToString()).Join()}");
+            Debug.Log($"Time to create hierarchies: {(System.DateTime.Now - time).TotalMilliseconds}");
+            Debug.Log($"Number of adapters: {_graphAdapterMap.Count()}");
+            Debug.Log($"Number of main nodes per type: {_nodeHierarchyMap.Select(kvp => kvp.Value.Childs.Count().ToString()).Join()}");
         }
 
         static IEnumerable<System.Type> GetValidSubTypes(System.Type type, List<System.Type> allTypes)

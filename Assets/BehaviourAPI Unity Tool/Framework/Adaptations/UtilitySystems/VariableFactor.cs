@@ -14,7 +14,4 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
             return Mathf.Clamp01(Utility);
         }
     }
-
-    [Serializable]
-    public class SerializedFloatFunction : SerializedMethod<Func<float>> { }
 }

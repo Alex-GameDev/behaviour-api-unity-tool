@@ -10,10 +10,17 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         public SerializedStatusFunction update;
         public SerializedAction stop;
 
+        public override void SetExecutionContext(ExecutionContext context)
+        {
+            return;
+        }
+
         public override void Start() => start.GetFunction()?.Invoke();
 
         public override void Stop() => stop.GetFunction()?.Invoke();
 
         public override Status Update() => update.GetFunction()?.Invoke() ?? Status.Running;
+
+
     }
 }

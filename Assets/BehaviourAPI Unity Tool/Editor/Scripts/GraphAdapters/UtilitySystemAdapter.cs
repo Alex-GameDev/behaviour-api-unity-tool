@@ -11,6 +11,7 @@ using UtilityAction = BehaviourAPI.Unity.Framework.Adaptations.UtilityAction;
 using CustomFunction = BehaviourAPI.Unity.Framework.Adaptations.CustomFunction;
 using VariableFactor = BehaviourAPI.Unity.Framework.Adaptations.VariableFactor;
 using UnityEditor.UIElements;
+using BehaviourAPI.Unity.Framework.Adaptations;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -27,7 +28,8 @@ namespace BehaviourAPI.Unity.Editor
             typeof(UtilityExitNode),
             typeof(FusionFactor),
             typeof(FunctionFactor),
-            typeof(VariableFactor)
+            typeof(VariableFactor),
+            typeof(ContextVariableFactor)
         };
         public override List<Type> ExcludedTypes => new List<Type>
         {

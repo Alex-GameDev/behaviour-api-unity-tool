@@ -11,7 +11,7 @@ using UnityEngine.Assertions;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    [CustomEditor(typeof(EditorBehaviourRunner))]
+    [CustomEditor(typeof(EditorBehaviourRunner),editorForChildClasses: true)]
     public class EditorBehaviourRunnerEditor : UnityEditor.Editor
     {
         

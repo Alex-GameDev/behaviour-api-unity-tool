@@ -12,6 +12,11 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         [HideInInspector][SerializeField] GraphAsset subgraph;
         public GraphAsset Subgraph { get => subgraph; set => subgraph = value; }
 
+        public override void SetExecutionContext(ExecutionContext context)
+        {
+            subgraph.Graph.SetExecutionContext(context);
+        }
+
         public override void Start()
         {
             subgraph.Graph.Start();

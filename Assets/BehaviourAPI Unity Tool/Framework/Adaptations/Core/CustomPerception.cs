@@ -1,3 +1,4 @@
+using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
 using UnityEngine;
 
@@ -8,6 +9,11 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         public SerializedAction init;
         public SerializedBoolFunction check;
         public SerializedAction reset;
+
+        public override void SetExecutionContext(ExecutionContext context)
+        {
+            return;
+        }
 
         public override void Initialize() => init.GetFunction()?.Invoke();
         public override void Reset() => reset.GetFunction()?.Invoke();
