@@ -21,10 +21,12 @@ namespace BehaviourAPI.Unity.Runtime
         [HideInInspector] [SerializeField] List<PushPerceptionAsset> pushPerceptions = new List<PushPerceptionAsset>();
         [HideInInspector] [SerializeField] List<PerceptionAsset> pullPerceptions = new List<PerceptionAsset>();
 
-        private BehaviourGraph _buildedMainGraph;
+        protected BehaviourGraph _buildedMainGraph;
         public List<GraphAsset> Graphs => graphs;
         public List<PushPerceptionAsset> PushPerceptions => pushPerceptions;
         public List<PerceptionAsset> PullPerceptions => pullPerceptions;
+
+        public BehaviourSystemAsset ExecutionSystem { get; private set; }
 
         public GraphAsset MainGraph
         {
@@ -45,14 +47,17 @@ namespace BehaviourAPI.Unity.Runtime
 
         public override BehaviourSystemAsset GetBehaviourSystemAsset()
         {
-            return BehaviourSystemAsset.CreateSystem(graphs, pullPerceptions, PushPerceptions);
+            return ExecutionSystem;
         }
 
         protected override void OnAwake()
         {
             if(MainGraph != null)
             {
-                BuildSystem();
+                ExecutionSystem = BuildSystem();
+                _buildedMainGraph = ExecutionSystem.MainGraph.Graph;
+                _buildedMainGraph.SetExecutionContext(new UnityExecutionContext(gameObject));
+                Debug.Log("Build graph");
             }
             else
             {
@@ -65,6 +70,7 @@ namespace BehaviourAPI.Unity.Runtime
         {
             if(_buildedMainGraph != null)
             {
+                Debug.Log("Start graph");
                 _buildedMainGraph.Start();
             }
             else
@@ -87,12 +93,25 @@ namespace BehaviourAPI.Unity.Runtime
             }
         }
 
-        private void BuildSystem()
+        private BehaviourSystemAsset BuildSystem()
         {
-            pullPerceptions.ForEach(p => p.Build());
-            graphs.ForEach(p => p.Build(nodeNamingSettings));
-            pushPerceptions.ForEach(p => p.Build());
-            _buildedMainGraph = MainGraph.Graph;
+            var time = DateTime.Now;
+            var duplicator = new Duplicator();
+            var originalSystem = BehaviourSystemAsset.CreateSystem(Graphs, PullPerceptions, PushPerceptions);
+
+            var executionSystem = duplicator.Duplicate(originalSystem);
+
+            if (MainGraph.Nodes[0] == executionSystem.MainGraph.Nodes[0]) Debug.LogWarning("Asset didnt copy");
+            if (MainGraph.Nodes[0] == executionSystem.MainGraph.Nodes[0]) Debug.LogWarning("Asset didnt copy");
+            if (MainGraph.Nodes[0].Node == executionSystem.MainGraph.Nodes[0].Node) Debug.LogWarning("Nodes didnt copy");
+
+            executionSystem.PullPerceptions.ForEach(p => p.Build());
+            executionSystem.Graphs.ForEach(p => p.Build(nodeNamingSettings));
+            executionSystem.PushPerceptions.ForEach(p => p.Build());
+            if (executionSystem.MainGraph.Graph == MainGraph.Graph) Debug.LogError("!!!!!!!!!!!!!!!!");
+
+            Debug.Log("Totaltime: " + (DateTime.Now - time).TotalMilliseconds);
+            return executionSystem;
         }
 
         #region --------------------------- Create elements ---------------------------

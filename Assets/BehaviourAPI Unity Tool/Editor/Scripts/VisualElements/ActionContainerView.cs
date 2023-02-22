@@ -118,6 +118,12 @@ namespace BehaviourAPI.Unity.Editor
                     label.AddToClassList("node-text");
                     _container.Add(label);
                 }
+                else if(action is ContextCustomAction)
+                {
+                    var label = new Label("Custom Action (context)");
+                    label.AddToClassList("node-text");
+                    _container.Add(label);
+                }
                 else if (action is UnityAction unityAction)
                 {
                     var label = new Label(unityAction.DisplayInfo);

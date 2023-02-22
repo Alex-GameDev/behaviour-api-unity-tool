@@ -1,3 +1,4 @@
+using behaviourAPI.Unity.Framework.Adaptations;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
@@ -6,30 +7,32 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
-    public class PopTransition : StateMachines.StackFSMs.PopTransition, ISerializationCallbackReceiver
+    public class PopTransition : StateMachines.StackFSMs.PopTransition, IActionAssignable, IPerceptionAssignable
     {
         [SerializeReference] Action _action;
         public PerceptionAsset perception;
 
+        public Action ActionReference
+        {
+            get => _action;
+            set => _action = value;
+        }
+
+        public PerceptionAsset PerceptionReference
+        {
+            get => perception;
+            set => perception = value;
+        }
         public PopTransition()
         {
             StatusFlags = StatusFlags.Actived;
-        }
-
-        public void OnAfterDeserialize()
-        {
-            Action = _action;
-        }
-
-        public void OnBeforeSerialize()
-        {
-            return;
         }
 
         protected override void BuildConnections(List<Node> parents, List<Node> children)
         {
             base.BuildConnections(parents, children);
             Perception = perception?.perception;
+            Action = _action;
         }
     }
 }

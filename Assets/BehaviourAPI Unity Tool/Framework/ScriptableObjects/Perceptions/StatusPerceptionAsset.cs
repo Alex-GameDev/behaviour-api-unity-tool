@@ -5,24 +5,11 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework
 {
-    public class StatusPerceptionAsset : PerceptionAsset, ISerializationCallbackReceiver
+    public class StatusPerceptionAsset : PerceptionAsset
     {
-        [HideInInspector] public NodeAsset target;
-
         public void OnAfterDeserialize()
         {
             return;
-        }
-
-        public void OnBeforeSerialize()
-        {
-            if(perception is ExecutionStatusPerception statusPerception)
-            {
-                if(target != null)
-                {
-                    statusPerception.StatusHandler = target.Node as IStatusHandler;
-                }
-            }
         }
     }
 }

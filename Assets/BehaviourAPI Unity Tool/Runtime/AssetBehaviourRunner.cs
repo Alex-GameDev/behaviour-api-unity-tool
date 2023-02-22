@@ -107,12 +107,12 @@ namespace BehaviourAPI.Unity.Runtime
                     {
                         if (!pushPerceptionMap.TryAdd(pushPerception.Name, pushPerception.pushPerception))
                         {
-                            Debug.LogWarning($"Push perception with name \"{pushPerception.Name}\" cannot be added. Another push perception with the same name was already added");
+                            Debug.LogWarning($"Push PerceptionReference with name \"{pushPerception.Name}\" cannot be added. Another push PerceptionReference with the same name was already added");
                         }
                     }
                     else
                     {
-                        Debug.Log($"Push perception \"{pushPerception.Name}\" wasn't added because it has no targets.");
+                        Debug.Log($"Push PerceptionReference \"{pushPerception.Name}\" wasn't added because it has no targets.");
                     }
                 }
             }
@@ -138,12 +138,12 @@ namespace BehaviourAPI.Unity.Runtime
                     {
                         if (!pullPerceptionMap.TryAdd(perception.Name, perception.perception))
                         {
-                            Debug.LogWarning($"Perception with name \"{perception.Name}\" cannot be added. Another perception with the same name was already addeds");
+                            Debug.LogWarning($"Perception with name \"{perception.Name}\" cannot be added. Another PerceptionReference with the same name was already addeds");
                         }
                     }
                     else
                     {
-                        Debug.Log($"Push perception \"{perception.Name}\" wasn't added because it's empty.");
+                        Debug.Log($"Push PerceptionReference \"{perception.Name}\" wasn't added because it's empty.");
                     }
                 }
             }

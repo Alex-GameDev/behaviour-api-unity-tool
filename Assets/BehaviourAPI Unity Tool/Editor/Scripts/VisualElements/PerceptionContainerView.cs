@@ -44,7 +44,7 @@ namespace BehaviourAPI.Unity.Editor
             _container = new VisualElement();
             Add(_container);
 
-            _assignButton = new Button(OnAssignPerception) { text = "Assign perception" };
+            _assignButton = new Button(OnAssignPerception) { text = "Assign PerceptionReference" };
             Add(_assignButton);
         }
 
@@ -52,7 +52,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
             {
-                menuEvt.menu.AppendAction("Clear perception", dd => ClearPerception(),
+                menuEvt.menu.AppendAction("Clear PerceptionReference", dd => ClearPerception(),
                     (_) => GetSerializedProperty().objectReferenceValue != null ?
                     DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
             }));
@@ -127,8 +127,7 @@ namespace BehaviourAPI.Unity.Editor
                 }
                 else if(perceptionAsset is StatusPerceptionAsset spa)
                 {
-                    if (spa.target != null) return $"check {spa.target.Name} status";
-                    else return "check node status";
+                    return "check node status";
                 }
                 else
                 {
@@ -140,7 +139,7 @@ namespace BehaviourAPI.Unity.Editor
                     }
                     else
                     {
-                        return "custom perception";
+                        return "custom Perception";
                     }
                 }              
             }

@@ -27,7 +27,7 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
 
         public override Status Update()
         {
-            Debug.Log(message);
+            Debug.Log(message, context.GameObject);
             return Status.Success;
         }
 

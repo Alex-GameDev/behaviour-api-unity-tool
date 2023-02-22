@@ -21,12 +21,19 @@ namespace BehaviourAPI.Unity.Framework
         public UnityExecutionContext(GameObject gameObject)
         {
             GameObject = gameObject;
-            Transform = gameObject.transform;
-            NavMeshAgent = gameObject.GetComponent<NavMeshAgent>();
-            Rigidbody = gameObject.GetComponent<Rigidbody>();
-            Rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
-            Collider = gameObject.GetComponent<Collider>();
-            Collider2D = gameObject.GetComponent<Collider2D>();
+            if(gameObject != null)
+            {
+                Transform = gameObject.transform;
+                NavMeshAgent = gameObject.GetComponent<NavMeshAgent>();
+                Rigidbody = gameObject.GetComponent<Rigidbody>();
+                Rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
+                Collider = gameObject.GetComponent<Collider>();
+                Collider2D = gameObject.GetComponent<Collider2D>();
+            }
+            else
+            {
+                Debug.LogWarning("Context was created with a null gameobject");
+            }
         }
     }
 }

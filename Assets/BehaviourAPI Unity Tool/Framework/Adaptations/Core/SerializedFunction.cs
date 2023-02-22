@@ -26,27 +26,30 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         protected virtual Type[] FunctionArgs => new Type[0];
         public void OnAfterDeserialize()
         {
-            if (!string.IsNullOrEmpty(methodName))
+            if (!string.IsNullOrEmpty(methodName) && component != null)
             {
-                if (component.GetType().GetMethod(methodName) == null)
+                Type[] arguments = FunctionArgs;
+                var method = component.GetType().GetMethod(methodName, arguments);
+
+                if (method == null)
                 {
                     methodName = "";
                     _function = null;
                 }
                 else if (_function == null)
                 {
-                    Type[] arguments = FunctionArgs;
-
                     ParameterExpression[] parameters = arguments.Select(type => Expression.Parameter(type)).ToArray();
-                    ConstantExpression componentExpression = Expression.Constant(component);
-                    MethodCallExpression methodCall = Expression.Call(
-                        componentExpression,
-                        component.GetType().GetMethod(methodName, arguments),
-                        parameters
-                    );
-
-                    Expression<T> exp = Expression.Lambda<T>(methodCall, parameters);
-                    _function = exp.Compile();
+                    if(method != null)
+                    {
+                        ConstantExpression componentExpression = Expression.Constant(component);
+                        MethodCallExpression methodCall = Expression.Call(componentExpression, method, parameters);
+                        Expression<T> exp = Expression.Lambda<T>(methodCall, parameters);
+                        _function = exp.Compile();
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Deserialization error: The selected method parameters don't match the function");
+                    }
                 }
             }
         }
@@ -72,7 +75,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     public class SerializedStatusFunction : SerializedMethod<Func<Status>> { }
 
     /// <summary>
-    /// Serialized method for perception check event
+    /// Serialized method for PerceptionReference check event
     /// </summary>
     [Serializable]
     public class SerializedBoolFunction : SerializedMethod<Func<bool>> { }
@@ -111,7 +114,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     }
 
     /// <summary>
-    /// Serialized method for perception check event with context
+    /// Serialized method for PerceptionReference check event with context
     /// </summary>
     [Serializable]
     public class ContextualSerializedBoolFunction : SerializedMethod<Func<UnityExecutionContext, bool>> { }

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
     /// <summary>
-    /// Stores a perception as an unity object.
+    /// Action that stores its subgraph in an asset.
     /// </summary>
     public class SubgraphAction : Action
     {
