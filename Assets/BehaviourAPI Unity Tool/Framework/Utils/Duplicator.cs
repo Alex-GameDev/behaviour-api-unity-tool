@@ -74,11 +74,17 @@ public class Duplicator
         foreach (var node in original.Nodes)
         {
             var nodeClone = ScriptableObject.CreateInstance<NodeAsset>();
-            nodeClone.Node = (Node)node.Node.Clone();
+            if(node.Node == null)
+            {
+                Debug.LogWarning($"Node of {node.Name} is null");
+                nodeClone.Node = null;
+            }
+            else
+            {
+                nodeClone.Node = (Node)node.Node.Clone();
+            }
             nodeClone.Position = node.Position;
             nodeClone.Name = node.Name;
-
-            if (nodeClone.Node == node.Node) Debug.LogWarning("EEEEEEEEE");
 
             copy.Nodes.Add(nodeClone);
             nodeCopyMap[node] = nodeClone;
@@ -121,8 +127,6 @@ public class Duplicator
                     copyPHandler.PerceptionReference = perceptionCopyMap[originalPHandler.PerceptionReference];
             }
         }
-
-        if(original.Nodes.Count != copy.Nodes.Count) Debug.LogWarning("E");
     }
 
     PerceptionAsset CopyPerceptionAsset(PerceptionAsset original)

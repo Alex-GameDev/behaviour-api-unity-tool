@@ -1,18 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
-using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.StateMachines;
 using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Runtime;
-using BehaviourAPI.UtilitySystems;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PizzaBoyVisualRunner : VisualBehaviourRunner
+public class PizzaBoyEditorRunner : EditorBehaviourRunner
 {
     [SerializeField] Ingredient _pizzaMass;
     [SerializeField] Ingredient _tomato;
@@ -48,7 +42,6 @@ public class PizzaBoyVisualRunner : VisualBehaviourRunner
 
     [CustomMethod]
     public void CreateRecipe_2() => CreateRecipe(2);
-
     public void CreateRecipe(int id)
     {
         _pizza.SetHandler(_tableHandler);
@@ -65,7 +58,7 @@ public class PizzaBoyVisualRunner : VisualBehaviourRunner
     [CustomMethod]
     public Status RecipeCreated() => (Vector3.Distance(transform.position, _table.position) < 0.3f).ToStatus(Status.Running);
 
-    // Cuando termina la acciÃ³n:
+    // Cuando termina la acción:
     [CustomMethod]
     public void CreateRecipeCompleted()
     {
@@ -73,7 +66,7 @@ public class PizzaBoyVisualRunner : VisualBehaviourRunner
         _recipePaper.Hide();
     }
 
-    // AÃ±ade un elemento a la pizza
+    // Añade un elemento a la pizza
     [CustomMethod]
     public void PutMass() => PutIngredient(_pizzaMass);
 
@@ -94,7 +87,7 @@ public class PizzaBoyVisualRunner : VisualBehaviourRunner
         return st;
     }
 
-    // AÃ±ade el siguiente ingrediente de la receta
+    // Añade el siguiente ingrediente de la receta
     [CustomMethod]
     public void PutNextTopping()
     {
@@ -115,7 +108,7 @@ public class PizzaBoyVisualRunner : VisualBehaviourRunner
             return Status.Running;
     }
 
-    // AcciÃ³n de hornear la pizza
+    // Acción de hornear la pizza
     [CustomMethod]
     public void BakePizza()
     {
@@ -127,7 +120,7 @@ public class PizzaBoyVisualRunner : VisualBehaviourRunner
     [CustomMethod]
     public Status pizzaBaked() => (Vector3.Distance(transform.position, _oven.position) < 0.5f).ToStatus(Status.Running);
 
-    // Cuando la acciÃ³n de hornear la pizza acaba, se borra la receta y se destruye la pizza
+    // Cuando la acción de hornear la pizza acaba, se borra la receta y se destruye la pizza
 
     [CustomMethod]
     public void BakedActionCompleted()
@@ -141,6 +134,5 @@ public class PizzaBoyVisualRunner : VisualBehaviourRunner
 
     [CustomMethod]
     public float PeperoniFactor() => _peperoniUsed % 4;
-
 
 }

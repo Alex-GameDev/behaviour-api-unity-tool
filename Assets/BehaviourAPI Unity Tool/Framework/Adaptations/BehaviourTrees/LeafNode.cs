@@ -16,8 +16,6 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
             set => SerializedAction = value; 
         }
 
-
-
         protected override void BuildConnections(List<Node> parents, List<Node> children)
         {
             base.BuildConnections(parents, children);
