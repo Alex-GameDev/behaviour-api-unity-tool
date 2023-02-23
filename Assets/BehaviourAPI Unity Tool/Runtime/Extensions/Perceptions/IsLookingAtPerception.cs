@@ -4,7 +4,6 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
 {
     public class IsLookingAtPerception : UnityPerception
     {
-        public Transform SelfTransform;
         public Transform OtherTransform;
 
         public float minDist, maxDist;
@@ -12,15 +11,15 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
 
         public override bool Check()
         {
-            var delta = OtherTransform.position - SelfTransform.position;
+            var delta = OtherTransform.position - context.Transform.position;
 
             if (delta.magnitude < minDist || delta.magnitude > maxDist) return false;
 
-            var lookAt = SelfTransform.forward;
+            var lookAt = context.Transform.forward;
 
             return Vector3.Angle(lookAt, delta) < maxAngle;
         }
 
-        public override string DisplayInfo => "if $Self is looking at $Other";
+        public override string DisplayInfo => "if is looking at $Other";
     }
 }

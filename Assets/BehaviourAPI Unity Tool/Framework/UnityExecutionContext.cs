@@ -18,6 +18,8 @@ namespace BehaviourAPI.Unity.Framework
         public Collider Collider { get; private set; }
         public Collider2D Collider2D { get; private set; }
 
+        public CharacterController CharacterController { get; private set; }
+
         public UnityExecutionContext(GameObject gameObject)
         {
             GameObject = gameObject;
@@ -29,6 +31,7 @@ namespace BehaviourAPI.Unity.Framework
                 Rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
                 Collider = gameObject.GetComponent<Collider>();
                 Collider2D = gameObject.GetComponent<Collider2D>();
+                CharacterController = gameObject.GetComponent<CharacterController>();
             }
             else
             {

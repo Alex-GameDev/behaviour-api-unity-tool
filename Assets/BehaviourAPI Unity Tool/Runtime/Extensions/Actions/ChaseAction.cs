@@ -1,4 +1,5 @@
 using BehaviourAPI.Core;
+using BehaviourAPI.Unity.Framework;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -6,11 +7,12 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
 {
     public class ChaseAction : UnityAction
     {
-        public NavMeshAgent agent;
         public float speed;
         public Transform target;
         public float maxDistance;
         public float maxTime;
+
+        NavMeshAgent _agent;
 
         float _currentTime;
 
@@ -18,7 +20,6 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
 
         public ChaseAction(NavMeshAgent agent, Transform target, float speed, float maxDistance, float maxTime)
         {
-            this.agent = agent;
             this.speed = speed;
             this.target = target;
             this.maxTime = maxTime;
@@ -27,14 +28,14 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
 
         public override void Start()
         {
-            agent.speed = speed;
+            context.NavMeshAgent.speed = speed;
             _currentTime = 0f;
-            agent.destination = new Vector3(target.transform.position.x, agent.transform.position.y, target.transform.position.z);
+            context.NavMeshAgent.destination = new Vector3(target.transform.position.x, context.NavMeshAgent.transform.position.y, target.transform.position.z);
         }
 
         public override void Stop()
         {
-            agent.speed = 0f;
+            context.NavMeshAgent.speed = 0f;
         }
 
         public override Status Update()
@@ -48,7 +49,7 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
             }
             else
             {
-                float distance = Vector3.Distance(agent.transform.position, target.position);
+                float distance = Vector3.Distance(context.NavMeshAgent.transform.position, target.position);
                 // Si ha alcanzado el objetivo
                 if (distance < .3f) return Status.Success;
 

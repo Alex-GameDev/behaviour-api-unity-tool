@@ -10,7 +10,6 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
     /// </summary>
     public class FleeAction : UnityAction
     {
-        public NavMeshAgent agent;
         public float speed;
         public float distance;
         public float maxTimeRunning;
@@ -20,9 +19,8 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
 
         public FleeAction() { }
 
-        public FleeAction(NavMeshAgent agent, float speed, float distance, float maxTimeRunning)
+        public FleeAction(float speed, float distance, float maxTimeRunning)
         {
-            this.agent = agent;
             this.speed = speed;
             this.distance = distance;
             this.maxTimeRunning = maxTimeRunning;
@@ -31,15 +29,15 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
         public override void Start()
         {
             _timeRunning = 0f;
-            agent.speed = speed;
+            context.NavMeshAgent.speed = speed;
             Vector3 positionToRun = Random.insideUnitSphere * distance;
-            _target = new Vector3(positionToRun.x, agent.transform.position.y, positionToRun.z);
-            agent.destination = _target;
+            _target = new Vector3(positionToRun.x, context.NavMeshAgent.transform.position.y, positionToRun.z);
+            context.NavMeshAgent.destination = _target;
         }
 
         public override void Stop()
         {
-            agent.speed = 0f;
+            context.NavMeshAgent.speed = 0f;
         }
 
         public override string DisplayInfo => "Flee to random direction";
@@ -52,7 +50,7 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
             {
                 return Status.Failure;
             }
-            else if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+            else if (!context.NavMeshAgent.hasPath || context.NavMeshAgent.velocity.sqrMagnitude == 0f)
             {
                 return Status.Success;
             }

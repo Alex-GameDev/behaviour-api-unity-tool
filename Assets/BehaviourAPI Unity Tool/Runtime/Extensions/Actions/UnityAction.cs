@@ -12,6 +12,11 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
         public override void SetExecutionContext(ExecutionContext context)
         {
             this.context = (UnityExecutionContext)context;
+            OnSetContext();
+        }
+
+        protected virtual void OnSetContext()
+        {
         }
     }
 }

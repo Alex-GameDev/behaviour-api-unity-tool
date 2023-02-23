@@ -11,6 +11,8 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
 {
     public class ProbabilisticState : StateMachines.ProbabilisticState, IActionAssignable
     {
+        [SerializeField] List<float> probabilities = new List<float>();
+
         [SerializeReference] Action _action;
 
         public Action ActionReference
@@ -18,8 +20,6 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
             get => _action;
             set => _action = value;
         }
-
-        [SerializeField] List<float> probabilities = new List<float>();
 
         protected override void BuildConnections(List<Node> parents, List<Node> children)
         {

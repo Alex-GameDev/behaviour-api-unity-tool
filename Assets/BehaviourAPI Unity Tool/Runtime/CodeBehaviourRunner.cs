@@ -12,13 +12,23 @@ namespace BehaviourAPI.Unity.Runtime
         HashSet<BehaviourGraph> allgraphs = new HashSet<BehaviourGraph>();
 
         protected abstract BehaviourGraph CreateGraph();
+
         protected override void OnAwake()
         {
             rootGraph = CreateGraph();
+
+            if (rootGraph != null) rootGraph.SetExecutionContext(new UnityExecutionContext(gameObject));
         }
 
-        protected override void OnStart() => rootGraph.Start();
-        protected override void OnUpdate() => rootGraph.Update();
+        protected override void OnStart()
+        {
+            rootGraph.Start();
+        }
+
+        protected override void OnUpdate()
+        {
+            rootGraph.Update();
+        }
 
         public override BehaviourSystemAsset GetBehaviourSystemAsset()
         {

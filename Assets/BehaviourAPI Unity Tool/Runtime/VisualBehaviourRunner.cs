@@ -26,7 +26,7 @@ namespace BehaviourAPI.Unity.Runtime
             }
             else
             {
-                _rootGraph = SystemAsset.Build(nodeNamingSettings, perceptionNamingSettings, pullPerceptionNamingSettings);
+                SystemAsset.Build(nodeNamingSettings, perceptionNamingSettings, pullPerceptionNamingSettings);
 
                 if (_rootGraph == null)
                 {

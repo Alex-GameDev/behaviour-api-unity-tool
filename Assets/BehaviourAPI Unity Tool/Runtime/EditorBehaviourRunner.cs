@@ -11,23 +11,20 @@ using UnityEngine.SceneManagement;
 
 namespace BehaviourAPI.Unity.Runtime
 {
-    public class EditorBehaviourRunner : BehaviourRunner, IBehaviourSystem, ISerializationCallbackReceiver
+    public abstract class EditorBehaviourRunner : DataBehaviourRunner, IBehaviourSystem, ISerializationCallbackReceiver
     {
-        public NamingSettings nodeNamingSettings = NamingSettings.IgnoreWhenInvalid;
-        public NamingSettings perceptionNamingSettings = NamingSettings.IgnoreWhenInvalid;
-        public NamingSettings pullPerceptionNamingSettings = NamingSettings.IgnoreWhenInvalid;
 
         [HideInInspector] [SerializeField] List<GraphAsset> graphs = new List<GraphAsset>();
         [HideInInspector] [SerializeField] List<PushPerceptionAsset> pushPerceptions = new List<PushPerceptionAsset>();
         [HideInInspector] [SerializeField] List<PerceptionAsset> pullPerceptions = new List<PerceptionAsset>();
 
-        protected BehaviourGraph _buildedMainGraph;
         public List<GraphAsset> Graphs => graphs;
         public List<PushPerceptionAsset> PushPerceptions => pushPerceptions;
         public List<PerceptionAsset> PullPerceptions => pullPerceptions;
 
-        public BehaviourSystemAsset ExecutionSystem { get; private set; }
-
+        /// <summary>
+        /// The main graph of the runner
+        /// </summary>
         public GraphAsset MainGraph
         {
             get
@@ -45,74 +42,10 @@ namespace BehaviourAPI.Unity.Runtime
             }
         }
 
-        public override BehaviourSystemAsset GetBehaviourSystemAsset()
+        protected override BehaviourSystemAsset GetSystem()
         {
-            return ExecutionSystem;
-        }
-
-        protected override void OnAwake()
-        {
-            if(MainGraph != null)
-            {
-                ExecutionSystem = BuildSystem();
-                _buildedMainGraph = ExecutionSystem.MainGraph.Graph;
-                _buildedMainGraph.SetExecutionContext(new UnityExecutionContext(gameObject));
-                Debug.Log("Build graph");
-            }
-            else
-            {
-                Debug.LogWarning("[BehaviourRunner] - This runner has not graphs attached.", this);
-                Destroy(this);
-            }
-        }
-
-        protected override void OnStart()
-        {
-            if(_buildedMainGraph != null)
-            {
-                Debug.Log("Start graph");
-                _buildedMainGraph.Start();
-            }
-            else
-            {
-                Debug.LogWarning("[BehaviourRunner] - This runner has not graphs attached.", this);
-                Destroy(this);
-            }
-        }
-
-        protected override void OnUpdate()
-        {
-            if (_buildedMainGraph != null)
-            {
-                _buildedMainGraph.Update();
-            }
-            else
-            {
-                Debug.LogWarning("[BehaviourRunner] - This runner has not graphs attached.", this);
-                Destroy(this);
-            }
-        }
-
-        private BehaviourSystemAsset BuildSystem()
-        {
-            var time = DateTime.Now;
-            var duplicator = new Duplicator();
-            var originalSystem = BehaviourSystemAsset.CreateSystem(Graphs, PullPerceptions, PushPerceptions);
-
-            var executionSystem = duplicator.Duplicate(originalSystem);
-
-            if (MainGraph.Nodes[0] == executionSystem.MainGraph.Nodes[0]) Debug.LogWarning("Asset didnt copy");
-            if (MainGraph.Nodes[0] == executionSystem.MainGraph.Nodes[0]) Debug.LogWarning("Asset didnt copy");
-            if (MainGraph.Nodes[0].Node == executionSystem.MainGraph.Nodes[0].Node) Debug.LogWarning("Nodes didnt copy");
-
-            executionSystem.PullPerceptions.ForEach(p => p.Build());
-            executionSystem.Graphs.ForEach(p => p.Build(nodeNamingSettings));
-            executionSystem.PushPerceptions.ForEach(p => p.Build());
-            if (executionSystem.MainGraph.Graph == MainGraph.Graph) Debug.LogError("!!!!!!!!!!!!!!!!");
-
-            Debug.Log("Totaltime: " + (DateTime.Now - time).TotalMilliseconds);
-            return executionSystem;
-        }
+            return BehaviourSystemAsset.CreateSystem(Graphs, PullPerceptions, PushPerceptions);
+        }       
 
         #region --------------------------- Create elements ---------------------------
 

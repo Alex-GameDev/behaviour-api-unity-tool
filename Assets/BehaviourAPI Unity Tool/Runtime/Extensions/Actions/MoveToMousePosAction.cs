@@ -12,37 +12,35 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
     /// </summary>
     public class MoveToMousePosAction : UnityAction
     {
-        public NavMeshAgent agent;
         public float speed;
 
         public MoveToMousePosAction()
         {
         }
 
-        public MoveToMousePosAction(NavMeshAgent agent, float speed)
+        public MoveToMousePosAction(float speed)
         {
-            this.agent = agent;
             this.speed = speed;
         }
 
         public override void Start()
         {
-            agent.speed = speed;
+            context.NavMeshAgent.speed = speed;
             Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(cameraRay, out RaycastHit hit, 100f))
             {
-                agent.destination = new Vector3(hit.point.x, agent.transform.position.y, hit.point.z);
+                context.NavMeshAgent.destination = new Vector3(hit.point.x, context.NavMeshAgent.transform.position.y, hit.point.z);
             }
         }
 
         public override void Stop()
         {
-            agent.speed = 0f;
+            context.NavMeshAgent.speed = 0f;
         }
 
         public override Status Update()
         {
-            if (!agent.hasPath || agent.speed == -1)
+            if (!context.NavMeshAgent.hasPath || context.NavMeshAgent.speed == -1)
             {
                 return Status.Success;
             }

@@ -11,9 +11,11 @@ using UnityEditor.Graphs;
 using UnityEngine;
 using Node = BehaviourAPI.Core.Node;
 
+/// <summary>
+/// Creates a runtime copy of a behaviour system
+/// </summary>
 public class Duplicator
 {
-
     Dictionary<GraphAsset, GraphAsset> graphCopyMap = new Dictionary<GraphAsset, GraphAsset>();
     Dictionary<NodeAsset, NodeAsset> nodeCopyMap = new Dictionary<NodeAsset, NodeAsset>();
 
@@ -40,6 +42,7 @@ public class Duplicator
         foreach (var graph in asset.Graphs)
         {
             var graphCopy = ScriptableObject.CreateInstance<GraphAsset>();
+            graphCopy.Name = graph.Name;
             graphCopy.Graph = (BehaviourGraph)graph.Graph.Clone();
             graphAssets.Add(graphCopy);
             graphCopyMap[graph] = graphCopy;
@@ -101,7 +104,7 @@ public class Duplicator
             if (node.Node is IActionAssignable originalHandler && 
                 nodeCopy.Node is IActionAssignable copyHandler)
             {
-                copyHandler.ActionReference = (Action)originalHandler.ActionReference.Clone();
+                copyHandler.ActionReference = (Action)originalHandler.ActionReference?.Clone();
 
                 if(originalHandler.ActionReference is SubgraphAction sgo &&
                     copyHandler.ActionReference is SubgraphAction sgc)
@@ -114,7 +117,8 @@ public class Duplicator
             if (node.Node is IPerceptionAssignable originalPHandler &&
                 nodeCopy.Node is IPerceptionAssignable copyPHandler)
             {
-                copyPHandler.PerceptionReference = perceptionCopyMap[originalPHandler.PerceptionReference];
+                if(originalPHandler.PerceptionReference != null)
+                    copyPHandler.PerceptionReference = perceptionCopyMap[originalPHandler.PerceptionReference];
             }
         }
 

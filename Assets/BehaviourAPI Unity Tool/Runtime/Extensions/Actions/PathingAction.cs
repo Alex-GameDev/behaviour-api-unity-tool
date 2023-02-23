@@ -6,8 +6,6 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
 {
     public class PathingAction : UnityAction
     {
-        public Transform transform;
-
         public List<Vector3> positions;
         public float speed;
         public float distanceThreshold;
@@ -18,7 +16,6 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
 
         public PathingAction(Transform transform, List<Vector3> positions, float speed, float distanceThreshold)
         {
-            this.transform = transform;
             this.positions = positions;
             this.speed = speed;
             this.distanceThreshold = distanceThreshold;
@@ -35,7 +32,7 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
         {
             if (positions.Count == 0) return Status.Failure;
 
-            if (Vector3.Distance(transform.position, positions[currentTargetPosId]) < distanceThreshold)
+            if (Vector3.Distance(context.Transform.position, positions[currentTargetPosId]) < distanceThreshold)
             {
                 currentTargetPosId++;
                 if (currentTargetPosId >= positions.Count)
@@ -45,11 +42,11 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
                 }
             }
 
-            var currentPos = transform.position;
+            var currentPos = context.Transform.position;
             var rawMovement = positions[currentTargetPosId] - currentPos;
             var maxDistance = rawMovement.magnitude;
             var movement = rawMovement.normalized * speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(currentPos, currentPos + movement, maxDistance);
+            context.Transform.position = Vector3.MoveTowards(currentPos, currentPos + movement, maxDistance);
             return Status.Running;
         }
 

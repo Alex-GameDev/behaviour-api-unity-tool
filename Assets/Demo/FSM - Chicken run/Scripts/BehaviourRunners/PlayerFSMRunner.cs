@@ -34,8 +34,8 @@ public class PlayerFSMRunner : CodeBehaviourRunner
 
         // Estados
         var idle = fsm.CreateState("Idle");
-        var moving = fsm.CreateState("Moving", new MoveToMousePosAction(meshAgent, 3.5f));
-        var flee = fsm.CreateState("Flee", new FleeAction(meshAgent, 7f, 13f, 3f));
+        var moving = fsm.CreateState("Moving", new MoveToMousePosAction(3.5f));
+        var flee = fsm.CreateState("Flee", new FleeAction(7f, 13f, 3f));
 
         // Las transiciones que pasan al estado "moving" se activan con percepciones Push.
         var idleToMoving = fsm.CreateTransition("idle to moving", idle, moving, statusFlags: StatusFlags.None);
