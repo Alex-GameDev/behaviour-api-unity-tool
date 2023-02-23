@@ -38,8 +38,8 @@ public class RadarFSMRunner : CodeBehaviourRunner, IRadar
         _brokenState = brokenState;
         _workingState = workingState;
 
-        RegisterGraph(radarFSM);
-        RegisterGraph(subFSM);
+        RegisterGraph(radarFSM, "Radar");
+        RegisterGraph(subFSM, "Lights");
 
         return radarFSM;
     }

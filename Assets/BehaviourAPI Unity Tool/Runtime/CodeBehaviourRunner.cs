@@ -9,7 +9,7 @@ namespace BehaviourAPI.Unity.Runtime
     {
         BehaviourGraph rootGraph;
 
-        HashSet<BehaviourGraph> allgraphs = new HashSet<BehaviourGraph>();
+        Dictionary<BehaviourGraph, string> allgraphs = new Dictionary<BehaviourGraph, string>();
 
         protected abstract BehaviourGraph CreateGraph();
 
@@ -35,9 +35,9 @@ namespace BehaviourAPI.Unity.Runtime
             return BehaviourSystemAsset.CreateSystem(allgraphs);
         }
 
-        public void RegisterGraph(BehaviourGraph graph)
+        public void RegisterGraph(BehaviourGraph graph, string name = "")
         {
-            allgraphs.Add(graph);
+            allgraphs.Add(graph, name);
         }
     }
 }

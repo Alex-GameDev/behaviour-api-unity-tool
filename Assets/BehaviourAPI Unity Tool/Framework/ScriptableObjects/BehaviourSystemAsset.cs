@@ -123,13 +123,13 @@ namespace BehaviourAPI.Unity.Framework
             AssetDatabase.SaveAssetIfDirty(this);
         }
 
-        public static BehaviourSystemAsset CreateSystem(HashSet<BehaviourGraph> behaviourGraphs)
+        public static BehaviourSystemAsset CreateSystem(Dictionary<BehaviourGraph, string> behaviourGraphs)
         {
             var system = CreateInstance<BehaviourSystemAsset>();
-            foreach (var graph in behaviourGraphs)
+            foreach (var kvp in behaviourGraphs)
             {
-                var name = graph.GetType().Name;
-                var graphAsset = GraphAsset.Create(name, graph);
+                var name = !string.IsNullOrEmpty(kvp.Value) ? kvp.Value : kvp.Key.GetType().Name;
+                var graphAsset = GraphAsset.Create(name, kvp.Key);
                 system.graphs.Add(graphAsset);
             }
             return system;
