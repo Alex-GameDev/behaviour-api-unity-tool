@@ -123,7 +123,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &8931427
+--- !u!114 &17248981
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -135,60 +135,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: storeInBasket
+  Name: 
   node:
-    rid: 2511131225754173448
-  position: {x: 300, y: 800}
-  parents:
-  - {fileID: 43033864}
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 2511131225754173448
-      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        SerializedAction:
-          rid: 2511131225754173453
-    - rid: 2511131225754173453
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        start:
-          component: {fileID: 90416565}
-          methodName: StoreCaptureInBasket
-        update:
-          component: {fileID: 90416565}
-          methodName: CompleteOnSuccess
-        stop:
-          component: {fileID: 0}
-          methodName: 
---- !u!114 &43033864
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: check
-  node:
-    rid: 2511131225754173447
-  position: {x: 300, y: 600}
-  parents:
-  - {fileID: 1909721724}
+    rid: 3601718050786377728
+  position: {x: 75, y: 0}
+  parents: []
   childs:
-  - {fileID: 8931427}
+  - {fileID: 1445540410}
   references:
     version: 2
     RefIds:
-    - rid: 2511131225754173447
-      type: {class: ConditionNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+    - rid: 3601718050786377728
+      type: {class: IteratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
-        perception: {fileID: 2117181221}
+        Iterations: -1
 --- !u!1001 &90416561
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -275,19 +235,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
   m_PrefabInstance: {fileID: 90416561}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &90416564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 90416562}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  systemAsset: {fileID: 0}
 --- !u!114 &90416565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,14 +249,70 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodeNamingSettings: 1
   perceptionNamingSettings: 1
-  pullPerceptionNamingSettings: 1
-  SystemAsset: {fileID: 308420365}
+  pushPerceptionNamingSettings: 1
+  graphs:
+  - {fileID: 310564352}
+  pushPerceptions: []
+  pullPerceptions:
+  - {fileID: 1546327933}
   _fishPrefab: {fileID: 5281474623226569190, guid: c63f1f735b851024faf98461c4931367, type: 3}
   _bootPrefab: {fileID: 2808376287602457127, guid: 273a344fd2f2c1e4984ab8bc8754d7e3, type: 3}
   _fishDropTarget: {fileID: 1013018739}
   _bootDropTarget: {fileID: 1847852898}
   _baitTarget: {fileID: 394313093}
   _rod: {fileID: 1026007597}
+--- !u!114 &90416569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 90416562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  systemAsset: {fileID: 0}
+--- !u!114 &147760285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601718050786377730
+  position: {x: -300, y: 400}
+  parents:
+  - {fileID: 1445540410}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377730
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        SerializedAction:
+          rid: 3601718050786377738
+    - rid: 3601718050786377738
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        start:
+          component: {fileID: 90416565}
+          methodName: StartThrow
+        update:
+          component: {fileID: 90416565}
+          methodName: RodThrownStatus
+        stop:
+          component: {fileID: 0}
+          methodName: 
 --- !u!1 &178529728
 GameObject:
   m_ObjectHideFlags: 0
@@ -564,7 +567,7 @@ LightingSettings:
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
   m_PVRFilteringAtrousPositionSigmaAO: 1
   m_PVRTiledBaking: 0
---- !u!114 &275182123
+--- !u!114 &310564352
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -573,37 +576,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: returnToWater
-  node:
-    rid: 2511131225754173449
-  position: {x: 600, y: 600}
-  parents:
-  - {fileID: 1909721724}
-  childs: []
+  Name: new BehaviourTree
+  graph:
+    rid: 3601718050786377737
+  nodes:
+  - {fileID: 17248981}
+  - {fileID: 1445540410}
+  - {fileID: 147760285}
+  - {fileID: 1704822407}
+  - {fileID: 1252244313}
+  - {fileID: 331988480}
+  - {fileID: 394221625}
+  - {fileID: 1308384687}
+  - {fileID: 1704428676}
   references:
     version: 2
     RefIds:
-    - rid: 2511131225754173449
-      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        SerializedAction:
-          rid: 2511131225754173452
-    - rid: 2511131225754173452
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        start:
-          component: {fileID: 90416565}
-          methodName: DropCaptureInWater
-        update:
-          component: {fileID: 90416565}
-          methodName: CompleteOnSuccess
-        stop:
-          component: {fileID: 0}
-          methodName: 
---- !u!114 &302121898
+    - rid: 3601718050786377737
+      type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+--- !u!114 &331988480
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -617,37 +611,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: 
   node:
-    rid: 3601717732746985478
-  position: {x: 0, y: 400}
+    rid: 3601718050786377733
+  position: {x: 450, y: 400}
   parents:
-  - {fileID: 1122302136}
+  - {fileID: 1445540410}
   childs:
-  - {fileID: 1443121607}
+  - {fileID: 1308384687}
+  - {fileID: 1704428676}
   references:
     version: 2
     RefIds:
-    - rid: 3601717732746985478
-      type: {class: UnityTimerDecorator, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
+    - rid: 3601718050786377733
+      type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
-        TotalTime: 3
---- !u!114 &308420365
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db249917b7c50574eaa600c74aff1437, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  graphs:
-  - {fileID: 1693644974}
-  pushPerceptions: []
-  perceptions:
-  - {fileID: 2117181221}
---- !u!114 &322078536
+        IsRandomized: 0
+--- !u!114 &394221625
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -659,30 +637,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: throwTheRod
+  Name: 
   node:
-    rid: 2511131225754173443
-  position: {x: -300, y: 400}
+    rid: 3601718050786377734
+  position: {x: 300, y: 800}
   parents:
-  - {fileID: 1122302136}
+  - {fileID: 1308384687}
   childs: []
   references:
     version: 2
     RefIds:
-    - rid: 2511131225754173443
+    - rid: 3601718050786377734
       type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
         SerializedAction:
-          rid: 2511131225754173450
-    - rid: 2511131225754173450
+          rid: 3601718050786377740
+    - rid: 3601718050786377740
       type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
         start:
           component: {fileID: 90416565}
-          methodName: StartThrow
+          methodName: StoreCaptureInBasket
         update:
           component: {fileID: 90416565}
-          methodName: RodThrownStatus
+          methodName: CompleteOnSuccess
         stop:
           component: {fileID: 0}
           methodName: 
@@ -814,32 +792,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300024, guid: fe9ba93f508bf1849bce40f4ae043ed2, type: 3}
---- !u!114 &911924050
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: loop
-  node:
-    rid: 2511131225754173441
-  position: {x: 75, y: 0}
-  parents: []
-  childs:
-  - {fileID: 1122302136}
-  references:
-    version: 2
-    RefIds:
-    - rid: 2511131225754173441
-      type: {class: IteratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        Iterations: -1
 --- !u!1 &953050417
 GameObject:
   m_ObjectHideFlags: 0
@@ -1066,7 +1018,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1122302136
+--- !u!114 &1252244313
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1078,23 +1030,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: seq
+  Name: 
   node:
-    rid: 2511131225754173442
-  position: {x: 75, y: 200}
+    rid: 3601718050786377732
+  position: {x: 0, y: 600}
   parents:
-  - {fileID: 911924050}
-  childs:
-  - {fileID: 322078536}
-  - {fileID: 302121898}
-  - {fileID: 1909721724}
+  - {fileID: 1704822407}
+  childs: []
   references:
     version: 2
     RefIds:
-    - rid: 2511131225754173442
-      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+    - rid: 3601718050786377732
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        IsRandomized: 0
+        SerializedAction:
+          rid: 3601718050786377739
+    - rid: 3601718050786377739
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        start:
+          component: {fileID: 90416565}
+          methodName: StartCatch
+        update:
+          component: {fileID: 90416565}
+          methodName: RodPickedStatus
+        stop:
+          component: {fileID: 0}
+          methodName: 
 --- !u!1 &1294133889
 GameObject:
   m_ObjectHideFlags: 0
@@ -1128,7 +1090,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1443121607
+--- !u!114 &1308384687
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1140,33 +1102,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: catchSomething
+  Name: 
   node:
-    rid: 2511131225754173445
-  position: {x: 0, y: 600}
+    rid: 3601718050786377735
+  position: {x: 300, y: 600}
   parents:
-  - {fileID: 302121898}
-  childs: []
+  - {fileID: 331988480}
+  childs:
+  - {fileID: 394221625}
   references:
     version: 2
     RefIds:
-    - rid: 2511131225754173445
-      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+    - rid: 3601718050786377735
+      type: {class: ConditionNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        SerializedAction:
-          rid: 2511131225754173451
-    - rid: 2511131225754173451
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+        perception: {fileID: 1546327933}
+--- !u!114 &1445540410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601718050786377729
+  position: {x: 75, y: 200}
+  parents:
+  - {fileID: 17248981}
+  childs:
+  - {fileID: 147760285}
+  - {fileID: 1704822407}
+  - {fileID: 331988480}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377729
+      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
-        start:
-          component: {fileID: 90416565}
-          methodName: StartCatch
-        update:
-          component: {fileID: 90416565}
-          methodName: RodPickedStatus
-        stop:
-          component: {fileID: 0}
-          methodName: 
+        IsRandomized: 0
 --- !u!1 &1507272130
 GameObject:
   m_ObjectHideFlags: 0
@@ -1265,7 +1244,7 @@ Transform:
   m_Father: {fileID: 1294133890}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1693644974
+--- !u!114 &1546327933
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1274,27 +1253,93 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
-  graph:
-    rid: 2511131225754173440
-  nodes:
-  - {fileID: 911924050}
-  - {fileID: 1122302136}
-  - {fileID: 322078536}
-  - {fileID: 1443121607}
-  - {fileID: 1909721724}
-  - {fileID: 43033864}
-  - {fileID: 8931427}
-  - {fileID: 275182123}
-  - {fileID: 302121898}
+  Name: fish
+  perception:
+    rid: 3601718050786377742
   references:
     version: 2
     RefIds:
-    - rid: 2511131225754173440
-      type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+    - rid: 3601718050786377742
+      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        init:
+          component: {fileID: 0}
+          methodName: 
+        check:
+          component: {fileID: 90416565}
+          methodName: IsFishCatched
+        reset:
+          component: {fileID: 0}
+          methodName: 
+--- !u!114 &1704428676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601718050786377736
+  position: {x: 600, y: 600}
+  parents:
+  - {fileID: 331988480}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377736
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        SerializedAction:
+          rid: 3601718050786377741
+    - rid: 3601718050786377741
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        start:
+          component: {fileID: 90416565}
+          methodName: DropCaptureInWater
+        update:
+          component: {fileID: 90416565}
+          methodName: CompleteOnSuccess
+        stop:
+          component: {fileID: 0}
+          methodName: 
+--- !u!114 &1704822407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  node:
+    rid: 3601718050786377731
+  position: {x: 0, y: 400}
+  parents:
+  - {fileID: 1445540410}
+  childs:
+  - {fileID: 1252244313}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377731
+      type: {class: UnityTimerDecorator, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        TotalTime: 3
 --- !u!1 &1847852897
 GameObject:
   m_ObjectHideFlags: 0
@@ -1326,61 +1371,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1909721724
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: sel
-  node:
-    rid: 2511131225754173446
-  position: {x: 450, y: 400}
-  parents:
-  - {fileID: 1122302136}
-  childs:
-  - {fileID: 43033864}
-  - {fileID: 275182123}
-  references:
-    version: 2
-    RefIds:
-    - rid: 2511131225754173446
-      type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        IsRandomized: 0
---- !u!114 &2117181221
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: new pushperception
-  perception:
-    rid: 3601717732746985477
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717732746985477
-      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        init:
-          component: {fileID: 0}
-          methodName: 
-        check:
-          component: {fileID: 90416565}
-          methodName: IsFishCatched
-        reset:
-          component: {fileID: 0}
-          methodName: 

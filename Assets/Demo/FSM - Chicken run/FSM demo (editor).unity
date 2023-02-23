@@ -207,12 +207,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4292928448873590, guid: aa3784adb6428184e991be2d60ee0cb2, type: 3}
   m_PrefabInstance: {fileID: 26509545}
   m_PrefabAsset: {fileID: 0}
---- !u!195 &26509547 stripped
-NavMeshAgent:
-  m_CorrespondingSourceObject: {fileID: 6570712956237242012, guid: aa3784adb6428184e991be2d60ee0cb2, type: 3}
-  m_PrefabInstance: {fileID: 26509545}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &27148826
+--- !u!114 &70292806
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -226,15 +221,79 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: time to move
   perception:
-    rid: 3601717913087639614
+    rid: 3601718050786377764
   references:
     version: 2
     RefIds:
-    - rid: 3601717913087639614
+    - rid: 3601718050786377764
       type: {class: UnityTimePerception, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: Assembly-CSharp}
       data:
         TotalTime: 3
---- !u!114 &152438549
+--- !u!114 &96661111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: moving to idle
+  node:
+    rid: 3601718050786377760
+  position: {x: 372, y: 150}
+  parents:
+  - {fileID: 1497046178}
+  childs:
+  - {fileID: 1268310180}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601718050786377760
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        StatusFlags: 6
+        _action:
+          rid: -2
+        perception: {fileID: 0}
+--- !u!114 &115076626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: runaway to idle
+  node:
+    rid: 3601718050786377778
+  position: {x: -213, y: 394}
+  parents:
+  - {fileID: 1760107787}
+  childs:
+  - {fileID: 1947800681}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601718050786377778
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        StatusFlags: 6
+        _action:
+          rid: -2
+        perception: {fileID: 0}
+--- !u!114 &139831284
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -248,24 +307,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: idle to moving
   node:
-    rid: 3601717913087639608
-  position: {x: 367, y: -93}
+    rid: 3601718050786377759
+  position: {x: 380, y: -5}
   parents:
-  - {fileID: 1386750810}
+  - {fileID: 1268310180}
   childs:
-  - {fileID: 330568468}
+  - {fileID: 1497046178}
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 3601717913087639608
+    - rid: 3601718050786377759
       type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
         StatusFlags: 7
         _action:
           rid: -2
-        perception: {fileID: 27148826}
+        perception: {fileID: 70292806}
 --- !u!1 &246536231
 GameObject:
   m_ObjectHideFlags: 0
@@ -366,7 +425,7 @@ MonoBehaviour:
   offsetY: 13
   offsetZ: 10
   targetToFollow: {fileID: 1638828717}
---- !u!114 &254318414
+--- !u!114 &266195913
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -378,61 +437,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: idle
+  Name: move to idle
   node:
-    rid: 3601717913087639618
-  position: {x: 127, y: 435}
+    rid: 3601718050786377781
+  position: {x: 184, y: 261}
   parents:
-  - {fileID: 399593105}
-  - {fileID: 1476374896}
+  - {fileID: 832292218}
   childs:
-  - {fileID: 1154911868}
-  - {fileID: 350659695}
+  - {fileID: 1947800681}
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 3601717913087639618
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+    - rid: 3601718050786377781
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
+        StatusFlags: 6
         _action:
           rid: -2
---- !u!114 &330568468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Moving
-  node:
-    rid: 3601717913087639606
-  position: {x: 600, y: 0}
-  parents:
-  - {fileID: 152438549}
-  childs:
-  - {fileID: 1533237207}
-  - {fileID: 1505852610}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717913087639606
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        _action:
-          rid: 3601717913087639615
-    - rid: 3601717913087639615
-      type: {class: PatrolAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        agent: {fileID: 26509547}
-        speed: 3
-        maxDistance: 13
+        perception: {fileID: 0}
 --- !u!1001 &344833233
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -507,7 +531,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1215336314095226742, guid: 03a80449306c92f42ae1e38d0f560559, type: 3}
   m_PrefabInstance: {fileID: 344833233}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &350659695
+--- !u!114 &353009349
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -516,29 +540,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Script: {fileID: 11500000, guid: 212d5be0b64d9d143980afbe174ecdab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: idle to runaway
-  node:
-    rid: 3601717913087639627
-  position: {x: 296, y: 645}
-  parents:
-  - {fileID: 254318414}
-  childs:
-  - {fileID: 1657089196}
+  Name: click
+  pushPerception:
+    rid: 3601718050786377783
+  targets:
+  - {fileID: 1363312800}
+  - {fileID: 790237443}
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601717913087639627
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        StatusFlags: 7
-        _action:
-          rid: -2
-        perception: {fileID: 2092432821}
+    - rid: 3601718050786377783
+      type: {class: PushPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
 --- !u!1001 &388525265
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -613,38 +628,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1215336314095226742, guid: 03a80449306c92f42ae1e38d0f560559, type: 3}
   m_PrefabInstance: {fileID: 388525265}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &399593105
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: move to idle
-  node:
-    rid: 3601717913087639625
-  position: {x: 489, y: 516}
-  parents:
-  - {fileID: 2147304355}
-  childs:
-  - {fileID: 254318414}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601717913087639625
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        StatusFlags: 6
-        _action:
-          rid: -2
-        perception: {fileID: 0}
 --- !u!1001 &417124683
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -898,6 +881,38 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1215336314095226742, guid: 03a80449306c92f42ae1e38d0f560559, type: 3}
   m_PrefabInstance: {fileID: 462060572}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &554013672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: moving to chase
+  node:
+    rid: 3601718050786377763
+  position: {x: 649, y: 588}
+  parents:
+  - {fileID: 1497046178}
+  childs:
+  - {fileID: 1336517702}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601718050786377763
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        StatusFlags: 7
+        _action:
+          rid: -2
+        perception: {fileID: 737152288}
 --- !u!1 &611292991
 GameObject:
   m_ObjectHideFlags: 0
@@ -1014,7 +1029,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &689331125
+--- !u!114 &642456998
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1023,27 +1038,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: chicken near
-  perception:
-    rid: 3601717913087639613
+  Name: move to runaway
+  node:
+    rid: 3601718050786377780
+  position: {x: 464, y: 563}
+  parents:
+  - {fileID: 832292218}
+  childs:
+  - {fileID: 1760107787}
   references:
     version: 2
     RefIds:
-    - rid: 3601717913087639613
-      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601718050786377780
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        init:
-          component: {fileID: 0}
-          methodName: 
-        check:
-          component: {fileID: 2092855746}
-          methodName: CheckWatchTarget
-        reset:
-          component: {fileID: 0}
-          methodName: 
+        StatusFlags: 7
+        _action:
+          rid: -2
+        perception: {fileID: 1906187357}
 --- !u!1001 &694644016
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1118,7 +1135,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1215336314095226742, guid: 03a80449306c92f42ae1e38d0f560559, type: 3}
   m_PrefabInstance: {fileID: 694644016}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &708602738
+--- !u!114 &737152288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: see player
+  perception:
+    rid: 3601718050786377767
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377767
+      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        init:
+          component: {fileID: 0}
+          methodName: 
+        check:
+          component: {fileID: 2092855747}
+          methodName: CheckWatchTarget
+        reset:
+          component: {fileID: 0}
+          methodName: 
+--- !u!114 &790237443
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1130,23 +1177,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: chase to idle
+  Name: idle to move
   node:
-    rid: 3601717913087639611
-  position: {x: -92, y: 238}
+    rid: 3601718050786377776
+  position: {x: 189, y: 121}
   parents:
-  - {fileID: 1085835966}
+  - {fileID: 1947800681}
   childs:
-  - {fileID: 1386750810}
+  - {fileID: 832292218}
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 3601717913087639611
+    - rid: 3601718050786377776
       type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        StatusFlags: 6
+        StatusFlags: 0
         _action:
           rid: -2
         perception: {fileID: 0}
@@ -1224,7 +1271,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 417506, guid: 8f76e4de37339cc4e95feb6a8e054111, type: 3}
   m_PrefabInstance: {fileID: 806079312}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &837572211
+--- !u!114 &832292218
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1236,27 +1283,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: idle to chase
+  Name: Move
   node:
-    rid: 3601717913087639610
-  position: {x: 178, y: 230}
+    rid: 3601718050786377771
+  position: {x: 426, y: 222}
   parents:
-  - {fileID: 1386750810}
+  - {fileID: 790237443}
+  - {fileID: 1363312800}
   childs:
-  - {fileID: 1085835966}
+  - {fileID: 1363312800}
+  - {fileID: 642456998}
+  - {fileID: 266195913}
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601717913087639610
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+    - rid: 3601718050786377771
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        StatusFlags: 7
         _action:
-          rid: -2
-        perception: {fileID: 689331125}
---- !u!114 &883089091
+          rid: 3601718050786377775
+    - rid: 3601718050786377775
+      type: {class: MoveToMousePosAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        speed: 3.5
+--- !u!114 &873228361
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1270,22 +1320,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: new FSM
   graph:
-    rid: 3601717913087639617
+    rid: 3601718050786377769
   nodes:
-  - {fileID: 254318414}
-  - {fileID: 2147304355}
-  - {fileID: 1657089196}
-  - {fileID: 1085519551}
-  - {fileID: 1154911868}
-  - {fileID: 399593105}
-  - {fileID: 1683237286}
-  - {fileID: 350659695}
-  - {fileID: 1476374896}
+  - {fileID: 1947800681}
+  - {fileID: 832292218}
+  - {fileID: 1760107787}
+  - {fileID: 790237443}
+  - {fileID: 1363312800}
+  - {fileID: 115076626}
+  - {fileID: 937299286}
+  - {fileID: 642456998}
+  - {fileID: 266195913}
   references:
     version: 2
     RefIds:
-    - rid: 3601717913087639617
+    - rid: 3601718050786377769
       type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+--- !u!114 &937299286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: idle to runaway
+  node:
+    rid: 3601718050786377779
+  position: {x: 3, y: 378}
+  parents:
+  - {fileID: 1947800681}
+  childs:
+  - {fileID: 1760107787}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601718050786377779
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        StatusFlags: 7
+        _action:
+          rid: -2
+        perception: {fileID: 1906187357}
 --- !u!1001 &942850601
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1348,11 +1430,6 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 1638828718, guid: bbbd837c30cf81b4eb94afe299e75708, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bbbd837c30cf81b4eb94afe299e75708, type: 3}
---- !u!195 &942850602 stripped
-NavMeshAgent:
-  m_CorrespondingSourceObject: {fileID: 922734696, guid: bbbd837c30cf81b4eb94afe299e75708, type: 3}
-  m_PrefabInstance: {fileID: 942850601}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &974826872
 GameObject:
   m_ObjectHideFlags: 0
@@ -1384,130 +1461,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1085519551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: move to move
-  node:
-    rid: 3601717913087639623
-  position: {x: 741, y: 161}
-  parents:
-  - {fileID: 2147304355}
-  childs:
-  - {fileID: 2147304355}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601717913087639623
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        StatusFlags: 0
-        _action:
-          rid: -2
-        perception: {fileID: 0}
---- !u!114 &1085835966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Chasing
-  node:
-    rid: 3601717913087639607
-  position: {x: 16, y: 486}
-  parents:
-  - {fileID: 1505852610}
-  - {fileID: 837572211}
-  childs:
-  - {fileID: 708602738}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717913087639607
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        _action:
-          rid: 3601717913087639616
-    - rid: 3601717913087639616
-      type: {class: ChaseAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        agent: {fileID: 26509547}
-        speed: 5
-        target: {fileID: 1638828722}
-        maxDistance: 10
-        maxTime: 2.5
---- !u!114 &1154911868
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: idle to move
-  node:
-    rid: 3601717913087639624
-  position: {x: 478, y: 317}
-  parents:
-  - {fileID: 254318414}
-  childs:
-  - {fileID: 2147304355}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601717913087639624
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        StatusFlags: 0
-        _action:
-          rid: -2
-        perception: {fileID: 0}
---- !u!114 &1219231102
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 212d5be0b64d9d143980afbe174ecdab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: click
-  pushPerception:
-    rid: 3601717913087639630
-  targets:
-  - {fileID: 1085519551}
-  - {fileID: 1154911868}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717913087639630
-      type: {class: PushPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
 --- !u!1001 &1255338317
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1656,6 +1609,38 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1215336314095226742, guid: 03a80449306c92f42ae1e38d0f560559, type: 3}
   m_PrefabInstance: {fileID: 1259048060}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1268310180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Idle
+  node:
+    rid: 3601718050786377756
+  position: {x: 3, y: 97}
+  parents:
+  - {fileID: 1513337089}
+  - {fileID: 96661111}
+  childs:
+  - {fileID: 1521063332}
+  - {fileID: 139831284}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601718050786377756
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        _action:
+          rid: -2
 --- !u!1001 &1309324916
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1804,7 +1789,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 417506, guid: 8f76e4de37339cc4e95feb6a8e054111, type: 3}
   m_PrefabInstance: {fileID: 1323380800}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1386750810
+--- !u!114 &1336517702
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1816,26 +1801,62 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Idle
+  Name: Chasing
   node:
-    rid: 3601717913087639605
-  position: {x: 0, y: 0}
+    rid: 3601718050786377758
+  position: {x: -33, y: 593}
   parents:
-  - {fileID: 1533237207}
-  - {fileID: 708602738}
+  - {fileID: 554013672}
+  - {fileID: 1521063332}
   childs:
-  - {fileID: 152438549}
-  - {fileID: 837572211}
+  - {fileID: 1513337089}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377758
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        _action:
+          rid: 3601718050786377768
+    - rid: 3601718050786377768
+      type: {class: ChaseAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        speed: 5
+        target: {fileID: 1638828722}
+        maxDistance: 10
+        maxTime: 2.5
+--- !u!114 &1363312800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: move to move
+  node:
+    rid: 3601718050786377777
+  position: {x: 459, y: -5}
+  parents:
+  - {fileID: 832292218}
+  childs:
+  - {fileID: 832292218}
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 3601717913087639605
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+    - rid: 3601718050786377777
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
+        StatusFlags: 0
         _action:
           rid: -2
+        perception: {fileID: 0}
 --- !u!1001 &1425679193
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1910,38 +1931,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1215336314095226742, guid: 03a80449306c92f42ae1e38d0f560559, type: 3}
   m_PrefabInstance: {fileID: 1425679193}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1476374896
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: runaway to idle
-  node:
-    rid: 3601717913087639628
-  position: {x: 42, y: 653}
-  parents:
-  - {fileID: 1657089196}
-  childs:
-  - {fileID: 254318414}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601717913087639628
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        StatusFlags: 6
-        _action:
-          rid: -2
-        perception: {fileID: 0}
 --- !u!1001 &1492731989
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2016,7 +2005,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1215336314095226742, guid: 03a80449306c92f42ae1e38d0f560559, type: 3}
   m_PrefabInstance: {fileID: 1492731989}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1505852610
+--- !u!114 &1497046178
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2028,27 +2017,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: moving to chase
+  Name: Moving
   node:
-    rid: 3601717913087639612
-  position: {x: 538, y: 339}
+    rid: 3601718050786377757
+  position: {x: 607, y: 142}
   parents:
-  - {fileID: 330568468}
+  - {fileID: 139831284}
   childs:
-  - {fileID: 1085835966}
+  - {fileID: 554013672}
+  - {fileID: 96661111}
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601717913087639612
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+    - rid: 3601718050786377757
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        StatusFlags: 7
         _action:
-          rid: -2
-        perception: {fileID: 689331125}
---- !u!114 &1533237207
+          rid: 3601718050786377766
+    - rid: 3601718050786377766
+      type: {class: PatrolAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        speed: 3
+        maxDistance: 13
+--- !u!114 &1513337089
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2060,26 +2051,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: moving to idle
+  Name: chase to idle
   node:
-    rid: 3601717913087639609
-  position: {x: 365, y: 63}
+    rid: 3601718050786377762
+  position: {x: -101, y: 369}
   parents:
-  - {fileID: 330568468}
+  - {fileID: 1336517702}
   childs:
-  - {fileID: 1386750810}
+  - {fileID: 1268310180}
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 3601717913087639609
+    - rid: 3601718050786377762
       type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
         StatusFlags: 6
         _action:
           rid: -2
         perception: {fileID: 0}
+--- !u!114 &1521063332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: idle to chase
+  node:
+    rid: 3601718050786377761
+  position: {x: 177, y: 361}
+  parents:
+  - {fileID: 1268310180}
+  childs:
+  - {fileID: 1336517702}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601718050786377761
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        StatusFlags: 7
+        _action:
+          rid: -2
+        perception: {fileID: 737152288}
 --- !u!1001 &1617633954
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2312,7 +2335,30 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4600201873981788853, guid: bbbd837c30cf81b4eb94afe299e75708, type: 3}
   m_PrefabInstance: {fileID: 942850601}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1638828727
+--- !u!114 &1638828729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1638828717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 241376c416925ec48905178fad6bae11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nodeNamingSettings: 1
+  perceptionNamingSettings: 1
+  pushPerceptionNamingSettings: 1
+  graphs:
+  - {fileID: 873228361}
+  pushPerceptions:
+  - {fileID: 353009349}
+  pullPerceptions:
+  - {fileID: 1906187357}
+  minDistanceToChicken: 5
+  chicken: {fileID: 26509546}
+--- !u!114 &1638828732
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2325,110 +2371,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   systemAsset: {fileID: 0}
---- !u!114 &1638828728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1638828717}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccc22f5dc64f6894f8d483138fe78fc6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nodeNamingSettings: 1
-  perceptionNamingSettings: 1
-  pullPerceptionNamingSettings: 1
-  SystemAsset: {fileID: 1827471768}
-  minDistanceToChicken: 5
-  chicken: {fileID: 26509546}
---- !u!114 &1657089196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: flee
-  node:
-    rid: 3601717913087639620
-  position: {x: 119, y: 892}
-  parents:
-  - {fileID: 1683237286}
-  - {fileID: 350659695}
-  childs:
-  - {fileID: 1476374896}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717913087639620
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        _action:
-          rid: 3601717913087639622
-    - rid: 3601717913087639622
-      type: {class: FleeAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        agent: {fileID: 942850602}
-        speed: 7
-        distance: 13
-        maxTimeRunning: 3
---- !u!114 &1683237286
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: move to runaway
-  node:
-    rid: 3601717913087639626
-  position: {x: 630, y: 771}
-  parents:
-  - {fileID: 2147304355}
-  childs:
-  - {fileID: 1657089196}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601717913087639626
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        StatusFlags: 7
-        _action:
-          rid: -2
-        perception: {fileID: 2092432821}
---- !u!114 &1702081691
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db249917b7c50574eaa600c74aff1437, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  graphs:
-  - {fileID: 2142419707}
-  pushPerceptions: []
-  perceptions:
-  - {fileID: 689331125}
-  - {fileID: 27148826}
 --- !u!1001 &1733514537
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2503,6 +2445,41 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1215336314095226742, guid: 03a80449306c92f42ae1e38d0f560559, type: 3}
   m_PrefabInstance: {fileID: 1733514537}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1760107787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Runaway
+  node:
+    rid: 3601718050786377772
+  position: {x: -145, y: 576}
+  parents:
+  - {fileID: 642456998}
+  - {fileID: 937299286}
+  childs:
+  - {fileID: 115076626}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377772
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        _action:
+          rid: 3601718050786377774
+    - rid: 3601718050786377774
+      type: {class: FleeAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
+      data:
+        speed: 7
+        distance: 13
+        maxTimeRunning: 3
 --- !u!1001 &1780293269
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2577,7 +2554,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 417506, guid: 8f76e4de37339cc4e95feb6a8e054111, type: 3}
   m_PrefabInstance: {fileID: 1780293269}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1827471768
+--- !u!64 &1837552261 stripped
+MeshCollider:
+  m_CorrespondingSourceObject: {fileID: 8792237637700662432, guid: aa3784adb6428184e991be2d60ee0cb2, type: 3}
+  m_PrefabInstance: {fileID: 26509545}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1838564434
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2586,20 +2568,88 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db249917b7c50574eaa600c74aff1437, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  graphs:
-  - {fileID: 883089091}
-  pushPerceptions:
-  - {fileID: 1219231102}
-  perceptions:
-  - {fileID: 2092432821}
---- !u!64 &1837552261 stripped
-MeshCollider:
-  m_CorrespondingSourceObject: {fileID: 8792237637700662432, guid: aa3784adb6428184e991be2d60ee0cb2, type: 3}
-  m_PrefabInstance: {fileID: 26509545}
+  Name: new FSM
+  graph:
+    rid: 3601718050786377765
+  nodes:
+  - {fileID: 1268310180}
+  - {fileID: 1497046178}
+  - {fileID: 1336517702}
+  - {fileID: 139831284}
+  - {fileID: 96661111}
+  - {fileID: 1521063332}
+  - {fileID: 1513337089}
+  - {fileID: 554013672}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377765
+      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+--- !u!114 &1906187357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: chicken near
+  perception:
+    rid: 3601718050786377782
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377782
+      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        init:
+          component: {fileID: 0}
+          methodName: 
+        check:
+          component: {fileID: 1638828729}
+          methodName: CheckDistanceToChicken
+        reset:
+          component: {fileID: 0}
+          methodName: 
+--- !u!114 &1947800681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Idle
+  node:
+    rid: 3601718050786377770
+  position: {x: -160.90855, y: 197.11299}
+  parents:
+  - {fileID: 115076626}
+  - {fileID: 266195913}
+  childs:
+  - {fileID: 790237443}
+  - {fileID: 937299286}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601718050786377770
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        _action:
+          rid: -2
 --- !u!1 &1959260468
 GameObject:
   m_ObjectHideFlags: 0
@@ -2694,42 +2744,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!114 &2092432821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: chicken near
-  perception:
-    rid: 3601717913087639629
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717913087639629
-      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        init:
-          component: {fileID: 0}
-          methodName: 
-        check:
-          component: {fileID: 1638828728}
-          methodName: CheckDistanceToChicken
-        reset:
-          component: {fileID: 0}
-          methodName: 
 --- !u!1 &2092855735 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1969419073538870, guid: aa3784adb6428184e991be2d60ee0cb2, type: 3}
   m_PrefabInstance: {fileID: 26509545}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2092855745
+--- !u!114 &2092855747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2092855735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d83037191732a6b43915d07744a0d723, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nodeNamingSettings: 1
+  perceptionNamingSettings: 1
+  pushPerceptionNamingSettings: 1
+  graphs:
+  - {fileID: 1838564434}
+  pushPerceptions: []
+  pullPerceptions:
+  - {fileID: 70292806}
+  - {fileID: 737152288}
+  _target: {fileID: 1638828722}
+  _visionCollider: {fileID: 1837552261}
+--- !u!114 &2092855750
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2742,86 +2785,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   systemAsset: {fileID: 0}
---- !u!114 &2092855746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092855735}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a767dbfcf987c84f952037b95f056ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nodeNamingSettings: 1
-  perceptionNamingSettings: 1
-  pullPerceptionNamingSettings: 1
-  SystemAsset: {fileID: 1702081691}
-  _target: {fileID: 1638828722}
-  _visionCollider: {fileID: 1837552261}
---- !u!114 &2142419707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: new FSM
-  graph:
-    rid: 3601717913087639604
-  nodes:
-  - {fileID: 1386750810}
-  - {fileID: 330568468}
-  - {fileID: 1085835966}
-  - {fileID: 152438549}
-  - {fileID: 1533237207}
-  - {fileID: 837572211}
-  - {fileID: 708602738}
-  - {fileID: 1505852610}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717913087639604
-      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
---- !u!114 &2147304355
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: moving
-  node:
-    rid: 3601717913087639619
-  position: {x: 707, y: 436}
-  parents:
-  - {fileID: 1085519551}
-  - {fileID: 1154911868}
-  childs:
-  - {fileID: 1085519551}
-  - {fileID: 399593105}
-  - {fileID: 1683237286}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717913087639619
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        _action:
-          rid: 3601717913087639621
-    - rid: 3601717913087639621
-      type: {class: MoveToMousePosAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        agent: {fileID: 942850602}
-        speed: 3.5

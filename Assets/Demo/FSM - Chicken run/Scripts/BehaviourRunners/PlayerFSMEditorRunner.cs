@@ -1,10 +1,11 @@
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Runtime;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class PlayerFSMVisualRunner : VisualBehaviourRunner
+public class PlayerFSMEditorRunner : EditorBehaviourRunner
 {
     [SerializeField] private float minDistanceToChicken = 5;
     [SerializeField] private Transform chicken;

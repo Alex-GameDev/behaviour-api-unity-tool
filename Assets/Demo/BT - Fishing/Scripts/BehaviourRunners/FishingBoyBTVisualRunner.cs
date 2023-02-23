@@ -3,7 +3,7 @@ using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Runtime;
 using UnityEngine;
 
-public class FishingBoyBTVisualRunner : VisualBehaviourRunner
+public class FishingBoyBTVisualRunner : EditorBehaviourRunner
 {
     [SerializeField] GameObject _fishPrefab, _bootPrefab;
     [SerializeField] Transform _fishDropTarget, _bootDropTarget, _baitTarget;

@@ -4,9 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.GraphicsBuffer;
 
-public class ChickenFSMVisualRunner : VisualBehaviourRunner
+public class ChickenFSMEditorRunner : EditorBehaviourRunner
 {
     [SerializeField] Transform _target;
     [SerializeField] Collider _visionCollider;

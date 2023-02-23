@@ -155,6 +155,7 @@ public class Duplicator
         }
 
         perceptionAsset.perception = perception;
+        perceptionAsset.Name = original.Name;
         perceptionCopyMap[original] = perceptionAsset;
         return perceptionAsset;       
     }

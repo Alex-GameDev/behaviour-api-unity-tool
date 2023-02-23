@@ -44,7 +44,7 @@ namespace BehaviourAPI.Unity.Editor
             _container = new VisualElement();
             Add(_container);
 
-            _assignButton = new Button(OnAssignPerception) { text = "Assign PerceptionReference" };
+            _assignButton = new Button(OnAssignPerception) { text = "Assign Perception" };
             Add(_assignButton);
         }
 
@@ -52,7 +52,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
             {
-                menuEvt.menu.AppendAction("Clear PerceptionReference", dd => ClearPerception(),
+                menuEvt.menu.AppendAction("Clear Perception", dd => ClearPerception(),
                     (_) => GetSerializedProperty().objectReferenceValue != null ?
                     DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
             }));
