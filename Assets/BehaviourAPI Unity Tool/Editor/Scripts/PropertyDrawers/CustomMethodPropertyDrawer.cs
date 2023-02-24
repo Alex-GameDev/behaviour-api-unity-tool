@@ -57,18 +57,6 @@ namespace BehaviourAPI.Unity.Editor
         }
     }
 
-    [CustomPropertyDrawer(typeof(ContextualSerializedStatusFunction))]
-    public class ContextualSerializedStatusFunctionPropertyDrawer : CustomMethodPropertyDrawer
-    {
-        protected override bool ValidateMethod(MethodInfo methodInfo)
-        {
-            return methodInfo.ReturnParameter.ParameterType == typeof(Status) &&
-                methodInfo.GetParameters().Length == 1 &&
-                methodInfo.GetParameters()[0].ParameterType == typeof(UnityExecutionContext);
-        }
-    }
-
-
 
     [CustomPropertyDrawer(typeof(SerializedAction))]
     public class SerializedActionPropertyDrawer : CustomMethodPropertyDrawer
@@ -79,18 +67,6 @@ namespace BehaviourAPI.Unity.Editor
                 methodInfo.GetParameters().Length == 0;
         }
     }
-
-    [CustomPropertyDrawer(typeof(ContextualSerializedAction))]
-    public class ContextualSerializedActionPropertyDrawer : CustomMethodPropertyDrawer
-    {
-        protected override bool ValidateMethod(MethodInfo methodInfo)
-        {
-            return methodInfo.ReturnParameter.ParameterType == typeof(void) &&
-                methodInfo.GetParameters().Length == 1 &&
-                methodInfo.GetParameters()[0].ParameterType == typeof(UnityExecutionContext);
-        }
-    }
-
 
 
     [CustomPropertyDrawer(typeof(SerializedBoolFunction))]
@@ -103,16 +79,6 @@ namespace BehaviourAPI.Unity.Editor
         }
     }
 
-    [CustomPropertyDrawer(typeof(ContextualSerializedBoolFunction))]
-    public class ContextualSerializedBoolFunctionPropertyDrawer : CustomMethodPropertyDrawer
-    {
-        protected override bool ValidateMethod(MethodInfo methodInfo)
-        {
-            return methodInfo.ReturnParameter.ParameterType == typeof(bool) &&
-                methodInfo.GetParameters().Length == 1 &&
-                methodInfo.GetParameters()[0].ParameterType == typeof(UnityExecutionContext);
-        }
-    }
 
 
 
@@ -126,18 +92,6 @@ namespace BehaviourAPI.Unity.Editor
         }
     }
 
-    [CustomPropertyDrawer(typeof(ContextualSerializedFloatFunction))]
-    public class ContextualSerializedFloatFunctionPropertyDrawer : CustomMethodPropertyDrawer
-    {
-        protected override bool ValidateMethod(MethodInfo methodInfo)
-        {
-            return methodInfo.ReturnParameter.ParameterType == typeof(float) &&
-               methodInfo.GetParameters().Length == 1 &&
-                methodInfo.GetParameters()[0].ParameterType == typeof(UnityExecutionContext);
-        }
-    }
-
-
 
     [CustomPropertyDrawer(typeof(SerializedFloatFloatFunction))]
     public class SerializedFloatFloatFunctionPropertyDrawer : CustomMethodPropertyDrawer
@@ -150,15 +104,5 @@ namespace BehaviourAPI.Unity.Editor
         }
     }
 
-    [CustomPropertyDrawer(typeof(ContextualSerializedFloatFloatFunction))]
-    public class ContextualSerializedFloatFloatFunctionPropertyDrawer : CustomMethodPropertyDrawer
-    {
-        protected override bool ValidateMethod(MethodInfo methodInfo)
-        {
-            return methodInfo.ReturnParameter.ParameterType == typeof(float) &&
-               methodInfo.GetParameters().Length == 2 &&
-               methodInfo.GetParameters()[0].ParameterType == typeof(UnityExecutionContext) &&
-            methodInfo.GetParameters()[1].ParameterType == typeof(float);
-        }
-    }
+
 }

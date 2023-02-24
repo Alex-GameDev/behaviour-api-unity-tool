@@ -16,14 +16,23 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         public override void SetExecutionContext(ExecutionContext context)
         {
             _context = (UnityExecutionContext)context;
-            if (_context == null) Debug.LogError("Context Variable factor need an UnityExecutionContext to work");
+            if (_context != null)
+            {
+                start.SetContext(_context);
+                update.SetContext(_context);
+                stop.SetContext(_context);
+            }
+            else
+            {
+                Debug.LogError("Context action need an UnityExecutionContext to work");
+            }
         }
 
-        public override void Start() => start.GetFunction()?.Invoke(_context);
+        public override void Start() => start.GetFunction()?.Invoke();
 
-        public override void Stop() => stop.GetFunction()?.Invoke(_context);
+        public override void Stop() => stop.GetFunction()?.Invoke();
 
-        public override Status Update() => update.GetFunction()?.Invoke(_context) ?? Status.Running;
+        public override Status Update() => update.GetFunction()?.Invoke() ?? Status.Running;
 
 
     }

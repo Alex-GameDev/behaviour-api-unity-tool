@@ -1,6 +1,7 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
@@ -15,11 +16,20 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         public override void SetExecutionContext(ExecutionContext context)
         {
             _context = (UnityExecutionContext)context;
-            if (_context == null) Debug.LogError("Context Variable factor need an UnityExecutionContext to work");
+            if (_context != null)
+            {
+                init.SetContext(_context);
+                check.SetContext(_context);
+                reset.SetContext(_context);
+            }
+            else
+            {
+                Debug.LogError("Context perception need an UnityExecutionContext to work");
+            }
         }
 
-        public override void Initialize() => init.GetFunction()?.Invoke(_context);
-        public override void Reset() => reset.GetFunction()?.Invoke(_context);
-        public override bool Check() => check.GetFunction()?.Invoke(_context) ?? false;
+        public override void Initialize() => init.GetFunction()?.Invoke();
+        public override void Reset() => reset.GetFunction()?.Invoke();
+        public override bool Check() => check.GetFunction()?.Invoke() ?? false;
     }
 }

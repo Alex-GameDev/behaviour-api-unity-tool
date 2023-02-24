@@ -202,7 +202,7 @@ MonoBehaviour:
   Name: 
   node:
     rid: 3601718071714119687
-  position: {x: 241, y: 123}
+  position: {x: 269, y: 136}
   parents:
   - {fileID: -4655086083545884845}
   childs:

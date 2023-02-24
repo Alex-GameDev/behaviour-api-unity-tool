@@ -14,9 +14,16 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         public override void SetExecutionContext(ExecutionContext context)
         {
             _context = (UnityExecutionContext)context;
-            if (_context == null) Debug.LogError("Context Variable factor need an UnityExecutionContext to work");
+            if (_context == null)
+            {
+                function.SetContext(_context);
+            }
+            else
+            {
+                Debug.LogError("Context Function factor need an UnityExecutionContext to work");
+            }
         }
 
-        protected override float Evaluate(float childUtility) => function.GetFunction()?.Invoke(_context, childUtility) ?? 0f;
+        protected override float Evaluate(float childUtility) => function.GetFunction()?.Invoke(childUtility) ?? 0f;
     }
 }

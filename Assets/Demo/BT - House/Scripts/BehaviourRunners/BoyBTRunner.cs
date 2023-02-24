@@ -34,7 +34,7 @@ public class BoyBTRunner : CodeBehaviourRunner
         var bt = new BehaviourTree();
         var doorPos = new Vector3(_door.transform.position.x, transform.position.y, _door.transform.position.z);
 
-        var walkToDoorAction = new WalkAction(meshAgent, doorPos, 5f);
+        var walkToDoorAction = new WalkAction(doorPos, 5f);
         var openDoorAction = new FunctionalAction(OpenDoor, () => (!_door.IsClosed).ToStatus());
         var explodeAction = new FunctionalAction(SmashDoor, () => Status.Success);
         var enterAction = new FunctionalAction(EnterTheHouse, () => Status.Success);

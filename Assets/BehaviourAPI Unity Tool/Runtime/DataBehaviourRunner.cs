@@ -14,10 +14,6 @@ namespace BehaviourAPI.Unity.Runtime
         public NamingSettings perceptionNamingSettings = NamingSettings.IgnoreWhenInvalid;
         public NamingSettings pushPerceptionNamingSettings = NamingSettings.IgnoreWhenInvalid;
 
-        Dictionary<string, PushPerception> pushPerceptionMap;
-        Dictionary<string, Perception> pullPerceptionMap;
-        Dictionary<string, BehaviourGraph> graphMap;
-
         protected BehaviourGraph _buildedMainGraph;
 
         /// <summary>
@@ -32,16 +28,18 @@ namespace BehaviourAPI.Unity.Runtime
 
         protected override void OnAwake()
         {
-            var system = GetSystem();
+            var system = GetEditorSystem();
             var duplicator = new Duplicator();
             ExecutionSystem = duplicator.Duplicate(system);
 
             ExecutionSystem.Build(nodeNamingSettings, perceptionNamingSettings, perceptionNamingSettings);
             _buildedMainGraph = ExecutionSystem.MainGraph.Graph;
+            ModifyGraphs();            
             _buildedMainGraph.SetExecutionContext(new UnityExecutionContext(gameObject));
         }
 
-        protected abstract BehaviourSystemAsset GetSystem();
+        protected virtual void ModifyGraphs() { }
+        protected abstract BehaviourSystemAsset GetEditorSystem();
 
         protected override void OnStart()
         {

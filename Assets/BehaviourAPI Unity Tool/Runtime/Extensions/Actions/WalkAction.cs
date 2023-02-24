@@ -25,6 +25,8 @@ public class WalkAction : UnityAction
 
     public override void Start()
     {
+        if (context == null) Debug.Log("No context");
+        if (context.NavMeshAgent == null) Debug.Log("No agent");
         context.NavMeshAgent.destination = Target;
     }
 

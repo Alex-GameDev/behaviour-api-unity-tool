@@ -42,7 +42,7 @@ namespace BehaviourAPI.Unity.Runtime
             }
         }
 
-        protected override BehaviourSystemAsset GetSystem()
+        protected override BehaviourSystemAsset GetEditorSystem()
         {
             return BehaviourSystemAsset.CreateSystem(Graphs, PullPerceptions, PushPerceptions);
         }       
