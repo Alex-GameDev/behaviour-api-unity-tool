@@ -9,9 +9,9 @@ namespace BehaviourAPI.Unity.Editor
     {
         public string name;
         public Type Type;
-        public IEnumerable<EditorHierarchyNode> Childs;
+        public List<EditorHierarchyNode> Childs;
 
-        public EditorHierarchyNode(string name, Type type, IEnumerable<EditorHierarchyNode> childs)
+        public EditorHierarchyNode(string name, Type type, List<EditorHierarchyNode> childs)
         {
             this.name = name;
             Type = type;

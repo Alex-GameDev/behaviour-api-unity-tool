@@ -8,6 +8,8 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
     /// <summary>
     /// Custom action that moves an agent to a given position, returning success when the position is arrived.
     /// </summary>
+
+    [SelectionGroup("MOVEMENT")]
     public class PatrolAction : UnityAction
     {
         public float speed;

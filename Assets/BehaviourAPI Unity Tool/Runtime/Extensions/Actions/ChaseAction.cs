@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 namespace BehaviourAPI.Unity.Runtime.Extensions
 {
+    [SelectionGroup("MOVEMENT")]
     public class ChaseAction : UnityAction
     {
         public float speed;

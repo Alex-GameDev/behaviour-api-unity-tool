@@ -3,6 +3,7 @@ using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework.Adaptations;
+using BehaviourAPI.Unity.Runtime;
 using BehaviourAPI.Unity.Runtime.Extensions;
 using System;
 using System.Collections;
@@ -11,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.Graphs;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -88,20 +90,22 @@ namespace BehaviourAPI.Unity.Editor
             var unityActionTypes = GetValidSubTypes(typeof(UnityAction), types)
                 .Select(t => new EditorHierarchyNode(t.Name.CamelCaseToSpaced(), t));
 
+            var unityActionNode = GetUnityActionHierarchy(types);
+
             _actionHierarchy = new EditorHierarchyNode("Actions", typeof(Action), new List<EditorHierarchyNode>()
             {
                 new EditorHierarchyNode("Custom Action", typeof(CustomAction)),
                 new EditorHierarchyNode("Custom Action (Context)", typeof(ContextCustomAction)),
-                new EditorHierarchyNode("Unity Action(s)",typeof(UnityAction), unityActionTypes),
+                unityActionNode,
                 new EditorHierarchyNode("Subgraph Action", typeof(SubgraphAction))
             });
 
             var unityPerceptionTypes =GetValidSubTypes(typeof(UnityPerception), types)
-                .Select(t => new EditorHierarchyNode(t.Name.CamelCaseToSpaced(), t));
+                .Select(t => new EditorHierarchyNode(t.Name.CamelCaseToSpaced(), t)).ToList();
 
             var compoundPerceptionTypes = types.FindAll(t => t.IsSubclassOf(typeof(CompoundPerception)) &&
                  t.GetConstructors().Any(c => c.GetParameters().Length == 0))
-                .Select(t => new EditorHierarchyNode(t.Name.CamelCaseToSpaced(), t));
+                .Select(t => new EditorHierarchyNode(t.Name.CamelCaseToSpaced(), t)).ToList();
 
             _perceptionHierarchy = new EditorHierarchyNode("Perceptions", typeof(Perception), new List<EditorHierarchyNode>()
             {
@@ -149,10 +153,43 @@ namespace BehaviourAPI.Unity.Editor
                 }
                 return new EditorHierarchyNode($"{graphType.Name} nodes", graphType, list);
             });
-
-            //Debug.Log($"Time to create hierarchies: {(System.DateTime.Now - time).TotalMilliseconds}");
+            
+            Debug.Log($"Time to create hierarchies: {(System.DateTime.Now - time).TotalMilliseconds}");
             //Debug.Log($"Number of adapters: {_graphAdapterMap.Count()}");
             //Debug.Log($"Number of main nodes per type: {_nodeHierarchyMap.Select(kvp => kvp.Value.Childs.Count().ToString()).Join()}");
+        }
+
+        EditorHierarchyNode GetUnityActionHierarchy(List<System.Type> allTypes)
+        {
+            var types = GetValidSubTypes(typeof(UnityAction), allTypes);
+
+            Dictionary<string, EditorHierarchyNode> groups = new Dictionary<string, EditorHierarchyNode>();
+            List<EditorHierarchyNode> ungroupedActions = new List<EditorHierarchyNode>();
+
+            foreach(var actionType in types)
+            {
+                var group = actionType.GetCustomAttributes<SelectionGroupAttribute>();
+                var actionNode = new EditorHierarchyNode(actionType.Name.CamelCaseToSpaced(), actionType);
+
+                if(group.Count() == 0)
+                {
+                    ungroupedActions.Add(actionNode);
+                }
+                else
+                {
+                    foreach (var attribute in group)
+                    {
+                        var groupName = attribute.name;
+                        var groupNode = new EditorHierarchyNode(groupName, null);
+                        groups.TryAdd(groupName, groupNode);
+                        groups[groupName].Childs.Add(actionNode);
+                    }
+                }
+            }
+
+            var unityActionNode = new EditorHierarchyNode("Unity Actions", typeof(UnityAction),
+                groups.Values.Union(ungroupedActions).ToList());
+            return unityActionNode;
         }
 
         static IEnumerable<System.Type> GetValidSubTypes(System.Type type, List<System.Type> allTypes)

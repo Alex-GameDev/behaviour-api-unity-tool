@@ -8,6 +8,8 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
     /// <summary>
     /// Custom action that moves an agent away from a transform, returning success when the position is arrived.
     /// </summary>
+
+    [SelectionGroup("MOVEMENT")]
     public class FleeAction : UnityAction
     {
         public float speed;

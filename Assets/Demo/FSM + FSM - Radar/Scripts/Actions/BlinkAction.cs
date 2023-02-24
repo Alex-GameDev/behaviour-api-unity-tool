@@ -1,4 +1,5 @@
 using BehaviourAPI.Core;
+using BehaviourAPI.Unity.Runtime;
 using BehaviourAPI.Unity.Runtime.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +7,8 @@ using UnityEngine.UI;
 /// <summary>
 /// Custom action that makes a light blink.
 /// </summary>
+/// 
+[SelectionGroup("DEMO - Radar")]
 public class BlinkAction : UnityAction
 {
     public Light Light;
@@ -17,6 +20,7 @@ public class BlinkAction : UnityAction
     public BlinkAction()
     {
     }
+
 
     public BlinkAction(Light light, Text marker, Color color)
     {
@@ -35,8 +39,8 @@ public class BlinkAction : UnityAction
 
     public override void Stop()
     {
-        Light.intensity = 1f;
-        Marker.text = "000";
+        if(Light != null) Light.intensity = 1f;
+        if(Marker != null)  Marker.text = "000";
     }
 
     public override Status Update()

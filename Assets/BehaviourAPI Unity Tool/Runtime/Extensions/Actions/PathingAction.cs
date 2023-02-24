@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime.Extensions
 {
+    [SelectionGroup("MOVEMENT")]
     public class PathingAction : UnityAction
     {
         public List<Vector3> positions;
