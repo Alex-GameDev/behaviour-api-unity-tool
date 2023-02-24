@@ -75,7 +75,7 @@ public class RadarFSMRunner : CodeBehaviourRunner, IRadar
 
         if (Physics.Raycast(ray, out RaycastHit hit, 50) && hit.collider.tag == "Car")
         {
-            var carSpeed = hit.collider.gameObject.GetComponent<CarFSMRunner>().GetSpeed();
+            var carSpeed = hit.collider.gameObject.GetComponent<ICar>().GetSpeed();
 
             bool trigger = speecCheckFunction?.Invoke(carSpeed) ?? false;
             if (trigger)

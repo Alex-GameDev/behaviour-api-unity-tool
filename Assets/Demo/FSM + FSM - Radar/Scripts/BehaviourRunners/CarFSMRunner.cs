@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CarFSMRunner : CodeBehaviourRunner
+public class CarFSMRunner : CodeBehaviourRunner, ICar
 {
     Rigidbody _rb;
     IRadar _radar;
@@ -17,7 +17,7 @@ public class CarFSMRunner : CodeBehaviourRunner
     {
         _rb = GetComponent<Rigidbody>();
         _radar = GameObject.FindGameObjectWithTag("Radar").GetComponent<IRadar>();
-        _speed = Random.Range(15f, 30f);
+        _speed = Random.Range(10f, 30f);
         base.OnAwake();
     }
 

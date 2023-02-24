@@ -123,6 +123,38 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &4906089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: fixed
+  node:
+    rid: 3601718050786377823
+  position: {x: 293, y: 180}
+  parents:
+  - {fileID: 748720577}
+  childs:
+  - {fileID: 1321868086}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601718050786377823
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        StatusFlags: 7
+        _action:
+          rid: -2
+        perception: {fileID: 1220017354}
 --- !u!1 &60152271
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,7 +253,43 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 60152271}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &99380660
+--- !u!114 &183385841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: normal
+  node:
+    rid: 3601718050786377826
+  position: {x: 233, y: 111}
+  parents:
+  - {fileID: 1002393253}
+  - {fileID: 329463002}
+  childs:
+  - {fileID: 334918333}
+  - {fileID: 1196397918}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377826
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        _action:
+          rid: 3601718050786377838
+    - rid: 3601718050786377838
+      type: {class: LightAction, ns: , asm: Assembly-CSharp}
+      data:
+        Light: {fileID: 976166224}
+        Color: {r: 0, g: 0, b: 1, a: 1}
+        TimeToEnd: -1
+--- !u!114 &188200054
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -233,25 +301,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: isOverSpeed
+  Name: car under speed
   perception:
-    rid: 3601717872941596730
+    rid: 3601718050786377840
   references:
     version: 2
     RefIds:
-    - rid: 3601717872941596730
+    - rid: 3601718050786377840
       type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
         init:
           component: {fileID: 0}
           methodName: 
         check:
-          component: {fileID: 976166223}
-          methodName: CheckRadarForOverSpeed
+          component: {fileID: 976166226}
+          methodName: CheckRadarForUnderSpeed
         reset:
           component: {fileID: 0}
           methodName: 
---- !u!114 &177048369
+--- !u!114 &329463002
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -263,62 +331,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: waiting
+  Name: under speed to normal
   node:
-    rid: 3601717732746985519
-  position: {x: -45, y: 59}
+    rid: 3601718050786377831
+  position: {x: 529, y: 163}
   parents:
-  - {fileID: 1301125860}
-  - {fileID: 260717357}
+  - {fileID: 825272556}
   childs:
-  - {fileID: 1101395834}
-  - {fileID: 453727490}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717732746985519
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        _action:
-          rid: 3601717872941596726
-    - rid: 3601717872941596726
-      type: {class: LightAction, ns: , asm: Assembly-CSharp}
-      data:
-        Light: {fileID: 976166224}
-        Color: {r: 0, g: 0, b: 1, a: 1}
-        TimeToEnd: -1
---- !u!114 &260717357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: over speed to wait
-  node:
-    rid: 3601717732746985525
-  position: {x: 281, y: 103}
-  parents:
-  - {fileID: 1694346995}
-  childs:
-  - {fileID: 177048369}
+  - {fileID: 183385841}
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 3601717732746985525
+    - rid: 3601718050786377831
       type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
         StatusFlags: 6
         _action:
           rid: -2
         perception: {fileID: 0}
+--- !u!114 &334918333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: normal to over speed
+  node:
+    rid: 3601718050786377829
+  position: {x: -9, y: 193}
+  parents:
+  - {fileID: 183385841}
+  childs:
+  - {fileID: 716035723}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601718050786377829
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        StatusFlags: 7
+        _action:
+          rid: -2
+        perception: {fileID: 1654492764}
 --- !u!1 &363079224
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,60 +481,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 363079224}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &370248092
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: timetobreak
-  perception:
-    rid: 3601717821731766338
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717821731766338
-      type: {class: UnityTimePerception, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: Assembly-CSharp}
-      data:
-        TotalTime: 20
---- !u!114 &453727490
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: car over speed
-  node:
-    rid: 3601717732746985522
-  position: {x: 286, y: -58}
-  parents:
-  - {fileID: 177048369}
-  childs:
-  - {fileID: 1694346995}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601717732746985522
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        StatusFlags: -1
-        _action:
-          rid: -2
-        perception: {fileID: 99380660}
 --- !u!1 &565233521
 GameObject:
   m_ObjectHideFlags: 0
@@ -663,6 +673,74 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &716035723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: over speed
+  node:
+    rid: 3601718050786377825
+  position: {x: -308, y: 85}
+  parents:
+  - {fileID: 334918333}
+  childs:
+  - {fileID: 1002393253}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377825
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        _action:
+          rid: 3601718050786377836
+    - rid: 3601718050786377836
+      type: {class: LightAction, ns: , asm: Assembly-CSharp}
+      data:
+        Light: {fileID: 976166224}
+        Color: {r: 1, g: 0, b: 0, a: 1}
+        TimeToEnd: 1
+--- !u!114 &748720577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: broken
+  node:
+    rid: 3601718050786377821
+  position: {x: 525, y: 143}
+  parents:
+  - {fileID: 1777588635}
+  childs:
+  - {fileID: 4906089}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377821
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        _action:
+          rid: 3601718050786377833
+    - rid: 3601718050786377833
+      type: {class: BlinkAction, ns: , asm: Assembly-CSharp}
+      data:
+        Light: {fileID: 976166224}
+        Color: {r: 1, g: 1, b: 0, a: 1}
+        Marker: {fileID: 1692010840}
 --- !u!850595691 &754460183
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -725,6 +803,93 @@ LightingSettings:
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
   m_PVRFilteringAtrousPositionSigmaAO: 1
   m_PVRTiledBaking: 0
+--- !u!114 &767018200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: sub
+  graph:
+    rid: 3601718050786377819
+  nodes:
+  - {fileID: 183385841}
+  - {fileID: 716035723}
+  - {fileID: 825272556}
+  - {fileID: 1002393253}
+  - {fileID: 334918333}
+  - {fileID: 1196397918}
+  - {fileID: 329463002}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377819
+      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+--- !u!114 &771145396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Main
+  graph:
+    rid: 3601718050786377818
+  nodes:
+  - {fileID: 1321868086}
+  - {fileID: 748720577}
+  - {fileID: 1777588635}
+  - {fileID: 4906089}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377818
+      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+--- !u!114 &825272556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: under speed
+  node:
+    rid: 3601718050786377827
+  position: {x: 786, y: 53}
+  parents:
+  - {fileID: 1196397918}
+  childs:
+  - {fileID: 329463002}
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377827
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        _action:
+          rid: 3601718050786377837
+    - rid: 3601718050786377837
+      type: {class: LightAction, ns: , asm: Assembly-CSharp}
+      data:
+        Light: {fileID: 976166224}
+        Color: {r: 0, g: 1, b: 0, a: 1}
+        TimeToEnd: 1
 --- !u!1 &835941222
 GameObject:
   m_ObjectHideFlags: 0
@@ -924,61 +1089,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &892163769
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  node:
-    rid: 3601717732746985513
-  position: {x: 362, y: -55}
-  parents:
-  - {fileID: 1663129390}
-  childs:
-  - {fileID: 1394575150}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717732746985513
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        StatusFlags: 7
-        _action:
-          rid: 3601717872941596736
-        perception: {fileID: 370248092}
-    - rid: 3601717872941596736
-      type: {class: DebugAction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        message: tttt
---- !u!114 &904345711
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db249917b7c50574eaa600c74aff1437, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  graphs:
-  - {fileID: 1265597479}
-  - {fileID: 2089078290}
-  pushPerceptions: []
-  perceptions:
-  - {fileID: 1873486825}
-  - {fileID: 370248092}
-  - {fileID: 1698874873}
-  - {fileID: 99380660}
 --- !u!1001 &976166221
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1102,24 +1212,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1369674582665762386, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
   m_PrefabInstance: {fileID: 976166221}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &976166223
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 976166222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 990899258fc02694a97733cf6a1a7568, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nodeNamingSettings: 1
-  perceptionNamingSettings: 1
-  pullPerceptionNamingSettings: 1
-  SystemAsset: {fileID: 904345711}
-  pointToLook: {x: 8.8, y: 0.3, z: -6}
-  speedText: {fileID: 1692010840}
 --- !u!108 &976166224 stripped
 Light:
   m_CorrespondingSourceObject: {fileID: 1271630270, guid: 8c26e389c6315304bab5e8ad15ba0806, type: 3}
@@ -1138,6 +1230,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   systemAsset: {fileID: 0}
+--- !u!114 &976166226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 976166222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b8c7a3c15e78ca4f88f748df6450049, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nodeNamingSettings: 2
+  perceptionNamingSettings: 1
+  pushPerceptionNamingSettings: 1
+  graphs:
+  - {fileID: 771145396}
+  - {fileID: 767018200}
+  pushPerceptions: []
+  pullPerceptions:
+  - {fileID: 1220017354}
+  - {fileID: 1322335114}
+  - {fileID: 1654492764}
+  - {fileID: 188200054}
+  pointToLook: {x: 8.8, y: 0.3, z: -6}
+  speedText: {fileID: 1692010840}
 --- !u!1 &987190456
 GameObject:
   m_ObjectHideFlags: 0
@@ -1169,7 +1287,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1018097129
+--- !u!114 &1002393253
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1181,26 +1299,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
+  Name: over speed to normal
   node:
-    rid: 3601717732746985514
-  position: {x: 346, y: 124}
+    rid: 3601718050786377828
+  position: {x: 11, y: -38}
   parents:
-  - {fileID: 1394575150}
+  - {fileID: 716035723}
   childs:
-  - {fileID: 1663129390}
+  - {fileID: 183385841}
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 3601717732746985514
+    - rid: 3601718050786377828
       type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        StatusFlags: 7
+        StatusFlags: 6
         _action:
           rid: -2
-        perception: {fileID: 1873486825}
+        perception: {fileID: 0}
 --- !u!1 &1050367645
 GameObject:
   m_ObjectHideFlags: 0
@@ -1285,7 +1403,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 40.894, z: 0}
---- !u!114 &1101395834
+--- !u!114 &1196397918
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1297,27 +1415,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: under speed to wait
+  Name: normal to under speed
   node:
-    rid: 3601717732746985523
-  position: {x: -285, y: 112}
+    rid: 3601718050786377830
+  position: {x: 537, y: -41}
   parents:
-  - {fileID: 177048369}
+  - {fileID: 183385841}
   childs:
-  - {fileID: 1166431773}
+  - {fileID: 825272556}
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 3601717732746985523
+    - rid: 3601718050786377830
       type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        StatusFlags: -1
+        StatusFlags: 7
         _action:
           rid: -2
-        perception: {fileID: 1698874873}
---- !u!114 &1166431773
+        perception: {fileID: 188200054}
+--- !u!114 &1220017354
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1326,31 +1444,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: under speed
-  node:
-    rid: 3601717732746985521
-  position: {x: -607, y: 32}
-  parents:
-  - {fileID: 1101395834}
-  childs:
-  - {fileID: 1301125860}
+  Name: time to fix
+  perception:
+    rid: 3601718050786377834
   references:
     version: 2
     RefIds:
-    - rid: 3601717732746985521
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+    - rid: 3601718050786377834
+      type: {class: UnityTimePerception, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: Assembly-CSharp}
       data:
-        _action:
-          rid: 3601717872941596728
-    - rid: 3601717872941596728
-      type: {class: LightAction, ns: , asm: Assembly-CSharp}
-      data:
-        Light: {fileID: 976166224}
-        Color: {r: 0, g: 1, b: 0, a: 1}
-        TimeToEnd: 1
+        TotalTime: 10
 --- !u!1 &1256260071
 GameObject:
   m_ObjectHideFlags: 0
@@ -1387,63 +1493,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1265597479
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Main
-  graph:
-    rid: 3601717732746985509
-  nodes:
-  - {fileID: 1663129390}
-  - {fileID: 1394575150}
-  - {fileID: 892163769}
-  - {fileID: 1018097129}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717732746985509
-      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
---- !u!114 &1301125860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: car under speed
-  node:
-    rid: 3601717732746985524
-  position: {x: -283, y: -71}
-  parents:
-  - {fileID: 1166431773}
-  childs:
-  - {fileID: 177048369}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601717732746985524
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        StatusFlags: 6
-        _action:
-          rid: -2
-        perception: {fileID: 0}
 --- !u!1 &1310239756
 GameObject:
   m_ObjectHideFlags: 0
@@ -1512,7 +1561,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1394575150
+--- !u!114 &1321868086
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1524,60 +1573,78 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: broken_state
+  Name: working
   node:
-    rid: 3601717732746985512
-  position: {x: 600, y: 0}
+    rid: 3601718050786377820
+  position: {x: -12, y: 124}
   parents:
-  - {fileID: 892163769}
+  - {fileID: 4906089}
   childs:
-  - {fileID: 1018097129}
+  - {fileID: 1777588635}
   references:
     version: 2
     RefIds:
-    - rid: 3601717732746985512
+    - rid: 3601718050786377820
       type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
         _action:
-          rid: 3601717872941596724
-    - rid: 3601717872941596724
-      type: {class: BlinkAction, ns: , asm: Assembly-CSharp}
-      data:
-        Light: {fileID: 976166224}
-        Color: {r: 1, g: 1, b: 0, a: 1}
-        Marker: {fileID: 1692010840}
---- !u!114 &1663129390
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: working_state
-  node:
-    rid: 3601717732746985511
-  position: {x: 0, y: 0}
-  parents:
-  - {fileID: 1018097129}
-  childs:
-  - {fileID: 892163769}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717732746985511
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        _action:
-          rid: 3601717732746985515
-    - rid: 3601717732746985515
+          rid: 3601718050786377832
+    - rid: 3601718050786377832
       type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        subgraph: {fileID: 2089078290}
+        subgraph: {fileID: 767018200}
+--- !u!114 &1322335114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: time to break
+  perception:
+    rid: 3601718050786377835
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377835
+      type: {class: UnityTimePerception, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: Assembly-CSharp}
+      data:
+        TotalTime: 20
+--- !u!114 &1654492764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: car over speed
+  perception:
+    rid: 3601718050786377839
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718050786377839
+      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        init:
+          component: {fileID: 0}
+          methodName: 
+        check:
+          component: {fileID: 976166226}
+          methodName: CheckRadarForOverSpeed
+        reset:
+          component: {fileID: 0}
+          methodName: 
 --- !u!1 &1692010838
 GameObject:
   m_ObjectHideFlags: 0
@@ -1658,70 +1725,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1692010838}
   m_CullTransparentMesh: 0
---- !u!114 &1694346995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: over
-  node:
-    rid: 3601717732746985520
-  position: {x: 515, y: 60}
-  parents:
-  - {fileID: 453727490}
-  childs:
-  - {fileID: 260717357}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717732746985520
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        _action:
-          rid: 3601717872941596727
-    - rid: 3601717872941596727
-      type: {class: LightAction, ns: , asm: Assembly-CSharp}
-      data:
-        Light: {fileID: 976166224}
-        Color: {r: 1, g: 0, b: 0, a: 1}
-        TimeToEnd: 1
---- !u!114 &1698874873
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: isUnderSpeed
-  perception:
-    rid: 3601717872941596729
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717872941596729
-      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        init:
-          component: {fileID: 0}
-          methodName: 
-        check:
-          component: {fileID: 976166223}
-          methodName: CheckRadarForUnderSpeed
-        reset:
-          component: {fileID: 0}
-          methodName: 
 --- !u!1 &1744644688
 GameObject:
   m_ObjectHideFlags: 0
@@ -1758,7 +1761,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 13.700073, y: -16.400024}
+  m_AnchoredPosition: {x: 13.700195, y: -16.400024}
   m_SizeDelta: {x: 70, y: 30}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1744644690
@@ -1799,7 +1802,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1744644688}
   m_CullTransparentMesh: 0
---- !u!114 &1873486825
+--- !u!114 &1777588635
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1808,19 +1811,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: timetofix
-  perception:
-    rid: 3601717821731766337
+  Name: broke
+  node:
+    rid: 3601718050786377822
+  position: {x: 301, y: 31}
+  parents:
+  - {fileID: 1321868086}
+  childs:
+  - {fileID: 748720577}
   references:
     version: 2
     RefIds:
-    - rid: 3601717821731766337
-      type: {class: UnityTimePerception, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: Assembly-CSharp}
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3601718050786377822
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
-        TotalTime: 10
+        StatusFlags: 7
+        _action:
+          rid: -2
+        perception: {fileID: 1322335114}
 --- !u!1 &1948739223
 GameObject:
   m_ObjectHideFlags: 0
@@ -1852,34 +1865,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2089078290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: SubFSM
-  graph:
-    rid: 3601717732746985510
-  nodes:
-  - {fileID: 177048369}
-  - {fileID: 1694346995}
-  - {fileID: 1166431773}
-  - {fileID: 453727490}
-  - {fileID: 1101395834}
-  - {fileID: 1301125860}
-  - {fileID: 260717357}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601717732746985510
-      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
 --- !u!1 &2146011418
 GameObject:
   m_ObjectHideFlags: 0
@@ -2072,35 +2057,39 @@ PrefabInstance:
     - target: {fileID: 6348232475757109475, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}
       propertyPath: _vehicles.Array.data[0]
       value: 
-      objectReference: {fileID: 1959030373088092, guid: fc4245223e4122142bb14239d44230ef, type: 3}
+      objectReference: {fileID: 1959030373088092, guid: 9f045feba4b85224e8df09f6c5923960, type: 3}
     - target: {fileID: 6348232475757109475, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}
       propertyPath: _vehicles.Array.data[1]
       value: 
-      objectReference: {fileID: 1959030373088092, guid: 34941e62fdb557544ada8af1b5333ae0, type: 3}
+      objectReference: {fileID: 1646981259178978, guid: ca5520094dc586e41afd452938f3d5cd, type: 3}
     - target: {fileID: 6348232475757109475, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}
       propertyPath: _vehicles.Array.data[2]
       value: 
-      objectReference: {fileID: 1646981259178978, guid: 0ae65270c30153049ab49eb3ebf070d6, type: 3}
+      objectReference: {fileID: 1646981259178978, guid: 431a727caa9dab14489cad32aaa1feed, type: 3}
     - target: {fileID: 6348232475757109475, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}
       propertyPath: _vehicles.Array.data[3]
       value: 
-      objectReference: {fileID: 1646981259178978, guid: 2dc42346e5313b34c93d598a61994629, type: 3}
+      objectReference: {fileID: 1646981259178978, guid: 7638b7d446d268144a268c38d73535f6, type: 3}
     - target: {fileID: 6348232475757109475, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}
       propertyPath: _vehicles.Array.data[4]
       value: 
-      objectReference: {fileID: 1646981259178978, guid: 512151c1530b99343a884b12ee9c5e1e, type: 3}
+      objectReference: {fileID: 1646981259178978, guid: 34d8974e51911ba4696cdcf474d49a4b, type: 3}
     - target: {fileID: 6348232475757109475, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}
       propertyPath: _vehicles.Array.data[5]
       value: 
-      objectReference: {fileID: 1646981259178978, guid: ab26596a331d7ee43a3e9d29e2be9f84, type: 3}
+      objectReference: {fileID: 1959030373088092, guid: a6917675e0ab6994899c4107be05fd4a, type: 3}
     - target: {fileID: 6348232475757109475, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}
       propertyPath: _vehicles.Array.data[6]
       value: 
-      objectReference: {fileID: 1646981259178978, guid: f463242ba59e68243b7a693d4f0cfc18, type: 3}
+      objectReference: {fileID: 1646981259178978, guid: 34350e1095bec3340b56b922ffe85d29, type: 3}
     - target: {fileID: 6348232475757109475, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}
       propertyPath: _vehicles.Array.data[7]
       value: 
-      objectReference: {fileID: 1646981259178978, guid: 50477af197889084e8a6d97f2b73b73b, type: 3}
+      objectReference: {fileID: 1646981259178978, guid: 706ea69ec57354a4bb31c973794aea5b, type: 3}
+    - target: {fileID: 6348232475757109485, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 559011617304336883, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 13e84f2fd31404d46a1fc11a717e4115, type: 3}

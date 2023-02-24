@@ -45,12 +45,7 @@ namespace BehaviourAPI.Unity.Runtime
 
         protected override void OnStart()
         {
-            if (_buildedMainGraph != null)
-            {
-                Debug.Log("Start graph");
-                _buildedMainGraph.Start();
-            }
-            else
+            if (_buildedMainGraph == null)
             {
                 Debug.LogWarning("[BehaviourRunner] - This runner has not graphs attached.", this);
                 Destroy(this);
@@ -70,9 +65,16 @@ namespace BehaviourAPI.Unity.Runtime
             }
         }
 
+        private void OnEnable()
+        {
+            if (_buildedMainGraph.Status == Status.None)
+                _buildedMainGraph?.Start();
+        }
+
         private void OnDisable()
         {
-            _buildedMainGraph?.Stop();
+            if(_buildedMainGraph.Status != Status.None)
+                _buildedMainGraph?.Stop();
         }       
 
         #region ------------------------------------ Find elements ---------------------------------------
@@ -97,7 +99,7 @@ namespace BehaviourAPI.Unity.Runtime
             return ExecutionSystem.pullPerceptionMap.GetValueOrDefault(name);
         }
 
-        public Perception FindPerception<T>(string name) where T : Perception
+        public T FindPerception<T>(string name) where T : Perception
         {
             if (ExecutionSystem.pullPerceptionMap.TryGetValue(name, out var perception))
             {
@@ -110,7 +112,7 @@ namespace BehaviourAPI.Unity.Runtime
             }
         }
 
-        public Perception FindPerceptionOrDefault<T>(string name) where T : Perception
+        public T FindPerceptionOrDefault<T>(string name) where T : Perception
         {
             if (ExecutionSystem.pullPerceptionMap.TryGetValue(name, out var perception))
             {
