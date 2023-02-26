@@ -158,7 +158,6 @@ namespace BehaviourAPI.Unity.Editor
             _editToolbar.Q<ToolbarButton>("bw-toolbar-setroot-btn").clicked += ChangeMainGraph;
             _editToolbar.Q<ToolbarButton>("bw-toolbar-clear-btn").clicked += OpenClearGraphWindow;
             _editToolbar.Q<ToolbarButton>("bw-toolbar-delete-btn").clicked += DisplayDeleteGraphAlertWindow;
-            _editToolbar.Q<ToolbarButton>("bw-toolbar-save-btn").clicked += SaveSystemData;
             _editToolbar.Q<ToolbarButton>("bw-toolbar-generatescript-btn").clicked += OpenCreateScriptWindow;
 
             var addGraphMenu = _editToolbar.Q<ToolbarMenu>("bw-toolbar-add-menu");
