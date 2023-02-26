@@ -34,6 +34,10 @@ using StateTransition = BehaviourAPI.StateMachines.StateTransition;
 using PopTransition = BehaviourAPI.StateMachines.StackFSMs.PopTransition;
 using PushTransition = BehaviourAPI.StateMachines.StackFSMs.PushTransition;
 using UnityAction = BehaviourAPI.Unity.Runtime.Extensions.UnityAction;
+using static UnityEditor.PlayerSettings;
+using ProbabilisticState = BehaviourAPI.StateMachines.ProbabilisticState;
+using behaviourAPI.Unity.Framework.Adaptations;
+using System.Security.Cryptography;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -265,6 +269,10 @@ namespace BehaviourAPI.Unity.Editor
                     methodCode = $"new {nameof(ConditionPerception)}({string.Join(", ", parameters)})";
                     type = typeof(ConditionPerception);
                 }
+                else if(p is ContextCustomPerception contextCustomperception)
+                {
+                    methodCode = $"new {nameof(ConditionPerception)}()";
+                }
                 else if(p is UnityPerception unityPerception)
                 {
                     methodCode = GenerateConstructorCode(unityPerception, scriptTemplate);
@@ -286,8 +294,12 @@ namespace BehaviourAPI.Unity.Editor
         /// Generates code for a action inline.
         /// new ACTIONTYPE(args)
         /// </summary>
-        static string GenerateActionCode(Action action, ScriptTemplate scriptTemplate)
+        static string GenerateActionCode(IActionAssignable actionAssignable, ScriptTemplate scriptTemplate)
         {
+            if (actionAssignable == null) return null;
+
+            var action = actionAssignable.ActionReference;
+
             if (action is CustomAction customAction)
             {
                 var parameters = new List<string>();
@@ -304,6 +316,10 @@ namespace BehaviourAPI.Unity.Editor
                 return $"new {nameof(FunctionalAction)}({string.Join(", ", parameters)})";
 
             }
+            else if(action is ContextCustomAction contextCustomAction)
+            {
+                return $"new {nameof(FunctionalAction)}()";
+            }
             else if (action is UnityAction unityAction)
             {
                 scriptTemplate.AddUsingDirective(typeof(UnityAction).Namespace);
@@ -313,34 +329,6 @@ namespace BehaviourAPI.Unity.Editor
             {
                 var graphName = scriptTemplate.FindVariableName(subgraphAction.Subgraph);
                 return $"new {nameof(SubsystemAction)}({graphName ?? "null /* Missing subgraph */"})";
-            }
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Generates code for a perception variable.
-        /// PERCEPTIONTYPE p = new PERCEPTIONTYPE(args);
-        static string GeneratePerceptionCode(Perception perception, ScriptTemplate scriptTemplate)
-        {
-            if (perception is CustomPerception customPerception)
-            {
-                var parameters = new List<string>();
-
-                var initMethodArg = GenerateSerializedMethodCode(customPerception.init, scriptTemplate);
-                var checkMethodArg = GenerateSerializedMethodCode(customPerception.check, scriptTemplate);
-                var resetMethodArg = GenerateSerializedMethodCode(customPerception.reset, scriptTemplate);
-
-                if (initMethodArg != null) parameters.Add(initMethodArg);
-                if (checkMethodArg != null) parameters.Add(checkMethodArg);
-                else parameters.Add("() => false");
-                if (resetMethodArg != null) parameters.Add(resetMethodArg);
-
-                return $"new {nameof(ConditionPerception)}({string.Join(", ", parameters)})";
-            }
-            else if (perception is UnityPerception unityPerception)
-            {
-                return GenerateConstructorCode(unityPerception, scriptTemplate);
             }
             else
                 return null;
@@ -515,7 +503,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 args.Add(template.FindVariableName(asset.Childs.FirstOrDefault()) ?? k_CodeForMissingNode);
 
-                if (action.Action != null) args.Add(GenerateActionCode(action.Action, template));
+                if (action.Action != null) args.Add(GenerateActionCode(action as IActionAssignable, template));
                 if (action.FinishSystemOnComplete) args.Add("finishOnComplete: true");
                 method = $"CreateAction";
             }
@@ -591,13 +579,13 @@ namespace BehaviourAPI.Unity.Editor
                 method = $"CreateDecorator<{typeName}>({args.Join()}){setterCode}";
                 if (btNode is Framework.Adaptations.ConditionNode cn)
                 {
-                    var perceptionName = template.FindVariableName(cn.perception) ?? "null /*Missing perception*/";
+                    var perceptionName = template.FindVariableName(cn.PerceptionReference) ?? "null /*Missing perception*/";
                     method += $".SetPerception({perceptionName})";
                 }
             }
             else if (btNode is LeafNode leaf)
             {
-                var actionCode = GenerateActionCode(leaf.Action, template) ?? "null /* Missing action */";
+                var actionCode = GenerateActionCode(leaf as IActionAssignable, template) ?? "null /* Missing action */";
                 args.Add(actionCode);
                 method = $"CreateLeafNode({args.Join()})";
             }
@@ -608,10 +596,7 @@ namespace BehaviourAPI.Unity.Editor
         #endregion
 
         #region ------------------------------------------- FSMs ------------------------------------------
-        /// <summary>
-        /// 
-        /// </summary>
-
+        
         static string GenerateCodeForState(NodeAsset asset, ScriptTemplate template, string graphName, bool includeNodeName)
         {
             var state = asset.Node as State;
@@ -622,19 +607,21 @@ namespace BehaviourAPI.Unity.Editor
             }
 
             var nodeName = !string.IsNullOrEmpty(asset.Name) ? asset.Name : state.TypeName().ToLower();
-            var typeName = state.TypeName();
-
             var args = new List<string>();
+
+            string actionCode = GenerateActionCode(state as IActionAssignable, template);
+            string method = "CreateState";
+            if(state is ProbabilisticState)
+            {                
+                method += "<ProbabilisticState>";
+            }
+           
             if (includeNodeName && !string.IsNullOrEmpty(asset.Name)) args.Add($"\"{asset.Name}\"");
 
-            var actionCode = GenerateActionCode(state.Action, template);
             if(!string.IsNullOrEmpty(actionCode)) args.Add(actionCode);
-            return template.AddVariableDeclarationLine(state.GetType(), nodeName, asset, $"{graphName}.CreateState({args.Join()})");
+            return template.AddVariableDeclarationLine(state.GetType(), nodeName, asset, $"{graphName}.{method}({args.Join()})");
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         static string GenerateCodeForTransition(NodeAsset asset, ScriptTemplate template, string graphName, bool includeNodeName)
         {
             var transition = asset.Node as Transition;
@@ -666,7 +653,7 @@ namespace BehaviourAPI.Unity.Editor
 
                 if(stateTransition is Framework.Adaptations.StateTransition sta)
                 {
-                    perceptionCode = template.FindVariableName(sta.perception);
+                    perceptionCode = template.FindVariableName(sta.PerceptionReference);
                 }
                
                 method = "CreateTransition";
@@ -678,7 +665,7 @@ namespace BehaviourAPI.Unity.Editor
 
                 if (exitTransition is Framework.Adaptations.ExitTransition sta)
                 {
-                    perceptionCode = template.FindVariableName(sta.perception);
+                    perceptionCode = template.FindVariableName(sta.PerceptionReference);
                 }
 
                 method = "CreateExitTransition";
@@ -687,7 +674,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (popTransition is Framework.Adaptations.PopTransition sta)
                 {
-                    perceptionCode = template.FindVariableName(sta.perception);
+                    perceptionCode = template.FindVariableName(sta.PerceptionReference);
                 }
 
                 method = "CreatePopTransition";
@@ -699,7 +686,7 @@ namespace BehaviourAPI.Unity.Editor
 
                 if (pushTransition is Framework.Adaptations.PushTransition sta)
                 {
-                    perceptionCode = template.FindVariableName(sta.perception);
+                    perceptionCode = template.FindVariableName(sta.PerceptionReference);
                 }
 
                 method = "CreatePushTransition";
@@ -713,7 +700,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (transition.Action != null)
             {
-                var actionCode = GenerateActionCode(transition.Action, template);
+                var actionCode = GenerateActionCode(transition as IActionAssignable, template);
                 if (!string.IsNullOrEmpty(actionCode))
                 {
                     if (!perceptionAdded) actionCode = "action: " + actionCode;
@@ -799,7 +786,7 @@ namespace BehaviourAPI.Unity.Editor
                         var argCode = "";
                         if(field.FieldType.IsAssignableFrom(typeof(Action)))
                         {
-                            argCode = GenerateActionCode(field.GetValue(node) as Action, scriptTemplate);
+                            break;
                         }
                         else if(field.FieldType.IsAssignableFrom(typeof(Perception)))
                         {
