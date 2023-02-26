@@ -1164,8 +1164,8 @@ MonoBehaviour:
   _tomato: {fileID: 11400000, guid: 42c417143ccf45d45a802773e120696e, type: 2}
   _allRecipes:
   - {fileID: 11400000, guid: 3adeeea1b5afb034abab2665351182cd, type: 2}
-  - {fileID: 11400000, guid: af22c8addc8f8994abccf1c7a82a4e73, type: 2}
   - {fileID: 11400000, guid: dd625effc1a48564fba80b8d693bb104, type: 2}
+  - {fileID: 11400000, guid: af22c8addc8f8994abccf1c7a82a4e73, type: 2}
   _timeToAddIngredient: 2
   _pizzaTransform: {fileID: 2113832839}
   _table: {fileID: 1512374334}
@@ -1204,6 +1204,8 @@ MonoBehaviour:
     - rid: 3601718049242873875
       type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
+        ExecuteOnLoop: 0
+        DontStopOnInterrupt: 0
         subgraph: {fileID: 1172181477}
 --- !u!1 &1434616177
 GameObject:
@@ -1512,6 +1514,8 @@ MonoBehaviour:
     - rid: 3601718049242873874
       type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
       data:
+        ExecuteOnLoop: 0
+        DontStopOnInterrupt: 0
         subgraph: {fileID: 256291798}
 --- !u!114 &1668522930
 MonoBehaviour:

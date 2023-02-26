@@ -214,8 +214,18 @@ namespace BehaviourAPI.Unity.Editor
             _pullPerceptionInspector?.ResetList();
             UpdateGraphSelectionToolbar();
 
-            if (IsRuntime) _editToolbar?.Hide();
-            else _editToolbar?.Show();
+            if (IsRuntime)
+            {
+                _nodeInspector?.Hide();
+                _editToolbar?.Hide();
+                _container?.Hide();
+            }
+            else
+            {
+                _nodeInspector?.Show();
+                _editToolbar?.Show();
+                _container.Show();
+            }
         }
 
         void ChangeInspector(IHidable inspector)

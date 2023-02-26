@@ -45,7 +45,9 @@ namespace BehaviourAPI.Unity.Editor
             {
                 menuEvt.menu.AppendSeparator();
                 menuEvt.menu.AppendAction("Debug (Node)", _ => DebugNode(asset));
-                SetUpNodeContextMenu(nodeView, menuEvt);
+
+                if (!BehaviourEditorWindow.Instance.IsRuntime) SetUpNodeContextMenu(nodeView, menuEvt);
+
                 menuEvt.StopPropagation();
 
             }));
@@ -118,7 +120,9 @@ namespace BehaviourAPI.Unity.Editor
             menuEvt.menu.AppendAction("Refresh", _ => graphView.RefreshView());
             menuEvt.menu.AppendAction("Auto layout", _ => AutoLayoutGraph(graphView));
             menuEvt.menu.AppendAction("Debug (Graph)", _ => DebugGraph(graphView.GraphAsset));
-            SetUpGraphContextMenu(graphView, menuEvt);
+
+            if (!BehaviourEditorWindow.Instance.IsRuntime)  SetUpGraphContextMenu(graphView, menuEvt);
+
             menuEvt.StopPropagation();
         }
 

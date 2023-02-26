@@ -66,9 +66,15 @@ namespace BehaviourAPI.Unity.Editor
 
             if(Node.Node != null)
             {
-                DrawExtensionContainer();
-                SetUpContextualMenu();
-                if (graphView.Runtime) AddRuntimeLayout();
+                if(graphView.Runtime)
+                {
+                    AddRuntimeLayout();
+                }
+                else
+                {
+                    DrawExtensionContainer();
+                    SetUpContextualMenu();
+                }
             }
             else
             {
@@ -90,7 +96,7 @@ namespace BehaviourAPI.Unity.Editor
         }
 
         private void SetUpContextualMenu()
-        {
+        {           
             this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
             {
                 menuEvt.menu.AppendAction("Duplicate node", _ => _graphView.DuplicateNode(Node));
@@ -140,6 +146,12 @@ namespace BehaviourAPI.Unity.Editor
         {
             var obj = new SerializedObject(Node);
             var titleInputField = this.Q<TextField>(name: "title-input-field");
+
+            if (BehaviourEditorWindow.Instance.IsRuntime)
+            {
+                titleInputField.isReadOnly = true;
+            }
+
             titleInputField.bindingPath = "Name";
             titleInputField.Bind(obj);
         }
