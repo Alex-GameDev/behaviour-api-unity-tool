@@ -28,6 +28,7 @@ public class WalkAction : UnityAction
         if (context == null) Debug.Log("No context");
         if (context.NavMeshAgent == null) Debug.Log("No agent");
         context.NavMeshAgent.destination = Target;
+        context.NavMeshAgent.speed = Speed;
     }
 
     public override void Stop()

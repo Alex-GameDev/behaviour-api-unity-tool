@@ -7,6 +7,16 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
         public Transform OtherTransform;
         public float Maxdistance;
 
+        public DistancePerception(Transform otherTransform, float maxdistance)
+        {
+            OtherTransform = otherTransform;
+            Maxdistance = maxdistance;
+        }
+
+        public DistancePerception()
+        {
+        }
+
         public override bool Check()
         {
             return Vector3.Distance(context.Transform.position, OtherTransform.position) < Maxdistance;

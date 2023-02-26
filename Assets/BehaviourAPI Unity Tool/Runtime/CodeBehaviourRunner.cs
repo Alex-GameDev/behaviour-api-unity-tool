@@ -11,6 +11,8 @@ namespace BehaviourAPI.Unity.Runtime
 
         Dictionary<BehaviourGraph, string> allgraphs = new Dictionary<BehaviourGraph, string>();
 
+        bool _running;
+
         protected abstract BehaviourGraph CreateGraph();
 
         protected override void OnAwake()
@@ -23,6 +25,7 @@ namespace BehaviourAPI.Unity.Runtime
         protected override void OnStart()
         {
             rootGraph.Start();
+            _running = true;
         }
 
         protected override void OnUpdate()

@@ -38,7 +38,6 @@ public class BoyBTEditorRunner : EditorBehaviourRunner
 
     public void SmashDoor()
     {
-        Debug.Log("Exploding");
         GameObject explosion = Instantiate(explosionFX, _door.transform);
         _audioSource.clip = explosionClip;
         _audioSource.Play();

@@ -9,7 +9,8 @@ public class KeyRotation : MonoBehaviour
 
     private void Start()
     {
-        gameObject.SetActive(toggle.isOn);
+        if(toggle != null)
+            gameObject.SetActive(toggle.isOn);
     }
 
     private void Update()

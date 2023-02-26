@@ -20,7 +20,7 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
         {
         }
 
-        public PatrolAction(NavMeshAgent agent, float speed, float maxDistance)
+        public PatrolAction(float speed, float maxDistance)
         {
             this.speed = speed;
             this.maxDistance = maxDistance;

@@ -32,8 +32,8 @@ public class ChickenFSMRunner : CodeBehaviourRunner
 
         // Estados
         var idle = fsm.CreateState("Idle");
-        var moving = fsm.CreateState("Moving", new PatrolAction(_agent, 3f, 13f));
-        var chasing = fsm.CreateState("Chasing", new ChaseAction(_agent, _target, 5f, 10f, 2.5f));
+        var moving = fsm.CreateState("Moving", new PatrolAction(3f, 13f));
+        var chasing = fsm.CreateState("Chasing", new ChaseAction(_target, 5f, 10f, 2.5f));
 
         // Las transiciones que pasan al estado moving se lanzan con un temporizador:
         var idleToMoving = fsm.CreateTransition("idle to moving", idle, moving, timeToStartMoving);

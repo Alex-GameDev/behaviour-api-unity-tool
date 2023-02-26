@@ -13,13 +13,11 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
         public float maxDistance;
         public float maxTime;
 
-        NavMeshAgent _agent;
-
         float _currentTime;
 
         public ChaseAction() { }
 
-        public ChaseAction(NavMeshAgent agent, Transform target, float speed, float maxDistance, float maxTime)
+        public ChaseAction(Transform target, float speed, float maxDistance, float maxTime)
         {
             this.speed = speed;
             this.target = target;

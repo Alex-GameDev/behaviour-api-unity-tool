@@ -15,6 +15,7 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
         public float speed;
         public float distance;
         public float maxTimeRunning;
+
         float _timeRunning;
 
         Vector3 _target;

@@ -922,7 +922,7 @@ MonoBehaviour:
   Name: smash door
   node:
     rid: 3601718071714119743
-  position: {x: 300, y: 400}
+  position: {x: 316, y: 416}
   parents:
   - {fileID: 5155486098334696784}
   childs: []

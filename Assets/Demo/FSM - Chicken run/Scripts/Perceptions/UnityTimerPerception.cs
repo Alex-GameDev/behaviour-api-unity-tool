@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 /// <summary>
-/// Perception triggered when a time passes, asuming its executing on Update
+/// Perception triggered when a totalTime passes, asuming its executing on Update
 /// </summary>
 namespace BehaviourAPI.Unity.Runtime.Extensions
 {    public class UnityTimePerception : UnityPerception
@@ -19,9 +19,9 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
         {
         }
 
-        public UnityTimePerception(float time)
+        public UnityTimePerception(float totalTime)
         {
-            TotalTime = time;
+            TotalTime = totalTime;
         }
 
         public override void Initialize()

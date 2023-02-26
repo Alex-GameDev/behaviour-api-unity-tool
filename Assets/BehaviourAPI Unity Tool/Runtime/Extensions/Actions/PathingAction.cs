@@ -15,7 +15,7 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
 
         public PathingAction() { }
 
-        public PathingAction(Transform transform, List<Vector3> positions, float speed, float distanceThreshold)
+        public PathingAction(List<Vector3> positions, float speed, float distanceThreshold)
         {
             this.positions = positions;
             this.speed = speed;
@@ -27,19 +27,29 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
         public override void Start()
         {
             currentTargetPosId = 0;
+
+            if(positions.Count > 0)
+                context.Transform.forward = (positions[currentTargetPosId] - context.Transform.position).normalized;
         }
 
         public override Status Update()
         {
             if (positions.Count == 0) return Status.Failure;
 
+
+
             if (Vector3.Distance(context.Transform.position, positions[currentTargetPosId]) < distanceThreshold)
             {
                 currentTargetPosId++;
+
                 if (currentTargetPosId >= positions.Count)
                 {
                     currentTargetPosId = 0;
                     return Status.Success;
+                }
+                else
+                {
+                    context.Transform.forward = (positions[currentTargetPosId] - positions[currentTargetPosId - 1]).normalized;
                 }
             }
 

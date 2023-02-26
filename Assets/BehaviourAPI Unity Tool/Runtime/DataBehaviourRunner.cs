@@ -16,6 +16,8 @@ namespace BehaviourAPI.Unity.Runtime
 
         protected BehaviourGraph _buildedMainGraph;
 
+        bool _running;
+
         /// <summary>
         /// The runtime copy of the behaviour system
         /// </summary>
@@ -48,6 +50,8 @@ namespace BehaviourAPI.Unity.Runtime
                 Debug.LogWarning("[BehaviourRunner] - This runner has not graphs attached.", this);
                 Destroy(this);
             }
+            _buildedMainGraph?.Start();
+            _running = true;
         }
 
         protected override void OnUpdate()
@@ -65,13 +69,17 @@ namespace BehaviourAPI.Unity.Runtime
 
         private void OnEnable()
         {
+            if (!_running) return;
+
             if (_buildedMainGraph.Status == Status.None)
                 _buildedMainGraph?.Start();
         }
 
         private void OnDisable()
         {
-            if(_buildedMainGraph.Status != Status.None)
+            if (!_running) return;
+
+            if (_buildedMainGraph.Status != Status.None)
                 _buildedMainGraph?.Stop();
         }       
 
