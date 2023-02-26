@@ -207,15 +207,15 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
-                _graphView.ClearView();
+                _graphView?.ClearView();
             }
 
-            _pushPerceptionInspector.ResetList();
-            _pullPerceptionInspector.ResetList();
+            _pushPerceptionInspector?.ResetList();
+            _pullPerceptionInspector?.ResetList();
             UpdateGraphSelectionToolbar();
 
-            if (IsRuntime) _editToolbar.Hide();
-            else _editToolbar.Show();
+            if (IsRuntime) _editToolbar?.Hide();
+            else _editToolbar?.Show();
         }
 
         void ChangeInspector(IHidable inspector)
@@ -238,7 +238,7 @@ namespace BehaviourAPI.Unity.Editor
 
         void UpdateGraphSelectionToolbar()
         {
-            _selectGraphMenu.menu.MenuItems().Clear();
+            _selectGraphMenu?.menu.MenuItems().Clear();
 
             if (System == null) return;
 

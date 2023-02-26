@@ -30,7 +30,7 @@ namespace BehaviourAPI.Unity.Editor
             rootVisualElement.Add(windownFromUXML);
 
             scriptNameTextField = rootVisualElement.Q<TextField>("csw-name-textfield");
-            pathTextField = rootVisualElement.Q<TextField>("csw-PATH-textfield");
+            pathTextField = rootVisualElement.Q<TextField>("csw-path-textfield");
 
             scriptNameTextField.value = BehaviourAPISettings.instance.GenerateScriptDefaultName;
             pathTextField.value = BehaviourAPISettings.instance.GenerateScriptDefaultPath;

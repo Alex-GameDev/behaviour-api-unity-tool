@@ -238,7 +238,8 @@ MonoBehaviour:
   - {fileID: 49550865}
   - {fileID: 927470388}
   pushPerceptions: []
-  pullPerceptions: []
+  pullPerceptions:
+  - {fileID: 1677788333}
 --- !u!4 &748385218
 Transform:
   m_ObjectHideFlags: 0
@@ -435,6 +436,36 @@ MonoBehaviour:
         _action:
           rid: -2
         perception: {fileID: 0}
+--- !u!114 &1677788333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4daaaa46e03f24b9c813f71ca174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: new ContextCustomPerception
+  perception:
+    rid: 3601718117079712008
+  references:
+    version: 2
+    RefIds:
+    - rid: 3601718117079712008
+      type: {class: ContextCustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: 
+          methodName: 
+        reset:
+          componentName: 
+          methodName: 
 --- !u!114 &1749434631
 MonoBehaviour:
   m_ObjectHideFlags: 0

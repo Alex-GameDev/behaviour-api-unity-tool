@@ -31,7 +31,7 @@ namespace BehaviourAPI.Unity.Editor
 
         void AddElement(Type type)
         {
-            System.CreatePerception("new pushperception", type);
+            System.CreatePerception("new " + type.Name, type);
             RefreshList();
         }
 
