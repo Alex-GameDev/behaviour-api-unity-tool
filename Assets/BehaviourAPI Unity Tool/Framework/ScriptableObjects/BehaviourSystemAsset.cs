@@ -100,15 +100,18 @@ namespace BehaviourAPI.Unity.Framework
                 OnSubAssetRemoved(pullPerception);
             }
         }
+
         public void OnSubAssetCreated(ScriptableObject asset)
         {
             asset.name = asset.GetType().Name;
+            EditorUtility.SetDirty(this);
             AssetDatabase.AddObjectToAsset(asset, this);
             AssetDatabase.SaveAssetIfDirty(this);
         }
 
         public void OnSubAssetRemoved(ScriptableObject asset)
         {
+            EditorUtility.SetDirty(this);
             AssetDatabase.RemoveObjectFromAsset(asset);
             AssetDatabase.SaveAssetIfDirty(this);
         }

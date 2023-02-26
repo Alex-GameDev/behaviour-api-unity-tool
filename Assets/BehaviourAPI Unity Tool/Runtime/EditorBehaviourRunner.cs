@@ -6,7 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEditor.VersionControl;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 
 namespace BehaviourAPI.Unity.Runtime
@@ -117,11 +119,11 @@ namespace BehaviourAPI.Unity.Runtime
             };
         }
 
-        public void RemovePerception(PerceptionAsset pushPerception)
+        public void RemovePerception(PerceptionAsset pullPerception)
         {
-            if (pullPerceptions.Remove(pushPerception))
+            if (pullPerceptions.Remove(pullPerception))
             {
-                RemoveSubElement(pushPerception);
+                RemoveSubElement(pullPerception);
             }
         }
 
@@ -134,7 +136,9 @@ namespace BehaviourAPI.Unity.Runtime
                     EditorSceneManager.SaveScene(gameObject.scene);
                 }
             }
+            EditorUtility.SetDirty(this);
             AssetDatabase.SaveAssetIfDirty(gameObject);
+            AssetDatabase.Refresh();
         }
 
         private void AddSubElement(ScriptableObject scriptable)
@@ -142,21 +146,29 @@ namespace BehaviourAPI.Unity.Runtime
             if (gameObject.scene.name == null)
             {
                 scriptable.name = scriptable.GetType().Name;
-                AssetDatabase.AddObjectToAsset(scriptable, gameObject);
+                EditorUtility.SetDirty(this);
+                EditorUtility.SetDirty(scriptable);
+                AssetDatabase.AddObjectToAsset(scriptable, this);
+                AssetDatabase.SaveAssetIfDirty(this);
                 AssetDatabase.Refresh();
             }
-            EditorUtility.SetDirty(this);
+            else
+            {
+                EditorUtility.SetDirty(this);
+            }
         }
 
         private void RemoveSubElement(ScriptableObject scriptable)
         {
+            EditorUtility.SetDirty(this);
+            EditorUtility.SetDirty(scriptable);
+
             if (gameObject.scene.name == null)
             {
                 AssetDatabase.RemoveObjectFromAsset(scriptable);
+                AssetDatabase.SaveAssetIfDirty(this);
                 AssetDatabase.Refresh();
             }
-            DestroyImmediate(scriptable, true);
-            EditorUtility.SetDirty(this);
         }
 
         public void OnModifyAsset()

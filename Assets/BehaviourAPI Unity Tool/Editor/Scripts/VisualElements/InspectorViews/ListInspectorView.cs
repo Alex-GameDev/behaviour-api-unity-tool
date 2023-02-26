@@ -69,7 +69,7 @@ namespace BehaviourAPI.Unity.Editor
 
             RemoveElement(asset);
             OnRemoveElement?.Invoke(asset);
-            _listView.RefreshItems();
+            RefreshList();
         }               
 
         void OnItemsChosen(IEnumerable<object> items)
@@ -79,7 +79,13 @@ namespace BehaviourAPI.Unity.Editor
 
             UpdateInspector(selectedElement);
         }
-        protected void RefreshList() => _listView.RefreshItems();
+        protected void RefreshList()
+        {
+            //_mainContainer.Remove(_listView);
+            _listView.itemsSource = GetList();
+            _listView.RefreshItems();
+            //_listView = AddListView();
+        }
 
         protected abstract List<T> GetList();
 

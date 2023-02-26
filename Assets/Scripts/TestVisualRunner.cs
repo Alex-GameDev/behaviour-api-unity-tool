@@ -4,23 +4,8 @@ using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Runtime;
 using UnityEngine;
 
-public class TestVisualRunner : VisualBehaviourRunner
+public class TestVisualRunner : EditorBehaviourRunner
 {
-    protected override void OnStart()
-    {
-        base.OnStart();
-
-        FindPushPerception("pp");
-        FindPushPerception("pp2");
-        FindPushPerception("pp3");
-        FindPushPerception("pp4");
-    }
-
-    protected override void OnUpdate()
-    {
-        base.OnUpdate();
-    }
-
     [CustomMethod]
     public void foo() { }
 

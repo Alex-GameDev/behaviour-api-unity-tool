@@ -137,9 +137,17 @@ namespace BehaviourAPI.Unity.Editor
                     {
                         return up.DisplayInfo;
                     }
-                    else
+                    else if(perception is CustomPerception)
                     {
                         return "custom Perception";
+                    }
+                    else if(perception is ContextCustomPerception)
+                    {
+                        return "custom Perception (Context)";
+                    }
+                    else
+                    {
+                        return "---";
                     }
                 }              
             }
