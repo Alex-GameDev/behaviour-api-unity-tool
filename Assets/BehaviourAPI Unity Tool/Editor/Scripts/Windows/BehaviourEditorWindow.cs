@@ -45,6 +45,7 @@ namespace BehaviourAPI.Unity.Editor
 
         IHidable _currentInspector;
 
+        [MenuItem("BehaviourAPI/Open editor window")]
         public static void Open()
         {
             BehaviourEditorWindow window = GetWindow<BehaviourEditorWindow>();
