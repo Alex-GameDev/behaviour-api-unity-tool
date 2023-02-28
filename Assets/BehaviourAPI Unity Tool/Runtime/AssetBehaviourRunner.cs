@@ -11,9 +11,9 @@ namespace BehaviourAPI.Unity.Runtime
     {      
         public BehaviourSystemAsset System;
 
-        protected override BehaviourSystemAsset GetEditorSystem()
-        {
-            return System;
-        }
+        /// <summary>
+        /// Returns the system asset to generate a runtime copy
+        /// </summary>
+        protected override BehaviourSystemAsset GetEditorSystem() => System;
     }
 }

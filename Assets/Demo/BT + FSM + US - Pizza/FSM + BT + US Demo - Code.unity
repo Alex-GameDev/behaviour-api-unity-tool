@@ -326,6 +326,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ef96fe5746ada94bbd1ff1541923285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ExecuteOnLoop: 0
+  DontStopOnDisable: 0
   _pizzaMass: {fileID: 11400000, guid: 6a56fc729e5dc424d8851517b3a2b13e, type: 2}
   _tomato: {fileID: 11400000, guid: 42c417143ccf45d45a802773e120696e, type: 2}
   _allRecipes:

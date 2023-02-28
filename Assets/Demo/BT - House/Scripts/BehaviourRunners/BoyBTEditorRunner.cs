@@ -32,8 +32,8 @@ public class BoyBTEditorRunner : EditorBehaviourRunner
     protected override void ModifyGraphs()
     {
         var doorPos = new Vector3(_door.transform.position.x, transform.position.y, _door.transform.position.z);
-        _buildedMainGraph.FindNode<LeafNode>("go to door").Action = new WalkAction(doorPos, 5f);
-        _buildedMainGraph.FindNode<LeafNode>("return to door").Action = new WalkAction(doorPos, 5f);
+        BuildedGraph.FindNode<LeafNode>("go to door").Action = new WalkAction(doorPos, 5f);
+        BuildedGraph.FindNode<LeafNode>("return to door").Action = new WalkAction(doorPos, 5f);
     }
 
     public void SmashDoor()

@@ -14,74 +14,44 @@ namespace BehaviourAPI.Unity.Runtime
         public NamingSettings perceptionNamingSettings = NamingSettings.IgnoreWhenInvalid;
         public NamingSettings pushPerceptionNamingSettings = NamingSettings.IgnoreWhenInvalid;
 
-        protected BehaviourGraph _buildedMainGraph;
-
-        bool _running;
-
         /// <summary>
         /// The runtime copy of the behaviour system
         /// </summary>
         public BehaviourSystemAsset ExecutionSystem { get; private set; }
 
-        public override BehaviourSystemAsset GetBehaviourSystemAsset()
-        {
-            return ExecutionSystem;
-        }
+        public BehaviourGraph BuildedGraph { get; private set; }
 
-        protected override void OnAwake()
+        /// <summary>
+        /// Generates a runtime copy of the editor system
+        /// </summary>
+        protected override BehaviourGraph GetExecutionGraph()
         {
             var system = GetEditorSystem();
             var duplicator = new Duplicator();
             ExecutionSystem = duplicator.Duplicate(system);
 
             ExecutionSystem.Build(nodeNamingSettings, perceptionNamingSettings, perceptionNamingSettings);
-            _buildedMainGraph = ExecutionSystem.MainGraph.Graph;
-            ModifyGraphs();            
-            _buildedMainGraph.SetExecutionContext(new UnityExecutionContext(gameObject));
+            BuildedGraph = ExecutionSystem.MainGraph.Graph;
+
+            ModifyGraphs();
+            return BuildedGraph;
         }
 
+        /// <summary>
+        /// Overrides this method to modify the created system in code
+        /// </summary>
         protected virtual void ModifyGraphs() { }
+
+        /// <summary>
+        /// Get the system created in editor mode
+        /// </summary>
         protected abstract BehaviourSystemAsset GetEditorSystem();
 
-        protected override void OnStart()
+        public override BehaviourSystemAsset GetBehaviourSystemAsset()
         {
-            if (_buildedMainGraph == null)
-            {
-                Debug.LogWarning("[BehaviourRunner] - This runner has not graphs attached.", this);
-                Destroy(this);
-            }
-            _buildedMainGraph?.Start();
-            _running = true;
+            return ExecutionSystem;
         }
-
-        protected override void OnUpdate()
-        {
-            if (_buildedMainGraph != null)
-            {
-                _buildedMainGraph.Update();
-            }
-            else
-            {
-                Debug.LogWarning("[BehaviourRunner] - This runner has not graphs attached.", this);
-                Destroy(this);
-            }
-        }
-
-        private void OnEnable()
-        {
-            if (!_running) return;
-
-            if (_buildedMainGraph.Status == Status.None)
-                _buildedMainGraph?.Start();
-        }
-
-        private void OnDisable()
-        {
-            if (!_running) return;
-
-            if (_buildedMainGraph.Status != Status.None)
-                _buildedMainGraph?.Stop();
-        }       
+      
 
         #region ------------------------------------ Find elements ---------------------------------------
 

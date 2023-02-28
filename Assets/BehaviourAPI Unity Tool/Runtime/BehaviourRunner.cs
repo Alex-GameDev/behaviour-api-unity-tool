@@ -1,10 +1,19 @@
 using UnityEngine;
 using BehaviourAPI.Unity.Framework;
+using System;
+using BehaviourAPI.Core;
 
 namespace BehaviourAPI.Unity.Runtime
 {
     public abstract class BehaviourRunner : MonoBehaviour
-    {     
+    {
+        public bool ExecuteOnLoop;
+        public bool DontStopOnDisable;
+
+        bool _systemRunning;
+
+        BehaviourGraph _executionGraph;
+
         public abstract BehaviourSystemAsset GetBehaviourSystemAsset();
 
         private void Awake() => OnAwake();
@@ -13,10 +22,74 @@ namespace BehaviourAPI.Unity.Runtime
 
         private void Update() => OnUpdate();
 
-        protected abstract void OnAwake();
+        private void OnEnable() => OnEnableSystem();
 
-        protected abstract void OnStart();
+        private void OnDisable() => OnDisableSystem();
 
-        protected abstract void OnUpdate();
+        protected virtual void OnAwake()
+        {
+            _executionGraph = GetExecutionGraph();
+
+            if(_executionGraph != null)
+            {
+                UnityExecutionContext context = new UnityExecutionContext(gameObject);
+                _executionGraph.SetExecutionContext(context);
+            }
+        }
+
+        protected abstract BehaviourGraph GetExecutionGraph();
+
+        protected virtual void OnStart()
+        {
+            if(_executionGraph != null)
+            {
+                _executionGraph.Start();
+                _systemRunning = true;
+            }
+            else
+            {
+                Debug.LogWarning("[BehaviourRunner] - This runner has not graphs attached.", this);
+                Destroy(this);
+            }
+        }
+
+        protected virtual void OnUpdate()
+        {
+            if (_executionGraph != null)
+            {
+                _executionGraph.Update();
+
+                if(ExecuteOnLoop && _executionGraph.Status != Status.Running)
+                {
+                    _executionGraph.Restart();
+                }
+            }
+            else
+            {
+                Debug.LogWarning("[BehaviourRunner] - This runner has not graphs attached.", this);
+                Destroy(this);
+            }
+        }
+
+        protected virtual void OnEnableSystem()
+        {
+            if(!DontStopOnDisable && _systemRunning)
+            {
+                if(_executionGraph != null)
+                {
+                    _executionGraph.Start();
+                }
+            }
+        }
+        protected virtual void OnDisableSystem()
+        {
+            if (!DontStopOnDisable && _systemRunning)
+            {
+                if (_executionGraph != null)
+                {
+                    _executionGraph.Stop();
+                }
+            }
+        }
     }
 }
