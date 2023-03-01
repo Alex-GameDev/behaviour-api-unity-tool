@@ -75,7 +75,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85cb27fcedf31194b912dd04c361542e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ExecuteOnLoop: 0
+  DontStopOnDisable: 0
   doorOpenClip: {fileID: 8300000, guid: 24139dc6952d31f4486ec25245533cb1, type: 3}
   keyFoundClip: {fileID: 8300000, guid: 69994e2ff543a7c40ba881ddacb0c0dc, type: 3}
   explosionClip: {fileID: 8300000, guid: 2638340574fe08e4ca49b88174dda3a1, type: 3}
   explosionFX: {fileID: 100004, guid: 6e8c7c425e5bc374daf95a774767b1e3, type: 3}
+--- !u!114 &3543775450257027640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940405016730152400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  systemAsset: {fileID: 0}

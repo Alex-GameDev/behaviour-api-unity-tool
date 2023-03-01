@@ -6,6 +6,9 @@ using UnityEngine.AI;
 
 namespace BehaviourAPI.Unity.Framework
 {
+    /// <summary>
+    /// The execution context in unity with references to the gameObject and the main components.
+    /// </summary>
     public class UnityExecutionContext : ExecutionContext
     {
         public GameObject GameObject { get; private set; }

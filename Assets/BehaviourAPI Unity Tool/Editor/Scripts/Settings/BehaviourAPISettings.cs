@@ -84,7 +84,6 @@ namespace BehaviourAPI.Unity.Editor
 
         private void BuildHierarchies()
         {
-            var time = System.DateTime.Now;
             var types = GetTypes();
 
             var unityActionTypes = GetValidSubTypes(typeof(UnityAction), types)
@@ -152,11 +151,8 @@ namespace BehaviourAPI.Unity.Editor
                     }
                 }
                 return new EditorHierarchyNode($"{graphType.Name} nodes", graphType, list);
-            });
-            
-            Debug.Log($"Time to create hierarchies: {(System.DateTime.Now - time).TotalMilliseconds}");
-            //Debug.Log($"Number of adapters: {_graphAdapterMap.Count()}");
-            //Debug.Log($"Number of main nodes per type: {_nodeHierarchyMap.Select(kvp => kvp.Value.Childs.Count().ToString()).Join()}");
+            });           
+
         }
 
         EditorHierarchyNode GetUnityActionHierarchy(List<System.Type> allTypes)
