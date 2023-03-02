@@ -67,10 +67,10 @@ public class PizzaBoyRunner : CodeBehaviourRunner
         var tomatoState = fsm.CreateState("tomato", new FunctionalAction(() => PutIngredient(_tomato), WaitToPutIngredient));
         var toppingState = fsm.CreateState("topping", new FunctionalAction(PutNextTopping, CheckToppings));
 
-        fsm.CreateTransition("mass putted", massState, tomatoState, new ExecutionStatusPerception(massState, StatusFlags.Success | StatusFlags.Failure));
-        fsm.CreateTransition("tommato putted", tomatoState, toppingState, new ExecutionStatusPerception(tomatoState, StatusFlags.Success | StatusFlags.Failure));
-        fsm.CreateTransition("next topping", toppingState, toppingState, new ExecutionStatusPerception(toppingState, StatusFlags.Failure));
-        fsm.CreateExitTransition("pizza completed", toppingState, Status.Success, new ExecutionStatusPerception(toppingState, StatusFlags.Success));
+        fsm.CreateTransition("mass putted", massState, tomatoState, statusFlags: StatusFlags.Finished);
+        fsm.CreateTransition("tommato putted", tomatoState, toppingState, statusFlags: StatusFlags.Finished);
+        fsm.CreateTransition("next topping", toppingState, toppingState, statusFlags: StatusFlags.Failure);
+        fsm.CreateExitTransition("pizza completed", toppingState, Status.Success, statusFlags: StatusFlags.Success);
         return fsm;
     }
 
