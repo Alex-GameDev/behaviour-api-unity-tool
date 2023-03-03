@@ -24,5 +24,5 @@ MonoBehaviour:
   FusionFactorColor: {r: 0.7074133, g: 0.27033645, b: 0.7075472, a: 1}
   SelectableNodeColor: {r: 1, g: 0.65, b: 0.15, a: 1}
   BucketColor: {r: 1, g: 0.451019, b: 0.1490196, a: 1}
-  RootPath: Assets/BehaviourAPI Unity Tool
+  RootPath: Assets/BehaviourAPI Unity Package/GUI Editor Tool
   CustomAssemblies: 
