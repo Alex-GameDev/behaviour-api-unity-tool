@@ -12,7 +12,7 @@
             <ui:VisualElement name="node-port-cover" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: none;" />
         </ui:VisualElement>
         <ui:VisualElement name="node-border" class="node-border">
-            <ui:VisualElement name="node-status" class="node-status" style="border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px;">
+            <ui:VisualElement name="node-status" class="node-status">
                 <ui:VisualElement name="contents">
                     <ui:VisualElement name="top">
                         <ui:VisualElement name="node-type-color-top" style="height: 5px; border-top-left-radius: 2px; border-bottom-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; background-color: rgb(166, 166, 166); margin-left: 5px; margin-right: 5px;" />

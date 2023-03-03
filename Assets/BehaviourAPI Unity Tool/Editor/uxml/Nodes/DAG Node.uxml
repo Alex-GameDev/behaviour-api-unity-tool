@@ -7,7 +7,7 @@
             <ui:VisualElement name="node-port-cover" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: none;" />
         </ui:VisualElement>
         <ui:VisualElement name="node-border" class="node-border">
-            <ui:VisualElement name="node-status" style="border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px;">
+            <ui:VisualElement name="node-status">
                 <ui:VisualElement name="contents" class="node-rect">
                     <ui:VisualElement name="top">
                         <ui:VisualElement name="node-content">

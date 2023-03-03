@@ -73,8 +73,6 @@ namespace BehaviourAPI.Unity.Editor
                 nodeView.ChangeTypeColor(BehaviourAPISettings.instance.TransitionColor);
                 nodeView.Q("node-status").ChangeBorderColor(new Color(0,0,0,0));
                 contents.style.width = 125;
-                contents.ChangeBorderColor(new Color(.25f, .25f, .25f, .25f));
-                contents.ChangeBackgroundColor(new Color(.15f, .15f, .15f, .4f));
             }
             else
             {

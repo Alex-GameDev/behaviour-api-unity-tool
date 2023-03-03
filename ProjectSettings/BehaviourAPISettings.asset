@@ -20,8 +20,8 @@ MonoBehaviour:
   StateColor: {r: 1, g: 0.65, b: 0.15, a: 1}
   TransitionColor: {r: 0.65241194, g: 0.7336611, b: 0.764151, a: 1}
   LeafFactorColor: {r: 0.4575472, g: 0.74791014, b: 1, a: 1}
-  CurveFactorColor: {r: 0.5445066, g: 0.51690996, b: 0.9056604, a: 1}
-  FusionFactorColor: {r: 0.60959363, g: 0.244304, b: 0.8490566, a: 1}
+  CurveFactorColor: {r: 0.41717446, g: 0.3972499, b: 0.745283, a: 1}
+  FusionFactorColor: {r: 0.7074133, g: 0.27033645, b: 0.7075472, a: 1}
   SelectableNodeColor: {r: 1, g: 0.65, b: 0.15, a: 1}
   BucketColor: {r: 1, g: 0.451019, b: 0.1490196, a: 1}
   RootPath: Assets/BehaviourAPI Unity Tool
