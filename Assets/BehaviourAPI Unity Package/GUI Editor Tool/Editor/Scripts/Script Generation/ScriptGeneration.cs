@@ -447,7 +447,7 @@ namespace BehaviourAPI.Unity.Editor
                 methodCode = $"CreateVariableFactor({args.Join()})";
             }
             // If is a function factor, generates also code for the child if wasn't generated yet. The generates code for the setters.
-            else if (factor is FunctionFactor functionFactor)
+            else if (factor is CurveFactor functionFactor)
             {
                 var child = asset.Childs.FirstOrDefault();
                 string childName = child != null ? template.FindVariableName(child) ?? GenerateCodeForFactor(child, template, graphName, includeNodeName) : k_CodeForMissingNode;

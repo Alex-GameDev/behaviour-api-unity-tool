@@ -78,10 +78,10 @@ public class PizzaBoyRunner : CodeBehaviourRunner
     {
         var us = new UtilitySystem();
 
-        var pizzafactor = us.CreateVariableFactor("pizzas", () => _pizzasCreated % 10, 10, 0);
-        var pepperoniFactor = us.CreateVariableFactor("peperoni_used", () => _peperoniUsed % 4, 4, 0);  
+        var pizzafactor = us.CreateVariable("pizzas", () => _pizzasCreated % 10, 10, 0);
+        var pepperoniFactor = us.CreateVariable("peperoni_used", () => _peperoniUsed % 4, 4, 0);  
 
-        var peperoniSumFactor = us.CreateFusionFactor<WeightedFusionFactor>("peperoni", pizzafactor, pepperoniFactor)
+        var peperoniSumFactor = us.CreateFusion<WeightedFusionFactor>("peperoni", pizzafactor, pepperoniFactor)
             .SetWeights(0.6f, 0.4f);
 
         var pointList = new List<BehaviourAPI.Core.Vector2>();
@@ -91,9 +91,9 @@ public class PizzaBoyRunner : CodeBehaviourRunner
         pointList.Add(new BehaviourAPI.Core.Vector2(0.6f, 0.4f));
         pointList.Add(new BehaviourAPI.Core.Vector2(0.8f, 0.2f));
         pointList.Add(new BehaviourAPI.Core.Vector2(1.0f, 0.0f));
-        var vegetarianFactor = us.CreateFunctionFactor<PointedFunction>("vegetarian", pizzafactor).SetPoints(pointList);
+        var vegetarianFactor = us.CreateCurve<PointedCurveFactor>("vegetarian", pizzafactor).SetPoints(pointList);
 
-        var hawaiianFactor = us.CreateFunctionFactor<ExponentialFunction>("hawaiian", pizzafactor).SetExponent(.7f);
+        var hawaiianFactor = us.CreateCurve<ExponentialCurveFactor>("hawaiian", pizzafactor).SetExponent(.7f);
 
         var peperoniAction = us.CreateAction("choose ham and cheese", peperoniSumFactor,
             new FunctionalAction(() => CreateRecipe(0), RecipeCreated, CreateRecipeCompleted), finishOnComplete: true);

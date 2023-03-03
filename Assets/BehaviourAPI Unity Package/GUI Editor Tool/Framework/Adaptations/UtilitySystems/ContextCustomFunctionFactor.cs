@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
-    public class ContextCustomFunctionFactor : FunctionFactor
+    public class ContextCustomFunctionFactor : CurveFactor
     {
         private UnityExecutionContext _context;
 

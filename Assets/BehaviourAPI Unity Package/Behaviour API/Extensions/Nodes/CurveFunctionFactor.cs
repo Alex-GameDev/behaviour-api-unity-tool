@@ -3,7 +3,7 @@ using UnityEngine;
 namespace BehaviourAPI.UnityExtensions
 {
     using UtilitySystems;
-    public class CurveFunction : FunctionFactor
+    public class CurveFunction : CurveFactor
     {
         public AnimationCurve curve;
 

@@ -3,7 +3,7 @@ using System;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
-    public class CustomFunction : FunctionFactor
+    public class CustomFunction : CurveFactor
     {
         public SerializedFloatFloatFunction function;
 

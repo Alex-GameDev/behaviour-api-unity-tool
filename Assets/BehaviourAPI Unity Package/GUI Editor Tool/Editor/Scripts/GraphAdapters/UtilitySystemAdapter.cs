@@ -27,15 +27,15 @@ namespace BehaviourAPI.Unity.Editor
             typeof(UtilityBucket),
             typeof(UtilityExitNode),
             typeof(FusionFactor),
-            typeof(FunctionFactor),
+            typeof(CurveFactor),
             typeof(VariableFactor),
             typeof(ContextVariableFactor)
         };
         public override List<Type> ExcludedTypes => new List<Type>
         {
             typeof(UtilitySystems.UtilityAction),
-            typeof(UtilitySystems.PointedFunction),
-            typeof(UtilitySystems.CustomFunction),
+            typeof(UtilitySystems.PointedCurveFactor),
+            typeof(UtilitySystems.CustomCurveFactor),
             typeof(UtilitySystems.VariableFactor)
         };
 
@@ -79,7 +79,7 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
-                if(node is FunctionFactor) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.CurveFactorColor);
+                if(node is CurveFactor) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.CurveFactorColor);
                 else if(node is FusionFactor) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.FusionFactorColor);
                 else if(node is UtilityExecutableNode) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.SelectableNodeColor);
                 else if(node is UtilityBucket) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.BucketColor);
