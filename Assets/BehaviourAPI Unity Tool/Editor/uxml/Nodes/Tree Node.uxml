@@ -15,6 +15,7 @@
             <ui:VisualElement name="node-status" class="node-status" style="border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px;">
                 <ui:VisualElement name="contents">
                     <ui:VisualElement name="top">
+                        <ui:VisualElement name="node-type-color-top" style="height: 5px; border-top-left-radius: 2px; border-bottom-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; background-color: rgb(166, 166, 166); margin-left: 5px; margin-right: 5px;" />
                         <ui:VisualElement name="node-content" style="align-items: stretch;">
                             <ui:VisualElement name="title" style="height: auto; flex-direction: column;">
                                 <ui:TextField max-length="30" name="title-input-field" tooltip="Node name" />
@@ -29,6 +30,7 @@
                             </ui:VisualElement>
                             <ui:VisualElement name="extension" />
                         </ui:VisualElement>
+                        <ui:VisualElement name="node-type-color-bottom" style="height: 5px; border-top-left-radius: 2px; border-bottom-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; background-color: rgb(166, 166, 166); margin-left: 5px; margin-right: 5px;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

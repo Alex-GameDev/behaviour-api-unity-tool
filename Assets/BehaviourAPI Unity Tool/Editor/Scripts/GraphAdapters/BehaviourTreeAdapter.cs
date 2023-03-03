@@ -56,14 +56,23 @@ namespace BehaviourAPI.Unity.Editor
         protected override void SetUpDetails(NodeView nodeView)
         {
             var node = nodeView.Node.Node;
-            if (node is BehaviourTrees.LeafNode) return;
-            else
+            if (node is BehaviourTrees.LeafNode)
+            {
+                nodeView.ChangeTypeColor(BehaviourAPISettings.instance.LeafNodeColor);
+            }
+            else if (node is CompositeNode)
             {
                 nodeView.IconElement.Enable();
-                if(node is DecoratorNode) nodeView.IconElement.Add(new Label(node.TypeName().CamelCaseToSpaced().ToUpper()));
-                else if(node is SequencerNode) nodeView.IconElement.Add(new Label("-->"));
-                else if(node is SelectorNode) nodeView.IconElement.Add(new Label("?"));
-            }          
+                nodeView.ChangeTypeColor(BehaviourAPISettings.instance.CompositeColor);
+                if (node is SequencerNode) nodeView.IconElement.Add(new Label("-->"));
+                else if (node is SelectorNode) nodeView.IconElement.Add(new Label("?"));
+            }
+            else if(node is DecoratorNode)
+            {
+                nodeView.IconElement.Enable();
+                nodeView.ChangeTypeColor(BehaviourAPISettings.instance.DecoratorColor);
+                nodeView.IconElement.Add(new Label(node.TypeName().CamelCaseToSpaced().ToUpper()));
+            }       
         }                
 
         // Reload the root node when the old one is removed

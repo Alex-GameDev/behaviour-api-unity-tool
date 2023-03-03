@@ -11,6 +11,7 @@
                 <ui:VisualElement name="contents" class="node-rect">
                     <ui:VisualElement name="top">
                         <ui:VisualElement name="node-content">
+                            <ui:VisualElement name="node-type-color-top" style="height: 5px; border-top-left-radius: 2px; border-bottom-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; background-color: rgb(166, 166, 166); margin-left: 5px; margin-right: 5px;" />
                             <ui:VisualElement name="title" style="height: auto; flex-direction: column;">
                                 <ui:TextField max-length="30" name="title-input-field" tooltip="Node name" style="-unity-text-align: middle-center; white-space: nowrap; font-size: 10px;" />
                                 <ui:VisualElement name="title-button-container">
@@ -23,6 +24,7 @@
                                 <ui:VisualElement name="node-icon" />
                             </ui:VisualElement>
                             <ui:VisualElement name="extension" />
+                            <ui:VisualElement name="node-type-color-bottom" style="height: 5px; border-top-left-radius: 2px; border-bottom-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; background-color: rgb(166, 166, 166); margin-left: 5px; margin-right: 5px;" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>

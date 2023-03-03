@@ -59,7 +59,8 @@ namespace BehaviourAPI.Unity.Editor
             var node = nodeView.Node.Node;
             if (node is UtilitySystems.VariableFactor)
             {
-                if(node is VariableFactor vf)
+                nodeView.ChangeTypeColor(BehaviourAPISettings.instance.LeafFactorColor);
+                if (node is VariableFactor vf)
                 {
                     var obj = new SerializedObject(nodeView.Node);
 
@@ -78,6 +79,11 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
+                if(node is FunctionFactor) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.CurveFactorColor);
+                else if(node is FusionFactor) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.FusionFactorColor);
+                else if(node is UtilityExecutableNode) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.SelectableNodeColor);
+                else if(node is UtilityBucket) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.BucketColor);
+
                 nodeView.IconElement.Enable();
                 if(node is Factor) nodeView.IconElement.Add(new Label(node.TypeName().CamelCaseToSpaced().Split().First().ToUpper()));
                 else nodeView.IconElement.Add(new Label(node.TypeName().CamelCaseToSpaced().ToUpper()));

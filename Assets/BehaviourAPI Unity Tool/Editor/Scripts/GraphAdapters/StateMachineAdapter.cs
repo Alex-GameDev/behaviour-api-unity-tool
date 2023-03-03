@@ -70,6 +70,7 @@ namespace BehaviourAPI.Unity.Editor
             var contents = nodeView.Q("contents");
             if (nodeView.Node.Node is Transition)
             {
+                nodeView.ChangeTypeColor(BehaviourAPISettings.instance.TransitionColor);
                 nodeView.Q("node-status").ChangeBorderColor(new Color(0,0,0,0));
                 contents.style.width = 125;
                 contents.ChangeBorderColor(new Color(.25f, .25f, .25f, .25f));
@@ -77,6 +78,7 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
+                nodeView.ChangeTypeColor(BehaviourAPISettings.instance.StateColor);
                 contents.style.width = 200;
             }
 
@@ -85,13 +87,6 @@ namespace BehaviourAPI.Unity.Editor
                 var label = nodeView.RootElement.Q<Label>("node-root-label");
                 label.text = "Exit";
                 nodeView.RootElement.Q("node-root-tag").ChangeBackgroundColor(new Color(.8f, .3f, .3f));
-
-                var statusLabel = new Label();
-                statusLabel.Bind(new SerializedObject(nodeView.Node));
-                statusLabel.bindingPath = "node.ExitStatus";
-
-                nodeView.IconElement.Add(statusLabel);
-                nodeView.IconElement.Enable();
 
                 nodeView.RootElement.Enable();
             }

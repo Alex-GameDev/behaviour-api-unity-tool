@@ -191,6 +191,12 @@ namespace BehaviourAPI.Unity.Editor
             return port;
         }
 
+        public void ChangeTypeColor(Color color)
+        {
+            this.Q("node-type-color-top").ChangeBackgroundColor(color);
+            this.Q("node-type-color-bottom").ChangeBackgroundColor(color);
+        }
+
         #endregion
 
         #region --------------------------- Editor events ---------------------------
