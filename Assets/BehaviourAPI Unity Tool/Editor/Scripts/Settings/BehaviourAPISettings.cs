@@ -6,28 +6,51 @@ using BehaviourAPI.Unity.Framework.Adaptations;
 using BehaviourAPI.Unity.Runtime;
 using BehaviourAPI.Unity.Runtime.Extensions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
-using UnityEditor.Graphs;
-using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Action = BehaviourAPI.Core.Actions.Action;
-using LeafNode = BehaviourAPI.Unity.Framework.Adaptations.LeafNode;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    [FilePath("Config/StateFile.foo", FilePathAttribute.Location.PreferencesFolder)]
+    [FilePath("ProjectSettings/BehaviourAPISettings.asset", FilePathAttribute.Location.ProjectFolder)]
     public class BehaviourAPISettings : ScriptableSingleton<BehaviourAPISettings>
     {
+        #region ------------------------- Default values ------------------------
+
+        private static readonly Color k_LeafNodeColor = new Color(1f, 0.65f, 0.15f, 1f);
+        private static readonly Color k_DecoratorColor = new Color(1f, 0.65f, 0.15f, 1f);
+        private static readonly Color k_CompositeColor = new Color(1f, 0.65f, 0.15f, 1f);
+        private static readonly Color k_StateColor = new Color(1f, 0.65f, 0.15f, 1f);
+        private static readonly Color k_TransitionColor = new Color(1f, 0.65f, 0.15f, 1f);
+        private static readonly Color k_LeafFactorColor = new Color(1f, 0.65f, 0.15f, 1f);
+        private static readonly Color k_CurveFactorColor = new Color(1f, 0.65f, 0.15f, 1f);
+        private static readonly Color k_FusionFactorColor = new Color(1f, 0.65f, 0.15f, 1f);
+        private static readonly Color k_SelectableNodeColor = new Color(1f, 0.65f, 0.15f, 1f);
+        private static readonly Color k_BucketColor = new Color(1f, 0.65f, 0.15f, 1f);
+
+        #endregion
+
         #region ----------------------- Script generation -----------------------
 
         public string GenerateScriptDefaultPath = "Assets/Scripts/";
         public string GenerateScriptDefaultName = "NewBehaviourRunner";
+
+        [Header("Colors")]
+        public Color LeafNodeColor = k_LeafNodeColor;
+        public Color DecoratorColor = k_DecoratorColor;
+        public Color CompositeColor = k_CompositeColor;
+
+        public Color StateColor = k_StateColor;
+        public Color TransitionColor = k_TransitionColor;
+
+        public Color LeafFactorColor = k_LeafFactorColor;
+        public Color CurveFactorColor = k_CurveFactorColor;
+        public Color FusionFactorColor = k_FusionFactorColor;
+        public Color SelectableNodeColor = k_SelectableNodeColor;
+        public Color BucketColor = k_BucketColor;
 
         #endregion
 

@@ -36,26 +36,24 @@ namespace BehaviourAPI.Unity.Editor
         {
             using (CreateSettingsWindowGUIScope())
             {
+                m_SerializedObject.Update();
+                EditorGUI.BeginChangeCheck();
+
                 EditorGUILayout.LabelField("General", EditorStyles.boldLabel);
 
                 var pathProp = m_SerializedObject.FindProperty("RootPath");
-                if(pathProp != null)
+                if (pathProp != null)
                 {
                     pathProp.stringValue = EditorGUILayout.TextField(Styles.RootPath, pathProp.stringValue);
                 }
 
                 var assemblyProp = m_SerializedObject.FindProperty("CustomAssemblies");
-                if(assemblyProp != null)
+                if (assemblyProp != null)
                 {
                     assemblyProp.stringValue = EditorGUILayout.TextField(Styles.Assemblies, assemblyProp.stringValue);
                 }
 
-                if (EditorGUI.EndChangeCheck())
-                {
-                    m_SerializedObject.ApplyModifiedProperties();
-                    BehaviourAPISettings.instance.Save();
-                }
-
+                EditorGUILayout.Space(10);
                 EditorGUILayout.LabelField("Script generation", EditorStyles.boldLabel);
 
                 var scriptPathProp = m_SerializedObject.FindProperty("GenerateScriptDefaultPath");
@@ -70,11 +68,39 @@ namespace BehaviourAPI.Unity.Editor
                     scriptNameProp.stringValue = EditorGUILayout.TextField(Styles.ScriptName, scriptNameProp.stringValue);
                 }
 
+                EditorGUILayout.Space(10);
+                EditorGUILayout.LabelField("Colors", EditorStyles.boldLabel);
+
+                EditorGUILayout.Space(5);
+                DisplayColorProperty("LeafNodeColor");
+                DisplayColorProperty("DecoratorColor");
+                DisplayColorProperty("CompositeColor");
+
+                EditorGUILayout.Space(5);
+                DisplayColorProperty("StateColor");
+                DisplayColorProperty("TransitionColor");
+
+                EditorGUILayout.Space(5);
+                DisplayColorProperty("LeafFactorColor");
+                DisplayColorProperty("CurveFactorColor");
+                DisplayColorProperty("FusionFactorColor");
+                DisplayColorProperty("SelectableNodeColor");
+                DisplayColorProperty("BucketColor");
+
                 if (EditorGUI.EndChangeCheck())
                 {
                     m_SerializedObject.ApplyModifiedProperties();
                     BehaviourAPISettings.instance.Save();
                 }
+            }
+        }
+
+        private void DisplayColorProperty(string propertyName)
+        {
+            var prop = m_SerializedObject.FindProperty(propertyName);
+            if(prop != null)
+            {
+                prop.colorValue = EditorGUILayout.ColorField(new GUIContent(propertyName), prop.colorValue);
             }
         }
 
