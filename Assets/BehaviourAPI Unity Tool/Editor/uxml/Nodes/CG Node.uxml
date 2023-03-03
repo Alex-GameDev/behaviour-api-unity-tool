@@ -11,8 +11,8 @@
                 <ui:VisualElement name="contents" class="node-rect" style="border-top-left-radius: 25px; border-bottom-left-radius: 25px; border-top-right-radius: 25px; border-bottom-right-radius: 25px; min-width: 0; min-height: 40px; max-width: 250px; padding-top: 5px; padding-bottom: 20px;">
                     <ui:VisualElement name="node-header" style="min-height: 20px;">
                         <ui:VisualElement name="node-root" style="padding-left: 20px; padding-right: 20px; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; display: none;">
-                            <ui:VisualElement name="node-root-tag" style="background-color: rgb(64, 121, 152); border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; display: flex; flex-direction: row; justify-content: center;">
-                                <ui:Label text="Start" display-tooltip-when-elided="true" name="node-root-label" style="-unity-text-align: upper-center; font-size: 12px; -unity-font-style: bold-and-italic; -unity-font: url(&apos;project://database/Library/unity%20default%20resources?fileID=10102&amp;guid=0000000000000000e000000000000000&amp;type=0#Arial&apos;);" />
+                            <ui:VisualElement name="node-root-tag" style="background-color: rgb(200, 200, 200); border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; display: flex; flex-direction: row; justify-content: center;">
+                                <ui:Label text="START" display-tooltip-when-elided="true" name="node-root-label" style="-unity-text-align: upper-center; font-size: 12px; -unity-font-style: bold-and-italic; -unity-font: url(&apos;project://database/Library/unity%20default%20resources?fileID=10102&amp;guid=0000000000000000e000000000000000&amp;type=0#Arial&apos;); color: rgb(38, 38, 38);" />
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
