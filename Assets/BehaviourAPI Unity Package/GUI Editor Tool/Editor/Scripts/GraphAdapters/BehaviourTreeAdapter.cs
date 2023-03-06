@@ -45,13 +45,7 @@ namespace BehaviourAPI.Unity.Editor
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
         {
             menuEvt.menu.AppendAction("Set root node", _ => SetRootNode(node), _ => (node != _rootView).ToMenuStatus());
-            menuEvt.menu.AppendAction("Order childs by position (x)", 
-                _ =>
-                {
-                    node.Node.OrderChilds(n => n.Position.x);
-                    node.UpdateEdgeViews();
-                    BehaviourEditorWindow.Instance.OnModifyAsset();
-                }, (node.Node.Childs.Count > 1).ToMenuStatus());
+            menuEvt.menu.AppendAction("Order childs by position (x)", _ => node.OrderChilds(n => n.Position.x), (node.Node.Childs.Count > 1).ToMenuStatus());
         }
 
         protected override void SetUpDetails(NodeView nodeView)
@@ -124,7 +118,7 @@ namespace BehaviourAPI.Unity.Editor
             menuEvt.menu.AppendAction("Order all node's child by position (x)", 
                 _ =>
                 {
-                    graph.GraphAsset.Nodes.ForEach(n => n.OrderChilds(n => n.Position.x));
+                    graph.nodes.ForEach(n => (n as NodeView).OrderChilds(n => n.Position.x, false));
                     BehaviourEditorWindow.Instance.OnModifyAsset();
                 });
         }

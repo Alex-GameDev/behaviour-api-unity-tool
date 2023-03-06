@@ -167,11 +167,11 @@ MonoBehaviour:
   Name: 
   node:
     rid: 6537695184696115206
-  position: {x: 1212, y: 219}
+  position: {x: 900, y: 150}
   parents: []
   childs:
-  - {fileID: 1568932006}
   - {fileID: 1328437785}
+  - {fileID: 1568932006}
   references:
     version: 2
     RefIds:
@@ -195,7 +195,7 @@ MonoBehaviour:
   Name: 5
   node:
     rid: 6537695140574396419
-  position: {x: 212, y: 276}
+  position: {x: 0, y: 0}
   parents:
   - {fileID: 1978768649}
   childs: []
@@ -210,6 +210,27 @@ MonoBehaviour:
         variableFunction:
           component: {fileID: 0}
           methodName: 
+--- !u!114 &962010430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: new FSM
+  graph:
+    rid: 6537695184696115210
+  nodes: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 6537695184696115210
+      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
 --- !u!1 &1314463087
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,6 +268,7 @@ MonoBehaviour:
   graphs:
   - {fileID: 1600658874}
   - {fileID: 375440590}
+  - {fileID: 962010430}
   pushPerceptions: []
   pullPerceptions: []
   _target: {fileID: 0}
@@ -281,7 +303,7 @@ MonoBehaviour:
   Name: 2
   node:
     rid: 6537695140574396420
-  position: {x: 827, y: 260}
+  position: {x: 600, y: 50}
   parents:
   - {fileID: 628240482}
   childs:
@@ -402,6 +424,7 @@ MonoBehaviour:
   childs:
   - {fileID: 1933573866}
   - {fileID: 2036319385}
+  - {fileID: 1533855112}
   references:
     version: 2
     RefIds:
@@ -409,6 +432,35 @@ MonoBehaviour:
       type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
         IsRandomized: 0
+--- !u!114 &1533855112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: B
+  node:
+    rid: 6537695184696115209
+  position: {x: 300, y: 400}
+  parents:
+  - {fileID: 1494033147}
+  childs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 6537695184696115209
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        SerializedAction:
+          rid: -2
 --- !u!114 &1568932006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -424,7 +476,7 @@ MonoBehaviour:
   Name: 1
   node:
     rid: 6537695184696115207
-  position: {x: 877, y: 111}
+  position: {x: 300, y: 250}
   parents:
   - {fileID: 628240482}
   childs:
@@ -458,8 +510,9 @@ MonoBehaviour:
   nodes:
   - {fileID: 1771804931}
   - {fileID: 1494033147}
-  - {fileID: 1933573866}
   - {fileID: 2036319385}
+  - {fileID: 1933573866}
+  - {fileID: 1533855112}
   references:
     version: 2
     RefIds:
@@ -600,7 +653,7 @@ MonoBehaviour:
   Name: C
   node:
     rid: 6537695164943826944
-  position: {x: -152, y: 392}
+  position: {x: -300, y: 400}
   parents:
   - {fileID: 1494033147}
   childs: []
@@ -629,7 +682,7 @@ MonoBehaviour:
   Name: 3
   node:
     rid: 6537695184696115204
-  position: {x: 543, y: 227}
+  position: {x: 300, y: 50}
   parents:
   - {fileID: 1328437785}
   childs:
@@ -652,10 +705,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
+  Name: A
   node:
     rid: 6537695184696115203
-  position: {x: 147, y: 397}
+  position: {x: 0, y: 400}
   parents:
   - {fileID: 1494033147}
   childs: []
@@ -684,7 +737,7 @@ MonoBehaviour:
   Name: 4
   node:
     rid: 6537695184696115205
-  position: {x: 231, y: 121}
+  position: {x: 4, y: -118}
   parents:
   - {fileID: 1978768649}
   - {fileID: 1568932006}

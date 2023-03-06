@@ -1,8 +1,10 @@
+using BehaviourAPI.Core;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -70,6 +72,20 @@ namespace BehaviourAPI.Unity.Editor
             else
             {
                 edgeNumberDiv.Enable();
+            }
+        }
+
+        public void UpdateStatus(Status status)
+        {
+            edgeStatusLabel.text = status.ToString();
+            edgeStatusLabel.style.color = status.ToColor();
+            if(status == Status.None)
+            {
+                edgeStatusDiv.Disable();
+            }
+            else
+            {
+                edgeStatusDiv.Enable();
             }
         }
     }

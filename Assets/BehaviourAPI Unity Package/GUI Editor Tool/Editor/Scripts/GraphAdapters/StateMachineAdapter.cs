@@ -53,18 +53,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             menuEvt.menu.AppendAction("Set entry state", _ => ChangeEntryState(node), 
                 _ => (node.Node != null && node.Node.Node is State) ? (node != _entryStateView).ToMenuStatus() : DropdownMenuAction.Status.Hidden);
-            menuEvt.menu.AppendAction("Order childs by position (x)", _ => 
-            {
-                node.Node.OrderChilds(n => n.Position.x);
-                node.UpdateEdgeViews();
-                BehaviourEditorWindow.Instance.OnModifyAsset();
-            }, (node.Node.Childs.Count > 1).ToMenuStatus());
-            menuEvt.menu.AppendAction("Order childs by position (y)", _ =>
-            {
-                node.Node.OrderChilds(n => n.Position.y);
-                node.UpdateEdgeViews();
-                BehaviourEditorWindow.Instance.OnModifyAsset();
-            }, (node.Node.Childs.Count > 1).ToMenuStatus());
+            menuEvt.menu.AppendAction("Order childs by position (x)", _ => menuEvt.menu.AppendAction("Order childs by position (x)", _ => node.OrderChilds(n => n.Position.x), (node.Node.Childs.Count > 1).ToMenuStatus()));
+            menuEvt.menu.AppendAction("Order childs by position (y)", _ => menuEvt.menu.AppendAction("Order childs by position (y)", _ => node.OrderChilds(n => n.Position.y), (node.Node.Childs.Count > 1).ToMenuStatus()));
         }
 
         protected override void SetUpDetails(NodeView nodeView)
@@ -129,12 +119,12 @@ namespace BehaviourAPI.Unity.Editor
         {
             menuEvt.menu.AppendAction("Order all node's child by position (x)", _ =>
             {
-                graph.GraphAsset.Nodes.ForEach(n => n.OrderChilds(n => n.Position.x));
+                graph.nodes.ForEach(n => (n as NodeView).OrderChilds(n => n.Position.x, false));
                 BehaviourEditorWindow.Instance.OnModifyAsset();
             });
             menuEvt.menu.AppendAction("Order all node's child by position (y)", _ =>
             {
-                graph.GraphAsset.Nodes.ForEach(n => n.OrderChilds(n => n.Position.y));
+                graph.nodes.ForEach(n => (n as NodeView).OrderChilds(n => n.Position.y, false));
                 BehaviourEditorWindow.Instance.OnModifyAsset();
             });
         }

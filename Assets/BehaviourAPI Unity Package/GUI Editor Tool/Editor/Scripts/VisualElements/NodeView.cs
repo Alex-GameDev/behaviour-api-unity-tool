@@ -314,5 +314,12 @@ namespace BehaviourAPI.Unity.Editor
                 }
             }
         }
+
+        public void OrderChilds(Func<NodeAsset, float> sortFunction, bool notify = true)
+        {
+            Node.OrderChilds(sortFunction);
+            UpdateEdgeViews();
+            if(notify) BehaviourEditorWindow.Instance.OnModifyAsset();
+        }
     }
 }
