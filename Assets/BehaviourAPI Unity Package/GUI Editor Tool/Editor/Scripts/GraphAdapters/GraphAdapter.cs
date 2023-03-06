@@ -86,13 +86,12 @@ namespace BehaviourAPI.Unity.Editor
                 var tgtPort = targetView.GetBestPort(sourceView, Direction.Input);
 
                 EdgeView edge = srcPort.ConnectTo<EdgeView>(tgtPort);
-                edge.control.edgeNumberLabel.text = id.ToString();
                 graphView.AddConnectionView(edge);
 
                 srcPort.node.RefreshPorts();
                 tgtPort.node.RefreshPorts();
-                sourceView.OnConnected(targetView, srcPort, ignoreConnection: true);
-                targetView.OnConnected(sourceView, tgtPort, ignoreConnection: true);
+                sourceView.OnConnected(edge, targetView, srcPort, ignoreConnection: true);
+                targetView.OnConnected(edge, sourceView, tgtPort, ignoreConnection: true);
                 id++;
             }
         }

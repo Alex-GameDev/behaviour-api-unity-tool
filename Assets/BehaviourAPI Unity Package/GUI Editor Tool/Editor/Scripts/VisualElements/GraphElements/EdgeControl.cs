@@ -10,16 +10,22 @@ namespace BehaviourAPI.Unity.Editor
     {
         public EdgeView edgeView;
 
-        public VisualElement edgeTag;
-        public Label edgeNumberLabel;
+        public VisualElement edgeNumberDiv, edgeStatusDiv;
+        public Label edgeNumberLabel, edgeStatusLabel;
 
         public EdgeControl()
         {
-            edgeTag = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(BehaviourAPISettings.instance.EditorLayoutsPath + "edgetag.uxml").Instantiate();
+            var edgeTag = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(BehaviourAPISettings.instance.EditorLayoutsPath + "edgetag.uxml").Instantiate();
             edgeTag.style.position = Position.Absolute;
             edgeTag.style.left = new StyleLength(new Length(50, LengthUnit.Percent));
             edgeTag.style.top = new StyleLength(new Length(50, LengthUnit.Percent));
+
+            edgeNumberDiv = edgeTag.Q("edge-number-div");
             edgeNumberLabel = edgeTag.Q<Label>("edge-number-label");
+
+            edgeStatusDiv = edgeTag.Q("edge-status-div");
+            edgeStatusLabel = edgeTag.Q<Label>("edge-status-label");
+
             Add(edgeTag);
         }
 
@@ -59,11 +65,11 @@ namespace BehaviourAPI.Unity.Editor
             edgeNumberLabel.text = id.ToString();
             if(id == 0)
             {
-                edgeNumberLabel.Disable();
+                edgeNumberDiv.Disable();
             }
             else
             {
-                edgeNumberLabel.Enable();
+                edgeNumberDiv.Enable();
             }
         }
     }

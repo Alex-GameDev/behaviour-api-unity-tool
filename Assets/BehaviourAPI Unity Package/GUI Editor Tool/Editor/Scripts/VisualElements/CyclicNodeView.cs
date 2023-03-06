@@ -17,9 +17,9 @@ namespace BehaviourAPI.Unity.Editor
 
         Port inputUniquePort, outputUniquePort;
 
-        public override void OnConnected(NodeView other, Port port, bool ignoreConnection = false)
+        public override void OnConnected(EdgeView edgeView, NodeView other, Port port, bool ignoreConnection = false)
         {
-            base.OnConnected(other, port, ignoreConnection);
+            base.OnConnected(edgeView, other, port, ignoreConnection);
 
             //Debug.Log("Disabling all ports except the connected one");
             if(port.direction == Direction.Input)
@@ -42,9 +42,9 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        public override void OnDisconnected(NodeView other, Port port, bool ignoreConnection = false)
+        public override void OnDisconnected(EdgeView edgeView, NodeView other, Port port, bool ignoreConnection = false)
         {
-            base.OnDisconnected(other, port, ignoreConnection);
+            base.OnDisconnected(edgeView, other, port, ignoreConnection);
 
             //Debug.Log("Enabling all ports");
             if (port.direction == Direction.Input)

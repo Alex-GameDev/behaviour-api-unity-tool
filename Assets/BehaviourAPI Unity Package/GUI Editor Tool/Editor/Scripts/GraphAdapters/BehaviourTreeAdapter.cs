@@ -49,6 +49,7 @@ namespace BehaviourAPI.Unity.Editor
                 _ =>
                 {
                     node.Node.OrderChilds(n => n.Position.x);
+                    node.UpdateEdgeViews();
                     BehaviourEditorWindow.Instance.OnModifyAsset();
                 }, (node.Node.Childs.Count > 1).ToMenuStatus());
         }

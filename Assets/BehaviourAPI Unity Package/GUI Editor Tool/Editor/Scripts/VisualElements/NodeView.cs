@@ -32,6 +32,8 @@ namespace BehaviourAPI.Unity.Editor
 
         List<PortView> inputPorts, outputPorts;
 
+        List<EdgeView> outputEdges = new List<EdgeView>();
+
         #endregion
 
         #region ----------------------- Visual elements -----------------------
@@ -217,19 +219,26 @@ namespace BehaviourAPI.Unity.Editor
             Selected?.Invoke(null);
         }
 
-        public virtual void OnConnected(NodeView other, Port port, bool ignoreConnection = false)
+        public virtual void OnConnected(EdgeView edgeView, NodeView other, Port port, bool ignoreConnection = false)
         {
-            if (ignoreConnection) return;
-
-            if (port.direction == Direction.Input)
+            if (!ignoreConnection)
             {
-                Node.Parents.Add(other.Node);
+                if (port.direction == Direction.Input)
+                {
+                    Node.Parents.Add(other.Node);
+                }
+                else
+                {
+                    Node.Childs.Add(other.Node);
+                }
             }
-            else
+
+            if (port.direction == Direction.Output)
             {
-                Node.Childs.Add(other.Node);
+                outputEdges.Add(edgeView);
                 UpdateEdgeViews();
             }
+
         }
 
         public void OnMoved(Vector2 pos)
@@ -237,17 +246,23 @@ namespace BehaviourAPI.Unity.Editor
            Node.Position = pos;
         }
 
-        public virtual void OnDisconnected(NodeView other, Port port, bool ignoreConnection = false)
+        public virtual void OnDisconnected(EdgeView edgeView, NodeView other, Port port, bool ignoreConnection = false)
         {
-            if (ignoreConnection) return;
-
-            if (port.direction == Direction.Input)
+            if (!ignoreConnection)
             {
-                Node.Parents.Remove(other.Node);
+                if (port.direction == Direction.Input)
+                {
+                    Node.Parents.Remove(other.Node);
+                }
+                else
+                {
+                    Node.Childs.Remove(other.Node);
+                }
             }
-            else
+
+            if (port.direction == Direction.Output)
             {
-                Node.Childs.Remove(other.Node);
+                outputEdges.Remove(edgeView);
                 UpdateEdgeViews();
             }
         }
@@ -280,20 +295,18 @@ namespace BehaviourAPI.Unity.Editor
 
         public void UpdateEdgeViews()
         {
-            var edgeViews = outputPorts.SelectMany(p => p.connections).Select(e => (EdgeView) e);
             var childs = Node.Childs;
 
-            Debug.Log(edgeViews.Count() + " / " + childs.Count);
             if(childs.Count <= 1)
             {
-                foreach (var edgeView in edgeViews)
+                foreach (var edgeView in outputEdges)
                 {
                     edgeView.control.UpdateIndex(0);
                 }
             }
             else
             {
-                foreach (var edgeView in edgeViews)
+                foreach (var edgeView in outputEdges)
                 {
                     var target = (edgeView.input.node as NodeView).Node;
                     int idx = childs.IndexOf(target);

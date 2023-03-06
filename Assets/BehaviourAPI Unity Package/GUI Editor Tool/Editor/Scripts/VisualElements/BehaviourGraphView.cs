@@ -155,8 +155,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             var source = (NodeView)edge.output.node;
             var target = (NodeView)edge.input.node;
-            source.OnConnected(target, edge.output);
-            target.OnConnected(source, edge.input);
+            source.OnConnected((EdgeView)edge, target, edge.output);
+            target.OnConnected((EdgeView)edge, source, edge.input);
             BehaviourEditorWindow.Instance.OnModifyAsset();
         }
 
@@ -181,8 +181,8 @@ namespace BehaviourAPI.Unity.Editor
             {
                 var source = (NodeView)edge.output.node;
                 var target = (NodeView)edge.input.node;
-                source.OnDisconnected(target, edge.output);
-                target.OnDisconnected(source, edge.input);
+                source.OnDisconnected((EdgeView)edge, target, edge.output);
+                target.OnDisconnected((EdgeView)edge, source, edge.input);
                 BehaviourEditorWindow.Instance.OnModifyAsset();
             }
         }

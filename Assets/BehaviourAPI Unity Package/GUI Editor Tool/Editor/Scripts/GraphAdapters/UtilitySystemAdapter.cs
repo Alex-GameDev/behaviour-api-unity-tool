@@ -50,6 +50,7 @@ namespace BehaviourAPI.Unity.Editor
             menuEvt.menu.AppendAction("Order childs by position (y)", _ =>
             {
                 node.Node.OrderChilds(n => n.Position.y);
+                node.UpdateEdgeViews();
                 BehaviourEditorWindow.Instance.OnModifyAsset();
             }, (node.Node.Childs.Count > 1).ToMenuStatus());
         }
