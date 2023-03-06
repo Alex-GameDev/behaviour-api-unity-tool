@@ -45,6 +45,8 @@ namespace BehaviourAPI.Unity.Editor
         public List<PortView> InputPorts => inputPorts;
         public List<PortView> OutputPorts => outputPorts;
 
+        List<EdgeView> InputEdges;
+
         #endregion
 
         public abstract string LayoutPath { get; }     
@@ -220,9 +222,14 @@ namespace BehaviourAPI.Unity.Editor
             if (ignoreConnection) return;
 
             if (port.direction == Direction.Input)
+            {
                 Node.Parents.Add(other.Node);
+            }
             else
+            {
                 Node.Childs.Add(other.Node);
+                UpdateEdgeViews();
+            }
         }
 
         public void OnMoved(Vector2 pos)
@@ -235,9 +242,14 @@ namespace BehaviourAPI.Unity.Editor
             if (ignoreConnection) return;
 
             if (port.direction == Direction.Input)
+            {
                 Node.Parents.Remove(other.Node);
+            }
             else
+            {
                 Node.Childs.Remove(other.Node);
+                UpdateEdgeViews();
+            }
         }
 
         public void DisconnectPorts(VisualElement portContainer)
@@ -264,6 +276,30 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (dir == Direction.Input) return InputPort;
             else return OutputPort;
+        }
+
+        public void UpdateEdgeViews()
+        {
+            var edgeViews = outputPorts.SelectMany(p => p.connections).Select(e => (EdgeView) e);
+            var childs = Node.Childs;
+
+            Debug.Log(edgeViews.Count() + " / " + childs.Count);
+            if(childs.Count <= 1)
+            {
+                foreach (var edgeView in edgeViews)
+                {
+                    edgeView.control.UpdateIndex(0);
+                }
+            }
+            else
+            {
+                foreach (var edgeView in edgeViews)
+                {
+                    var target = (edgeView.input.node as NodeView).Node;
+                    int idx = childs.IndexOf(target);
+                    edgeView.control.UpdateIndex(idx + 1);
+                }
+            }
         }
     }
 }

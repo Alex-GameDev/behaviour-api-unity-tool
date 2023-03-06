@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="border-top-left-radius: 2px; border-bottom-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; background-color: rgb(41, 41, 41); align-items: center; justify-content: center; width: initial;">
+        <ui:VisualElement style="position: absolute; left: -50%; padding-left: 4px; padding-right: 4px; padding-top: 4px; padding-bottom: 4px; background-color: rgb(29, 29, 29);">
+            <ui:Label text="0" display-tooltip-when-elided="true" name="edge-number-label" style="-unity-text-align: upper-center; display: flex;" />
+            <ui:Label display-tooltip-when-elided="true" name="edge-status-label" style="display: none;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

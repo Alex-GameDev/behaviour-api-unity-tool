@@ -77,6 +77,7 @@ namespace BehaviourAPI.Unity.Editor
 
             var sourceView = graphView.GetViewOf(asset);
 
+            int id = 1;
             foreach (NodeAsset child in asset.Childs)
             {
                 var targetView = graphView.GetViewOf(child);
@@ -85,12 +86,14 @@ namespace BehaviourAPI.Unity.Editor
                 var tgtPort = targetView.GetBestPort(sourceView, Direction.Input);
 
                 EdgeView edge = srcPort.ConnectTo<EdgeView>(tgtPort);
+                edge.control.edgeNumberLabel.text = id.ToString();
                 graphView.AddConnectionView(edge);
 
                 srcPort.node.RefreshPorts();
                 tgtPort.node.RefreshPorts();
                 sourceView.OnConnected(targetView, srcPort, ignoreConnection: true);
                 targetView.OnConnected(sourceView, tgtPort, ignoreConnection: true);
+                id++;
             }
         }
 
