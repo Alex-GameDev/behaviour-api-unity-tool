@@ -19,6 +19,8 @@ namespace BehaviourAPI.Unity.Demo
         bool _fishCatched;
         GameObject _currentCapture;
 
+        float _timeToSuccess;
+
         protected override BehaviourGraph CreateGraph()
         {
             var bt = new BehaviourTree();
@@ -29,8 +31,8 @@ namespace BehaviourAPI.Unity.Demo
             var throwTheRod = bt.CreateLeafNode("Throw rod", new FunctionalAction(StartThrow, () => _rod.IsThrown() ? Status.Success : Status.Running));
             var catchSomething = bt.CreateLeafNode("Catch sonmething", new FunctionalAction(StartCatch, () => _rod.IsPickedUp() ? Status.Success : Status.Running));
 
-            var returnToWater = bt.CreateLeafNode("Return to water", new FunctionalAction(DropCaptureInWater, () => Status.Success));
-            var storeInBasket = bt.CreateLeafNode("Store in basket", new FunctionalAction(StoreCaptureInBasket, () => Status.Success));
+            var returnToWater = bt.CreateLeafNode("Return to water", new FunctionalAction(DropCaptureInWater, WaitToSuccess));
+            var storeInBasket = bt.CreateLeafNode("Store in basket", new FunctionalAction(StoreCaptureInBasket, WaitToSuccess));
 
             var timer = bt.CreateDecorator<UnityTimerDecorator>("Timer", catchSomething).SetTotalTime(3f);
             var check = bt.CreateDecorator<ConditionNode>("Cond", storeInBasket).SetPerception(fishPerception);
@@ -70,6 +72,19 @@ namespace BehaviourAPI.Unity.Demo
             var drop = Instantiate(capturePrefab, target.position, target.rotation);
             drop.transform.localScale = target.localScale;
             if (destroyAfter) Destroy(drop, 2f);
+            _timeToSuccess = Time.time;
+        }
+
+        Status WaitToSuccess()
+        {
+            if(Time.time > _timeToSuccess + 2f)
+            {
+                return Status.Success; 
+            }
+            else
+            {
+                return Status.Running;
+            }
         }
     }
 }
