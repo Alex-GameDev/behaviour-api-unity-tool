@@ -13,6 +13,7 @@ namespace BehaviourAPI.Unity.Editor
     using System.Linq;
     using System.Collections.Generic;
     using BehaviourAPI.Unity.Framework;
+    using BehaviourAPI.UnityExtensions;
 
 
     /// <summary>
@@ -27,12 +28,12 @@ namespace BehaviourAPI.Unity.Editor
         public Action<NodeAsset> Selected;
         public Action<NodeAsset> UnSelected;
 
-        BehaviourGraphView _graphView;
+        protected BehaviourGraphView _graphView;
         public BehaviourGraphView GraphView => _graphView;
 
         List<PortView> inputPorts, outputPorts;
 
-        List<EdgeView> outputEdges = new List<EdgeView>();
+        protected List<EdgeView> outputEdges = new List<EdgeView>();
 
         #endregion
 
@@ -47,7 +48,6 @@ namespace BehaviourAPI.Unity.Editor
         public List<PortView> InputPorts => inputPorts;
         public List<PortView> OutputPorts => outputPorts;
 
-        List<EdgeView> InputEdges;
 
         #endregion
 
@@ -87,7 +87,7 @@ namespace BehaviourAPI.Unity.Editor
             }            
         }
 
-        private void AddRuntimeLayout()
+        protected virtual void AddRuntimeLayout()
         {
             this.Q("node-port-cover").Enable();
             if(Node.Node is IStatusHandler statusHandler)

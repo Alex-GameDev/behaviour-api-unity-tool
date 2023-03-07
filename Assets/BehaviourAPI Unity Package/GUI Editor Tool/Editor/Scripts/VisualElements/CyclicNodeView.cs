@@ -1,3 +1,6 @@
+using BehaviourAPI.BehaviourTrees;
+using BehaviourAPI.Core;
+using BehaviourAPI.StateMachines;
 using BehaviourAPI.Unity.Framework;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,8 +40,17 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     OutputPorts.ForEach(p => { if (p != port) p.Disable(); });
                     outputUniquePort = port;
+                }               
+            }
+
+            if (_graphView.Runtime && port.direction == Direction.Output)
+            {
+                if (other.Node.Node is Transition t)
+                {
+                    Debug.Log("A");
+                    t.SourceStateLastStatusChanged += (status) => { Debug.Log(status); edgeView.control.UpdateStatus(status); };
+                    edgeView.control.UpdateStatus(t.SourceStateLastStatus);
                 }
-               
             }
         }
 
@@ -213,6 +225,29 @@ namespace BehaviourAPI.Unity.Editor
             {
                 outputContainer.style.display = DisplayStyle.None;
             }
+        }
+
+        public override void OnConnected(EdgeView edgeView, NodeView other, Port port, bool ignoreConnection = false)
+        {
+            base.OnConnected(edgeView, other, port, ignoreConnection);
+
+            if(_graphView.Runtime && port.direction == Direction.Output)
+            {
+                if (other.Node.Node is BTNode btNode)
+                {
+                    btNode.LastExecutionStatusChanged += (status) => edgeView.control.UpdateStatus(status);
+                    edgeView.control.UpdateStatus(btNode.LastExecutionStatus);
+                }
+            }
+        }
+
+        public void ResetStatus()
+        {
+            outputEdges.ForEach(edge =>
+            {
+                edge.control.UpdateStatus(Status.None);
+                (edge.input.node as TreeNodeView).ResetStatus();
+            });
         }
     }
 }
