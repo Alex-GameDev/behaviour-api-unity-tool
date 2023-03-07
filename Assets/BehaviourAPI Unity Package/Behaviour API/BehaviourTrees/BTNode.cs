@@ -25,14 +25,25 @@ namespace BehaviourAPI.BehaviourTrees
                 }
             }
         }
-        public Status LastExecutionStatus => _lastExecutionStatus;
+        public Status LastExecutionStatus
+        {
+            get => _lastExecutionStatus;
+            protected set
+            {
+                _lastExecutionStatus = value;
+                LastExecutionStatusChanged?.Invoke(value);
+            }
+        }
 
         public Action<Status> StatusChanged { get; set; }
+        public Action<Status> LastExecutionStatusChanged { get; set; }
 
         Status _status;
         Status _lastExecutionStatus;
 
         #endregion
+
+        #region ----------------------------------------- Build methods --------------------------------------
 
         public override object Clone()
         {
@@ -40,6 +51,7 @@ namespace BehaviourAPI.BehaviourTrees
             btNode.StatusChanged = delegate { };
             return btNode;
         }
+        #endregion
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
@@ -49,6 +61,7 @@ namespace BehaviourAPI.BehaviourTrees
                 throw new Exception("ERROR: This node is already been executed");
 
             Status = Status.Running;
+            ResetLastStatus();
         }
 
         public void Update()
@@ -62,12 +75,24 @@ namespace BehaviourAPI.BehaviourTrees
             if (Status == Status.None)
                 throw new Exception("ERROR: This node is already been stopped");
 
-            _lastExecutionStatus = Status;
+            LastExecutionStatus = Status;
             Status = Status.None;
         }
 
         protected abstract Status UpdateStatus();
 
+        public virtual bool ResetLastStatus()
+        {
+            if(LastExecutionStatus != Status.None)
+            {
+                LastExecutionStatus = Status.None;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         #endregion
     }
 }

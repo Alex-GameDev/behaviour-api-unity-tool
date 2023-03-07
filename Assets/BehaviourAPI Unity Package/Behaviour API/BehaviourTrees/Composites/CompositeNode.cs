@@ -80,6 +80,13 @@ namespace BehaviourAPI.BehaviourTrees
 
         protected int BTChildCount => m_children.Count;
 
+        public override bool ResetLastStatus()
+        {
+            bool b = base.ResetLastStatus();
+            if(b) m_children.ForEach(child => child.ResetLastStatus());
+            return b;
+        }
+
         #endregion
     }
 }

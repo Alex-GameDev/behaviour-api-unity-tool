@@ -13,7 +13,7 @@
         public override void Perform()
         {
             base.Perform();
-            _stackFSM.Pop();
+            _stackFSM.Pop(this);
         }
 
         #endregion

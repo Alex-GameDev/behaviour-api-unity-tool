@@ -12,11 +12,6 @@ namespace BehaviourAPI.Core
         Status Status { get; }
 
         /// <summary>
-        /// The finish status of the last execution
-        /// </summary>
-        Status LastExecutionStatus { get; }
-
-        /// <summary>
         /// Called the first frame of the execution
         /// </summary>
         void Start();

@@ -40,7 +40,7 @@ namespace BehaviourAPI.StateMachines
             if (_targetState == null)
                 throw new MissingChildException(this, "The target state can't be null.");
 
-            _fsm.SetCurrentState(_targetState);
+            _fsm.SetCurrentState(_targetState, this);
         }
 
         #endregion

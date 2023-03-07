@@ -36,5 +36,12 @@ namespace BehaviourAPI.BehaviourTrees
         }
 
         #endregion
+
+        public override bool ResetLastStatus()
+        {
+            bool b = base.ResetLastStatus();
+            if(b) m_childNode.ResetLastStatus();
+            return b;
+        }
     }
 }

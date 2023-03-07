@@ -16,6 +16,21 @@ namespace BehaviourAPI.StateMachines
         public override int MaxInputConnections => 1;
 
         public System.Action TransitionTriggered { get; set; }
+        public System.Action<Status> SourceStateLastStatusChanged { get; set; }
+
+        /// <summary>
+        /// The status that the source state had when this transition was triggered
+        /// </summary>
+        public Status SourceStateLastStatus {
+            get => _sourceStateLastStatus; 
+            set
+            {
+                _sourceStateLastStatus = value;
+                SourceStateLastStatusChanged?.Invoke(value);
+            }
+        }
+
+        Status _sourceStateLastStatus;
 
         #endregion
 
@@ -65,7 +80,11 @@ namespace BehaviourAPI.StateMachines
         #region --------------------------------------- Runtime methods --------------------------------------
 
         public void Start() => Perception?.Initialize();
-        public void Stop() => Perception?.Reset();
+
+        public void Stop()
+        {
+            Perception?.Reset();
+        }
 
         public virtual bool Check()
         {
@@ -84,6 +103,7 @@ namespace BehaviourAPI.StateMachines
             }
 
             TransitionTriggered?.Invoke();
+            SourceStateLastStatus = _sourceState.Status;
         }
 
         public void Fire() => Perform();

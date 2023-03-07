@@ -17,11 +17,14 @@ namespace BehaviourAPI.StateMachines
 
         public override bool CanCreateLoops => true;
 
+        public Transition LastPerformedTransition { get; private set; }
+
         #endregion
 
         #region ------------------------------------------- Fields -------------------------------------------
 
         protected State _currentState;
+
 
         #endregion
 
@@ -211,8 +214,12 @@ namespace BehaviourAPI.StateMachines
             _currentState?.Stop();
         }
 
-        public virtual void SetCurrentState(State state)
+        public virtual void SetCurrentState(State state, Transition transition)
         {
+            if(LastPerformedTransition != null)
+                LastPerformedTransition.SourceStateLastStatus = Status.None;
+
+            LastPerformedTransition = transition;
             _currentState?.Stop();
             _currentState = state;
             _currentState?.Start();

@@ -41,7 +41,7 @@ namespace BehaviourAPI.StateMachines.StackFSMs
             base.Perform();
             if (_targetState == null) throw new MissingChildException(this, "The target state can't be null.");
 
-            _stackFSM.Push(_targetState);
+            _stackFSM.Push(_targetState, this);
         }
 
         #endregion

@@ -28,12 +28,9 @@ namespace BehaviourAPI.StateMachines
             }
         }
 
-        public Status LastExecutionStatus => _lastExecutionStatus;
-
         public Action<Status> StatusChanged { get; set; }
 
         Status _status;
-        Status _lastExecutionStatus;
 
         #endregion
 
@@ -109,7 +106,6 @@ namespace BehaviourAPI.StateMachines
             if (Status == Status.None)
                 throw new Exception("ERROR: This node is already been stopped");
 
-            _lastExecutionStatus = Status;
             Status = Status.None;
             _transitions.ForEach(t => t?.Stop());
             Action?.Stop();

@@ -43,16 +43,16 @@ namespace BehaviourAPI.StateMachines.StackFSMs
             return transition;
         }
 
-        public void Push(State targetState)
+        public void Push(State targetState, PushTransition pushTransition)
         {
             _stateStack.Push(_currentState);
-            SetCurrentState(targetState);
+            SetCurrentState(targetState, pushTransition);
         }
 
-        public void Pop()
+        public void Pop(PopTransition popTransition)
         {
             var targetState = _stateStack.Pop();
-            SetCurrentState(targetState);
+            SetCurrentState(targetState, popTransition);
         }
 
         public override object Clone()
