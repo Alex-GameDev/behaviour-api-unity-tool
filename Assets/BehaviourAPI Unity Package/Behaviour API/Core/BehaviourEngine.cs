@@ -24,9 +24,12 @@ namespace BehaviourAPI.Core
             }
         }
 
+        public Status LastExecutionStatus => _lastExecutionStatus;
+
         public Action<Status> StatusChanged { get; set; }
 
         Status _status;
+        Status _lastExecutionStatus;
 
         /// <summary>
         /// Executes the first frame
@@ -47,6 +50,7 @@ namespace BehaviourAPI.Core
             if (Status == Status.None)
                 throw new Exception("ERROR: This behaviour engine is already been stopped");
 
+            _lastExecutionStatus = Status;
             Status = Status.None;
         }
 

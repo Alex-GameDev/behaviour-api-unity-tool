@@ -20,13 +20,9 @@ namespace BehaviourAPI.UtilitySystems
 
         public override void Start()
         {
-            Status = ExitStatus;
+            if(ExitStatus != Status.None) Status = ExitStatus;
+            else ExitStatus = Status.Running;
             BehaviourGraph.Finish(ExitStatus);
-        }
-
-        public override void Stop()
-        {
-            Status = Status.None;
         }
 
         public override void Update()

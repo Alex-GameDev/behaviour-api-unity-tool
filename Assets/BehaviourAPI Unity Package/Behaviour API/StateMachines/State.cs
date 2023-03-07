@@ -28,9 +28,12 @@ namespace BehaviourAPI.StateMachines
             }
         }
 
+        public Status LastExecutionStatus => _lastExecutionStatus;
+
         public Action<Status> StatusChanged { get; set; }
 
         Status _status;
+        Status _lastExecutionStatus;
 
         #endregion
 
@@ -85,6 +88,9 @@ namespace BehaviourAPI.StateMachines
 
         public virtual void Start()
         {
+            if (Status != Status.None)
+                throw new Exception("ERROR: This node is already been executed");
+
             Status = Status.Running;
             _transitions.ForEach(t => t?.Start());
             Action?.Start();
@@ -92,12 +98,18 @@ namespace BehaviourAPI.StateMachines
 
         public virtual void Update()
         {
-            Status = Action?.Update() ?? Status.Running;
+            if (Status == Status.Running) 
+                Status = Action?.Update() ?? Status.Running;
+
             CheckTransitions();
         }
 
         public virtual void Stop()
         {
+            if (Status == Status.None)
+                throw new Exception("ERROR: This node is already been stopped");
+
+            _lastExecutionStatus = Status;
             Status = Status.None;
             _transitions.ForEach(t => t?.Stop());
             Action?.Stop();

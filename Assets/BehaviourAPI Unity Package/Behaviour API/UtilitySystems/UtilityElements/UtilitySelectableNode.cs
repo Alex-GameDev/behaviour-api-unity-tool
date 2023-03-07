@@ -26,9 +26,13 @@ namespace BehaviourAPI.UtilitySystems
             }
         }
 
+        public Status LastExecutionStatus => _lastExecutionStatus;
+
         public Action<Status> StatusChanged { get; set; }
 
         Status _status;
+        Status _lastExecutionStatus;
+
         /// <summary>
         /// True if this element should be executed even if later elements have more utility:
         /// </summary>
@@ -49,11 +53,24 @@ namespace BehaviourAPI.UtilitySystems
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
-        public abstract void Start();
+        public virtual void Start()
+        {
+            if (Status != Status.None)
+                throw new Exception("ERROR: This node is already been executed");
+
+            Status = Status.Running;
+        }
 
         public abstract void Update();
 
-        public abstract void Stop();
+        public virtual void Stop()
+        {
+            if (Status == Status.None)
+                throw new Exception("ERROR: This node is already been stopped");
+
+            _lastExecutionStatus = Status;
+            Status = Status.None;
+        }
 
         /// <summary>
         /// Return true if the utility system should change its status when a selectable node finish its execution

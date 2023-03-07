@@ -32,18 +32,20 @@ namespace BehaviourAPI.UtilitySystems
 
         public override void Start()
         {
-            Status = Status.Running;
+            base.Start();
             Action?.Start();
         }
 
         public override void Update()
         {
+            if (Status != Status.Running) return;
+
             Status = Action?.Update() ?? Status.Running;
         }
 
         public override void Stop()
         {
-            Status = Status.None;
+            base.Stop();
             Action?.Stop();
         }
 

@@ -81,14 +81,6 @@ namespace BehaviourAPI.Unity.Editor
         public static void Hide(this VisualElement visualElement) => visualElement.style.visibility = Visibility.Hidden;
         public static void Show(this VisualElement visualElement) => visualElement.style.visibility = Visibility.Visible;
 
-        public static Color ToColor(this Status status)
-        {
-            if (status == Status.Success) return Color.green;
-            if (status == Status.Failure) return Color.red;
-            if (status == Status.Running) return Color.yellow;
-            return Color.gray;
-        }
-
         public static void ChangeBorderColor(this VisualElement visualElement, Color color)
         {
             visualElement.style.borderBottomColor = color;

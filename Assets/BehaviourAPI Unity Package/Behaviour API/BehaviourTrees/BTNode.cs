@@ -25,10 +25,12 @@ namespace BehaviourAPI.BehaviourTrees
                 }
             }
         }
+        public Status LastExecutionStatus => _lastExecutionStatus;
 
         public Action<Status> StatusChanged { get; set; }
 
         Status _status;
+        Status _lastExecutionStatus;
 
         #endregion
 
@@ -43,16 +45,24 @@ namespace BehaviourAPI.BehaviourTrees
 
         public virtual void Start()
         {
+            if (Status != Status.None)
+                throw new Exception("ERROR: This node is already been executed");
+
             Status = Status.Running;
         }
 
         public void Update()
         {
+            if (Status != Status.Running) return;
             Status = UpdateStatus();
         }
 
         public virtual void Stop()
         {
+            if (Status == Status.None)
+                throw new Exception("ERROR: This node is already been stopped");
+
+            _lastExecutionStatus = Status;
             Status = Status.None;
         }
 

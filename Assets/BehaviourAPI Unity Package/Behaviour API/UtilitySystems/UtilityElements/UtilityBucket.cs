@@ -80,6 +80,8 @@ namespace BehaviourAPI.UtilitySystems
 
         public override void Start()
         {
+            base.Start();
+
             if (_utilityCandidates.Count == 0)
                 throw new MissingChildException(this, "The list of utility candidates of this bucket is empty.");
         }
@@ -136,12 +138,18 @@ namespace BehaviourAPI.UtilitySystems
                 _lastExecutedElement = _currentBestElement;
                 _lastExecutedElement?.Start();
             }
-            _lastExecutedElement?.Update();
+
+            if(_lastExecutedElement != null)
+            {
+                _lastExecutedElement.Update();
+                Status = _lastExecutedElement.Status;
+            }
         }
 
 
         public override void Stop()
         {
+            base.Stop();
             _lastExecutedElement?.Stop();
             _lastExecutedElement = null;
             _currentBestElement = null;

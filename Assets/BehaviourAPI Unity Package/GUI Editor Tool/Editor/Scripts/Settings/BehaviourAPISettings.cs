@@ -67,6 +67,7 @@ namespace BehaviourAPI.Unity.Editor
             "BehaviourAPI.StateMachines",
             "BehaviourAPI.BehaviourTrees",
             "BehaviourAPI.UtilitySystems",
+            "BehaviourAPI.UnityExtensions",
             "BehaviourAPI.Unity.Runtime",
             "BehaviourAPI.Unity.Framework",
             "BehaviourAPI.Unity.Editor"

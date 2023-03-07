@@ -56,6 +56,7 @@ namespace BehaviourAPI.BehaviourTrees
             if(_childExecutedLastFrame)
             {
                 m_childNode.Stop();
+                _childExecutedLastFrame = false;
             }
             if (Perception != null) Perception.Reset();
             else throw new NullReferenceException("ERROR: Perception is not defined.");
