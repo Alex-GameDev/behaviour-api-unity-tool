@@ -1,31 +1,44 @@
 using BehaviourAPI.Core;
-using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using UnityEditor.VersionControl;
+
 using UnityEngine;
-using UnityEngine.Assertions;
-using UnityEngine.SceneManagement;
 
 namespace BehaviourAPI.Unity.Runtime
 {
     public abstract class EditorBehaviourRunner : DataBehaviourRunner, IBehaviourSystem, ISerializationCallbackReceiver
     {
+        #region ------------------------------- Private fields --------------------------------
 
         [HideInInspector] [SerializeField] List<GraphAsset> graphs = new List<GraphAsset>();
         [HideInInspector] [SerializeField] List<PushPerceptionAsset> pushPerceptions = new List<PushPerceptionAsset>();
         [HideInInspector] [SerializeField] List<PerceptionAsset> pullPerceptions = new List<PerceptionAsset>();
 
+        #endregion
+
+        #region --------------------------------- Properties ----------------------------------
+
+        /// <summary>
+        /// The editable graphs of the system. Don't use in code.
+        /// </summary>
         public List<GraphAsset> Graphs => graphs;
+
+        /// <summary>
+        /// The editable push percepcions of the system. Don't use in code.
+        /// </summary>
         public List<PushPerceptionAsset> PushPerceptions => pushPerceptions;
+
+        /// <summary>
+        /// The editable perceptions of the system. Don't use in code.
+        /// </summary>
         public List<PerceptionAsset> PullPerceptions => pullPerceptions;
 
         /// <summary>
-        /// The main graph of the runner
+        /// The main editable graph of the runner. Don't use in code.
         /// </summary>
         public GraphAsset MainGraph
         {
@@ -44,10 +57,16 @@ namespace BehaviourAPI.Unity.Runtime
             }
         }
 
+        #endregion
+
+        #region --------------------------------- properties ----------------------------------
+
         protected override BehaviourSystemAsset GetEditorSystem()
         {
             return BehaviourSystemAsset.CreateSystem(Graphs, PullPerceptions, PushPerceptions);
-        }       
+        }
+
+        #endregion
 
         #region --------------------------- Create elements ---------------------------
 
