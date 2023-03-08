@@ -31,8 +31,18 @@ namespace BehaviourAPI.Unity.Editor
 
         void AddElement(Type type)
         {
-            System.CreatePerception("new " + type.Name, type);
-            RefreshList();
+            var perceptionAsset = PerceptionAsset.Create($"new {type.Name}", type);
+
+            if(perceptionAsset != null)
+            {
+                System.PullPerceptions.Add(perceptionAsset);
+                BehaviourEditorWindow.Instance.OnAddSubAsset(perceptionAsset);
+                RefreshList();
+            }
+            else
+            {
+                Debug.LogWarning("Error creating the perception.");
+            }
         }
 
         protected override List<PerceptionAsset> GetList()
@@ -43,7 +53,12 @@ namespace BehaviourAPI.Unity.Editor
 
         protected override void RemoveElement(PerceptionAsset asset)
         {
-            System.RemovePerception(asset);
+            if (System == null) return;
+
+            if (System.PullPerceptions.Remove(asset))
+            {
+                BehaviourEditorWindow.Instance.OnRemoveSubAsset(asset);
+            }
         }
 
         public override void UpdateInspector(PerceptionAsset asset)

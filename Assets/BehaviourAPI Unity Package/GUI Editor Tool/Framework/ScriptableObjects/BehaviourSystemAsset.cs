@@ -1,12 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
 using UnityEditor;
-using UnityEditor.Callbacks;
 using UnityEngine;
-using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Framework
 {
@@ -35,96 +31,17 @@ namespace BehaviourAPI.Unity.Framework
             }
         }
 
+
+
         public List<GraphAsset> Graphs => graphs;
         public List<PushPerceptionAsset> PushPerceptions => pushPerceptions;
         public List<PerceptionAsset> PullPerceptions => perceptions;
 
-        public GraphAsset CreateGraph(string name, Type type)
-        {
-            var graphAsset = GraphAsset.Create(name, type);
+        public bool IsAsset => true;
 
-            if (graphAsset != null)
-            {
-                Graphs.Add(graphAsset);
-                OnSubAssetCreated(graphAsset);
-            }
-            return graphAsset;
-        }
-
-        public PushPerceptionAsset CreatePushPerception(string name)
-        {
-            var pushPerceptionAsset = PushPerceptionAsset.Create(name);
-
-            if (pushPerceptionAsset != null)
-            {
-                PushPerceptions.Add(pushPerceptionAsset);
-                OnSubAssetCreated(pushPerceptionAsset);
-            }
-            return pushPerceptionAsset;
-        }
-
-        public PerceptionAsset CreatePerception(string name, Type type)
-        {
-            var perceptionAsset = PerceptionAsset.Create(name, type);
-
-            if (perceptionAsset != null)
-            {
-                PullPerceptions.Add(perceptionAsset);
-                OnSubAssetCreated(perceptionAsset);
-            }
-            return perceptionAsset;
-        }
-
-        public void RemoveGraph(GraphAsset graph)
-        {
-            if(graphs.Remove(graph))
-            {
-                Graphs.Remove(graph);
-                graph.Nodes.ForEach(n => OnSubAssetRemoved(n));
-                OnSubAssetRemoved(graph);
-            }
-        }
-
-        public void RemovePushPerception(PushPerceptionAsset pushPerception)
-        {
-            if (pushPerceptions.Remove(pushPerception))
-            {
-                OnSubAssetRemoved(pushPerception);
-            }
-        }
-
-        public void RemovePerception(PerceptionAsset pullPerception)
-        {
-            if (PullPerceptions.Remove(pullPerception))
-            {
-                OnSubAssetRemoved(pullPerception);
-            }
-        }
-
-        public void OnSubAssetCreated(ScriptableObject asset)
-        {
-            asset.name = asset.GetType().Name;
-            EditorUtility.SetDirty(this);
-            AssetDatabase.AddObjectToAsset(asset, this);
-            AssetDatabase.SaveAssetIfDirty(this);
-        }
-
-        public void OnSubAssetRemoved(ScriptableObject asset)
-        {
-            EditorUtility.SetDirty(this);
-            AssetDatabase.RemoveObjectFromAsset(asset);
-            AssetDatabase.SaveAssetIfDirty(this);
-        }
-
-        public void OnModifyAsset()
-        {
-            EditorUtility.SetDirty(this);
-        }
-
-        public void Save()
-        {
-            AssetDatabase.SaveAssetIfDirty(this);
-        }
+        public Object ObjectReference => this;
+        public ScriptableObject AssetReference => this;
+        public Component ComponentReference => null;
 
         public static BehaviourSystemAsset CreateSystem(Dictionary<BehaviourGraph, string> behaviourGraphs)
         {

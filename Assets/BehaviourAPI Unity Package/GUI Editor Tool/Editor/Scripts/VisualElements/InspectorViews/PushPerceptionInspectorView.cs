@@ -13,12 +13,11 @@ namespace BehaviourAPI.Unity.Editor
 {
     public class PushPerceptionInspectorView : ListInspectorView<PushPerceptionAsset>
     {
-        ListView _pushHandlerListView;
         public NodeSearchWindow nodeSearchWindow { get; set; }
 
-        public Action<PushPerceptionAsset> PushPerceptionCreated, PushPerceptionRemoved;
-
         IBehaviourSystem System => BehaviourEditorWindow.Instance.System;
+
+        ListView _pushHandlerListView;
 
         public PushPerceptionInspectorView() : base("Push Perceptions", Side.Right)
         {
@@ -28,9 +27,18 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (System == null) return;
 
-            var asset = System.CreatePushPerception("new pushperception");
-            RefreshList();
-            PushPerceptionCreated?.Invoke(asset);
+            var pushPerceptionAsset = PushPerceptionAsset.Create("new PushPerception");
+
+            if (pushPerceptionAsset != null)
+            {
+                System.PushPerceptions.Add(pushPerceptionAsset);
+                BehaviourEditorWindow.Instance.OnAddSubAsset(pushPerceptionAsset);
+                RefreshList();
+            }
+            else
+            {
+                Debug.LogWarning("Error creating the push perception.");
+            }
         }
 
         protected override List<PushPerceptionAsset> GetList()
@@ -41,8 +49,12 @@ namespace BehaviourAPI.Unity.Editor
 
         protected override void RemoveElement(PushPerceptionAsset asset)
         {
-            System.RemovePushPerception(asset);
-            PushPerceptionRemoved?.Invoke(asset);
+            if (System == null) return;
+
+            if (System.PushPerceptions.Remove(asset))
+            {
+                BehaviourEditorWindow.Instance.OnRemoveSubAsset(asset);
+            }            
         }
 
         public override void UpdateInspector(PushPerceptionAsset asset)
