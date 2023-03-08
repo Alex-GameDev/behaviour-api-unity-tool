@@ -11,7 +11,6 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
 using LeafNode = BehaviourAPI.Unity.Framework.Adaptations.LeafNode;
-using ConditionNode = BehaviourAPI.Unity.Framework.Adaptations.ConditionNode;
 
 namespace BehaviourAPI.Unity.Editor
 {

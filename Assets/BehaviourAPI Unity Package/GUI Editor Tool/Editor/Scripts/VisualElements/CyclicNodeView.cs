@@ -47,8 +47,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (other.Node.Node is Transition t)
                 {
-                    Debug.Log("A");
-                    t.SourceStateLastStatusChanged += (status) => { Debug.Log(status); edgeView.control.UpdateStatus(status); };
+                    t.SourceStateLastStatusChanged += (status) => edgeView.control.UpdateStatus(status);
                     edgeView.control.UpdateStatus(t.SourceStateLastStatus);
                 }
             }
