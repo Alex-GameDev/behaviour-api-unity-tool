@@ -11,18 +11,59 @@ using UnityEditor;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+using Object = UnityEngine.Object;
+using BehaviourAPI.Core.Serialization;
 
 namespace BehaviourAPI.UnityTool.Framework
 {
     [Serializable]
-    public class BehaviourSystemData 
+    public class BehaviourSystemData : ICloneable
     {
-        [HideInInspector] public List<GraphData> graphs;
-        [HideInInspector] public List<PushPerceptionData> pushPerception;
+        [HideInInspector] public List<GraphData> graphs = new List<GraphData>();
+        [HideInInspector] public List<PushPerceptionData> pushPerception = new List<PushPerceptionData>();
+
+        public BehaviourGraph BuildSystem()
+        {
+            if(graphs.Count > 0)
+            {
+                for (int i = 0; i < graphs.Count; i++)
+                {
+                    graphs[i].Build();
+                }
+
+                return graphs[0].graph;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public object Clone()
+        {
+            var copy = new BehaviourSystemData();
+            copy.graphs = new List<GraphData>(graphs.Count);
+            copy.pushPerception = new List<PushPerceptionData>(pushPerception.Count);
+
+            for(int i = 0; i < graphs.Count; i++)
+            {
+                copy.graphs.Add((GraphData)graphs[i].Clone());
+            }
+
+            for (int i = 0; i < pushPerception.Count; i++)
+            {
+                copy.pushPerception.Add((PushPerceptionData)pushPerception[i].Clone());
+            }
+
+            return copy;
+        }
     }
 
     [Serializable]
-    public class GraphData
+    public class GraphData : ICloneable
     {
         [HideInInspector] public string id;
         public string name;
@@ -37,6 +78,10 @@ namespace BehaviourAPI.UnityTool.Framework
 
             name = graphType.Name;
             id = Guid.NewGuid().ToString();
+        }
+
+        public GraphData()
+        {
         }
 
         public Dictionary<string, NodeData> GetNodeIdMap()
@@ -95,10 +140,40 @@ namespace BehaviourAPI.UnityTool.Framework
             }
             return visitedNodes;
         }
+
+        public void Build()
+        {
+            var builder = new BehaviourGraphBuilder(graph);
+            var nodeIdMap = GetNodeIdMap();
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                builder.AddNode(nodes[i].node,
+                    nodes[i].parentIds.Select(id => nodeIdMap[id].node).ToList(),
+                    nodes[i].childIds.Select(id => nodeIdMap[id].node).ToList()
+                    );
+            }
+            builder.Build();            
+        }
+
+        public object Clone()
+        {
+            GraphData copy = new GraphData();
+            copy.id = id;
+            copy.name = name;
+            copy.nodes = new List<NodeData>(nodes.Count);
+
+            for(int i = 0; i < nodes.Count; i++)
+            {
+                copy.nodes.Add((NodeData)nodes[i].Clone());
+            }
+
+            copy.graph = (BehaviourGraph)graph.Clone();
+            return copy;
+        }
     }
 
     [Serializable]
-    public class NodeData
+    public class NodeData : ICloneable
     {
         public string name;
         [HideInInspector] public string id;
@@ -118,13 +193,37 @@ namespace BehaviourAPI.UnityTool.Framework
             name = type.Name;
             id = Guid.NewGuid().ToString();
         }
+
+        public NodeData()
+        {
+        }
+
+        public object Clone()
+        {
+            NodeData copy = new NodeData();
+            copy.name = name;
+            copy.id = id;
+            copy.position = position;
+            copy.node = (Node)node.Clone();
+            copy.parentIds = new List<string>(parentIds);
+            copy.childIds = new List<string>(childIds);
+            return copy;
+        }
     }
 
     [Serializable]
-    public class PushPerceptionData
+    public class PushPerceptionData : ICloneable
     {
         public string name;
         [HideInInspector] public List<int> targetNodeIds;
+
+        public object Clone()
+        {
+            PushPerceptionData copy = new PushPerceptionData();
+            copy.name = name;
+            copy.targetNodeIds = new List<int>(targetNodeIds);
+            return copy;
+        }
     }
 
     public interface IBuildable

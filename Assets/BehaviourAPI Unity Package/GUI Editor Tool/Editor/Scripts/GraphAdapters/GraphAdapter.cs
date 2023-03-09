@@ -60,7 +60,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public void DrawNode(NodeData node, GraphView graphView)
         {
-            var nodeView = new NodeDataView(node, BehaviourAPISettings.instance.EditorLayoutsPath + "/Nodes/Tree Node.uxml");
+            var nodeView = new NodeDataView(node, graphView, BehaviourAPISettings.instance.EditorLayoutsPath + "/Nodes/Tree Node.uxml");
             graphView.AddNode(nodeView);
         }
 

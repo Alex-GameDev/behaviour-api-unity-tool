@@ -30,7 +30,7 @@ namespace BehaviourAPI.New.Unity.Editor
         /// <summary>
         /// The current selected graph
         /// </summary>
-        public GraphData graphData;
+        public GraphData graphData { get; private set; }
 
         /// <summary>
         /// The adapter used to render the current graph
@@ -141,7 +141,7 @@ namespace BehaviourAPI.New.Unity.Editor
 
         public void SetGraphData(GraphData data)
         {
-            ClearGraph();
+            ClearView();
             graphData = data;
             _adapter = GraphAdapter.FindAdapter(data.graph);
             _adapter.DrawGraph(data, this);
@@ -192,6 +192,18 @@ namespace BehaviourAPI.New.Unity.Editor
             EditorWindow.Instance.OnModifyAsset();
         }
 
+        public void ClearView()
+        {
+            _assetViewMap.Clear();
+            graphElements.ForEach(RemoveElement);
+        }
+
+        public void RefreshView()
+        {
+            ClearView();
+            _adapter.DrawGraph(graphData, this);
+        }
+
         #endregion
 
         #region ------------------------------ UTILS ---------------------------------
@@ -214,8 +226,8 @@ namespace BehaviourAPI.New.Unity.Editor
 
             if (data != null)
             {
-                _adapter.DrawNode(data, this);
                 graphData.nodes.Add(data);
+                _adapter.DrawNode(data, this);               
                 EditorWindow.Instance.OnModifyAsset();
             }
             else
@@ -232,7 +244,6 @@ namespace BehaviourAPI.New.Unity.Editor
                 EditorWindow.Instance.OnModifyAsset();
             }
         }
-
         #endregion
     }
 
@@ -244,6 +255,10 @@ namespace BehaviourAPI.New.Unity.Editor
 
         public Action Selected;
         public Action Unselected;
+
+        SerializedProperty _property;
+
+        GraphView _graphView;
 
         #endregion
 
@@ -262,9 +277,12 @@ namespace BehaviourAPI.New.Unity.Editor
 
         #region --------------------------- Set up ---------------------------
 
-        public NodeDataView(NodeData data, string path) : base(path)
+        public NodeDataView(NodeData data, GraphView graphView, string path) : base(path)
         {
             this.data = data;
+
+            _graphView = graphView;
+            RefreshProperty();
 
             RootElement = this.Q("node-root");
             IconElement = this.Q("node-icon");
@@ -310,16 +328,10 @@ namespace BehaviourAPI.New.Unity.Editor
 
         private void SetUpDataBinding()
         {
-            //var obj = new SerializedObject(Node);
-            //var titleInputField = this.Q<TextField>(name: "title-input-field");
+            var titleInputField = this.Q<TextField>(name: "title-input-field");
 
-            //if (BehaviourEditorWindow.Instance.IsRuntime)
-            //{
-            //    titleInputField.isReadOnly = true;
-            //}
-
-            //titleInputField.bindingPath = "Name";
-            //titleInputField.Bind(obj);
+            titleInputField.bindingPath = _property.propertyPath + ".name";
+            titleInputField.Bind(_property.serializedObject);
         }
 
         protected PortView InstantiatePort(Direction direction, PortOrientation orientation)
@@ -362,6 +374,21 @@ namespace BehaviourAPI.New.Unity.Editor
         {
             if (direction == Direction.Input) return InputPorts.FirstOrDefault();
             else return OutputPorts.FirstOrDefault();
+        }
+
+        SerializedProperty GetPropertyPath()
+        {
+            var graphDataId = _graphView.editorWindow.System.data.graphs.IndexOf(_graphView.graphData);
+            var nodeDataId = _graphView.graphData.nodes.IndexOf(data);
+
+            var path = $"data.graphs.Array.data[{graphDataId}].nodes.Array.data[{nodeDataId}]";
+            var prop = new SerializedObject(_graphView.editorWindow.System).FindProperty(path);
+
+            if(prop == null)
+            {
+                Debug.Log("null");
+            }
+            return prop;
         }
 
         #endregion
@@ -422,6 +449,11 @@ namespace BehaviourAPI.New.Unity.Editor
             //    outputEdges.Remove(edgeView);
             //    UpdateEdgeViews();
             //}
+        }
+
+        public void RefreshProperty()
+        {
+            _property = GetPropertyPath();
         }
 
         #endregion
