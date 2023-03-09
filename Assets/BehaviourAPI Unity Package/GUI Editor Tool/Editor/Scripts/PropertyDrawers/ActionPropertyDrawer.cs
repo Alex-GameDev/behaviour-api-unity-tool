@@ -31,7 +31,8 @@ namespace BehaviourAPI.New.Unity.Editor
             {
                 if (GUILayout.Button("Assign action"))
                 {
-                    SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)), ElementCreatorWindow.Create<ActionCreationWindow>((aType) => AssignAction(property, aType)));
+                    SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)), 
+                        ElementCreatorWindow.Create<ActionCreationWindow>((aType) => AssignAction(property, aType)));
                 }
             }
             else
@@ -123,16 +124,40 @@ namespace BehaviourAPI.New.Unity.Editor
     [CustomPropertyDrawer(typeof(SubgraphAction))]
     public class SubgraphActionPropertyDrawer : ActionPropertyDrawer
     {
+        bool first = false;
+
+        private void SetSubgraph(SerializedProperty property, GraphData data)
+        {
+            property.stringValue = data.id;
+            property.serializedObject.ApplyModifiedProperties();
+        }
+
+
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             base.OnGUI(position, property, label);
+
+            if(!first)
+            {
+                Debug.Log("first");
+                first = true;
+            }
+
+            if (property.managedReferenceValue == null) return;
+
             var subGraphProperty = property.FindPropertyRelative("subgraphId");
-            if(string.IsNullOrEmpty(subGraphProperty.stringValue) )
+            if(string.IsNullOrEmpty(subGraphProperty.stringValue))
             {
                 if (GUILayout.Button("Assign subgraph"))
                 {
-                    subGraphProperty.stringValue = "1";
-                    subGraphProperty.serializedObject.ApplyModifiedProperties();
+                    if(EditorWindow.Instance != null)
+                    {
+                        EditorWindow.Instance.OpenGraphSearchWindow((data) => SetSubgraph(subGraphProperty, data));
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Can't assign subgraph outside editor window");
+                    }
                 }
             }
             else

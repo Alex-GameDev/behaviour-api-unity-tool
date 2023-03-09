@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.Search;
 using UnityEditor.UIElements;
 using UnityEditor.VersionControl;
 using UnityEngine;
@@ -302,7 +303,7 @@ namespace BehaviourAPI.New.Unity.Editor
                 OnModifyAsset();
             }
 
-            //DisplayGraph(graphAsset);
+            DisplayGraph(graph);
             Toast("Graph created");
         }
 
@@ -358,7 +359,11 @@ namespace BehaviourAPI.New.Unity.Editor
             ShowNotification(new GUIContent(message), timeout);
         }
 
-
+        public void OpenGraphSearchWindow(Action<GraphData> setSubgraph)
+        {
+            SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)),
+                ElementSearchWindowProvider<GraphData>.Create<GraphSearchWindowProvider>(this, setSubgraph, g => g != _graphView.graphData));
+        }
 
         #endregion
     }
