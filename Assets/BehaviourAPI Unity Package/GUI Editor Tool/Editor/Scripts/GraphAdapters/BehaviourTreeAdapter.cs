@@ -69,7 +69,7 @@ namespace BehaviourAPI.Unity.Editor
             }       
         }                
 
-        // Reload the root node when the old one is removed
+        // Reload the root data when the old one is removed
         protected override GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change)
         {
             var rootNode = graphView.GraphAsset.Nodes.Find(n => n.Parents.Count == 0);

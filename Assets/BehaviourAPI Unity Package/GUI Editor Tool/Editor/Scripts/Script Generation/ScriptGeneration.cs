@@ -475,7 +475,7 @@ namespace BehaviourAPI.Unity.Editor
         }
 
         /// <summary>
-        /// Generates code for an Utility Selectable Node. If the node has childs, generates code recursively.
+        /// Generates code for an Utility Selectable Node. If the data has childs, generates code recursively.
         /// NODETYPE VARNAME = USNAME.CreateNODETYPE(args)...;
         /// </summary>
         static string GenerateCodeForSelectableNode(NodeAsset asset, ScriptTemplate template, string graphName, bool includeNodeName)
@@ -503,7 +503,7 @@ namespace BehaviourAPI.Unity.Editor
                 if (action.FinishSystemOnComplete) args.Add("finishOnComplete: true");
                 method = $"CreateAction";
             }
-            // If is an utility exit node, generates code for the child factor and the exit status.
+            // If is an utility exit data, generates code for the child factor and the exit status.
             else if (selectableNode is UtilityExitNode exitNode)
             {
                 args.Add(template.FindVariableName(asset.Childs.FirstOrDefault()) ?? k_CodeForMissingNode);
@@ -535,7 +535,7 @@ namespace BehaviourAPI.Unity.Editor
         #region ----------------------------------------- BTNodes -----------------------------------------
 
         /// <summary>
-        /// Generates code for an BTNode. If the node has childs, generates code recursively.
+        /// Generates code for an BTNode. If the data has childs, generates code recursively.
         /// NODETYPE VARNAME = USNAME.CreateNODETYPE(args)...;
         /// </summary>
         static string GenerateCodeForBTNode(NodeAsset asset, ScriptTemplate template, string graphName, bool includeNodeName)

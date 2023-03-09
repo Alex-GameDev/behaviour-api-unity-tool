@@ -17,7 +17,7 @@ namespace BehaviourAPI.Unity.Editor
 
 
     /// <summary>
-    /// Visual element that represents a node in a behaviour graph
+    /// Visual element that represents a data in a behaviour graph
     /// </summary>
     public abstract class NodeView : UnityEditor.Experimental.GraphView.Node
     {

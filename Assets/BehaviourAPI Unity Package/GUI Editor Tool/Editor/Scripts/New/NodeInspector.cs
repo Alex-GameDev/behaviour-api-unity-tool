@@ -81,7 +81,7 @@ namespace BehaviourAPI.New.Unity.Editor
             _inspectorContent.Add(container);
 
             //var obj = new SerializedObject(EditorWindow.Instance.System);
-            //var path = "data.graphs.Array.data[0].nodes.Array.data[0].node";
+            //var path = "data.graphs.Array.data[0].nodes.Array.data[0].data";
             //var prop = obj.FindProperty(path);
             
             //while(prop.Next(true))

@@ -10,6 +10,7 @@ using Action = BehaviourAPI.Core.Actions.Action;
 using UnityEditor;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework;
+using System.Linq;
 
 namespace BehaviourAPI.UnityTool.Framework
 {
@@ -36,6 +37,63 @@ namespace BehaviourAPI.UnityTool.Framework
 
             name = graphType.Name;
             id = Guid.NewGuid().ToString();
+        }
+
+        public Dictionary<string, NodeData> GetNodeIdMap()
+        {
+            return nodes.ToDictionary(n => n.id, n => n);
+        }
+
+        public HashSet<NodeData> GetChildPathing(NodeData start)
+        {
+            Dictionary<string, NodeData> nodeIdMap = GetNodeIdMap();
+            HashSet<NodeData> visitedNodes = new HashSet<NodeData>();
+            HashSet<NodeData> unvisitedNodes = new HashSet<NodeData>();
+
+            unvisitedNodes.Add(start);
+            while(unvisitedNodes.Count > 0)
+            {
+                var node = unvisitedNodes.First();
+                unvisitedNodes.Remove(node);
+                visitedNodes.Add(node);
+
+                for(int i = 0; i < node.childIds.Count; i++)
+                {
+                    NodeData child = nodeIdMap[node.childIds[i]];
+
+                    if(!visitedNodes.Contains(child))
+                    {
+                        unvisitedNodes.Add(child);
+                    }
+                }
+            }
+            return visitedNodes;
+        }
+
+        public HashSet<NodeData> GetParentPathing(NodeData start)
+        {
+            Dictionary<string, NodeData> nodeIdMap = GetNodeIdMap();
+            HashSet<NodeData> visitedNodes = new HashSet<NodeData>();
+            HashSet<NodeData> unvisitedNodes = new HashSet<NodeData>();
+
+            unvisitedNodes.Add(start);
+            while (unvisitedNodes.Count > 0)
+            {
+                var node = unvisitedNodes.First();
+                unvisitedNodes.Remove(node);
+                visitedNodes.Add(node);
+
+                for (int i = 0; i < node.parentIds.Count; i++)
+                {
+                    NodeData child = nodeIdMap[node.parentIds[i]];
+
+                    if (!visitedNodes.Contains(child))
+                    {
+                        unvisitedNodes.Add(child);
+                    }
+                }
+            }
+            return visitedNodes;
         }
     }
 

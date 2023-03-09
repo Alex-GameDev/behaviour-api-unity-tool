@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UIElements;
 using GraphView = BehaviourAPI.New.Unity.Editor.GraphView;
@@ -31,7 +32,7 @@ namespace BehaviourAPI.Unity.Editor
         protected abstract GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change);
 
         /// <summary>
-        /// Draw a node view
+        /// Draw a data view
         /// </summary>
         public void DrawNode(NodeAsset asset, BehaviourGraphView graphView)
         {
@@ -57,6 +58,13 @@ namespace BehaviourAPI.Unity.Editor
             graphView.AddNodeView(nodeView);
         }
 
+        public void DrawNode(NodeData node, GraphView graphView)
+        {
+            var nodeView = new NodeDataView(node, BehaviourAPISettings.instance.EditorLayoutsPath + "/Nodes/Tree Node.uxml");
+            graphView.AddNode(nodeView);
+        }
+
+
         void DebugNode(NodeAsset asset)
         {
             Debug.Log($"Name: {asset.Name}\nType: {asset.Node.TypeName()} / Pos: {asset.Position}\n" +
@@ -71,7 +79,7 @@ namespace BehaviourAPI.Unity.Editor
         }
 
         /// <summary>
-        /// Draw all connections that begins in a node.
+        /// Draw all connections that begins in a data.
         /// </summary>
         public void DrawConnections(NodeAsset asset, BehaviourGraphView graphView, List<NodeView> nodeViews)
         {
@@ -98,6 +106,30 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
+        public void DrawConnections(NodeData data, GraphView graphView)
+        {
+            if (data.node != null && data.node.MaxInputConnections == 0) return;
+
+            var sourceView = graphView.GetViewOf(data);
+            var nodeIdMap = graphView.graphData.GetNodeIdMap();
+            for(int i = 0; i < data.childIds.Count; i++)
+            {
+                string childId = data.childIds[i];
+                NodeData child = nodeIdMap[childId];
+                var childView = graphView.GetViewOf(child);
+                var srcPort = sourceView.GetBestPort(childView, Direction.Output);
+                var tgtPort = childView.GetBestPort(sourceView, Direction.Input);
+
+                EdgeView edge = srcPort.ConnectTo<EdgeView>(tgtPort);
+                graphView.AddConnectionView(edge);
+
+                srcPort.node.RefreshPorts();
+                tgtPort.node.RefreshPorts();
+                sourceView.OnConnected(edge, childView, srcPort, ignoreConnection: true);
+                childView.OnConnected(edge, sourceView, tgtPort, ignoreConnection: true);
+            }
+        }
+
         /// <summary>
         /// Draw a graph
         /// </summary>
@@ -118,12 +150,11 @@ namespace BehaviourAPI.Unity.Editor
             {
                 DrawNode(node, graphView);
             }
-        }
 
-        public void DrawNode(NodeData node, GraphView graphView)
-        {
-            var nodeView = new NodeDataView(node, BehaviourAPISettings.instance.EditorLayoutsPath + "/Nodes/Tree Node.uxml");
-            graphView.AddNode(nodeView);
+            foreach(var node in data.nodes)
+            {
+                DrawConnections(node, graphView);
+            }
         }
 
         public void BuildGraphContextualMenu(ContextualMenuPopulateEvent menuEvt, BehaviourGraphView graphView)
@@ -168,6 +199,51 @@ namespace BehaviourAPI.Unity.Editor
             return validPorts;
         }
 
+
+        public List<Port> ValidatePorts(UQueryState<Port> ports, Port startPort, GraphData data, bool allowLoops)
+        {
+            List<Port> validPorts = new List<Port>();
+
+            NodeDataView startNodeView = startPort.node as NodeDataView;
+
+            if (startNodeView != null)
+            {
+                var bannedTargetPorts = allowLoops ? new HashSet<NodeData>() : data.GetChildPathing(startNodeView.data);
+                var bannedSourcePorts = allowLoops ? new HashSet<NodeData>() : data.GetParentPathing(startNodeView.data);
+
+                foreach (var port in ports)
+                {
+                    if (ValidatePort(startPort, port, bannedTargetPorts, bannedSourcePorts))
+                    {
+                        validPorts.Add(port);
+                    }
+                }
+            }
+            return validPorts;
+        }
+
+        private bool ValidatePort(Port startPort, Port port, HashSet<NodeData> bannedTargetPorts, HashSet<NodeData> bannedSourcePorts)
+        {
+            if (startPort.direction == port.direction) return false;    // Same port direction
+            if (startPort.node == port.node) return false;              // Same data
+
+            var node = port.node as NodeDataView;
+            if (node == null) return false;                             // view without data assigned
+
+            if (startPort.direction == Direction.Input)
+            {
+                if (!port.portType.IsAssignableFrom(startPort.portType)) return false;      // Type missmatch
+                if (bannedTargetPorts.Contains(node.data)) return false;                   // Loop
+            }
+            else
+            {
+                if (!startPort.portType.IsAssignableFrom(port.portType)) return false;     // Type missmatch
+                if (bannedSourcePorts.Contains(node.data)) return false;                   // Loop
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Return a tree entry list with the hierarchy of classes from the current graph class
         /// </summary>
@@ -204,10 +280,10 @@ namespace BehaviourAPI.Unity.Editor
         bool ValidatePort(Port startPort, Port port, HashSet<NodeAsset> bannedTargetPorts, HashSet<NodeAsset> bannedSourcePorts)
         {
             if (startPort.direction == port.direction) return false;    // Same port direction
-            if (startPort.node == port.node) return false;              // Same node
+            if (startPort.node == port.node) return false;              // Same data
 
             var node = port.node as NodeView;
-            if (node == null) return false;                             // view without node assigned
+            if (node == null) return false;                             // view without data assigned
 
             if (startPort.direction == Direction.Input)
             {

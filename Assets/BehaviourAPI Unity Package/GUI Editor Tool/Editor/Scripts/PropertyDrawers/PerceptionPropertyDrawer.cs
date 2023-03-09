@@ -84,7 +84,7 @@ namespace BehaviourAPI.New.Unity.Editor
                 SerializedProperty resetComponentProp = property.FindPropertyRelative("reset.componentName");
                 SerializedProperty resetMethodProp = property.FindPropertyRelative("reset.methodName");
 
-                EditorGUI.LabelField(labelRect, "Custom Property", EditorStyles.boldLabel);
+                EditorGUI.LabelField(labelRect, "Custom perception", EditorStyles.boldLabel);
 
                 if(GUI.Button(removeRect, "X"))
                 {

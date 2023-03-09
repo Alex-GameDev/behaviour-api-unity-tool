@@ -17,26 +17,21 @@ MonoBehaviour:
     - id: c3d5acca-1966-4c0e-b151-1b01d8740b45
       name: BehaviourTree
       nodes:
-      - name: LeafNode
-        id: 0d60219d-ac6b-4ff4-ae2f-737f95022562
-        position: {x: 497, y: 188}
-        node:
-          rid: 6537695252129251332
-        parentIds: []
-        childIds: []
       - name: LoopUntilNode
         id: aa3efd4f-22b4-4c28-9348-7ced76f108b1
-        position: {x: 274, y: 3}
+        position: {x: 499, y: 353}
         node:
           rid: 6537695252129251333
         parentIds: []
-        childIds: []
-      - name: ConditionNode
-        id: 42ad7535-a1dd-480a-912d-87cbbdd49fe9
-        position: {x: 77, y: 204}
+        childIds:
+        - bc0fdbae-08ca-4521-8fce-55311a40fb11
+      - name: LeafNode
+        id: bc0fdbae-08ca-4521-8fce-55311a40fb11
+        position: {x: 454, y: 592}
         node:
-          rid: 6537695252563886081
-        parentIds: []
+          rid: 6537695257688801284
+        parentIds:
+        - aa3efd4f-22b4-4c28-9348-7ced76f108b1
         childIds: []
       graph:
         rid: 6537695252129251331
@@ -48,24 +43,13 @@ MonoBehaviour:
       type: {class: , ns: , asm: }
     - rid: 6537695252129251331
       type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-    - rid: 6537695252129251332
-      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
-      data:
-        SerializedAction:
-          rid: 6537695252563886222
     - rid: 6537695252129251333
       type: {class: LoopUntilNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
         TargetStatus: 4
         MaxIterations: -1
-    - rid: 6537695252563886081
-      type: {class: ConditionNode, ns: BehaviourAPI.UnityTool.Framework, asm: BehaviourAPI.UnityTool.Framework}
+    - rid: 6537695257688801284
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
-        perception:
+        SerializedAction:
           rid: -2
-    - rid: 6537695252563886222
-      type: {class: SubgraphAction, ns: BehaviourAPI.UnityTool.Framework, asm: BehaviourAPI.UnityTool.Framework}
-      data:
-        ExecuteOnLoop: 0
-        DontStopOnInterrupt: 0
-        subgraphId: 1

@@ -29,7 +29,7 @@ namespace BehaviourAPI.New.Unity.Editor
         {
             if (property.managedReferenceValue == null)
             {
-                if (GUILayout.Button("Assign perception"))
+                if (GUILayout.Button("Assign action"))
                 {
                     SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)), ElementCreatorWindow.Create<ActionCreationWindow>((aType) => AssignAction(property, aType)));
                 }
@@ -89,7 +89,7 @@ namespace BehaviourAPI.New.Unity.Editor
                 SerializedProperty stopComponentProp = property.FindPropertyRelative("stop.componentName");
                 SerializedProperty stopMethodProp = property.FindPropertyRelative("stop.methodName");
 
-                EditorGUI.LabelField(labelRect, "Custom Property", EditorStyles.boldLabel);
+                EditorGUI.LabelField(labelRect, "Custom action", EditorStyles.boldLabel);
 
                 if (GUI.Button(removeRect, "X"))
                 {

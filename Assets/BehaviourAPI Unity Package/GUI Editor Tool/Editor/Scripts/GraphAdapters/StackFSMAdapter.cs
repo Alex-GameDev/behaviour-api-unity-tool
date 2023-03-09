@@ -23,22 +23,22 @@ namespace BehaviourAPI.Unity.Editor
         //    return gName;
         //}
 
-        //protected override void AddTransition(NodeAsset node, ScriptTemplate template, string graphName)
+        //protected override void AddTransition(NodeAsset data, ScriptTemplate template, string graphName)
         //{
-        //    if(node.Node is StackTransition transition)
+        //    if(data.Node is StackTransition transition)
         //    {
-        //        var nodeName = !string.IsNullOrEmpty(node.Name) ? node.Name : transition.TypeName().ToLower();
+        //        var nodeName = !string.IsNullOrEmpty(data.Name) ? data.Name : transition.TypeName().ToLower();
         //        string typeName = transition.TypeName();
 
         //        var args = new List<string>();
 
-        //        var sourceState = template.FindVariableName(node.Parents.FirstOrDefault()) ?? "null/*ERROR*/";
+        //        var sourceState = template.FindVariableName(data.Parents.FirstOrDefault()) ?? "null/*ERROR*/";
         //        args.Add(sourceState);
 
         //        var methodName = string.Empty;
         //        if (transition is PushTransition pushTransition)
         //        {
-        //            var targetState = template.FindVariableName(node.Childs.FirstOrDefault()) ?? "null/*ERROR*/";
+        //            var targetState = template.FindVariableName(data.Childs.FirstOrDefault()) ?? "null/*ERROR*/";
         //            args.Add(targetState);
         //            methodName = "CreatePushTransition";
         //        }
@@ -61,11 +61,11 @@ namespace BehaviourAPI.Unity.Editor
 
         //        if (!transition.isPulled) args.Add("isPulled: false");
 
-        //        template.AddVariableDeclarationLine(typeName, nodeName, node, $"{graphName}.{methodName}({args.Join()})");
+        //        template.AddVariableDeclarationLine(typeName, nodeName, data, $"{graphName}.{methodName}({args.Join()})");
         //    }
         //    else
         //    {
-        //        base.AddTransition(node, template, graphName);
+        //        base.AddTransition(data, template, graphName);
         //    }
         //}
 

@@ -78,4 +78,19 @@ namespace BehaviourAPI.New.Unity.Editor
             return BehaviourAPISettings.instance.PerceptionHierarchy;
         }
     }
+
+    /// <summary>
+    /// Creation window for nodes
+    /// </summary>
+    public class NodeCreationWindow : ElementCreatorWindow
+    {
+        private Type _adapterType;
+
+        protected override EditorHierarchyNode GetHierarchyNode()
+        {
+            return BehaviourAPISettings.instance.NodeHierarchy(_adapterType);
+        }
+
+        public void SetAdapterType(Type type) => _adapterType = type;
+    }
 }

@@ -44,7 +44,7 @@ namespace BehaviourAPI.Unity.Editor
     }
 
     /// <summary>
-    /// Search window to select a node from any graph of the system
+    /// Search window to select a data from any graph of the system
     /// </summary>
     public class NodeSearchWindow : SearchWindow<NodeAsset>
     {

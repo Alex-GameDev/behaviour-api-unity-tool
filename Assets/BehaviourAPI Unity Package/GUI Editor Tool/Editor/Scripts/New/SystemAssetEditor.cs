@@ -23,7 +23,7 @@ namespace BehaviourAPI.New.Unity.Editor
                 EditorGUILayout.Space(5f);
                 foreach (var graph in asset.data.graphs)
                 {
-                    //EditorGUILayout.LabelField($"\t- {(string.IsNullOrWhiteSpace(graph.name) ? "unnamed" : graph.name)}({graph.graph.GetType().Name ?? "null"}, {graph.nodes.Count} node(s))");
+                    //EditorGUILayout.LabelField($"\t- {(string.IsNullOrWhiteSpace(graph.name) ? "unnamed" : graph.name)}({graph.graph.GetType().Name ?? "null"}, {graph.nodes.Count} data(s))");
                 }
                 EditorGUILayout.Space(5f);
                 //EditorGUILayout.LabelField($"Pull perceptions: \t {asset.PullPerceptions.Count}");
