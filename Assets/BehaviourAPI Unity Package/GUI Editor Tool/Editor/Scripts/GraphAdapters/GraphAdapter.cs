@@ -1,6 +1,7 @@
 using BehaviourAPI.Core;
+using BehaviourAPI.New.Unity.Editor;
 using BehaviourAPI.Unity.Framework;
-
+using BehaviourAPI.UnityTool.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
+using GraphView = BehaviourAPI.New.Unity.Editor.GraphView;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -108,6 +110,20 @@ namespace BehaviourAPI.Unity.Editor
             graphAsset.Nodes.ForEach(node => DrawConnections(node, graphView, nodeViews));            
 
             DrawGraphDetails(graphAsset, graphView, nodeViews);           
+        }
+
+        public void DrawGraph(GraphData data, GraphView graphView)
+        {
+            foreach(var node in data.nodes)
+            {
+                DrawNode(node, graphView);
+            }
+        }
+
+        public void DrawNode(NodeData node, GraphView graphView)
+        {
+            var nodeView = new NodeDataView(node, BehaviourAPISettings.instance.EditorLayoutsPath + "/Nodes/Tree Node.uxml");
+            graphView.AddNode(nodeView);
         }
 
         public void BuildGraphContextualMenu(ContextualMenuPopulateEvent menuEvt, BehaviourGraphView graphView)

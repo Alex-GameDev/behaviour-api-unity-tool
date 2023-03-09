@@ -19,7 +19,7 @@ namespace BehaviourAPI.Unity.Editor
     /// <summary>
     /// Visual element that represents a behaviour graph
     /// </summary>
-    public class BehaviourGraphView : GraphView
+    public class BehaviourGraphView : UnityEditor.Experimental.GraphView.GraphView
     {
         private static string stylePath => BehaviourAPISettings.instance.EditorStylesPath + "graph.uss";
 

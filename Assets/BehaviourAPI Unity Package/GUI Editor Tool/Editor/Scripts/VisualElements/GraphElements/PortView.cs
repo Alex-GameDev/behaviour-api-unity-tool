@@ -76,7 +76,7 @@ namespace BehaviourAPI.Unity.Editor
             {
             }
 
-            public void OnDrop(GraphView graphView, Edge edge)
+            public void OnDrop(UnityEditor.Experimental.GraphView.GraphView graphView, Edge edge)
             {
                 m_EdgesToCreate.Clear();
                 m_EdgesToCreate.Add(edge);
