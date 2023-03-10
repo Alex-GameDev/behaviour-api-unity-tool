@@ -150,7 +150,17 @@ namespace BehaviourAPI.New.Unity.Editor
         GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
             graphViewChange.movedElements?.ForEach(OnElementMoved);
-            graphViewChange.elementsToRemove?.ForEach(OnElementRemoved);
+
+            if(graphViewChange.elementsToRemove != null)
+            {
+                bool anyNodeRemoved = false;
+                foreach(var elementToRemove in graphViewChange.elementsToRemove)
+                {
+                    anyNodeRemoved |= OnElementRemoved(elementToRemove);
+                }
+                if(anyNodeRemoved) RefreshProperties();
+            }
+
             graphViewChange.edgesToCreate?.ForEach(OnEdgeCreated);
 
             return /* _adapter?.OnViewChanged(this, graphViewChange) ??*/ graphViewChange;
@@ -165,12 +175,14 @@ namespace BehaviourAPI.New.Unity.Editor
             }
         }
 
-        void OnElementRemoved(GraphElement element)
+        bool OnElementRemoved(GraphElement element)
         {
             if (element is NodeDataView nodeView)
             {
                 graphData.nodes.Remove(nodeView.data);
+                _assetViewMap.Remove(nodeView.data);
                 EditorWindow.Instance.OnModifyAsset();
+                return true;
             }
 
             if (element is Edge edge)
@@ -181,6 +193,7 @@ namespace BehaviourAPI.New.Unity.Editor
                 target.OnDisconnected((EdgeView)edge, source, edge.input);
                 EditorWindow.Instance.OnModifyAsset();
             }
+            return false;
         }
 
         void OnEdgeCreated(Edge edge)
@@ -202,6 +215,18 @@ namespace BehaviourAPI.New.Unity.Editor
         {
             ClearView();
             _adapter.DrawGraph(graphData, this);
+        }
+
+        /// <summary>
+        /// Call when a node is removed or the order changed to recompute the property paths
+        /// </summary>
+        public void RefreshProperties()
+        {
+            Debug.Log("Refresh properties");
+            foreach(var view in _assetViewMap.Values)
+            {
+                view.RefreshProperty();
+            }
         }
 
         #endregion
@@ -384,9 +409,11 @@ namespace BehaviourAPI.New.Unity.Editor
             var path = $"data.graphs.Array.data[{graphDataId}].nodes.Array.data[{nodeDataId}]";
             var prop = new SerializedObject(_graphView.editorWindow.System).FindProperty(path);
 
-            if(prop == null)
+            //Debug.Log("Valid: " + path);
+            if (prop == null)
             {
-                Debug.Log("null");
+                //Debug.Log(_graphView.graphData.nodes.Count);
+                //Debug.Log("NULL: " + path);
             }
             return prop;
         }
@@ -454,6 +481,7 @@ namespace BehaviourAPI.New.Unity.Editor
         public void RefreshProperty()
         {
             _property = GetPropertyPath();
+            SetUpDataBinding();
         }
 
         #endregion

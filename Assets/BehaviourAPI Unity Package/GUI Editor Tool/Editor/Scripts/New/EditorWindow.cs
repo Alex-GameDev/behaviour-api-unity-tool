@@ -116,7 +116,7 @@ namespace BehaviourAPI.New.Unity.Editor
             rootVisualElement.Q<Button>("im-pushperceptions-btn").clicked += () => ChangeInspector(_pushPerceptionInspector);
 
             _graphView = AddGraphView();
-
+            Debug.Log("Graph view added");
             SetUpToolbar();
 
             Undo.undoRedoPerformed += Refresh;
@@ -225,6 +225,7 @@ namespace BehaviourAPI.New.Unity.Editor
 
         void DisplayGraph(GraphData data, bool forceRefresh = false)
         {
+            if (_graphView == null) Debug.Log("e");
             if (data != null && _graphView.graphData == data && !forceRefresh) return;
 
             _graphView.SetGraphData(data);

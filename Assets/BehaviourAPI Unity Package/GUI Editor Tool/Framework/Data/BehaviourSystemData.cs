@@ -1,20 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Unity.Framework.Adaptations;
 using behaviourAPI.Unity.Framework.Adaptations;
 using Action = BehaviourAPI.Core.Actions.Action;
 using UnityEditor;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
-using Object = UnityEngine.Object;
+
 using BehaviourAPI.Core.Serialization;
 
 namespace BehaviourAPI.UnityTool.Framework
@@ -31,7 +26,7 @@ namespace BehaviourAPI.UnityTool.Framework
             {
                 for (int i = 0; i < graphs.Count; i++)
                 {
-                    graphs[i].Build();
+                    graphs[i].Build(this);
                 }
 
                 return graphs[0].graph;
@@ -141,12 +136,14 @@ namespace BehaviourAPI.UnityTool.Framework
             return visitedNodes;
         }
 
-        public void Build()
+        public void Build(BehaviourSystemData data)
         {
             var builder = new BehaviourGraphBuilder(graph);
             var nodeIdMap = GetNodeIdMap();
             for (int i = 0; i < nodes.Count; i++)
             {
+                if (nodes[i] is IBuildable buildable) buildable.Build(data);
+
                 builder.AddNode(nodes[i].node,
                     nodes[i].parentIds.Select(id => nodeIdMap[id].node).ToList(),
                     nodes[i].childIds.Select(id => nodeIdMap[id].node).ToList()
@@ -239,7 +236,7 @@ namespace BehaviourAPI.UnityTool.Framework
 
         public void Build(BehaviourSystemData data)
         {
-            // this.SubSystem = data.FindGraph(subgraphId);
+            SubSystem = data.graphs.Find(g => g.id == subgraphId).graph;
         }
     }
 
@@ -268,7 +265,7 @@ namespace BehaviourAPI.UnityTool.Framework
     [Serializable]
     public class PerceptionWrapper : Perception
     {
-        [SerializeReference] Perception perception;
+        [SerializeReference] public Perception perception;
 
         public override bool Check() => perception.Check();
 
@@ -280,28 +277,52 @@ namespace BehaviourAPI.UnityTool.Framework
 
         public override object Clone()
         {
-            var p = (PerceptionWrapper) base.Clone();
+            var p = new PerceptionWrapper();
             p.perception = (Perception) perception.Clone();
             return p;
         }
     }
 
     [Serializable]
-    public class CompoundPerceptionWrapper : Perception
+    public class CompoundPerceptionWrapper : Perception, IBuildable
     {
         [SerializeReference] public CompoundPerception compoundPerception;
-        public List<PerceptionWrapper> subPerceptions = new List<PerceptionWrapper>();
+        [SerializeField] List<PerceptionWrapper> subPerceptions = new List<PerceptionWrapper>();
+
+        public void Build(BehaviourSystemData data)
+        {
+            compoundPerception.Perceptions = subPerceptions.Select(wrapper => wrapper.perception).ToList();
+        }
 
 
         public override bool Check() => compoundPerception.Check();
 
+        public override void Initialize() => compoundPerception.Initialize();
+
+        public override void Reset() => compoundPerception.Reset();
+
         public override void SetExecutionContext(ExecutionContext context)
         {
-            throw new NotImplementedException();
+            compoundPerception.SetExecutionContext(context);
+        }
+
+        public override object Clone()
+        {
+            var copy = new CompoundPerceptionWrapper();
+            copy.compoundPerception = (CompoundPerception) compoundPerception.Clone();
+            copy.subPerceptions = new List<PerceptionWrapper>(subPerceptions.Count);
+
+
+            for (int i = 0; i < subPerceptions.Count; i++)
+            {
+                copy.subPerceptions.Add((PerceptionWrapper)subPerceptions[i].Clone());
+            }
+
+            return copy;
         }
     }
 
-    public class LeafNode : BehaviourTrees.LeafNode, IActionAssignable
+    public class LeafNode : BehaviourTrees.LeafNode, IActionAssignable, IBuildable
     {
         [SerializeReference] Action action;
 
@@ -310,20 +331,41 @@ namespace BehaviourAPI.UnityTool.Framework
             get => action;
             set => action = value;
         }
+
+        public void Build(BehaviourSystemData data)
+        {
+            if(action is IBuildable buildable) buildable.Build(data);
+        }
+
         protected override void BuildConnections(List<Node> parents, List<Node> children)
         {
             base.BuildConnections(parents, children);
             Action = action;
         }
+
+        public override object Clone()
+        {
+            var copy = (LeafNode)base.Clone();
+            copy.action = (Action)action.Clone();
+            return copy;
+        }
     }
 
-    public class ConditionNode : BehaviourTrees.ConditionNode, IBuildable
+    public class ConditionNode : BehaviourTrees.ConditionNode
     {
         [SerializeReference] public Perception perception;
 
-        public void Build(BehaviourSystemData data)
+        protected override void BuildConnections(List<Node> parents, List<Node> children)
         {
-            // this.Perception = data.FindPerception(subgraphId);
+            base.BuildConnections(parents, children);
+            Perception = perception;
+        }
+
+        public override object Clone()
+        {
+            var copy = (ConditionNode)base.Clone();
+            copy.perception = (Perception)perception.Clone();
+            return copy;
         }
     }
 }
