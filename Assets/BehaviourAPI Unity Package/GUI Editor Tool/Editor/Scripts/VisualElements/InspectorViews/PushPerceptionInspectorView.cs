@@ -81,7 +81,7 @@ namespace BehaviourAPI.Unity.Editor
             nodeSearchWindow.OpenWindow(AddPushHandler, nodeAsset => nodeAsset.Node is IPushActivable && !_selectedElement.Targets.Contains(nodeAsset));
         }
 
-        void AddPushHandler(NodeAsset obj)
+        void AddPushHandler(NodeData obj)
         {
             _selectedElement.Targets.Add(obj);
             BehaviourEditorWindow.Instance.OnModifyAsset();
@@ -104,7 +104,7 @@ namespace BehaviourAPI.Unity.Editor
             button.clicked += () => RemovePushHandlerListItem(targetNode);
         }
 
-        void RemovePushHandlerListItem(NodeAsset asset)
+        void RemovePushHandlerListItem(NodeData asset)
         {
             _selectedElement.Targets.Remove(asset);
             BehaviourEditorWindow.Instance.OnModifyAsset();

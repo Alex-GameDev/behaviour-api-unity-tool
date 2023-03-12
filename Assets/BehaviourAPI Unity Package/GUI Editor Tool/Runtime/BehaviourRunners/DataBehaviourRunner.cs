@@ -22,7 +22,7 @@ namespace BehaviourAPI.Unity.Runtime
         [Tooltip("Defines how the push perceptions are saved to be searched after.")]
         [SerializeField] NamingSettings pushPerceptionNamingSettings = NamingSettings.IgnoreWhenInvalid;
 
-        BehaviourSystemAsset _executionSystem;
+        BehaviourSystem _executionSystem;
 
         #endregion
 
@@ -50,7 +50,7 @@ namespace BehaviourAPI.Unity.Runtime
             return BuildedGraph;
         }
 
-        public sealed override BehaviourSystemAsset GetBehaviourSystemAsset()
+        public sealed override BehaviourSystem GetBehaviourSystemAsset()
         {
             return _executionSystem;
         }
@@ -63,7 +63,7 @@ namespace BehaviourAPI.Unity.Runtime
         /// <summary>
         /// Get the system created in editor mode to build the runtime one.
         /// </summary>
-        protected abstract BehaviourSystemAsset GetEditorSystem();
+        protected abstract BehaviourSystem GetEditorSystem();
 
         #endregion
 

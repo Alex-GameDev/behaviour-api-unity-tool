@@ -23,7 +23,7 @@ namespace BehaviourAPI.Unity.Editor
         //    return gName;
         //}
 
-        //protected override void AddTransition(NodeAsset data, ScriptTemplate template, string graphName)
+        //protected override void AddTransition(NodeData data, ScriptTemplate template, string graphName)
         //{
         //    if(data.Node is StackTransition transition)
         //    {

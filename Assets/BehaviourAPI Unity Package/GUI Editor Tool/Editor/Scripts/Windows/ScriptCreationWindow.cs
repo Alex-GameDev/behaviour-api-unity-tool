@@ -46,7 +46,7 @@ namespace BehaviourAPI.Unity.Editor
             string scriptName = scriptNameTextField.text;
 
             var system = BehaviourEditorWindow.Instance.System;
-            var systemAsset = BehaviourSystemAsset.CreateSystem(system.Graphs, system.PullPerceptions, system.PushPerceptions);
+            var systemAsset = BehaviourSystem.CreateSystem(system.Graphs, system.PullPerceptions, system.PushPerceptions);
 
             bool useFullNameVar = useFullNameVarToggle.value;
             bool includeNodeNames = includeNodeNamesToggle.value;

@@ -39,7 +39,7 @@ namespace BehaviourAPI.Unity.Editor
             if (firstNode != null) ChangeRootNode(nodeViews.Find(n => n.Node == firstNode));
         }
 
-        protected override NodeView GetLayout(NodeAsset asset, BehaviourGraphView graphView) => new TreeNodeView(asset, graphView);
+        protected override NodeView GetLayout(NodeData asset, BehaviourGraphView graphView) => new TreeNodeView(asset, graphView);
 
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
         {

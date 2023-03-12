@@ -43,7 +43,7 @@ namespace BehaviourAPI.Unity.Editor
         {            
         }
 
-        protected override NodeView GetLayout(NodeAsset asset, BehaviourGraphView graphView) => new LayeredNodeView(asset, graphView);
+        protected override NodeView GetLayout(NodeData asset, BehaviourGraphView graphView) => new LayeredNodeView(asset, graphView);
 
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
         {

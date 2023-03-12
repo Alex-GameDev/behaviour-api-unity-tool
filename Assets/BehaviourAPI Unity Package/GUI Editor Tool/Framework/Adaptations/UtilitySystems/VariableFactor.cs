@@ -1,3 +1,5 @@
+using BehaviourAPI.Core;
+using BehaviourAPI.UnityExtensions;
 using System;
 using UnityEngine;
 
@@ -5,13 +7,20 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
 {
     public class VariableFactor : UtilitySystems.VariableFactor
     {
-        public SerializedFloatFunction variableFunction;
+        public ContextualSerializedFloatFunction variableFunction;
 
-        protected override float ComputeUtility()
+        public override void SetExecutionContext(ExecutionContext context)
         {
-            Utility = variableFunction.GetFunction()?.Invoke() ?? min;
-            Utility = (Utility - min) / (max - min);
-            return Mathf.Clamp01(Utility);
+            var unityContext = (UnityExecutionContext)context;
+            if (unityContext != null)
+            {
+                variableFunction.SetContext(unityContext);
+                Variable = variableFunction.GetFunction();
+            }
+            else
+            {
+                Debug.LogError("Context Variable factor need an UnityExecutionContext to work");
+            }
         }
     }
 }

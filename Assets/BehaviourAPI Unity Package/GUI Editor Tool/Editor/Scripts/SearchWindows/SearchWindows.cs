@@ -46,7 +46,7 @@ namespace BehaviourAPI.Unity.Editor
     /// <summary>
     /// Search window to select a data from any graph of the system
     /// </summary>
-    public class NodeSearchWindow : SearchWindow<NodeAsset>
+    public class NodeSearchWindow : SearchWindow<NodeData>
     {
         public override List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
         {

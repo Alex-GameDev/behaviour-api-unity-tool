@@ -118,7 +118,7 @@ namespace BehaviourAPI.Unity.Editor
             _actionHierarchy = new EditorHierarchyNode("Actions", typeof(Action), new List<EditorHierarchyNode>()
             {
                 new EditorHierarchyNode("Custom Action", typeof(CustomAction)),
-                new EditorHierarchyNode("Custom Action (Context)", typeof(ContextCustomAction)),
+                new EditorHierarchyNode("Custom Action (Context)", typeof(CustomAction)),
                 unityActionNode,
                 new EditorHierarchyNode("Subgraph Action", typeof(UnityTool.Framework.SubgraphAction))
             });
@@ -133,7 +133,7 @@ namespace BehaviourAPI.Unity.Editor
             _perceptionHierarchy = new EditorHierarchyNode("Perceptions", typeof(Perception), new List<EditorHierarchyNode>()
             {
                 new EditorHierarchyNode("Custom Perception", typeof(CustomPerception)),
-                new EditorHierarchyNode("Custom Perception (Context)", typeof(ContextCustomPerception)),
+                new EditorHierarchyNode("Custom Perception (Context)", typeof(CustomPerception)),
                 new EditorHierarchyNode("Unity Perception(s)",typeof(UnityPerception), unityPerceptionTypes),
                 new EditorHierarchyNode("Compound Perception(s)", typeof(CompoundPerception), compoundPerceptionTypes),
                 new EditorHierarchyNode("Status Perception", typeof(ExecutionStatusPerception))

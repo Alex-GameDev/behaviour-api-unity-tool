@@ -7,11 +7,9 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     /// <summary>
     /// Action that stores its subgraph in an asset.
     /// </summary>
-    public class SubgraphAction : SubsystemAction
+    public class SubgraphAction : SubsystemAction, IBuildable
     {
-        [HideInInspector][SerializeField] GraphAsset subgraph;
-
-        public GraphAsset Subgraph { get => subgraph; set => subgraph = value; }
+        public string subGraphId;
 
         public SubgraphAction() : base(null)
         {
@@ -21,10 +19,9 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         {
         }
 
-        public override void SetExecutionContext(ExecutionContext context)
+        public void Build(SystemData data)
         {
-            SubSystem = Subgraph.Graph;
-            base.SetExecutionContext(context);
+            SubSystem = data.graphs.Find(g => g.id == subGraphId).graph;
         }
     }
 }

@@ -46,7 +46,7 @@ namespace BehaviourAPI.Unity.Editor
             if (firstState != null) ChangeEntryState(nodeViews.Find(n => n.Node == firstState));
         }
 
-        protected override NodeView GetLayout(NodeAsset asset, BehaviourGraphView graphView) => new CyclicNodeView(asset, graphView);
+        protected override NodeView GetLayout(NodeData asset, BehaviourGraphView graphView) => new CyclicNodeView(asset, graphView);
 
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
         {

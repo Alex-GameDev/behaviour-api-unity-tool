@@ -64,7 +64,7 @@ namespace BehaviourAPI.Unity.Editor
         /// <param name="path">The destination PATH to the script.</param>
         /// <param name="name">The script class name.</param>
         /// <param name="asset">The system asset.</param>
-        public static void GenerateScript(string path, string name, BehaviourSystemAsset asset, bool useFullNameVar = true, bool includeNodeNames = true)
+        public static void GenerateScript(string path, string name, BehaviourSystem asset, bool useFullNameVar = true, bool includeNodeNames = true)
         {
             if(asset == null)
             {
@@ -81,7 +81,7 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        static Object CreateScript(string path, BehaviourSystemAsset asset, bool useFullNameVar, bool includeNodeNames)
+        static Object CreateScript(string path, BehaviourSystem asset, bool useFullNameVar, bool includeNodeNames)
         {
             string folderPath = path.Substring(0, path.LastIndexOf("/") + 1);
             string scriptName = path.Substring(path.LastIndexOf("/") + 1).Replace(".cs", "");
@@ -100,7 +100,7 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Returns all the code to create the <paramref name="asset"/> in runtime.
         /// </summary>
-        static string GenerateSystemCode(BehaviourSystemAsset asset, string scriptName, bool useFullNameVar, bool includeNames)
+        static string GenerateSystemCode(BehaviourSystem asset, string scriptName, bool useFullNameVar, bool includeNames)
         {
             ScriptTemplate scriptTemplate = new ScriptTemplate(scriptName, useFullNameVar, nameof(CodeBehaviourRunner));
 
@@ -265,7 +265,7 @@ namespace BehaviourAPI.Unity.Editor
                     methodCode = $"new {nameof(ConditionPerception)}({string.Join(", ", parameters)})";
                     type = typeof(ConditionPerception);
                 }
-                else if(p is ContextCustomPerception contextCustomperception)
+                else if(p is CustomPerception contextCustomperception)
                 {
                     methodCode = $"new {nameof(ConditionPerception)}()";
                 }
@@ -312,7 +312,7 @@ namespace BehaviourAPI.Unity.Editor
                 return $"new {nameof(FunctionalAction)}({string.Join(", ", parameters)})";
 
             }
-            else if(action is ContextCustomAction contextCustomAction)
+            else if(action is CustomAction contextCustomAction)
             {
                 return $"new {nameof(FunctionalAction)}()";
             }
@@ -420,7 +420,7 @@ namespace BehaviourAPI.Unity.Editor
         /// Generates code for a utility system's factor. If the factor has childs, the method generates code recursively.
         /// FACTORTYPE VARNAME = USNAME.CreateFACTORTYPE(args).SetVARNAME(VARVALUE)...;
         /// </summary>
-        static string GenerateCodeForFactor(NodeAsset asset, ScriptTemplate template, string graphName, bool includeNodeName)
+        static string GenerateCodeForFactor(NodeData asset, ScriptTemplate template, string graphName, bool includeNodeName)
         {
             var factor = asset.Node as Factor;
 
@@ -478,7 +478,7 @@ namespace BehaviourAPI.Unity.Editor
         /// Generates code for an Utility Selectable Node. If the data has childs, generates code recursively.
         /// NODETYPE VARNAME = USNAME.CreateNODETYPE(args)...;
         /// </summary>
-        static string GenerateCodeForSelectableNode(NodeAsset asset, ScriptTemplate template, string graphName, bool includeNodeName)
+        static string GenerateCodeForSelectableNode(NodeData asset, ScriptTemplate template, string graphName, bool includeNodeName)
         {
             UtilitySelectableNode selectableNode = asset.Node as UtilitySelectableNode;
 
@@ -538,7 +538,7 @@ namespace BehaviourAPI.Unity.Editor
         /// Generates code for an BTNode. If the data has childs, generates code recursively.
         /// NODETYPE VARNAME = USNAME.CreateNODETYPE(args)...;
         /// </summary>
-        static string GenerateCodeForBTNode(NodeAsset asset, ScriptTemplate template, string graphName, bool includeNodeName)
+        static string GenerateCodeForBTNode(NodeData asset, ScriptTemplate template, string graphName, bool includeNodeName)
         {
             var btNode = asset.Node as BTNode;
 
@@ -593,7 +593,7 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ------------------------------------------- FSMs ------------------------------------------
         
-        static string GenerateCodeForState(NodeAsset asset, ScriptTemplate template, string graphName, bool includeNodeName)
+        static string GenerateCodeForState(NodeData asset, ScriptTemplate template, string graphName, bool includeNodeName)
         {
             var state = asset.Node as State;
 
@@ -618,7 +618,7 @@ namespace BehaviourAPI.Unity.Editor
             return template.AddVariableDeclarationLine(state.GetType(), nodeName, asset, $"{graphName}.{method}({args.Join()})");
         }
 
-        static string GenerateCodeForTransition(NodeAsset asset, ScriptTemplate template, string graphName, bool includeNodeName)
+        static string GenerateCodeForTransition(NodeData asset, ScriptTemplate template, string graphName, bool includeNodeName)
         {
             var transition = asset.Node as Transition;
 

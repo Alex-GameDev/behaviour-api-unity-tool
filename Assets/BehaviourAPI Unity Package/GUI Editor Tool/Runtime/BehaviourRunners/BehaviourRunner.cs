@@ -132,8 +132,8 @@ namespace BehaviourAPI.Unity.Runtime
         /// <summary>
         /// Returns the system that can be used by the <see cref="BSRuntimeDebugger"/> component.
         /// </summary>
-        /// <returns>The <see cref="BehaviourSystemAsset"/> debuggable.</returns>
-        public abstract BehaviourSystemAsset GetBehaviourSystemAsset();
+        /// <returns>The <see cref="BehaviourSystem"/> debuggable.</returns>
+        public abstract BehaviourSystem GetBehaviourSystemAsset();
 
         /// <summary>
         /// Gets the main graph that will be executed.

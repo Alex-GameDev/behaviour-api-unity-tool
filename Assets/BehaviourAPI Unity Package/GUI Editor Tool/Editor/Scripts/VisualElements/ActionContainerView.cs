@@ -20,7 +20,7 @@ namespace BehaviourAPI.Unity.Editor
     /// </summary>
     public class ActionContainerView : VisualElement
     {
-        NodeAsset nodeAsset;
+        NodeData nodeAsset;
         string propertyPath;
 
         NodeView _nodeView;
@@ -31,7 +31,7 @@ namespace BehaviourAPI.Unity.Editor
         Button _assignSubgraphBtn, _removeSubgraphBtn;
         Label _subgraphLabel;
   
-        public ActionContainerView(NodeAsset asset, SerializedProperty actionProperty, NodeView nodeView)
+        public ActionContainerView(NodeData asset, SerializedProperty actionProperty, NodeView nodeView)
         {
             nodeAsset = asset;
             propertyPath = actionProperty.propertyPath;
@@ -118,7 +118,7 @@ namespace BehaviourAPI.Unity.Editor
                     label.AddToClassList("node-text");
                     _container.Add(label);
                 }
-                else if(action is ContextCustomAction)
+                else if(action is CustomAction)
                 {
                     var label = new Label("Custom Action (context)");
                     label.AddToClassList("node-text");

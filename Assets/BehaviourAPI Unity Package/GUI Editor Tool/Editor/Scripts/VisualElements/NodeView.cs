@@ -23,10 +23,10 @@ namespace BehaviourAPI.Unity.Editor
     {
         #region --------------------------- Fields ---------------------------
         
-        public NodeAsset Node;
+        public NodeData Node;
 
-        public Action<NodeAsset> Selected;
-        public Action<NodeAsset> UnSelected;
+        public Action<NodeData> Selected;
+        public Action<NodeData> UnSelected;
 
         protected BehaviourGraphView _graphView;
         public BehaviourGraphView GraphView => _graphView;
@@ -54,7 +54,7 @@ namespace BehaviourAPI.Unity.Editor
         public abstract string LayoutPath { get; }     
 
         #region --------------------------- Set up ---------------------------
-        public NodeView(NodeAsset node, BehaviourGraphView graphView, string path) : base(path)
+        public NodeView(NodeData node, BehaviourGraphView graphView, string path) : base(path)
         {
             Node = node;
             _graphView = graphView;
@@ -315,7 +315,7 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        public void OrderChilds(Func<NodeAsset, float> sortFunction, bool notify = true)
+        public void OrderChilds(Func<NodeData, float> sortFunction, bool notify = true)
         {
             Node.OrderChilds(sortFunction);
             UpdateEdgeViews();

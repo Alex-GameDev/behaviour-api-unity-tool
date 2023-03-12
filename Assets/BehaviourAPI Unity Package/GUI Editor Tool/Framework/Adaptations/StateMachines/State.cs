@@ -10,18 +10,30 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
 {
     public class State : StateMachines.State, IActionAssignable
     {
-        [SerializeReference] Action _action;
+        [SerializeReference] Action action;
 
         public Action ActionReference
         {
-            get => _action;
-            set => _action = value;
+            get => action;
+            set => action = value;
+        }
+
+        public override object Clone()
+        {
+            var copy = (State)base.Clone();
+            copy.action = (Action)action.Clone();
+            return copy;
+        }
+
+        public void Build(SystemData data)
+        {
+            if (action is IBuildable buildable) buildable.Build(data);
         }
 
         protected override void BuildConnections(List<Node> parents, List<Node> children)
         {
             base.BuildConnections(parents, children);
-            Action = _action;
+            Action = action;
         }
     }
 }

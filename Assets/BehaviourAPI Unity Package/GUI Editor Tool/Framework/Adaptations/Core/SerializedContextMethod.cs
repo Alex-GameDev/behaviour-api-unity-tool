@@ -10,10 +10,19 @@ using BehaviourAPI.UnityExtensions;
 namespace BehaviourAPI.Unity.Framework
 {
     [Serializable]
-    public class SerializedContextMethod
+    public class SerializedContextMethod : ICloneable
     {
         public string componentName;
         public string methodName;
+
+        public object Clone()
+        {
+            return new SerializedContextMethod
+            {
+                componentName = componentName,
+                methodName = methodName,
+            };
+        }
     }
 
     [Serializable]

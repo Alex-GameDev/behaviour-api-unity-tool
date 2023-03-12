@@ -6,12 +6,12 @@ using static PlasticGui.PlasticTableColumn;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    [CustomEditor(typeof(BehaviourSystemAsset))]
+    [CustomEditor(typeof(BehaviourSystem))]
     public class BehaviourSystemAssetEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
-            BehaviourSystemAsset asset = target as BehaviourSystemAsset;
+            BehaviourSystem asset = target as BehaviourSystem;
 
             EditorGUILayout.Space(10f, true);
             GUIStyle centeredLabelstyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };

@@ -20,7 +20,7 @@ namespace BehaviourAPI.Unity.Editor
     /// </summary>
     public class PerceptionContainerView : VisualElement
     {
-        NodeAsset nodeAsset;
+        NodeData nodeAsset;
         string propertyPath;
 
         NodeView _nodeView;
@@ -28,7 +28,7 @@ namespace BehaviourAPI.Unity.Editor
         Button _assignButton;
         VisualElement _container;
 
-        public PerceptionContainerView(NodeAsset asset, SerializedProperty perceptionProperty, NodeView nodeView)
+        public PerceptionContainerView(NodeData asset, SerializedProperty perceptionProperty, NodeView nodeView)
         {
             nodeAsset = asset;
             propertyPath = perceptionProperty.propertyPath;
@@ -141,7 +141,7 @@ namespace BehaviourAPI.Unity.Editor
                     {
                         return "custom Perception";
                     }
-                    else if(perception is ContextCustomPerception)
+                    else if(perception is CustomPerception)
                     {
                         return "custom Perception (Context)";
                     }

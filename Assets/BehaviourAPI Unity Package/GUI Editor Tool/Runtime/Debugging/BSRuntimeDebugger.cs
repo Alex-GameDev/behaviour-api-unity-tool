@@ -15,7 +15,7 @@ namespace BehaviourAPI.Unity.Runtime
     /// </summary>   
     public class BSRuntimeDebugger : MonoBehaviour
     {
-        [HideInInspector] public BehaviourSystemAsset systemAsset;
+        [HideInInspector] public BehaviourSystem systemAsset;
 
         [SerializeField] bool debugStatusChanges;
 

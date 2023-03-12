@@ -1,5 +1,4 @@
-﻿
-using BehaviourAPI.Core.Actions;
+﻿using BehaviourAPI.Core.Actions;
 
 namespace behaviourAPI.Unity.Framework.Adaptations
 {

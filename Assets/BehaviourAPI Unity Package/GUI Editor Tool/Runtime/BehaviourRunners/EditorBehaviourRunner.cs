@@ -63,9 +63,9 @@ namespace BehaviourAPI.Unity.Runtime
 
         #region --------------------------------- properties ----------------------------------
 
-        protected override BehaviourSystemAsset GetEditorSystem()
+        protected override BehaviourSystem GetEditorSystem()
         {
-            return BehaviourSystemAsset.CreateSystem(Graphs, PullPerceptions, PushPerceptions);
+            return BehaviourSystem.CreateSystem(Graphs, PullPerceptions, PushPerceptions);
         }
 
         #endregion

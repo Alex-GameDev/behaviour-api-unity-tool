@@ -30,13 +30,13 @@ namespace BehaviourAPI.Unity.Editor
 
         Action<ContextualMenuPopulateEvent> _currentContextualMenuEvent;
 
-        Dictionary<NodeAsset, NodeView> _assetViewMap = new Dictionary<NodeAsset, NodeView>();
+        Dictionary<NodeData, NodeView> _assetViewMap = new Dictionary<NodeData, NodeView>();
 
         #endregion
 
         #region ---------------------------------- Events ----------------------------------
 
-        public Action<NodeAsset> NodeSelected, NodeAdded, NodeRemoved;
+        public Action<NodeData> NodeSelected, NodeAdded, NodeRemoved;
 
         #endregion
 
@@ -101,7 +101,7 @@ namespace BehaviourAPI.Unity.Editor
             AddElement(edge);
         }
 
-        public NodeView GetViewOf(NodeAsset nodeAsset) => _assetViewMap[nodeAsset];
+        public NodeView GetViewOf(NodeData nodeAsset) => _assetViewMap[nodeAsset];
 
         #endregion ------------------------------------------------------------------
 
@@ -244,7 +244,7 @@ namespace BehaviourAPI.Unity.Editor
         void CreateNode(Type type, Vector2 position) 
         {
             Vector2 pos = GetLocalMousePosition(position - editorWindow.position.position);
-            NodeAsset asset = GraphAsset.CreateNode(type, pos);
+            NodeData asset = GraphAsset.CreateNode(type, pos);
 
             if(asset != null)
             {
@@ -258,9 +258,9 @@ namespace BehaviourAPI.Unity.Editor
             NodeAdded?.Invoke(asset);
         } 
         
-        public void DuplicateNode(NodeAsset nodeAsset)
+        public void DuplicateNode(NodeData nodeAsset)
         {
-            NodeAsset assetCopy = GraphAsset.DuplicateNode(nodeAsset);
+            NodeData assetCopy = GraphAsset.DuplicateNode(nodeAsset);
             assetCopy.Position += new Vector2(20, 20);
 
             if (assetCopy != null)
