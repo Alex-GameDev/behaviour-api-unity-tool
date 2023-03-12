@@ -69,6 +69,7 @@ namespace BehaviourAPI.Unity.Runtime
         /// </summary>
         void BuildDictionaries()
         {
+            _graphMap = new Dictionary<string, BehaviourGraph>();
             foreach(GraphData data in _executionSystem.graphs)
             {
                 if(!string.IsNullOrWhiteSpace(data.name))
@@ -84,6 +85,7 @@ namespace BehaviourAPI.Unity.Runtime
                 }
             }
 
+            _pushPerceptionMap = new Dictionary<string, PushPerception>();
             foreach (PushPerceptionData data in _executionSystem.pushPerceptions)
             {
                 if (!string.IsNullOrWhiteSpace(data.name))

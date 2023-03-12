@@ -108,7 +108,7 @@ namespace BehaviourAPI.Unity.Framework
             var nodeIdMap = GetNodeIdMap();
             for (int i = 0; i < nodes.Count; i++)
             {
-                if (nodes[i] is IBuildable buildable) buildable.Build(data);
+                if (nodes[i].node is IBuildable buildable) buildable.Build(data);
 
                 builder.AddNode(nodes[i].node,
                     nodes[i].parentIds.Select(id => nodeIdMap[id].node).ToList(),
