@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEditor.Graphs;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -418,12 +419,14 @@ namespace BehaviourAPI.Unity.Editor
 
         public void OpenSearchGraphWindow(Action<GraphData> callback)
         {
-
+            SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)),
+                 GraphSearchWindowProvider.Create<GraphSearchWindowProvider>(this, callback,  g => g != _graphView.graphData));
         }
 
         public void OpenSearchNodeWindow(Action<NodeData> callback, Func<NodeData, bool> filter)
         {
-
+            SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)),
+                NodeSearchWindowProvider.Create<NodeSearchWindowProvider>(this, callback, filter));
         }
 
         public int GetSelectedGraphIndex()

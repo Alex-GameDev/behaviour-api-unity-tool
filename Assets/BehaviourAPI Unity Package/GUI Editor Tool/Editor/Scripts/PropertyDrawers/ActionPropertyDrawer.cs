@@ -131,7 +131,6 @@ namespace BehaviourAPI.Unity.Editor
         {
             base.OnGUI(position, property, label);
 
-
             if (property.managedReferenceValue == null) return;
 
             var subGraphProperty = property.FindPropertyRelative("subgraphId");
@@ -151,7 +150,9 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
-                if(GUILayout.Button("Remove subgraph"))
+                var subgraph = BehaviourEditorWindow.Instance.System.Data.graphs.Find(g => g.id == subGraphProperty.stringValue);
+                EditorGUILayout.LabelField(subgraph?.name ?? "missing subgraph");
+                if (GUILayout.Button("Remove subgraph"))
                 {
                     subGraphProperty.stringValue = string.Empty;
                     subGraphProperty.serializedObject.ApplyModifiedProperties();

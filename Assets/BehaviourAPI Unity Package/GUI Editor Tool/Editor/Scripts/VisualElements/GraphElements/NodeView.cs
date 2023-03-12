@@ -119,7 +119,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if(Node.node is IActionAssignable actionAssignable)
             {
-                var label = new Label($"if {GetActionInfo(actionAssignable.ActionReference)}");
+                var label = new Label($"{GetActionInfo(actionAssignable.ActionReference)}");
                 label.AddToClassList("node-text");
                 extensionContainer.Add(label);
             }
@@ -142,8 +142,17 @@ namespace BehaviourAPI.Unity.Editor
                 case UnityAction unityAction:
                     return unityAction.DisplayInfo;
                 case SubgraphAction subgraphAction:
-                    var graph = BehaviourEditorWindow.Instance.System.Data.graphs.Find(g => g.id == subgraphAction.subgraphId);
-                    return "Subgraph: " + graph?.name ?? "missing subgraph";
+                    if(string.IsNullOrEmpty(subgraphAction.subgraphId))
+                    {
+                        return "Subgraph: Unasigned";
+                    }
+                    else
+                    {
+                        var graph = BehaviourEditorWindow.Instance.System.Data.graphs.Find(g => g.id == subgraphAction.subgraphId);
+                        if(graph == null) return "Subgraph: missing subgraph";
+                        else return "Subgraph: " + graph.name;
+                    }                   
+                    
                 default:
                     return "(No action)";
             }

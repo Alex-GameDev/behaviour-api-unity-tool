@@ -9,7 +9,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     /// </summary>
     public class SubgraphAction : SubsystemAction, IBuildable
     {
-        public string subgraphId;
+        [HideInInspector] public string subgraphId;
 
         public SubgraphAction() : base(null)
         {
