@@ -17,7 +17,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         public override object Clone()
         {
             var copy = (ConditionNode)base.Clone();
-            copy.perception = (Perception)perception.Clone();
+            copy.perception = (Perception)perception?.Clone();
             return copy;
         }
 

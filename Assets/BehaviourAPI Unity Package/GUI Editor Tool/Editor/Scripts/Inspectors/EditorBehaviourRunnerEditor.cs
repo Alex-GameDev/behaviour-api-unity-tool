@@ -45,28 +45,22 @@ namespace BehaviourAPI.Unity.Editor
             bool isOnScene = runner.gameObject.scene.name != null;
             bool isOnPreviewScene = isOnScene && EditorSceneManager.IsPreviewScene(runner.gameObject.scene);
 
-            if (!isOnPreviewScene)
+            if (GUILayout.Button("EDIT"))
             {
-                if (GUILayout.Button("EDIT"))
+
+                if (Application.isPlaying)
                 {
-
-                    if (Application.isPlaying)
-                    {
-                        EditorWindow.GetWindow<BehaviourEditorWindow>().ShowNotification(new GUIContent("Cannot bind behaviour system on runtime"));
-                        return;
-                    }
-
-                    //Debug.Log("OpenWindow editor");
-                    BehaviourEditorWindow.OpenSystem(runner);
+                    EditorWindow.GetWindow<BehaviourEditorWindow>().ShowNotification(new GUIContent("Cannot bind behaviour system on runtime"));
+                    return;
                 }
 
-                if(isPartOfAPrefab && !isOnPreviewScene)
-                    EditorGUILayout.HelpBox("If you edit the behaviourSystem in a prefab instance, the original system will be override", MessageType.Info);
+                //Debug.Log("OpenWindow editor");
+                BehaviourEditorWindow.OpenSystem(runner);
             }
-            else
-            {
-                EditorGUILayout.HelpBox("BehaviourSystems that belongs to a prefab can only be edited from the prefab in asset mode.", MessageType.Warning);
-            }
+
+            if(isPartOfAPrefab && !isOnPreviewScene)
+                EditorGUILayout.HelpBox("If you edit the behaviourSystem in a prefab instance, the original system will be override", MessageType.Info);
+
 
 
             GUILayout.EndVertical();

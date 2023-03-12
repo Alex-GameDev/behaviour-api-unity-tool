@@ -32,8 +32,8 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         public override object Clone()
         {
             var copy = (StateTransition)base.Clone();
-            copy.action = (Action)action.Clone();
-            copy.perception = (Perception)perception.Clone();
+            copy.action = (Action)action?.Clone();
+            copy.perception = (Perception)perception?.Clone();
             return copy;
         }
 

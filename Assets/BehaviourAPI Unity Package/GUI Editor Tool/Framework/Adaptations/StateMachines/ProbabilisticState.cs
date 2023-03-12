@@ -22,7 +22,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         public override object Clone()
         {
             var copy = (ProbabilisticState)base.Clone();
-            copy.action = (Action)action.Clone();
+            copy.action = (Action)action?.Clone();
             return copy;
         }
 
