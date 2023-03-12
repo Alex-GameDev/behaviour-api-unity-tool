@@ -1,6 +1,7 @@
 using BehaviourAPI.Unity.Framework;
 using UnityEditor;
 using UnityEngine.UIElements;
+using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -46,8 +47,8 @@ namespace BehaviourAPI.Unity.Editor
 
     public class NodeInspector : Inspector<NodeData>
     {
-        private static readonly string _nodeProperty = "node";
-        private static readonly string _endProperty = "parentIds";
+        private static readonly string _nodeProperty = ".node";
+        private static readonly string _endProperty = ".parentIds";
         public NodeInspector() : base("Node", Side.Left)
         {
 
@@ -56,39 +57,22 @@ namespace BehaviourAPI.Unity.Editor
         public override void UpdateInspector(NodeData element)
         {
             base.UpdateInspector(element);
+            if (element == null) return;
+
+            var system = BehaviourEditorWindow.Instance.System;
+            var graphId = BehaviourEditorWindow.Instance.GetSelectedGraphIndex();
+            var nodeId = system.Data.graphs[graphId].nodes.IndexOf(element);
 
             IMGUIContainer container = new IMGUIContainer(() =>
             {
                 var obj = new SerializedObject(BehaviourEditorWindow.Instance.System.ObjectReference);
-                var path = "data.graphs.Array.data[0].nodes.Array.data[0]";
-                var prop = obj.FindProperty("data.graphs.Array.data[0].nodes.Array.data[0].node");
-                var end = obj.FindProperty("data.graphs.Array.data[0].nodes.Array.data[0].parentIds");
-                bool child = true;
-                while (prop.Next(child) && !SerializedProperty.EqualContents(prop, end))
-                {
-                    EditorGUILayout.PropertyField(prop, true);
-                    child = false;
-                }
-                obj.ApplyModifiedProperties();
+                var path = $"data.graphs.Array.data[{graphId}].nodes.Array.data[{nodeId}]";
+                var namePath = path + ".name";
+                var nameProp = obj.FindProperty(namePath);
+                EditorGUILayout.PropertyField(nameProp, true);
 
-            });
-            _inspectorContent.Add(container);
-        }
-
-        public void UpdateInspector(string propertyPath)
-        {
-            base.UpdateInspector(null);
-
-            if (propertyPath == null) return;
-
-            IMGUIContainer container = new IMGUIContainer(() =>
-            {
-                var obj = new SerializedObject(BehaviourEditorWindow.Instance.System.ObjectReference);
-
-                EditorGUILayout.PropertyField(obj.FindProperty(propertyPath + ".name"));
-                EditorGUILayout.Space(10f);
-                var prop = obj.FindProperty(propertyPath + ".node");
-                var end = obj.FindProperty(propertyPath + ".parentIds");
+                var prop = obj.FindProperty(path + _nodeProperty);
+                var end = obj.FindProperty(path + _endProperty);
                 bool child = true;
                 while (prop.Next(child) && !SerializedProperty.EqualContents(prop, end))
                 {

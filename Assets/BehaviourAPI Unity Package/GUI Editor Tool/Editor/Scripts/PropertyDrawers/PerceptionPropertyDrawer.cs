@@ -15,7 +15,15 @@ namespace BehaviourAPI.Unity.Editor
     {
         private void AssignPerception(SerializedProperty property, Type perceptionType)
         {
-            property.managedReferenceValue = (Perception)Activator.CreateInstance(perceptionType);
+            if (perceptionType.IsSubclassOf(typeof(CompoundPerception)))
+            {
+                var compound = (CompoundPerception)Activator.CreateInstance(perceptionType);
+                property.managedReferenceValue = new CompoundPerceptionWrapper(compound);
+            }
+            else
+            {
+                property.managedReferenceValue = (Perception)Activator.CreateInstance(perceptionType);
+            }
             property.serializedObject.ApplyModifiedProperties();
         }
 
@@ -120,7 +128,17 @@ namespace BehaviourAPI.Unity.Editor
         {
             arrayProperty.arraySize++;
             var lastElementProperty = arrayProperty.GetArrayElementAtIndex(arrayProperty.arraySize - 1).FindPropertyRelative("perception");
-            lastElementProperty.managedReferenceValue = (Perception)Activator.CreateInstance(perceptionType);
+            
+            if(perceptionType.IsSubclassOf(typeof(CompoundPerception)))
+            {
+                var compound = (CompoundPerception)Activator.CreateInstance(perceptionType);
+                lastElementProperty.managedReferenceValue = new CompoundPerceptionWrapper(compound);
+            }
+            else
+            {
+                lastElementProperty.managedReferenceValue = (Perception)Activator.CreateInstance(perceptionType);
+            }
+           
             arrayProperty.serializedObject.ApplyModifiedProperties();
         }
 
@@ -137,12 +155,11 @@ namespace BehaviourAPI.Unity.Editor
                 EditorGUILayout.BeginHorizontal(GUILayout.Width(position.width));
                 var labelsize = position.width - 50;
 
-                EditorGUILayout.LabelField(compoundPerceptionProperty.managedReferenceValue.TypeName(), GUILayout.Width(220));
+                EditorGUILayout.LabelField(compoundPerceptionProperty.managedReferenceValue?.TypeName(), GUILayout.Width(220));
 
                 bool removed = false;
                 if(GUILayout.Button("X"))
                 {
-                    Debug.Log(position.width - 50);
                     property.managedReferenceValue = null;
                     property.serializedObject.ApplyModifiedProperties();
                     removed = true;
@@ -166,20 +183,22 @@ namespace BehaviourAPI.Unity.Editor
                     EditorGUILayout.LabelField("Sub perceptions", centeredLabelstyle);
                     _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos, "window", GUILayout.MinHeight(300));
 
-                    for (int i = 0; i < subPerceptionProperty.arraySize; i++)
+                    if(subPerceptionProperty != null)
                     {
-                        var subperception = subPerceptionProperty.GetArrayElementAtIndex(i);
-                        var p = subperception.FindPropertyRelative("perception");
-
-                        EditorGUILayout.PropertyField(p);
-                        if (GUILayout.Button("Remove"))
+                        for (int i = 0; i < subPerceptionProperty.arraySize; i++)
                         {
-                            subPerceptionProperty.DeleteArrayElementAtIndex(i);
-                            property.serializedObject.ApplyModifiedProperties();
-                            break;
-                        }
-                        EditorGUILayout.Space(5);
+                            var subperception = subPerceptionProperty.GetArrayElementAtIndex(i);
+                            var p = subperception.FindPropertyRelative("perception");
 
+                            EditorGUILayout.PropertyField(p);
+                            if (GUILayout.Button("Remove"))
+                            {
+                                subPerceptionProperty.DeleteArrayElementAtIndex(i);
+                                property.serializedObject.ApplyModifiedProperties();
+                                break;
+                            }
+                            EditorGUILayout.Space(5);
+                        }
                     }
 
                     EditorGUILayout.EndScrollView();

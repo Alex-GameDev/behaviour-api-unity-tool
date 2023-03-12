@@ -58,7 +58,7 @@ namespace BehaviourAPI.Unity.Editor
         BehaviourGraphView _graphView;
         VisualElement _noGraphPanel, _container, _currentInspector;
 
-        NodeInspectorView _nodeInspector;
+        NodeInspector _nodeInspector;
 
         GraphInspector _graphInspector;
         PushPerceptionInspectorView _pushPerceptionInspector;
@@ -118,7 +118,7 @@ namespace BehaviourAPI.Unity.Editor
             _container = rootVisualElement.Q("bw-content");
 
             // Inspectors:
-            _nodeInspector = AddInspector<NodeInspectorView>();
+            _nodeInspector = AddInspector<NodeInspector>();
             _graphInspector = AddInspector<GraphInspector>();
             _graphInspector.Disable();
 
@@ -424,6 +424,11 @@ namespace BehaviourAPI.Unity.Editor
         public void OpenSearchNodeWindow(Action<NodeData> callback, Func<NodeData, bool> filter)
         {
 
+        }
+
+        public int GetSelectedGraphIndex()
+        {
+            return System.Data.graphs.IndexOf(_graphView.graphData);
         }
 
         /// <summary>

@@ -157,48 +157,43 @@ MonoBehaviour:
   DontStopOnDisable: 0
   data:
     graphs:
-    - id: 897dd85b-b7d9-4e76-9939-1a222b72045e
-      name: Main
+    - id: 2c2b21f0-0393-4ae3-ad90-496a54a76a9b
+      name: BehaviourTree
       nodes:
-      - name: IteratorNode
-        id: c5b6eebc-35a6-4482-9072-16abe8bd015f
-        position: {x: 385, y: 469}
+      - name: a
+        id: 4e099509-c3d5-4ef3-aa2b-55e0b026d2ff
+        position: {x: 473, y: -10}
         node:
-          rid: 6537695325249077251
+          rid: 6537695325249077274
         parentIds: []
-        childIds:
-        - d5ceea47-09e8-4d4c-85bd-1223eac249f2
-      - name: LeafNode
-        id: d5ceea47-09e8-4d4c-85bd-1223eac249f2
-        position: {x: 369, y: 721}
-        node:
-          rid: 6537695325249077250
-        parentIds:
-        - c5b6eebc-35a6-4482-9072-16abe8bd015f
         childIds: []
       graph:
-        rid: 6537695325249077249
-    pushPerceptions:
-    - name: a
-      targetNodeIds: []
+        rid: 6537695325249077273
+    pushPerceptions: []
   _target: {fileID: 0}
   _visionCollider: {fileID: 0}
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 6537695325249077249
+    - rid: 6537695325249077273
       type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-    - rid: 6537695325249077250
-      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+    - rid: 6537695325249077274
+      type: {class: ConditionNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
-        action:
-          rid: -2
-    - rid: 6537695325249077251
-      type: {class: IteratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+        perception:
+          rid: 6537695325249077297
+    - rid: 6537695325249077297
+      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
-        Iterations: -1
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: 
+          methodName: 
+        reset:
+          componentName: 
+          methodName: 
 --- !u!4 &1314463089
 Transform:
   m_ObjectHideFlags: 0

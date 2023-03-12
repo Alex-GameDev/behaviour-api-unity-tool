@@ -9,7 +9,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     /// </summary>
     public class SubgraphAction : SubsystemAction, IBuildable
     {
-        public string subGraphId;
+        public string subgraphId;
 
         public SubgraphAction() : base(null)
         {
@@ -21,7 +21,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
 
         public void Build(SystemData data)
         {
-            SubSystem = data.graphs.Find(g => g.id == subGraphId).graph;
+            SubSystem = data.graphs.Find(g => g.id == subgraphId).graph;
         }
     }
 }

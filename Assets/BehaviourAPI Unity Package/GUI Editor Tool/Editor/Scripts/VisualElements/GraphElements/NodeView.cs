@@ -11,11 +11,14 @@ using UnityEngine;
 namespace BehaviourAPI.Unity.Editor
 {
     using Core;
-    using Vector2 = UnityEngine.Vector2;
+    using Action = Core.Actions.Action;
+    using Vector2 = Vector2;
 
     using Framework;
     using UnityExtensions;
     using behaviourAPI.Unity.Framework.Adaptations;
+    using BehaviourAPI.Unity.Framework.Adaptations;
+    using BehaviourAPI.Core.Perceptions;
 
     /// <summary>
     /// Visual element that represents a data in a behaviour graph
@@ -29,7 +32,7 @@ namespace BehaviourAPI.Unity.Editor
         public NodeData Node { get; private set; }
         public BehaviourGraphView GraphView { get; private set; }
 
-        public Action Selected, Unselected;
+        public System.Action Selected, Unselected;
 
         SerializedProperty _property;
         #endregion
@@ -108,20 +111,59 @@ namespace BehaviourAPI.Unity.Editor
         }
 
         /// <summary>
-        /// Draws the visual elements to assign actions and perceptions
+        /// Draws the visual elements to display actions and perceptions
         /// </summary>
         void DrawExtensionContainer()
         {
             var extensionContainer = this.Q(name: "extension");
 
-            if(Node is IActionAssignable)
+            if(Node.node is IActionAssignable actionAssignable)
             {
-
+                var label = new Label($"if {GetActionInfo(actionAssignable.ActionReference)}");
+                label.AddToClassList("node-text");
+                extensionContainer.Add(label);
             }
 
-            if(Node is IPerceptionAssignable)
+            if(Node.node is IPerceptionAssignable perceptionAssignable)
             {
+                Debug.Log("Extension");
+                var label = new Label($"if {GetPerceptionInfo(perceptionAssignable.PerceptionReference)}");
+                label.AddToClassList("node-text");
+                extensionContainer.Add(label);
+            }
+        }
 
+        string GetActionInfo(Action action)
+        {
+            switch(action)
+            {
+                case CustomAction:
+                    return "Custom Action";
+                case UnityAction unityAction:
+                    return unityAction.DisplayInfo;
+                case SubgraphAction subgraphAction:
+                    var graph = BehaviourEditorWindow.Instance.System.Data.graphs.Find(g => g.id == subgraphAction.subgraphId);
+                    return "Subgraph: " + graph?.name ?? "missing subgraph";
+                default:
+                    return "(No action)";
+            }
+        }
+
+        string GetPerceptionInfo(Perception perception)
+        {
+            switch (perception)
+            {
+                case CustomPerception customPerception:
+                    return "Custom Perception";
+                case UnityPerception unityPerception:
+                    return unityPerception.DisplayInfo;
+                case CompoundPerceptionWrapper compoundPerception:
+                    var compoundType = compoundPerception.compoundPerception.GetType();
+                    var logicCharacter = compoundType == typeof(AndPerception) ? " && " :
+                        compoundType == typeof(OrPerception) ? " || " : " - ";
+                    return "(" + compoundPerception.subPerceptions.Select(sub => GetPerceptionInfo(sub.perception)).Join(logicCharacter) +")";
+                default:
+                    return "(No perception)";
             }
         }
 

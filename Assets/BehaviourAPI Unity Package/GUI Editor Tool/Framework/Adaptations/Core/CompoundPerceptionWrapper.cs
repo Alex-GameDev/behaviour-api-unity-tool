@@ -3,14 +3,26 @@ using BehaviourAPI.Core.Perceptions;
 
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
     public class CompoundPerceptionWrapper : Perception, IBuildable
     {
-        CompoundPerception compoundPerception;
+        [SerializeReference] public CompoundPerception compoundPerception;
 
-        public List<PerceptionWrapper> subPerceptions = new List<PerceptionWrapper>();
+        public List<PerceptionWrapper> subPerceptions;
+
+        public CompoundPerceptionWrapper()
+        {
+            subPerceptions = new List<PerceptionWrapper>();
+        }
+
+        public CompoundPerceptionWrapper(CompoundPerception compoundPerception)
+        {
+            this.compoundPerception = compoundPerception;
+            subPerceptions = new List<PerceptionWrapper>();
+        }
 
         public override void Initialize() => compoundPerception.Initialize();
 

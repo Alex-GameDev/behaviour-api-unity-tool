@@ -1,9 +1,11 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
+using System;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
+    [Serializable]
     public class PerceptionWrapper : Perception
     {
         [SerializeReference] public Perception perception;

@@ -75,7 +75,7 @@ namespace BehaviourAPI.Unity.Editor
 
         void AddManipulators()
         {
-            SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
+            SetupZoom(ContentZoomer.DefaultMinScale * 1.5f, ContentZoomer.DefaultMaxScale * 3f);
             this.AddManipulator(new ContentDragger());
 
             if (!Runtime)
@@ -93,7 +93,6 @@ namespace BehaviourAPI.Unity.Editor
                 var searchContext = new SearchWindowContext(context.screenMousePosition);
                 SearchWindow.Open(searchContext, nodeCreationWindowProvider);
             };
-
         }
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -119,7 +118,6 @@ namespace BehaviourAPI.Unity.Editor
         {
             nodeView.Selected = () => NodeSelected?.Invoke(nodeView.Node);
             nodeView.Unselected = () => NodeSelected?.Invoke(null);
-
             if (Runtime)
             {
                 nodeView.capabilities -= Capabilities.Deletable;
