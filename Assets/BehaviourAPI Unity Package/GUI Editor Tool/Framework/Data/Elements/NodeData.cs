@@ -45,6 +45,18 @@ namespace BehaviourAPI.Unity.Framework
             copy.parentIds = new List<string>(parentIds);
             copy.childIds = new List<string>(childIds);
             return copy;
-        }        
+        }
+        
+        /// <summary>
+        /// Creates a copy in the same graph, changing the id and name
+        /// </summary>
+        /// <returns></returns>
+        public NodeData Duplicate()
+        {
+            var copy = (NodeData)Clone();
+            copy.name += " (copy)";
+            id = Guid.NewGuid().ToString();
+            return copy;
+        }
     }
 }

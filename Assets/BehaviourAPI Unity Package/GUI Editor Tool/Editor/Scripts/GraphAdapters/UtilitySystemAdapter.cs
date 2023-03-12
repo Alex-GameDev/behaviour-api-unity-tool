@@ -29,7 +29,6 @@ namespace BehaviourAPI.Unity.Editor
             typeof(FusionFactor),
             typeof(CurveFactor),
             typeof(VariableFactor),
-            typeof(ContextVariableFactor)
         };
         public override List<Type> ExcludedTypes => new List<Type>
         {
@@ -39,7 +38,7 @@ namespace BehaviourAPI.Unity.Editor
             typeof(UtilitySystems.VariableFactor)
         };
 
-        protected override void DrawGraphDetails(GraphAsset graphAsset, BehaviourGraphView graphView, List<NodeView> nodeViews)
+        protected override void DrawGraphDetails(GraphData graphAsset, BehaviourGraphView graphView)
         {            
         }
 
@@ -47,31 +46,34 @@ namespace BehaviourAPI.Unity.Editor
 
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
         {
-            menuEvt.menu.AppendAction("Order childs by position (y)", _ => node.OrderChilds(n => n.Position.y), (node.Node.Childs.Count > 1).ToMenuStatus());
+            menuEvt.menu.AppendAction("Order childs by position (y)",
+                _ => node.GraphView.graphData.OrderChildNodes(node.Node, (n) => n.position.y),
+                (node.Node.childIds.Count > 1).ToMenuStatus()
+            );
         }
 
         protected override void SetUpDetails(NodeView nodeView)
         {
-            var node = nodeView.Node.Node;
+            var node = nodeView.Node.node;
             if (node is UtilitySystems.VariableFactor)
             {
-                nodeView.ChangeTypeColor(BehaviourAPISettings.instance.LeafFactorColor);
-                if (node is VariableFactor vf)
-                {
-                    var obj = new SerializedObject(nodeView.Node);
+                //nodeView.ChangeTypeColor(BehaviourAPISettings.instance.LeafFactorColor);
+                //if (node is VariableFactor vf)
+                //{
+                //    var obj = new SerializedObject(nodeView.Node);
 
-                    Label componentLabel = new Label();
-                    componentLabel.Bind(obj);                    
-                    componentLabel.AddToClassList("node-text");
-                    componentLabel.bindingPath = "node.variableFunction.component";
-                    nodeView.extensionContainer.Add(componentLabel);
+                //    Label componentLabel = new Label();
+                //    componentLabel.Bind(obj);                    
+                //    componentLabel.AddToClassList("node-text");
+                //    componentLabel.bindingPath = "node.variableFunction.component";
+                //    nodeView.extensionContainer.Add(componentLabel);
 
-                    Label methodLabel = new Label();
-                    methodLabel.Bind(obj);
-                    methodLabel.AddToClassList("node-text");
-                    methodLabel.bindingPath = "node.variableFunction.methodName";
-                    nodeView.extensionContainer.Add(methodLabel);
-                }
+                //    Label methodLabel = new Label();
+                //    methodLabel.Bind(obj);
+                //    methodLabel.AddToClassList("node-text");
+                //    methodLabel.bindingPath = "node.variableFunction.methodName";
+                //    nodeView.extensionContainer.Add(methodLabel);
+                //}
             }
             else
             {
@@ -116,10 +118,10 @@ namespace BehaviourAPI.Unity.Editor
 
         protected override void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt)
         {
-            menuEvt.menu.AppendAction("Order all node's child by position (y)", _ =>
+            menuEvt.menu.AppendAction("Order childs by position (y)", _ =>
             {
-                graph.nodes.ForEach(n => (n as NodeView).OrderChilds(n => n.Position.y, false));
-                BehaviourEditorWindow.Instance.OnModifyAsset();
+                graph.graphData.OrderAllChildNodes((n) => n.position.y);
+                BehaviourEditorWindow.Instance.RegisterChanges();
             });
         }
 

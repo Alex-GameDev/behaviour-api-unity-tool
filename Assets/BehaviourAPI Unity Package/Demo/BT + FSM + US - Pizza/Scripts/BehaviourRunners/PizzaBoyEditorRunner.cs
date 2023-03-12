@@ -34,13 +34,10 @@ public class PizzaBoyEditorRunner : EditorBehaviourRunner
     }
 
     // Escribe la receta
-    [CustomMethod]
     public void CreateRecipe_0() => CreateRecipe(0);
 
-    [CustomMethod]
     public void CreateRecipe_1() => CreateRecipe(1);
 
-    [CustomMethod]
     public void CreateRecipe_2() => CreateRecipe(2);
     public void CreateRecipe(int id)
     {
@@ -55,11 +52,9 @@ public class PizzaBoyEditorRunner : EditorBehaviourRunner
     }
 
     // Espera a que el personaje se haya colocado en la mesa
-    [CustomMethod]
     public Status RecipeCreated() => (Vector3.Distance(transform.position, _table.position) < 0.3f).ToStatus(Status.Running);
 
     // Cuando termina la acción:
-    [CustomMethod]
     public void CreateRecipeCompleted()
     {
         transform.LookAt(_pizzaTransform);
@@ -67,10 +62,8 @@ public class PizzaBoyEditorRunner : EditorBehaviourRunner
     }
 
     // Añade un elemento a la pizza
-    [CustomMethod]
     public void PutMass() => PutIngredient(_pizzaMass);
 
-    [CustomMethod]
     public void PutTomato() => PutIngredient(_tomato);
 
     public void PutIngredient(Ingredient ingredient)
@@ -80,7 +73,6 @@ public class PizzaBoyEditorRunner : EditorBehaviourRunner
     }
 
     // Espera un tiempo
-    [CustomMethod]
     public Status WaitToPutIngredient()
     {
         Status st = (Time.time > _lastIngredientAddedTime + _timeToAddIngredient).ToStatus(Status.Running);
@@ -88,7 +80,6 @@ public class PizzaBoyEditorRunner : EditorBehaviourRunner
     }
 
     // Añade el siguiente ingrediente de la receta
-    [CustomMethod]
     public void PutNextTopping()
     {
         _lastIngredientAddedTime = Time.time;
@@ -97,7 +88,6 @@ public class PizzaBoyEditorRunner : EditorBehaviourRunner
     }
 
     // Espera un tiempo y devuelve success si ya ha puesto todos los ingredientes.
-    [CustomMethod]
     public Status CheckToppings()
     {
         if (Time.time > _lastIngredientAddedTime + _timeToAddIngredient)
@@ -109,7 +99,6 @@ public class PizzaBoyEditorRunner : EditorBehaviourRunner
     }
 
     // Acción de hornear la pizza
-    [CustomMethod]
     public void BakePizza()
     {
         _pizza.SetHandler(_handsHandler);
@@ -117,22 +106,17 @@ public class PizzaBoyEditorRunner : EditorBehaviourRunner
     }
 
     // Espera a que el personaje llegue al horno
-    [CustomMethod]
     public Status pizzaBaked() => (Vector3.Distance(transform.position, _oven.position) < 0.5f).ToStatus(Status.Running);
 
     // Cuando la acción de hornear la pizza acaba, se borra la receta y se destruye la pizza
-
-    [CustomMethod]
     public void BakedActionCompleted()
     {
         _pizza.Clear();
         _recipePaper.Clear();
     }
 
-    [CustomMethod]
     public float PizzaFactor() => _pizzasCreated % 10;
 
-    [CustomMethod]
     public float PeperoniFactor() => _peperoniUsed % 4;
 
 }

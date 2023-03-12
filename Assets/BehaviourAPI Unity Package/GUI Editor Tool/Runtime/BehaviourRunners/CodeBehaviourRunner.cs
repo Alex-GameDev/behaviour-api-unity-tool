@@ -18,9 +18,9 @@ namespace BehaviourAPI.Unity.Runtime
 
         #region ------------------------------ Execution Methods ------------------------------
 
-        public sealed override BehaviourSystem GetBehaviourSystemAsset()
+        public sealed override SystemData GetBehaviourSystemAsset()
         {
-            return BehaviourSystem.CreateSystem(allgraphs);
+            return new SystemData(allgraphs);
         }
 
         protected override BehaviourGraph GetExecutionGraph() => CreateGraph();

@@ -10,7 +10,20 @@ namespace BehaviourAPI.Unity.Framework
     public class SystemData : ICloneable
     {
         [HideInInspector] public List<GraphData> graphs = new List<GraphData>();
-        [HideInInspector] public List<PushPerceptionData> pushPerception = new List<PushPerceptionData>();
+        [HideInInspector] public List<PushPerceptionData> pushPerceptions = new List<PushPerceptionData>();
+
+        public SystemData()
+        {
+            graphs = new List<GraphData>();
+            pushPerceptions = new List<PushPerceptionData>();
+        }
+
+        //TODO: 
+        public SystemData(Dictionary<BehaviourGraph, string> graphMap)
+        {
+            graphs = new List<GraphData>();
+            pushPerceptions = new List<PushPerceptionData>();
+        }
 
         public BehaviourGraph BuildSystem()
         {
@@ -29,20 +42,22 @@ namespace BehaviourAPI.Unity.Framework
             }
         }
 
+        public SystemData GetRuntimeCopy() => (SystemData)Clone();
+
         public object Clone()
         {
-            var copy = new BehaviourSystemData();
+            var copy = new SystemData();
             copy.graphs = new List<GraphData>(graphs.Count);
-            copy.pushPerception = new List<PushPerceptionData>(pushPerception.Count);
+            copy.pushPerceptions = new List<PushPerceptionData>(pushPerceptions.Count);
 
             for (int i = 0; i < graphs.Count; i++)
             {
                 copy.graphs.Add((GraphData)graphs[i].Clone());
             }
 
-            for (int i = 0; i < pushPerception.Count; i++)
+            for (int i = 0; i < pushPerceptions.Count; i++)
             {
-                copy.pushPerception.Add((PushPerceptionData)pushPerception[i].Clone());
+                copy.pushPerceptions.Add((PushPerceptionData)pushPerceptions[i].Clone());
             }
 
             return copy;

@@ -1,14 +1,8 @@
-using BehaviourAPI.BehaviourTrees;
-using BehaviourAPI.Unity.Editor;
-using BehaviourAPI.UnityTool.Framework;
-using System.Collections;
-using System.Collections.Generic;
+using BehaviourAPI.Unity.Framework;
 using UnityEditor;
-using UnityEditor.VersionControl;
-using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace BehaviourAPI.New.Unity.Editor
+namespace BehaviourAPI.Unity.Editor
 {
     public class Inspector<T> : VisualElement
     {
@@ -65,7 +59,7 @@ namespace BehaviourAPI.New.Unity.Editor
 
             IMGUIContainer container = new IMGUIContainer(() =>
             {
-                var obj = new SerializedObject(EditorWindow.Instance.System);
+                var obj = new SerializedObject(BehaviourEditorWindow.Instance.System.ObjectReference);
                 var path = "data.graphs.Array.data[0].nodes.Array.data[0]";
                 var prop = obj.FindProperty("data.graphs.Array.data[0].nodes.Array.data[0].node");
                 var end = obj.FindProperty("data.graphs.Array.data[0].nodes.Array.data[0].parentIds");
@@ -79,20 +73,6 @@ namespace BehaviourAPI.New.Unity.Editor
 
             });
             _inspectorContent.Add(container);
-
-            //var obj = new SerializedObject(EditorWindow.Instance.System);
-            //var path = "data.graphs.Array.data[0].nodes.Array.data[0].data";
-            //var prop = obj.FindProperty(path);
-            
-            //while(prop.Next(true))
-            //{
-            //    Debug.Log(prop.propertyPath);
-            //}
-
-            //foreach(SerializedProperty p in obj.GetIterator())
-            //{
-            //    Debug.Log(p.propertyPath);
-            //}
         }
 
         public void UpdateInspector(string propertyPath)
@@ -103,7 +83,7 @@ namespace BehaviourAPI.New.Unity.Editor
 
             IMGUIContainer container = new IMGUIContainer(() =>
             {
-                var obj = new SerializedObject(EditorWindow.Instance.System);
+                var obj = new SerializedObject(BehaviourEditorWindow.Instance.System.ObjectReference);
 
                 EditorGUILayout.PropertyField(obj.FindProperty(propertyPath + ".name"));
                 EditorGUILayout.Space(10f);

@@ -1,33 +1,34 @@
+using BehaviourAPI.Unity.Runtime;
 using BehaviourAPI.UnityTool.Framework;
 using UnityEditor;
 using UnityEngine;
 
-namespace BehaviourAPI.New.Unity.Editor
+namespace BehaviourAPI.Unity.Editor
 {
-    [CustomEditor(typeof(SystemAsset))]
+    [CustomEditor(typeof(BehaviourSystem))]
     public class SystemAssetEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            SystemAsset asset = target as SystemAsset;
+            BehaviourSystem asset = target as BehaviourSystem;
 
             EditorGUILayout.Space(10f, true);
             GUIStyle centeredLabelstyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
 
             GUILayout.BeginVertical("- BEHAVIOUR SYSTEM -", "window");
 
-            if (asset.data.graphs.Count != 0)
+            if (asset.Data.graphs.Count != 0)
             {
-                EditorGUILayout.LabelField($"Graphs: \t {asset.data.graphs.Count}");
+                EditorGUILayout.LabelField($"Graphs: \t {asset.Data.graphs.Count}");
                 EditorGUILayout.Space(5f);
-                foreach (var graph in asset.data.graphs)
+                foreach (var graph in asset.Data.graphs)
                 {
-                    //EditorGUILayout.LabelField($"\t- {(string.IsNullOrWhiteSpace(graph.name) ? "unnamed" : graph.name)}({graph.graph.GetType().Name ?? "null"}, {graph.nodes.Count} data(s))");
+                    EditorGUILayout.LabelField($"\t- {(string.IsNullOrWhiteSpace(graph.name) ? "unnamed" : graph.name)}({graph.graph.GetType().Name ?? "null"}, {graph.nodes.Count} data(s))");
                 }
                 EditorGUILayout.Space(5f);
-                //EditorGUILayout.LabelField($"Pull perceptions: \t {asset.PullPerceptions.Count}");
-                EditorGUILayout.LabelField($"Push Perceptions: \t {asset.data.pushPerception.Count}");
+
+                EditorGUILayout.LabelField($"Push Perceptions: \t {asset.Data.pushPerceptions.Count}");
             }
             else
             {
@@ -38,11 +39,11 @@ namespace BehaviourAPI.New.Unity.Editor
             {
                 if (Application.isPlaying)
                 {
-                    EditorWindow.GetWindow<EditorWindow>().ShowNotification(new GUIContent("Cannot edit binded behaviour system on runtime"));
+                    EditorWindow.GetWindow<BehaviourEditorWindow>().ShowNotification(new GUIContent("Cannot edit binded behaviour system on runtime"));
                     return;
                 }
 
-                EditorWindow.Open(asset);
+                BehaviourEditorWindow.OpenSystem(asset);
             }
 
             GUILayout.EndVertical();

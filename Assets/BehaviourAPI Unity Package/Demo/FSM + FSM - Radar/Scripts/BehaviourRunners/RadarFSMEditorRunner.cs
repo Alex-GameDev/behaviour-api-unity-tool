@@ -22,13 +22,11 @@ public class RadarFSMEditorRunner : EditorBehaviourRunner, IRadar
         return FindGraph("Main").FindNode<State>("working");
     }
 
-    [CustomMethod]
     public bool CheckRadarForOverSpeed()
     {
         return CheckRadar((speed) => speed > 20);
     }
 
-    [CustomMethod]
     public bool CheckRadarForUnderSpeed()
     {
         return CheckRadar((speed) => speed <= 20);

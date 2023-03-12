@@ -24,8 +24,8 @@ namespace BehaviourAPI.Unity.Editor
                 }
                 else
                 {
-                    if(runtimeDebugger.IsDebuggerReady) BehaviourEditorWindow.OpenSystem(runtimeDebugger.systemAsset, runtime: true);
-                    else EditorWindow.GetWindow<BehaviourEditorWindow>().ShowNotification(new GUIContent("Runtime debugger is not ready"));
+                    //if(runtimeDebugger.IsDebuggerReady) BehaviourEditorWindow.OpenSystem(runtimeDebugger.Data, runtime: true);
+                    //else EditorWindow.GetWindow<BehaviourEditorWindow>().ShowNotification(new GUIContent("Runtime debugger is not ready"));
                 }
             }
         }

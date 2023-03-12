@@ -120,7 +120,7 @@ namespace BehaviourAPI.Unity.Editor
                 new EditorHierarchyNode("Custom Action", typeof(CustomAction)),
                 new EditorHierarchyNode("Custom Action (Context)", typeof(CustomAction)),
                 unityActionNode,
-                new EditorHierarchyNode("Subgraph Action", typeof(UnityTool.Framework.SubgraphAction))
+                new EditorHierarchyNode("Subgraph Action", typeof(SubgraphAction))
             });
 
             var unityPerceptionTypes =GetValidSubTypes(typeof(UnityPerception), types)

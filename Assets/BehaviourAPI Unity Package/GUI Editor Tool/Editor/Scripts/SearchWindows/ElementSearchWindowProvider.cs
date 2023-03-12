@@ -1,16 +1,14 @@
-using BehaviourAPI.Unity.Editor;
-using BehaviourAPI.UnityTool.Framework;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace BehaviourAPI.New.Unity.Editor
+namespace BehaviourAPI.Unity.Editor
 {
+    using Framework;
     public abstract class ElementSearchWindowProvider<T> : ScriptableObject, ISearchWindowProvider where T : class
     {
-        protected EditorWindow _window;
+        protected BehaviourEditorWindow _window;
         Action<T> _callback;
         protected Func<T, bool> _filter;
 
@@ -22,7 +20,7 @@ namespace BehaviourAPI.New.Unity.Editor
             return true;
         }
 
-        public static E Create<E>(EditorWindow editorWindow, Action<T> callback, Func<T, bool> filter = null) where E : ElementSearchWindowProvider<T>
+        public static E Create<E>(BehaviourEditorWindow editorWindow, Action<T> callback, Func<T, bool> filter = null) where E : ElementSearchWindowProvider<T>
         {
             E window = CreateInstance<E>();
             window._window = editorWindow;
@@ -40,7 +38,7 @@ namespace BehaviourAPI.New.Unity.Editor
 
             list.AddGroup("Graphs", 0);
 
-            var graphList = _window.System.data.graphs;
+            var graphList = _window.System.Data.graphs;
             for (int i = 0; i < graphList.Count; i++)
             {
                 if (_filter == null || _filter(graphList[i]))
@@ -60,7 +58,7 @@ namespace BehaviourAPI.New.Unity.Editor
 
             list.AddGroup("Nodes", 0);
 
-            var graphList = _window.System.data.graphs;
+            var graphList = _window.System.Data.graphs;
 
             for (int i = 0; i < graphList.Count; i++)
             {

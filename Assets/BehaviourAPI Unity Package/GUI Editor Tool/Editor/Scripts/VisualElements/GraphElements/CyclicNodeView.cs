@@ -27,7 +27,7 @@ namespace BehaviourAPI.Unity.Editor
             //Debug.Log("Disabling all ports except the connected one");
             if(port.direction == Direction.Input)
             {
-                if(Node.Node != null && Node.Node.MaxInputConnections == 1)
+                if(Node.node != null && Node.node.MaxInputConnections == 1)
                 {
                     InputPorts.ForEach(p => { if (p != port) p.Disable(); });
                     inputUniquePort = port;
@@ -36,16 +36,16 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
-                if (Node.Node != null && Node.Node.MaxOutputConnections == 1)
+                if (Node.node != null && Node.node.MaxOutputConnections == 1)
                 {
                     OutputPorts.ForEach(p => { if (p != port) p.Disable(); });
                     outputUniquePort = port;
                 }               
             }
 
-            if (_graphView.Runtime && port.direction == Direction.Output)
+            if (GraphView.Runtime && port.direction == Direction.Output)
             {
-                if (other.Node.Node is Transition t)
+                if (other.Node.node is Transition t)
                 {
                     t.SourceStateLastStatusChanged += (status) => edgeView.control.UpdateStatus(status);
                     edgeView.control.UpdateStatus(t.SourceStateLastStatus);
@@ -60,7 +60,7 @@ namespace BehaviourAPI.Unity.Editor
             //Debug.Log("Enabling all ports");
             if (port.direction == Direction.Input)
             {
-                if (Node.Node != null && Node.Node.MaxInputConnections == 1)
+                if (Node.node != null && Node.node.MaxInputConnections == 1)
                 {
                     InputPorts.ForEach(p => { if (p != port) p.Enable(); });
                     inputUniquePort = null;
@@ -69,7 +69,7 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
-                if (Node.Node != null && Node.Node.MaxOutputConnections == 1)
+                if (Node.node != null && Node.node.MaxOutputConnections == 1)
                 {
                     OutputPorts.ForEach(p => { if (p != port) p.Enable(); });
                     outputUniquePort = null;
@@ -79,7 +79,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void SetUpPorts()
         {
-            if (Node.Node == null || Node.Node.MaxInputConnections != 0)
+            if (Node.node == null || Node.node.MaxInputConnections != 0)
             {
                 var port1 = InstantiatePort(Direction.Input, PortOrientation.Bottom);
                 port1.style.position = Position.Absolute;
@@ -102,7 +102,7 @@ namespace BehaviourAPI.Unity.Editor
                 inputContainer.style.display = DisplayStyle.None;
             }
 
-            if (Node.Node == null || Node.Node.MaxOutputConnections != 0)
+            if (Node.node == null || Node.node.MaxOutputConnections != 0)
             {
                 var port1 = InstantiatePort(Direction.Output, PortOrientation.Bottom);
                 port1.style.position = Position.Absolute;
@@ -132,8 +132,8 @@ namespace BehaviourAPI.Unity.Editor
                 else
                 {
                     if (InputPorts.Count < 4) return null;
-                    var otherPos = other.Node.Position;
-                    var delta = otherPos - Node.Position;
+                    var otherPos = other.Node.position;
+                    var delta = otherPos - Node.position;
                     if(Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
                     {
                         if (delta.x > 0) return InputPorts[1];
@@ -152,8 +152,8 @@ namespace BehaviourAPI.Unity.Editor
                 else
                 {
                     if (OutputPorts.Count < 4) return null;
-                    var otherPos = other.Node.Position;
-                    var delta = otherPos - Node.Position;
+                    var otherPos = other.Node.position;
+                    var delta = otherPos - Node.position;
                     if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
                     {
                         if (delta.x > 0) return OutputPorts[1];
@@ -179,7 +179,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void SetUpPorts()
         {
-            if (Node.Node == null || Node.Node.MaxInputConnections != 0)
+            if (Node.node == null || Node.node.MaxInputConnections != 0)
             {
                 var port = InstantiatePort(Direction.Input, PortOrientation.Right);
             }
@@ -188,7 +188,7 @@ namespace BehaviourAPI.Unity.Editor
                 inputContainer.style.display = DisplayStyle.None;
             }
 
-            if (Node.Node == null || Node.Node.MaxOutputConnections != 0)
+            if (Node.node == null || Node.node.MaxOutputConnections != 0)
             {
                 var port = InstantiatePort(Direction.Output, PortOrientation.Left);
             }
@@ -207,7 +207,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void SetUpPorts()
         {
-            if (Node.Node == null || Node.Node.MaxInputConnections != 0)
+            if (Node.node == null || Node.node.MaxInputConnections != 0)
             {
                 var port = InstantiatePort(Direction.Input, PortOrientation.Bottom);
             }
@@ -216,7 +216,7 @@ namespace BehaviourAPI.Unity.Editor
                 inputContainer.style.display = DisplayStyle.None;
             }
 
-            if (Node.Node == null || Node.Node.MaxOutputConnections != 0)
+            if (Node.node == null || Node.node.MaxOutputConnections != 0)
             {
                 var port = InstantiatePort(Direction.Output, PortOrientation.Top);
             }
@@ -230,9 +230,9 @@ namespace BehaviourAPI.Unity.Editor
         {
             base.OnConnected(edgeView, other, port, ignoreConnection);
 
-            if(_graphView.Runtime && port.direction == Direction.Output)
+            if(GraphView.Runtime && port.direction == Direction.Output)
             {
-                if (other.Node.Node is BTNode btNode)
+                if (other.Node.node is BTNode btNode)
                 {
                     btNode.LastExecutionStatusChanged += (status) => edgeView.control.UpdateStatus(status);
                     edgeView.control.UpdateStatus(btNode.LastExecutionStatus);

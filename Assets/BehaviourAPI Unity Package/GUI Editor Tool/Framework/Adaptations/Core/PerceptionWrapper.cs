@@ -1,10 +1,8 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace BehaviourAPI.UnityTool.Framework
+namespace BehaviourAPI.Unity.Framework.Adaptations
 {
     public class PerceptionWrapper : Perception
     {

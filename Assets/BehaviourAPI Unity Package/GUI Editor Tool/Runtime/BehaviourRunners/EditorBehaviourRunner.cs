@@ -5,81 +5,26 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
 {
-    public abstract class EditorBehaviourRunner : DataBehaviourRunner, IBehaviourSystem, ISerializationCallbackReceiver
+    public abstract class EditorBehaviourRunner : DataBehaviourRunner, IBehaviourSystem
     {
         #region ------------------------------- Private fields --------------------------------
 
-        [HideInInspector] [SerializeField] List<GraphAsset> graphs = new List<GraphAsset>();
-        [HideInInspector] [SerializeField] List<PushPerceptionAsset> pushPerceptions = new List<PushPerceptionAsset>();
-        [HideInInspector] [SerializeField] List<PerceptionAsset> pullPerceptions = new List<PerceptionAsset>();
+        [SerializeField] SystemData data = new SystemData();
 
         #endregion
 
         #region --------------------------------- Properties ----------------------------------
 
-        /// <summary>
-        /// The editable graphs of the system. Don't use in code.
-        /// </summary>
-        public List<GraphAsset> Graphs => graphs;
-
-        /// <summary>
-        /// The editable push percepcions of the system. Don't use in code.
-        /// </summary>
-        public List<PushPerceptionAsset> PushPerceptions => pushPerceptions;
-
-        /// <summary>
-        /// The editable perceptions of the system. Don't use in code.
-        /// </summary>
-        public List<PerceptionAsset> PullPerceptions => pullPerceptions;
-
-        /// <summary>
-        /// The main editable graph of the runner. Don't use in code.
-        /// </summary>
-        public GraphAsset MainGraph
-        {
-            get
-            {
-                if (graphs.Count == 0) return null;
-                else return graphs[0];
-            }
-            set
-            {
-                if (graphs.Contains(value))
-                {
-                    graphs.MoveAtFirst(value);
-                }
-            }
-        }
-
-        public bool IsAsset => false;
+        public SystemData Data => data;
 
         public Object ObjectReference => this;
-
-        public ScriptableObject AssetReference => null;
-
-        public Component ComponentReference => this;
 
         #endregion
 
         #region --------------------------------- properties ----------------------------------
 
-        protected override BehaviourSystem GetEditorSystem()
-        {
-            return BehaviourSystem.CreateSystem(Graphs, PullPerceptions, PushPerceptions);
-        }
+        protected override SystemData GetEditorSystemData() => data;
 
         #endregion
-
-        public void OnBeforeSerialize()
-        {
-            return;
-        }
-
-        public void OnAfterDeserialize()
-        {
-            graphs.RemoveAll(g => g == null);
-            pushPerceptions.RemoveAll(p => p == null);
-            pullPerceptions.RemoveAll(p => p == null);
-        }
     }
 }

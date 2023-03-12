@@ -12,7 +12,7 @@ using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    public class InspectorView<T> : VisualElement, IHidable where T :ScriptableObject
+    public class InspectorView<T> : VisualElement where T :ScriptableObject
     {
         private static string inspectorPath => BehaviourAPISettings.instance.EditorLayoutsPath + "/inspector.uxml";
         public enum Side { Left, Right }

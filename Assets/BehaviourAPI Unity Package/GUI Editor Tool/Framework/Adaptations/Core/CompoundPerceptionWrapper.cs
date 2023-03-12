@@ -1,12 +1,10 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.Unity.Framework;
-using System.Collections;
+
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
-namespace BehaviourAPI.UnityTool.Framework
+namespace BehaviourAPI.Unity.Framework.Adaptations
 {
     public class CompoundPerceptionWrapper : Perception, IBuildable
     {

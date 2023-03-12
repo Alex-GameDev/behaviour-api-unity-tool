@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using BehaviourAPI.Core;
+using BehaviourAPI.New.Unity.Editor;
 using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Runtime;
 using UnityEditor;
@@ -23,12 +24,19 @@ namespace BehaviourAPI.Unity.Editor
     {
         private static string stylePath => BehaviourAPISettings.instance.EditorStylesPath + "graph.uss";
 
+        /// <summary>
+        /// The current selected graph
+        /// </summary>
+        public GraphData graphData { get; private set; }
+
+        /// <summary>
+        /// The adapter used to render the current graph
+        /// </summary>
+        public GraphAdapter _adapter;
+
         #region ---------------------------------- Fields ----------------------------------
 
-        NodeCreationWindow _nodeCreationWindow;
         BehaviourEditorWindow editorWindow;
-
-        Action<ContextualMenuPopulateEvent> _currentContextualMenuEvent;
 
         Dictionary<NodeData, NodeView> _assetViewMap = new Dictionary<NodeData, NodeView>();
 
@@ -36,57 +44,87 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ---------------------------------- Events ----------------------------------
 
-        public Action<NodeData> NodeSelected, NodeAdded, NodeRemoved;
+        public Action<NodeData> NodeSelected;
 
         #endregion
 
         #region -------------------------------- Properties --------------------------------
-
-        public ActionCreationWindow ActionCreationWindow { get; private set; }
-        public PerceptionCreationWindow PerceptionCreationWindow { get; private set; }
-
-        public SubgraphSearchWindow SubgraphSearchWindow { get; private set; }
-        public NodeSearchWindow NodeSearchWindow { get; private set; }
-        public PerceptionSearchWindow PerceptionSearchWindow { get; private set; }
-
-        public GraphAsset GraphAsset { get; private set ; }
-
-        public GraphAdapter _adapter;
-
         public bool Runtime => BehaviourEditorWindow.Instance.IsRuntime;
 
-
+        public List<NodeView> nodeViews => _assetViewMap.Values.ToList();
 
         #endregion
 
+        #region --------------------------------- SET UP ----------------------------------
         public BehaviourGraphView(BehaviourEditorWindow parentWindow)
         {
             editorWindow = parentWindow;
             AddDecorators();
             AddManipulators();
-            AddSearchWindows();
+
             graphViewChanged = OnGraphViewChanged;
+        }
 
-            SubgraphSearchWindow = ScriptableObject.CreateInstance<SubgraphSearchWindow>();
-            SubgraphSearchWindow.SetEditorWindow(editorWindow);
-
-            NodeSearchWindow = ScriptableObject.CreateInstance<NodeSearchWindow>();
-            NodeSearchWindow.SetEditorWindow(editorWindow);
-
-            PerceptionSearchWindow = ScriptableObject.CreateInstance<PerceptionSearchWindow>();
-            PerceptionSearchWindow.SetEditorWindow(editorWindow);
+        void AddDecorators()
+        {
+            GridBackground gridBackground = new GridBackground();
+            Insert(0, gridBackground);
+            styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>(stylePath));
         }
 
 
-        #region ---------------------- ADD GRAPH ELEMENTS ---------------------------
+        void AddManipulators()
+        {
+            SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
+            this.AddManipulator(new ContentDragger());
+
+            if (!Runtime)
+            {
+                this.AddManipulator(new SelectionDragger());
+                this.AddManipulator(new RectangleSelector());
+            }
+
+            nodeCreationRequest = context =>
+            {
+                if (graphData == null || _adapter == null) return;
+
+                var nodeCreationWindowProvider = ElementCreatorWindowProvider.Create<NodeCreationWindow>(type => CreateNode(type, context.screenMousePosition));
+                nodeCreationWindowProvider.SetAdapterType(_adapter.GetType());
+                var searchContext = new SearchWindowContext(context.screenMousePosition);
+                SearchWindow.Open(searchContext, nodeCreationWindowProvider);
+            };
+
+        }
+
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+        {
+            base.BuildContextualMenu(evt);
+            _adapter?.BuildGraphContextualMenu(evt, this);
+        }
+
+        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+        {
+            if (_adapter == null)
+            {
+                Debug.LogWarning("Cant create connection without adapter");
+                return new List<Port>();
+            }
+            return _adapter.ValidatePorts(ports, startPort, graphData, graphData.graph.CanCreateLoops);
+        }
+
+        #endregion
+
+        #region ---------------------- ADD VISUAL ELEMENTS ---------------------------
         public void AddNodeView(NodeView nodeView)
         {
-            nodeView.Selected = (asset) => NodeSelected?.Invoke(asset);
+            nodeView.Selected = () => NodeSelected?.Invoke(nodeView.Node);
+            nodeView.Unselected = () => NodeSelected?.Invoke(null);
 
             if (Runtime)
             {
                 nodeView.capabilities -= Capabilities.Deletable;
             }
+
             AddElement(nodeView);
             _assetViewMap.Add(nodeView.Node, nodeView);
         }
@@ -101,38 +139,22 @@ namespace BehaviourAPI.Unity.Editor
             AddElement(edge);
         }
 
-        public NodeView GetViewOf(NodeData nodeAsset) => _assetViewMap[nodeAsset];
-
         #endregion ------------------------------------------------------------------
 
-        #region -------------------------- SET UP -------------------------------
-
-        void AddDecorators()
-        {
-            GridBackground gridBackground = new GridBackground();
-            Insert(0, gridBackground);
-
-            styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>(stylePath));
-        }
-
-        void AddManipulators()
-        {
-            SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
-            this.AddManipulator(new ContentDragger());
-
-            if (!Runtime)
-            {
-                this.AddManipulator(new SelectionDragger());
-                this.AddManipulator(new RectangleSelector());
-            }
-            this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
-            {
-                _currentContextualMenuEvent?.Invoke(menuEvt);
-            }));
-        }
-        #endregion ------------------------------------------------------------------
 
         #region --------------------------- CHANGE EVENTS ---------------------------
+
+        public void SetGraphData(GraphData data)
+        {
+            ClearView();
+            graphData = data;
+
+            if(graphData != null)
+            {
+                _adapter = GraphAdapter.FindAdapter(data.graph);
+                _adapter.DrawGraph(data, this);
+            }
+        }
 
         GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
@@ -145,10 +167,28 @@ namespace BehaviourAPI.Unity.Editor
                 return graphViewChange;
             }
 
-            graphViewChange.elementsToRemove?.ForEach(OnElementRemoved);
-            graphViewChange.edgesToCreate?.ForEach(OnEdgeCreated);
+            bool anyNodeRemoved = false;
+            if (graphViewChange.elementsToRemove != null)
+            {                
+                foreach (var elementToRemove in graphViewChange.elementsToRemove)
+                {
+                    anyNodeRemoved |= OnElementRemoved(elementToRemove);
+                }               
+            }
 
+            graphViewChange.edgesToCreate?.ForEach(OnEdgeCreated);
+            BehaviourEditorWindow.Instance.RegisterChanges();
+
+            if (anyNodeRemoved) RefreshProperties();
             return _adapter?.OnViewChanged(this, graphViewChange) ?? graphViewChange;
+        }
+
+        void OnElementMoved(GraphElement element)
+        {
+            if (element is NodeView nodeView)
+            {
+                nodeView.Node.position = element.GetPosition().position;
+            }
         }
 
         private void OnEdgeCreated(Edge edge)
@@ -157,25 +197,15 @@ namespace BehaviourAPI.Unity.Editor
             var target = (NodeView)edge.input.node;
             source.OnConnected((EdgeView)edge, target, edge.output);
             target.OnConnected((EdgeView)edge, source, edge.input);
-            BehaviourEditorWindow.Instance.OnModifyAsset();
         }
 
-        void OnElementMoved(GraphElement element)
+        bool OnElementRemoved(GraphElement element)
         {
             if (element is NodeView nodeView)
             {
-                nodeView.OnMoved(element.GetPosition().position);
-                BehaviourEditorWindow.Instance.OnModifyAsset();
-            }
-        }
-
-        void OnElementRemoved(GraphElement element)
-        {
-            if (element is NodeView nodeView)
-            {
-                GraphAsset.RemoveNode(nodeView.Node);
+                graphData.nodes.Remove(nodeView.Node);
                 _assetViewMap.Remove(nodeView.Node);
-                NodeRemoved?.Invoke(nodeView.Node);
+                return true;                
             }
             if (element is Edge edge)
             {
@@ -183,109 +213,83 @@ namespace BehaviourAPI.Unity.Editor
                 var target = (NodeView)edge.input.node;
                 source.OnDisconnected((EdgeView)edge, target, edge.output);
                 target.OnDisconnected((EdgeView)edge, source, edge.input);
-                BehaviourEditorWindow.Instance.OnModifyAsset();
             }
+            return false;
         }
 
-        #endregion ------------------------------------------------------------------
-
-        #region --------------------------- CHANGE GRAPH ----------------------------
-
-        public void SetGraph(GraphAsset graph)
-        {
-            ClearGraph();
-            GraphAsset = graph;
-
-            _adapter = GraphAdapter.FindAdapter(graph.Graph);
-            _adapter.DrawGraph(graph, this);
-            _currentContextualMenuEvent = (menuEvt) => _adapter.BuildGraphContextualMenu(menuEvt, this);
-
-            _nodeCreationWindow.SetAdapterType(_adapter.GetType());
-        }
-
-        #endregion ------------------------------------------------------------------
-
-        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
-        {
-            if (_adapter == null) return new List<Port>();
-            return _adapter.GetValidPorts(ports, startPort, GraphAsset.Graph.CanCreateLoops);
-        }
-
-        #region -------------------------- SEARCH WINDOWS ---------------------------
-
-        void AddSearchWindows()
-        {
-            _nodeCreationWindow = ScriptableObject.CreateInstance<NodeCreationWindow>();
-
-            ActionCreationWindow = ScriptableObject.CreateInstance<ActionCreationWindow>();
-            PerceptionCreationWindow = ScriptableObject.CreateInstance<PerceptionCreationWindow>();
-
-            nodeCreationRequest = context =>
-            {
-                if (GraphAsset == null) return;
-                if (Runtime)
-                {
-                    return;
-                }
-
-                var searchContext = new SearchWindowContext(context.screenMousePosition);
-                _nodeCreationWindow.Open((type) => CreateNode(type, context.screenMousePosition), searchContext);
-            };
-        }
-
-        #endregion ------------------------------------------------------------------
-
-       
-        Vector2 GetLocalMousePosition(Vector2 mousePosition)
-        {
-            return contentViewContainer.WorldToLocal(mousePosition);
-        }
-
-        void CreateNode(Type type, Vector2 position) 
-        {
-            Vector2 pos = GetLocalMousePosition(position - editorWindow.position.position);
-            NodeData asset = GraphAsset.CreateNode(type, pos);
-
-            if(asset != null)
-            {
-                _adapter.DrawNode(asset, this);
-            }
-            else
-            {
-                Debug.LogWarning("Error creating the node");
-            }
-
-            NodeAdded?.Invoke(asset);
-        } 
-        
-        public void DuplicateNode(NodeData nodeAsset)
-        {
-            NodeData assetCopy = GraphAsset.DuplicateNode(nodeAsset);
-            assetCopy.Position += new Vector2(20, 20);
-
-            if (assetCopy != null)
-            {
-                _adapter.DrawNode(assetCopy, this);
-            }
-            else
-            {
-                Debug.LogWarning("Error creating the node");
-            }
-            NodeAdded?.Invoke(assetCopy);
-        }
-
-        void ClearGraph()
+        public void ClearView()
         {
             _assetViewMap.Clear();
             graphElements.ForEach(RemoveElement);
         }
 
-        public void ClearView() => ClearGraph();
-
         public void RefreshView()
         {
-            ClearGraph();
-            _adapter.DrawGraph(GraphAsset, this);
+            ClearView();
+            _adapter.DrawGraph(graphData, this);
         }
+
+        /// <summary>
+        /// Call when a node is removed or the order changed to recompute the property paths
+        /// </summary>
+        public void RefreshProperties()
+        {
+            Debug.Log("Refresh properties");
+            foreach (var view in _assetViewMap.Values)
+            {
+                view.RefreshProperty();
+            }
+        }
+
+        #endregion ------------------------------------------------------------------
+
+        #region ------------------------------ UTILS ---------------------------------
+
+        public NodeView GetViewOf(NodeData nodeAsset) => _assetViewMap[nodeAsset];
+
+        Vector2 GetLocalMousePosition(Vector2 mousePosition)
+        {
+            return contentViewContainer.WorldToLocal(mousePosition);
+        }
+
+        #endregion
+
+        #region --------------------------- MODIFY DATA ----------------------------
+
+        void CreateNode(Type type, Vector2 position)
+        {
+            Vector2 pos = GetLocalMousePosition(position - editorWindow.position.position);
+            NodeData data = new NodeData(type, pos);
+
+            if (data != null)
+            {
+                graphData.nodes.Add(data);
+                _adapter.DrawNode(data, this);
+                BehaviourEditorWindow.Instance.RegisterChanges();
+            }
+            else
+            {
+                Debug.LogWarning("Error creating the node");
+            }
+        }
+
+        public void DuplicateNode(NodeData nodeAsset)
+        {
+            NodeData copy = nodeAsset.Duplicate();
+            copy.position += new Vector2(20, 20);
+
+            if (copy != null)
+            {
+                graphData.nodes.Add(copy);
+                BehaviourEditorWindow.Instance.RegisterChanges();
+                _adapter.DrawNode(copy, this);
+            }
+            else
+            {
+                Debug.LogWarning("Error creating the node");
+            }
+        }
+
+        #endregion ------------------------------------------------------------------       
     }
 }

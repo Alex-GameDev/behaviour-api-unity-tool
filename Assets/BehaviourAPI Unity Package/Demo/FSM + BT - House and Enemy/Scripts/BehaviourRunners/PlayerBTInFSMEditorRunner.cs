@@ -40,7 +40,7 @@ public class PlayerBTInFSMEditorRunner : EditorBehaviourRunner
         mainGraph.FindNode<State>("go to home").SetAction(new WalkAction(_doorPos, 5f));
         mainGraph.FindNode<State>("enter house").SetAction(new FunctionalAction(EnterTheHouse));
 
-        FindPerception<DistancePerception>("distance to enemy").OtherTransform = _enemyTransform;
+        //FindPerception<DistancePerception>("distance to enemy").OtherTransform = _enemyTransform;
 
         subgraph.FindNode<ConditionNode>("has no key").SetPerception(new ConditionPerception(() => !_hasKey));
         subgraph.FindNode<LeafNode>("walk to key").SetAction(new WalkAction(_keyPos, 5f));

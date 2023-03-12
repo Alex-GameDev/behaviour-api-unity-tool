@@ -2,8 +2,10 @@ using BehaviourAPI.Core;
 using BehaviourAPI.Unity.Framework;
 
 using System;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.Graphs;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -47,29 +49,22 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// The current selected graph.
         /// </summary>
-        public GraphAsset CurrentGraphAsset { get; private set; }
+        public GraphData CurrentGraphAsset { get; private set; }
 
         #endregion
 
         #region ------------------------------- private fields --------------------------------
 
         BehaviourGraphView _graphView;
-        VisualElement _noGraphPanel, _container;
+        VisualElement _noGraphPanel, _container, _currentInspector;
 
         NodeInspectorView _nodeInspector;
 
-        BehaviourGraphInspectorView _graphInspector;
-        PullPerceptionInspectorView _pullPerceptionInspector;
+        GraphInspector _graphInspector;
         PushPerceptionInspectorView _pushPerceptionInspector;
-
-        SubgraphSearchWindow _subgraphSearchWindow;
-        PerceptionSearchWindow _perceptionSearchWindow;
-        NodeSearchWindow nodeSearchWindow;
 
         Toolbar _editToolbar;
         ToolbarMenu _selectGraphMenu;
-
-        IHidable _currentInspector;
 
         #endregion
 
@@ -95,6 +90,7 @@ namespace BehaviourAPI.Unity.Editor
                 Instance.System = system;
                 Instance.IsAsset = AssetDatabase.Contains((UnityEngine.Object)system);
                 Instance.IsRuntime = runtime;
+
                 window.Refresh();
             }
         }
@@ -121,26 +117,21 @@ namespace BehaviourAPI.Unity.Editor
 
             _container = rootVisualElement.Q("bw-content");
 
+            // Inspectors:
+            _nodeInspector = AddInspector<NodeInspectorView>();
+            _graphInspector = AddInspector<GraphInspector>();
+            _graphInspector.Disable();
+
+            _pushPerceptionInspector = AddInspector<PushPerceptionInspectorView>();
+            _pushPerceptionInspector.Disable();
+
+            rootVisualElement.Q<Button>("im-graph-btn").clicked += () => ChangeInspector(_graphInspector);
+            rootVisualElement.Q<Button>("im-pushperceptions-btn").clicked += () => ChangeInspector(_pushPerceptionInspector);
+
             // Graphs:
             _noGraphPanel = AddEmptyPanel();
             _graphView = AddGraphView();
-
-            // Inspectors:
-            _nodeInspector = AddInspector<NodeInspectorView>();
-            _graphInspector = AddInspector<BehaviourGraphInspectorView>(swapable: true);
-            _pullPerceptionInspector = AddInspector<PullPerceptionInspectorView>(swapable: true);
-            _pushPerceptionInspector = AddInspector<PushPerceptionInspectorView>(swapable: true);
-            
-            _pullPerceptionInspector._graphView = _graphView;
-            _pushPerceptionInspector.nodeSearchWindow = _graphView.NodeSearchWindow;
-
             _graphView.NodeSelected += _nodeInspector.UpdateInspector;
-            _graphView.NodeAdded += OnAddSubAsset;
-            _graphView.NodeRemoved += OnRemoveSubAsset;
-
-            rootVisualElement.Q<Button>("im-pullperceptions-btn").clicked += () => ChangeInspector(_pullPerceptionInspector);
-            rootVisualElement.Q<Button>("im-graph-btn").clicked += () => ChangeInspector(_graphInspector);
-            rootVisualElement.Q<Button>("im-pushperceptions-btn").clicked += () => ChangeInspector(_pushPerceptionInspector);
 
             // Toolbar:
             SetUpToolbar();
@@ -148,16 +139,10 @@ namespace BehaviourAPI.Unity.Editor
             Undo.undoRedoPerformed += Refresh;
         }
 
-        private T AddInspector<T>(bool swapable = false) where T : VisualElement, new()
+        private T AddInspector<T>() where T : VisualElement, new()
         {
             var inspector = new T();
             _container.Add(inspector);
-
-            if(swapable)
-            {
-                inspector.Disable();
-            }
-
             return inspector;
         }
 
@@ -217,7 +202,7 @@ namespace BehaviourAPI.Unity.Editor
 
         void DisplayDeleteGraphAlertWindow()
         {
-            if (System == null || System.Graphs.Count == 0) return;
+            if (System == null || System.Data.graphs.Count == 0) return;
             AlertWindow.CreateAlertWindow("Are you sure to delete the current graph?", DeleteCurrentGraph);
         }
 
@@ -232,15 +217,14 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (System != null)
             {
-                DisplayGraph(System.MainGraph, forceRefresh: true);
+                DisplayGraph(System.Data.graphs.FirstOrDefault(), forceRefresh: true);
             }
             else
             {
                 _graphView?.ClearView();
             }
 
-            _pushPerceptionInspector?.ResetList();
-            _pullPerceptionInspector?.ResetList();
+            _pushPerceptionInspector?.ForceRefresh();
             UpdateGraphSelectionToolbar();
 
             if (IsRuntime)
@@ -261,9 +245,9 @@ namespace BehaviourAPI.Unity.Editor
         /// Change the selected inspector in the left side.
         /// </summary>
         /// <param name="inspector"> The displayed inspector.</param>
-        void ChangeInspector(IHidable inspector)
+        void ChangeInspector(VisualElement inspector)
         {
-            _currentInspector?.Hide();
+            _currentInspector?.Disable();
             if (_currentInspector == inspector)
             {
                 _currentInspector = null;
@@ -271,7 +255,7 @@ namespace BehaviourAPI.Unity.Editor
             else
             {
                 _currentInspector = inspector;
-                _currentInspector?.Show();
+                _currentInspector?.Enable();
             }
         }
 
@@ -284,15 +268,15 @@ namespace BehaviourAPI.Unity.Editor
 
             if (System == null) return;
 
-            for (int i = 0; i < System.Graphs.Count; i++)
+            for (int i = 0; i < System.Data.graphs.Count; i++)
             {
-                var graph = System.Graphs[i];
+                var graph = System.Data.graphs[i];
 
                 if(graph != null)
                 {
                     var id = i;
                     _selectGraphMenu.menu.AppendAction(
-                        actionName: $"{i + 1} - {graph.Name} ({graph.Graph.GetType().Name})",
+                        actionName: $"{i + 1} - {graph.name} ({graph.graph.TypeName()})",
                         action: _ => DisplayGraph(graph),
                         status: CurrentGraphAsset == graph ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal
                     );
@@ -303,18 +287,18 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Change the graph referenced in <see cref="CurrentGraphAsset"/> and repaint the graph view.
         /// </summary>
-        /// <param name="graphAsset">The new selected graph.</param>
+        /// <param name="graphData">The new selected graph.</param>
         /// <param name="forceRefresh">True for repaint even if the selected graph didn't changed.</param>
-        void DisplayGraph(GraphAsset graphAsset, bool forceRefresh = false)
+        void DisplayGraph(GraphData graphData, bool forceRefresh = false)
         {
-            if (graphAsset != null && CurrentGraphAsset == graphAsset && !forceRefresh) return;
+            if (graphData != null && _graphView.graphData == graphData && !forceRefresh) return;
 
-            CurrentGraphAsset = graphAsset;
+            _graphView.SetGraphData(graphData);
 
-            if (graphAsset != null)
+            if (graphData != null)
             {
                 _noGraphPanel.Disable();
-                _graphView.SetGraph(graphAsset);
+                _graphView.SetGraphData(graphData);
             }
             else
             {
@@ -322,7 +306,7 @@ namespace BehaviourAPI.Unity.Editor
                 _noGraphPanel.Enable();
             }
 
-            _graphInspector.UpdateInspector(graphAsset);
+            _graphInspector.UpdateInspector(graphData);
 
             UpdateGraphSelectionToolbar();
         }
@@ -330,6 +314,22 @@ namespace BehaviourAPI.Unity.Editor
         #endregion
 
         #region --------------------------------- Modify system ---------------------------------
+
+
+        /// <summary>
+        /// Sets <see cref="CurrentGraphAsset"/> as the main graph of <see cref="System"/> 
+        /// </summary>
+        private void ChangeMainGraph()
+        {
+            if (System == null || _graphView.graphData == null) return;
+
+            if (System.Data.graphs.Count == 0 || System.Data.graphs[0] == _graphView.graphData) return;
+
+            System.Data.graphs.MoveAtFirst(_graphView.graphData);
+            RegisterChanges();
+            UpdateGraphSelectionToolbar();
+            Toast("Main graph changed");
+        }
 
         /// <summary>
         /// Create a new <see cref="GraphAsset"/> in <see cref="System"/>.
@@ -344,15 +344,15 @@ namespace BehaviourAPI.Unity.Editor
                 return;
             }
 
-            var graphAsset = GraphAsset.Create(name, type);
+            var graphData = new GraphData(type);
 
-            if (graphAsset != null)
+            if (graphData != null)
             {
-                System.Graphs.Add(graphAsset);
-                OnAddSubAsset(graphAsset);
+                System.Data.graphs.Add(graphData);
+                RegisterChanges();
             }
 
-            DisplayGraph(graphAsset);
+            DisplayGraph(graphData);
             Toast("Graph created");
         }
 
@@ -361,115 +361,50 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         private void DeleteCurrentGraph()
         {
-            if (System == null)
+            if (System == null || _graphView.graphData == null)
             {
                 Debug.LogWarning("Can't delete graph if no system is selected");
                 return;
             }
 
-            if (System.Graphs.Remove(CurrentGraphAsset))
+            if (System.Data.graphs.Remove(_graphView.graphData))
             {
-                CurrentGraphAsset.Nodes.ForEach(n => OnRemoveSubAsset(n));
-                OnRemoveSubAsset(CurrentGraphAsset);
+                RegisterChanges();
             }
 
-            DisplayGraph(System.MainGraph);
+            DisplayGraph(System.Data.graphs.FirstOrDefault());
 
             Toast("Graph deleted");
         }
-
-        /// <summary>
-        /// Sets <see cref="CurrentGraphAsset"/> as the main graph of <see cref="System"/> 
-        /// </summary>
-        private void ChangeMainGraph()
-        {
-            if (System == null || System.MainGraph == CurrentGraphAsset) return;
-            System.MainGraph = CurrentGraphAsset;
-            OnModifyAsset();
-
-            UpdateGraphSelectionToolbar();
-            Toast("Main graph changed");
-        }
-
-        /// <summary>
-        /// Notifies unity that <see cref="System"/> was modified.
-        /// </summary>
-        public void OnModifyAsset()
-        {
-            EditorUtility.SetDirty(System.ObjectReference);
-        }
-
-        /// <summary>
-        /// Notifies unity that <paramref name="subAsset"/> was added to <see cref="System"/> as as sub asset.
-        /// </summary>
-        /// <param name="subAsset">The sub asset added.</param>
-        public void OnAddSubAsset(ScriptableObject subAsset)
-        {
-            subAsset.name = subAsset.GetType().Name;
-            EditorUtility.SetDirty(System.ObjectReference);
-
-            if (System.AssetReference != null)
-            {
-                AssetDatabase.AddObjectToAsset(subAsset, System.AssetReference);
-                AssetDatabase.SaveAssetIfDirty(System.AssetReference);
-            }
-            else if (System.ComponentReference != null)
-            {
-                EditorUtility.SetDirty(subAsset);
-                if (System.ComponentReference.gameObject.scene.name == null)
-                {
-                    AssetDatabase.AddObjectToAsset(subAsset, System.ComponentReference);
-                    AssetDatabase.SaveAssetIfDirty(this);
-                    AssetDatabase.Refresh();
-                }                
-            }
-        }
-
-        /// <summary>
-        /// Notifies unity that <paramref name="subAsset"/> was removed from <see cref="System"/>.
-        /// </summary>
-        /// <param name="subAsset">The sub asset removed.</param>
-        public void OnRemoveSubAsset(ScriptableObject subAsset)
-        {
-            EditorUtility.SetDirty(System.ObjectReference);
-
-            if(System.AssetReference != null)
-            {
-                AssetDatabase.RemoveObjectFromAsset(subAsset);
-                AssetDatabase.SaveAssetIfDirty(System.AssetReference);
-            }
-            else if(System.ComponentReference != null)
-            {
-                if (System.ComponentReference.gameObject.scene.name == null)
-                {
-                    AssetDatabase.RemoveObjectFromAsset(subAsset);
-                    AssetDatabase.SaveAssetIfDirty(System.ComponentReference);
-                    AssetDatabase.Refresh();
-                }
-            }
-        }
+ 
 
         /// <summary>
         /// Remove all nodes from <see cref="CurrentGraphAsset"/>.
         /// </summary>
         private void ClearCurrentGraph()
         {
-            if (System == null || CurrentGraphAsset == null) return;
+            if (System == null || _graphView.graphData == null) return;
 
             _graphView.ClearView();
 
-            if (IsAsset) CurrentGraphAsset.Nodes.ForEach(AssetDatabase.RemoveObjectFromAsset);
+            _graphView.graphData.nodes.Clear();
+            RegisterChanges();
 
-            foreach(var nodeasset in CurrentGraphAsset.Nodes)
-            {
-                OnRemoveSubAsset(nodeasset);
-            }
-
-            CurrentGraphAsset.Nodes.Clear();
+            //TODO: Comprobar referencias perdidas en push perceptions
             Toast("Graph clean");
         }
 
+        /// <summary>
+        /// Notifies unity that <see cref="System"/> was modified.
+        /// </summary>
+        public void RegisterChanges()
+        {
+            EditorUtility.SetDirty(System.ObjectReference);
+        }
+
         #endregion
+
+        #region ----------------------------------- Utils -----------------------------------
 
         /// <summary>
         /// Displays a notification in the current window
@@ -479,6 +414,16 @@ namespace BehaviourAPI.Unity.Editor
         public void Toast(string message, float timeout = .5f)
         {
             ShowNotification(new GUIContent(message), timeout);
+        }
+
+        public void OpenSearchGraphWindow(Action<GraphData> callback)
+        {
+
+        }
+
+        public void OpenSearchNodeWindow(Action<NodeData> callback, Func<NodeData, bool> filter)
+        {
+
         }
 
         /// <summary>
@@ -495,5 +440,7 @@ namespace BehaviourAPI.Unity.Editor
                 Refresh();
             }
         }
+
+        #endregion
     }
 }

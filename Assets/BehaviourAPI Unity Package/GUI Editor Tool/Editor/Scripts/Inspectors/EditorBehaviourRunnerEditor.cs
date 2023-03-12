@@ -13,8 +13,7 @@ namespace BehaviourAPI.Unity.Editor
 {
     [CustomEditor(typeof(EditorBehaviourRunner),editorForChildClasses: true)]
     public class EditorBehaviourRunnerEditor : UnityEditor.Editor
-    {
-        
+    {        
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
@@ -26,17 +25,16 @@ namespace BehaviourAPI.Unity.Editor
 
             GUILayout.BeginVertical("- BEHAVIOUR SYSTEM -", "window");
 
-            if(runner.Graphs.Count != 0)
+            if(runner.Data != null && runner.Data.graphs.Count != 0)
             {
-                EditorGUILayout.LabelField($"Graphs: \t {runner.Graphs.Count}");
+                EditorGUILayout.LabelField($"Graphs: \t {runner.Data.graphs.Count}");
                 EditorGUILayout.Space(5f);
-                foreach (var graph in runner.Graphs)
+                foreach (var graph in runner.Data.graphs)
                 {
-                    EditorGUILayout.LabelField($"\t- {(string.IsNullOrWhiteSpace(graph.Name) ? "unnamed" : graph.Name)}({graph.Graph?.TypeName() ?? "null"}, {graph.Nodes.Count} node(s))");
+                    EditorGUILayout.LabelField($"\t- {(string.IsNullOrWhiteSpace(graph.name) ? "unnamed" : graph.name)}({graph.graph?.TypeName() ?? "null"}, {graph.nodes.Count} node(s))");
                 }
                 EditorGUILayout.Space(5f);
-                EditorGUILayout.LabelField($"Pull perceptions: \t {runner.PullPerceptions.Count}");
-                EditorGUILayout.LabelField($"Push Perceptions: \t {runner.PushPerceptions.Count}");
+                EditorGUILayout.LabelField($"Push Perceptions: \t {runner.Data.pushPerceptions.Count}");
             }
             else
             {

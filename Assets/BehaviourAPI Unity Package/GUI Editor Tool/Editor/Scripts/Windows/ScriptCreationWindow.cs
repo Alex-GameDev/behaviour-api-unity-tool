@@ -46,12 +46,11 @@ namespace BehaviourAPI.Unity.Editor
             string scriptName = scriptNameTextField.text;
 
             var system = BehaviourEditorWindow.Instance.System;
-            var systemAsset = BehaviourSystem.CreateSystem(system.Graphs, system.PullPerceptions, system.PushPerceptions);
 
             bool useFullNameVar = useFullNameVarToggle.value;
             bool includeNodeNames = includeNodeNamesToggle.value;
 
-            if(systemAsset != null) ScriptGeneration.GenerateScript(path, scriptName, systemAsset, useFullNameVar, includeNodeNames);
+            if(system != null) ScriptGeneration.GenerateScript(path, scriptName, system, useFullNameVar, includeNodeNames);
             Close();
         }
     }

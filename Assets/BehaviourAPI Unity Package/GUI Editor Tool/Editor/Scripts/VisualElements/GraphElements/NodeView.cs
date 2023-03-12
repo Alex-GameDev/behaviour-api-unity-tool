@@ -1,74 +1,72 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+
+using UnityEditor;
+using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
+using UnityEngine.UIElements;
+using UnityEngine;
+
 namespace BehaviourAPI.Unity.Editor
 {
-    using BehaviourAPI.Core.Perceptions;
     using Core;
-    using System;
-    using UnityEditor;
-    using UnityEditor.Experimental.GraphView;
-    using UnityEditor.UIElements;
-    using UnityEngine.UIElements;
-    using UnityEngine;
     using Vector2 = UnityEngine.Vector2;
-    using Action = Core.Actions.Action;
-    using System.Linq;
-    using System.Collections.Generic;
-    using BehaviourAPI.Unity.Framework;
-    using BehaviourAPI.UnityExtensions;
 
+    using Framework;
+    using UnityExtensions;
+    using behaviourAPI.Unity.Framework.Adaptations;
 
     /// <summary>
     /// Visual element that represents a data in a behaviour graph
     /// </summary>
     public abstract class NodeView : UnityEditor.Experimental.GraphView.Node
     {
+        public abstract string LayoutPath { get; }
+
         #region --------------------------- Fields ---------------------------
-        
-        public NodeData Node;
 
-        public Action<NodeData> Selected;
-        public Action<NodeData> UnSelected;
+        public NodeData Node { get; private set; }
+        public BehaviourGraphView GraphView { get; private set; }
 
-        protected BehaviourGraphView _graphView;
-        public BehaviourGraphView GraphView => _graphView;
+        public Action Selected, Unselected;
 
-        List<PortView> inputPorts, outputPorts;
-
-        protected List<EdgeView> outputEdges = new List<EdgeView>();
-
+        SerializedProperty _property;
         #endregion
 
         #region ----------------------- Visual elements -----------------------
         public VisualElement RootElement { get; private set; }
         public VisualElement IconElement { get; private set; }
         public VisualElement BorderElement { get; private set; }
+        public VisualElement TypeColorTop { get; private set; }
+        public VisualElement TypeColorBottom { get; private set; }
 
-        public PortView InputPort => InputPorts.FirstOrDefault();
-        public PortView OutputPort => OutputPorts.FirstOrDefault();
+        public List<PortView> InputPorts { get; } = new List<PortView>();
+        public List<PortView> OutputPorts { get; } = new List<PortView>();
 
-        public List<PortView> InputPorts => inputPorts;
-        public List<PortView> OutputPorts => outputPorts;
+        protected List<EdgeView> outputEdges = new List<EdgeView>();
 
-
-        #endregion
-
-        public abstract string LayoutPath { get; }     
+        #endregion     
 
         #region --------------------------- Set up ---------------------------
         public NodeView(NodeData node, BehaviourGraphView graphView, string path) : base(path)
         {
             Node = node;
-            _graphView = graphView;
-            inputPorts = new List<PortView>();
-            outputPorts = new List<PortView>();
+            GraphView = graphView;
+
+            RefreshProperty();
+
             RootElement = this.Q("node-root");
             IconElement = this.Q("node-icon");
             BorderElement = this.Q("node-border");
 
-            SetPosition(new Rect(node.Position, Vector2.zero));
+            SetPosition(new Rect(node.position, Vector2.zero));
+
             SetUpPorts();
+
             SetUpDataBinding();
 
-            if(Node.Node != null)
+            if(Node.node != null)
             {
                 if(graphView.Runtime)
                 {
@@ -90,7 +88,7 @@ namespace BehaviourAPI.Unity.Editor
         protected virtual void AddRuntimeLayout()
         {
             this.Q("node-port-cover").Enable();
-            if(Node.Node is IStatusHandler statusHandler)
+            if(Node.node is IStatusHandler statusHandler)
             {
                 var statusBorder = this.Q("node-status");
                 statusHandler.StatusChanged += status => statusBorder.ChangeBorderColor(status.ToColor());
@@ -103,12 +101,11 @@ namespace BehaviourAPI.Unity.Editor
         {           
             this.AddManipulator(new ContextualMenuManipulator(menuEvt =>
             {
-                menuEvt.menu.AppendAction("Duplicate node", _ => _graphView.DuplicateNode(Node));
-                menuEvt.menu.AppendAction("Disconnect input ports", _ => DisconnectPorts(inputContainer), _ => Node.Node.MaxInputConnections != 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
-                menuEvt.menu.AppendAction("Disconnect output ports", _ => DisconnectPorts(outputContainer), _ => Node.Node.MaxOutputConnections != 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+                menuEvt.menu.AppendAction("Duplicate node", _ => GraphView.DuplicateNode(Node));
+                menuEvt.menu.AppendAction("Disconnect input ports", _ => DisconnectPorts(inputContainer), _ => Node.node.MaxInputConnections != 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+                menuEvt.menu.AppendAction("Disconnect output ports", _ => DisconnectPorts(outputContainer), _ => Node.node.MaxOutputConnections != 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
             }));
         }
-
 
         /// <summary>
         /// Draws the visual elements to assign actions and perceptions
@@ -117,47 +114,39 @@ namespace BehaviourAPI.Unity.Editor
         {
             var extensionContainer = this.Q(name: "extension");
 
-            SerializedObject nodeObj = new SerializedObject(Node);
-            var prop = nodeObj.GetIterator();
-            bool propertiesLeft = true;
-            while (propertiesLeft)
+            if(Node is IActionAssignable)
             {
-                // Actions
-                if (prop.propertyType == SerializedPropertyType.ManagedReference)
-                {
-                    var typeName = prop.managedReferenceFieldTypename.Split(' ').Last();
 
-                    if (typeName == typeof(Action).FullName)
-                    {
-                        var containerView = new ActionContainerView(Node, prop.Copy(), this);
-                        extensionContainer.Add(containerView);
-                    }                   
-                }
-                // Perceptions
-                else if(prop.propertyType == SerializedPropertyType.ObjectReference)
-                {
-                    if (prop.displayName == "Perception")
-                    {
-                        var containerView = new PerceptionContainerView(Node, prop.Copy(), this);
-                        extensionContainer.Add(containerView);
-                    }
-                }
-                propertiesLeft = prop.NextVisible(true);
+            }
+
+            if(Node is IPerceptionAssignable)
+            {
+
             }
         }
 
         void SetUpDataBinding()
         {
-            var obj = new SerializedObject(Node);
             var titleInputField = this.Q<TextField>(name: "title-input-field");
 
-            if (BehaviourEditorWindow.Instance.IsRuntime)
-            {
-                titleInputField.isReadOnly = true;
-            }
+            titleInputField.bindingPath = _property.propertyPath + ".name";
+            titleInputField.Bind(_property.serializedObject);
+        }
 
-            titleInputField.bindingPath = "Name";
-            titleInputField.Bind(obj);
+        public void RefreshProperty()
+        {
+            _property = GetPropertyPath();
+            SetUpDataBinding();
+        }
+
+        SerializedProperty GetPropertyPath()
+        {
+            var graphDataId = BehaviourEditorWindow.Instance.System.Data.graphs.IndexOf(GraphView.graphData);
+            var nodeDataId = GraphView.graphData.nodes.IndexOf(Node);
+
+            var path = $"data.graphs.Array.data[{graphDataId}].nodes.Array.data[{nodeDataId}]";
+            var prop = new SerializedObject(BehaviourEditorWindow.Instance.System.ObjectReference).FindProperty(path);
+            return prop;
         }
 
         protected PortView InstantiatePort(Direction direction, PortOrientation orientation)
@@ -167,11 +156,11 @@ namespace BehaviourAPI.Unity.Editor
             Port.Capacity portCapacity;
             Type portType;
 
-            if(Node.Node != null)
+            if(Node.node != null)
             {
-                if (isInput) portCapacity = Node.Node.MaxInputConnections == -1 ? Port.Capacity.Multi : Port.Capacity.Single;
-                else portCapacity = Node.Node.MaxOutputConnections == -1 ? Port.Capacity.Multi : Port.Capacity.Single;
-                portType = isInput ? Node.Node.GetType() : Node.Node.ChildType;
+                if (isInput) portCapacity = Node.node.MaxInputConnections == -1 ? Port.Capacity.Multi : Port.Capacity.Single;
+                else portCapacity = Node.node.MaxOutputConnections == -1 ? Port.Capacity.Multi : Port.Capacity.Single;
+                portType = isInput ? Node.node.GetType() : Node.node.ChildType;
             }
             else
             {
@@ -209,14 +198,14 @@ namespace BehaviourAPI.Unity.Editor
         {
             base.OnSelected();
             BorderElement.ChangeBackgroundColor(new Color(.5f, .5f, .5f, .5f));
-            Selected?.Invoke(Node);
+            Selected?.Invoke();
         }
 
         public override void OnUnselected()
         {
             BorderElement.ChangeBackgroundColor(new Color(0f, 0f, 0f, 0f));
             base.OnUnselected();
-            Selected?.Invoke(null);
+            Unselected?.Invoke();
         }
 
         public virtual void OnConnected(EdgeView edgeView, NodeView other, Port port, bool ignoreConnection = false)
@@ -225,11 +214,11 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (port.direction == Direction.Input)
                 {
-                    Node.Parents.Add(other.Node);
+                    Node.parentIds.Add(other.Node.id);
                 }
                 else
                 {
-                    Node.Childs.Add(other.Node);
+                    Node.childIds.Add(other.Node.id);
                 }
             }
 
@@ -238,12 +227,6 @@ namespace BehaviourAPI.Unity.Editor
                 outputEdges.Add(edgeView);
                 UpdateEdgeViews();
             }
-
-        }
-
-        public void OnMoved(Vector2 pos)
-        {
-           Node.Position = pos;
         }
 
         public virtual void OnDisconnected(EdgeView edgeView, NodeView other, Port port, bool ignoreConnection = false)
@@ -252,11 +235,11 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (port.direction == Direction.Input)
                 {
-                    Node.Parents.Remove(other.Node);
+                    Node.parentIds.Add(other.Node.id);
                 }
                 else
                 {
-                    Node.Childs.Remove(other.Node);
+                    Node.childIds.Remove(other.Node.id);
                 }
             }
 
@@ -289,13 +272,13 @@ namespace BehaviourAPI.Unity.Editor
 
         public virtual Port GetBestPort(NodeView other, Direction dir)
         {
-            if (dir == Direction.Input) return InputPort;
-            else return OutputPort;
+            if (dir == Direction.Input) return InputPorts.FirstOrDefault();
+            else return OutputPorts.FirstOrDefault();
         }
 
         public void UpdateEdgeViews()
         {
-            var childs = Node.Childs;
+            var childs = Node.childIds;
 
             if(childs.Count <= 1)
             {
@@ -309,17 +292,10 @@ namespace BehaviourAPI.Unity.Editor
                 foreach (var edgeView in outputEdges)
                 {
                     var target = (edgeView.input.node as NodeView).Node;
-                    int idx = childs.IndexOf(target);
+                    int idx = childs.IndexOf(target.id);
                     edgeView.control.UpdateIndex(idx + 1);
                 }
             }
-        }
-
-        public void OrderChilds(Func<NodeData, float> sortFunction, bool notify = true)
-        {
-            Node.OrderChilds(sortFunction);
-            UpdateEdgeViews();
-            if(notify) BehaviourEditorWindow.Instance.OnModifyAsset();
         }
     }
 }

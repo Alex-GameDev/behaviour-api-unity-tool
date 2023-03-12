@@ -1,17 +1,14 @@
-using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.Unity.Editor;
-using BehaviourAPI.UnityTool.Framework;
 using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using Action = BehaviourAPI.Core.Actions.Action;
 
-namespace BehaviourAPI.New.Unity.Editor
+namespace BehaviourAPI.Unity.Editor
 {
+    using Framework;
+    using Framework.Adaptations;
+    using Action = Core.Actions.Action;
     /// <summary>
     /// Default property drawer for actions
     /// </summary>
@@ -32,7 +29,7 @@ namespace BehaviourAPI.New.Unity.Editor
                 if (GUILayout.Button("Assign action"))
                 {
                     SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)), 
-                        ElementCreatorWindow.Create<ActionCreationWindow>((aType) => AssignAction(property, aType)));
+                        ElementCreatorWindowProvider.Create<ActionCreationWindow>((aType) => AssignAction(property, aType)));
                 }
             }
             else
@@ -150,9 +147,9 @@ namespace BehaviourAPI.New.Unity.Editor
             {
                 if (GUILayout.Button("Assign subgraph"))
                 {
-                    if(EditorWindow.Instance != null)
+                    if(BehaviourEditorWindow.Instance != null)
                     {
-                        EditorWindow.Instance.OpenGraphSearchWindow((data) => SetSubgraph(subGraphProperty, data));
+                        BehaviourEditorWindow.Instance.OpenSearchGraphWindow((data) => SetSubgraph(subGraphProperty, data));
                     }
                     else
                     {

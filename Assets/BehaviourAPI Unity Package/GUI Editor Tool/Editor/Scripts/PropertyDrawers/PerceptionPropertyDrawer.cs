@@ -1,16 +1,15 @@
-using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.Unity.Editor;
-using BehaviourAPI.UnityTool.Framework;
 using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-namespace BehaviourAPI.New.Unity.Editor
+namespace BehaviourAPI.Unity.Editor
 {
+    using Core.Perceptions;
+    using Framework;
+    using Framework.Adaptations;
+
     [CustomPropertyDrawer(typeof(Perception))]
     public class PerceptionPropertyDrawer : PropertyDrawer
     {
@@ -27,7 +26,7 @@ namespace BehaviourAPI.New.Unity.Editor
             {
                 if(GUILayout.Button("Assign perception"))
                 {
-                    SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)), ElementCreatorWindow.Create<PerceptionCreationWindow>((pType) => AssignPerception(property, pType)));
+                    SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)), ElementCreatorWindowProvider.Create<PerceptionCreationWindow>((pType) => AssignPerception(property, pType)));
                 }
             }
             else
@@ -157,7 +156,7 @@ namespace BehaviourAPI.New.Unity.Editor
                         //subPerceptionProperty.arraySize++;
 
                         SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)), 
-                            ElementCreatorWindow.Create<PerceptionCreationWindow>((pType) => AddSubPerception(subPerceptionProperty, pType)));
+                            ElementCreatorWindowProvider.Create<PerceptionCreationWindow>((pType) => AddSubPerception(subPerceptionProperty, pType)));
                         //subPerceptionProperty.GetArrayElementAtIndex(subPerceptionProperty.arraySize - 1).FindPropertyRelative("perception").managedReferenceValue = new CustomPerception();
                         //property.serializedObject.ApplyModifiedProperties();
                     }

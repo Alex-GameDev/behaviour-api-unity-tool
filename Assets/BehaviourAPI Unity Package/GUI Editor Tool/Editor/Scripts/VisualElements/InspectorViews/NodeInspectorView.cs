@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    public class NodeInspectorView : InspectorView<NodeData>
+    public class NodeInspectorView : Inspector<NodeData>
     {
         public NodeInspectorView() : base("Node", Side.Left)
         {

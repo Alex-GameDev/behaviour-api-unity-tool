@@ -15,7 +15,7 @@ namespace BehaviourAPI.Unity.Runtime
     /// </summary>   
     public class BSRuntimeDebugger : MonoBehaviour
     {
-        [HideInInspector] public BehaviourSystem systemAsset;
+        public SystemData Data { get; private set; }
 
         [SerializeField] bool debugStatusChanges;
 
@@ -25,17 +25,17 @@ namespace BehaviourAPI.Unity.Runtime
 
         void Awake()
         {
-            systemAsset = GetComponent<BehaviourRunner>().GetBehaviourSystemAsset();
+            Data = GetComponent<BehaviourRunner>().GetBehaviourSystemAsset();
             IsDebuggerReady = true;
 
-            systemAsset.Graphs.ForEach(g =>
+            Data.graphs.ForEach(g =>
             {
-                var dict = g.Graph.GetNodeNames();
-                foreach (var node in g.Graph.NodeList)
+                var dict = g.graph.GetNodeNames();
+                foreach (var node in g.graph.NodeList)
                 {
                     if (node is IStatusHandler handler)
                     {
-                        handler.StatusChanged += (status) => DebugStatusChanged(dict.GetValueOrDefault(node) ?? "unnamed", status, g.Name);
+                        handler.StatusChanged += (status) => DebugStatusChanged(dict.GetValueOrDefault(node) ?? "unnamed", status, g.name);
 
                         handler.StatusChanged += (status) =>
                         {

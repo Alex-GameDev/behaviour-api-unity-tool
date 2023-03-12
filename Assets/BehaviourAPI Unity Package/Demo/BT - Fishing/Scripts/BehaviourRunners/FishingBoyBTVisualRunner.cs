@@ -14,13 +14,10 @@ public class FishingBoyBTVisualRunner : EditorBehaviourRunner
     float _time;
     float totalTimeToDrop = 2f;
 
-    [CustomMethod]
     public void DropCaptureInWater() => DropCapture(_bootPrefab, _bootDropTarget, true);
 
-    [CustomMethod]
     public void StoreCaptureInBasket() => DropCapture(_fishPrefab, _fishDropTarget, false);
 
-    [CustomMethod]
     public void StartCatch()
     {
         _rod.PickUp();
@@ -34,13 +31,10 @@ public class FishingBoyBTVisualRunner : EditorBehaviourRunner
         _currentCapture.GetComponent<Rigidbody>().useGravity = false;
     }
 
-    [CustomMethod]
     public void StartThrow() =>  _rod.Throw();
 
-    [CustomMethod]
     public bool IsFishCatched() => _fishCatched;
 
-    [CustomMethod]
     public Status CompleteOnSuccess()
     {
         if(_time < totalTimeToDrop)
@@ -52,10 +46,8 @@ public class FishingBoyBTVisualRunner : EditorBehaviourRunner
         return Status.Success;
     }
 
-    [CustomMethod]
     public Status RodThrownStatus() => _rod.IsThrown() ? Status.Success : Status.Running;
 
-    [CustomMethod]
     public Status RodPickedStatus() => _rod.IsPickedUp() ? Status.Success : Status.Running;
 
     void DropCapture(GameObject capturePrefab, Transform target, bool destroyAfter)

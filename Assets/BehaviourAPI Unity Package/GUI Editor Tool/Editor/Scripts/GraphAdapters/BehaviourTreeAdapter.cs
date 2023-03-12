@@ -33,10 +33,10 @@ namespace BehaviourAPI.Unity.Editor
             typeof(LeafNode) 
         };       
 
-        protected override void DrawGraphDetails(GraphAsset graphAsset, BehaviourGraphView graphView, List<NodeView> nodeViews)
+        protected override void DrawGraphDetails(GraphData data, BehaviourGraphView graphView)
         {
-            var firstNode = graphAsset.Nodes.FirstOrDefault();
-            if (firstNode != null) ChangeRootNode(nodeViews.Find(n => n.Node == firstNode));
+            var firstNode = data.nodes.FirstOrDefault();
+            if (firstNode != null) ChangeRootNode(graphView.nodeViews.Find(n => n.Node == firstNode));
         }
 
         protected override NodeView GetLayout(NodeData asset, BehaviourGraphView graphView) => new TreeNodeView(asset, graphView);
@@ -44,12 +44,15 @@ namespace BehaviourAPI.Unity.Editor
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
         {
             menuEvt.menu.AppendAction("Set root node", _ => SetRootNode(node), _ => (node != _rootView).ToMenuStatus());
-            menuEvt.menu.AppendAction("Order childs by position (x)", _ => node.OrderChilds(n => n.Position.x), (node.Node.Childs.Count > 1).ToMenuStatus());
+            menuEvt.menu.AppendAction("Order childs by position (x)", 
+                _ => node.GraphView.graphData.OrderChildNodes(node.Node, (n) => n.position.x),
+                (node.Node.childIds.Count > 1).ToMenuStatus()
+            );
         }
 
         protected override void SetUpDetails(NodeView nodeView)
         {
-            var node = nodeView.Node.Node;
+            var node = nodeView.Node.node;
             if (node is BehaviourTrees.LeafNode)
             {
                 nodeView.ChangeTypeColor(BehaviourAPISettings.instance.LeafNodeColor);
@@ -72,11 +75,11 @@ namespace BehaviourAPI.Unity.Editor
         // Reload the root data when the old one is removed
         protected override GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change)
         {
-            var rootNode = graphView.GraphAsset.Nodes.Find(n => n.Parents.Count == 0);
+            var rootNode = graphView.graphData.nodes.Find(n => n.parentIds.Count == 0);
 
             if (rootNode != null)
             {
-                graphView.GraphAsset.Nodes.MoveAtFirst(rootNode);
+                graphView.graphData.nodes.MoveAtFirst(rootNode);
                 var view = graphView.nodes.Select(n => n as NodeView).ToList().Find(n => n.Node == rootNode);
                 ChangeRootNode(view);
             }
@@ -91,7 +94,7 @@ namespace BehaviourAPI.Unity.Editor
 
         void ChangeRootNode(NodeView newRootNode)
         {
-            if (newRootNode == null || newRootNode.Node.Parents.Count > 0) return;
+            if (newRootNode == null || newRootNode.Node.parentIds.Count > 0) return;
 
             var graphView = newRootNode.GraphView;
 
@@ -104,8 +107,8 @@ namespace BehaviourAPI.Unity.Editor
             _rootView = newRootNode;
             if (_rootView != null)
             {
-                graphView.GraphAsset.Nodes.MoveAtFirst(_rootView.Node);
-                BehaviourEditorWindow.Instance.OnModifyAsset();
+                graphView.graphData.nodes.MoveAtFirst(_rootView.Node);
+                BehaviourEditorWindow.Instance.RegisterChanges();
 
                 _rootView.inputContainer.Disable();
                 _rootView.RootElement.Enable();
@@ -114,12 +117,11 @@ namespace BehaviourAPI.Unity.Editor
 
         protected override void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt)
         {
-            menuEvt.menu.AppendAction("Order all node's child by position (x)", 
-                _ =>
-                {
-                    graph.nodes.ForEach(n => (n as NodeView).OrderChilds(n => n.Position.x, false));
-                    BehaviourEditorWindow.Instance.OnModifyAsset();
-                });
+            menuEvt.menu.AppendAction("Order childs by position (x)", _ =>
+            {
+                graph.graphData.OrderAllChildNodes((n) => n.position.x);
+                BehaviourEditorWindow.Instance.RegisterChanges();
+            });
         }
 
         #endregion

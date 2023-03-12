@@ -13,16 +13,10 @@ namespace BehaviourAPI.Unity.Runtime
     {
         #region -------------------------------- private fields ---------------------------------
 
-        [Tooltip("Defines how the graphs and nodes are saved to be searched after.")]
-        [SerializeField] NamingSettings graphNamingSettings = NamingSettings.IgnoreWhenInvalid;
+        SystemData _executionSystem;
 
-        [Tooltip("Defines how the perceptions are saved to be searched after.")]
-        [SerializeField] NamingSettings perceptionNamingSettings = NamingSettings.IgnoreWhenInvalid;
-
-        [Tooltip("Defines how the push perceptions are saved to be searched after.")]
-        [SerializeField] NamingSettings pushPerceptionNamingSettings = NamingSettings.IgnoreWhenInvalid;
-
-        BehaviourSystem _executionSystem;
+        Dictionary<string, BehaviourGraph> _graphMap;
+        Dictionary<string, PushPerception> _pushPerceptionMap;
 
         #endregion
 
@@ -39,18 +33,19 @@ namespace BehaviourAPI.Unity.Runtime
 
         protected sealed override BehaviourGraph GetExecutionGraph()
         {
-            var system = GetEditorSystem();
-            var duplicator = new Duplicator();
-            _executionSystem = duplicator.Duplicate(system);
+            var system = GetEditorSystemData();
+            _executionSystem = system.GetRuntimeCopy();
 
-            _executionSystem.Build(graphNamingSettings, perceptionNamingSettings, pushPerceptionNamingSettings);
-            BuildedGraph = _executionSystem.MainGraph.Graph;
+            _executionSystem.BuildSystem();
+
+            BuildDictionaries();
+            BuildedGraph = _executionSystem.graphs[0].graph;
 
             ModifyGraphs();
             return BuildedGraph;
         }
 
-        public sealed override BehaviourSystem GetBehaviourSystemAsset()
+        public sealed override SystemData GetBehaviourSystemAsset()
         {
             return _executionSystem;
         }
@@ -63,11 +58,47 @@ namespace BehaviourAPI.Unity.Runtime
         /// <summary>
         /// Get the system created in editor mode to build the runtime one.
         /// </summary>
-        protected abstract BehaviourSystem GetEditorSystem();
+        protected abstract SystemData GetEditorSystemData();
 
         #endregion
 
         #region ------------------------------------ Find elements ---------------------------------------
+
+        /// <summary>
+        /// Build the internal dictionaries to search elements runtime.
+        /// </summary>
+        void BuildDictionaries()
+        {
+            foreach(GraphData data in _executionSystem.graphs)
+            {
+                if(!string.IsNullOrWhiteSpace(data.name))
+                {
+                    if (!_graphMap.TryAdd(data.name, data.graph))
+                    {
+                        Debug.LogWarning($"ERROR: Graph \"{data.name}\" wasn't added to dictionary because a graph with the same name was added before.", this);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"ERROR: Graph \"{data.name}\" wasn't added to dictionary because the name is not valid", this);
+                }
+            }
+
+            foreach (PushPerceptionData data in _executionSystem.pushPerceptions)
+            {
+                if (!string.IsNullOrWhiteSpace(data.name))
+                {
+                    if (!_pushPerceptionMap.TryAdd(data.name, data.pushPerception))
+                    {
+                        Debug.LogWarning($"ERROR: Push perception \"{data.name}\" wasn't added to dictionary because a push perception with the same name was added before.", this);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"ERROR: Push perception \"{data.name}\" wasn't added to dictionary because the name is not valid", this);
+                }
+            }
+        }
 
         /// <summary>
         /// Find a push perception by its name. Throws and exception if doesn't exist.
@@ -76,7 +107,7 @@ namespace BehaviourAPI.Unity.Runtime
         /// <returns>The <see cref="PushPerception"></see> found.</returns>
         public PushPerception FindPushPerception(string name)
         {
-            return _executionSystem.pushPerceptionMap[name];
+            return _pushPerceptionMap[name];
         }
 
         /// <summary>
@@ -86,61 +117,7 @@ namespace BehaviourAPI.Unity.Runtime
         /// <returns>The <see cref="PushPerception"></see> found.</returns>
         public PushPerception FindPushPerceptionOrDefault(string name)
         {
-            return _executionSystem.pushPerceptionMap.GetValueOrDefault(name);
-        }
-
-        /// <summary>
-        /// Find a perception by its name. Throws and exception if doesn't exist.
-        /// </summary>
-        /// <param name="name">The name of the perception</param>
-        /// <returns>The <see cref="Perception"></see> found.</returns>
-        public Perception FindPerception(string name)
-        {
-            return _executionSystem.pullPerceptionMap[name];
-        }
-
-        /// <summary>
-        /// Find a push perception by its name or null if doesn't exists.
-        /// </summary>
-        /// <param name="name">The name of the push perception</param>
-        /// <returns>The <see cref="PushPerception"></see> found./></returns>
-        public Perception FindPerceptionOrDefault(string name)
-        {
-            return _executionSystem.pullPerceptionMap.GetValueOrDefault(name);
-        }
-
-        /// <summary>
-        /// Find a perception of type <typeparamref name="T"/> by its name. Throws and exception if doesn't exist.
-        /// </summary>
-        /// <typeparam name="T">The type of the perception.</typeparam>
-        /// <param name="name">The name of the perception</param>
-        /// <returns>The <see cref="Perception"></see> found.</returns>
-        public T FindPerception<T>(string name) where T : Perception
-        {
-            if (_executionSystem.pullPerceptionMap.TryGetValue(name, out var perception))
-            {
-                if (perception is T perceptionTyped) return perceptionTyped;
-                else throw new InvalidCastException($"Perception \"{name}\" exists, but is not an instance of {typeof(T).FullName} class.");
-            }
-            else
-            {
-                throw new KeyNotFoundException($"Perception \"{name}\" doesn't exist.");
-            }
-        }
-
-        /// <summary>
-        /// Find a perception of type <typeparamref name="T"/> by its name or null if doesn't exist.
-        /// </summary>
-        /// <typeparam name="T">The type of the perception.</typeparam>
-        /// <param name="name">The name of the perception</param>
-        /// <returns>The <see cref="Perception"></see> found.</returns>
-        public T FindPerceptionOrDefault<T>(string name) where T : Perception
-        {
-            if (_executionSystem.pullPerceptionMap.TryGetValue(name, out var perception))
-            {
-                if (perception is T perceptionTyped) return perceptionTyped;
-            }
-            return null;
+            return _pushPerceptionMap.GetValueOrDefault(name);
         }
 
         /// <summary>
@@ -150,7 +127,7 @@ namespace BehaviourAPI.Unity.Runtime
         /// <returns>The <see cref="BehaviourGraph"></see> found.</returns>
         public BehaviourGraph FindGraph(string name)
         {
-            return _executionSystem.graphMap[name];
+            return _graphMap[name];
         }
 
         /// <summary>
@@ -160,7 +137,7 @@ namespace BehaviourAPI.Unity.Runtime
         /// <returns>The <see cref="BehaviourGraph"></see> found.</returns>
         public BehaviourGraph FindGraphOrDefault(string name)
         {
-            return _executionSystem.graphMap.GetValueOrDefault(name);
+            return _graphMap.GetValueOrDefault(name);
         }
 
         /// <summary>
@@ -171,7 +148,7 @@ namespace BehaviourAPI.Unity.Runtime
         /// <returns>The <see cref="BehaviourGraph"></see> found.</returns>
         public T FindGraph<T>(string name) where T : BehaviourGraph
         {
-            if (_executionSystem.graphMap.TryGetValue(name, out var graph))
+            if (_graphMap.TryGetValue(name, out var graph))
             {
                 if (graph is T graphTyped) return graphTyped;
                 else throw new InvalidCastException($"Graph \"{name}\" exists, but is not an instance of {typeof(T).FullName} class.");
@@ -190,7 +167,7 @@ namespace BehaviourAPI.Unity.Runtime
         /// <returns>The <see cref="BehaviourGraph"></see> found.</returns>
         public T FindGraphOrDefault<T>(string name) where T : BehaviourGraph
         {
-            if (_executionSystem.graphMap.TryGetValue(name, out var graph))
+            if (_graphMap.TryGetValue(name, out var graph))
             {
                 if (graph is T graphTyped) return graphTyped;
             }

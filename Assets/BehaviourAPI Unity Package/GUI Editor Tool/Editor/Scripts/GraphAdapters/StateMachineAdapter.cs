@@ -40,10 +40,10 @@ namespace BehaviourAPI.Unity.Editor
             typeof(ProbabilisticState)
         };
 
-        protected override void DrawGraphDetails(GraphAsset graphAsset, BehaviourGraphView graphView, List<NodeView> nodeViews)
+        protected override void DrawGraphDetails(GraphData graphAsset, BehaviourGraphView graphView)
         {
-            var firstState = graphAsset.Nodes.FirstOrDefault(n => n.Node is State);
-            if (firstState != null) ChangeEntryState(nodeViews.Find(n => n.Node == firstState));
+            var firstState = graphAsset.nodes.FirstOrDefault(n => n.node is State);
+            if (firstState != null) ChangeEntryState(graphView.nodeViews.Find(n => n.Node == firstState));
         }
 
         protected override NodeView GetLayout(NodeData asset, BehaviourGraphView graphView) => new CyclicNodeView(asset, graphView);
@@ -51,15 +51,21 @@ namespace BehaviourAPI.Unity.Editor
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
         {
             menuEvt.menu.AppendAction("Set entry state", _ => ChangeEntryState(node), 
-                _ => (node.Node != null && node.Node.Node is State) ? (node != _entryStateView).ToMenuStatus() : DropdownMenuAction.Status.Hidden);
-            menuEvt.menu.AppendAction("Order childs by position (x)", _ => menuEvt.menu.AppendAction("Order childs by position (x)", _ => node.OrderChilds(n => n.Position.x), (node.Node.Childs.Count > 1).ToMenuStatus()));
-            menuEvt.menu.AppendAction("Order childs by position (y)", _ => menuEvt.menu.AppendAction("Order childs by position (y)", _ => node.OrderChilds(n => n.Position.y), (node.Node.Childs.Count > 1).ToMenuStatus()));
+                _ => (node.Node != null && node.Node.node is State) ? (node != _entryStateView).ToMenuStatus() : DropdownMenuAction.Status.Hidden);
+            menuEvt.menu.AppendAction("Order childs by position (x)",
+                _ => node.GraphView.graphData.OrderChildNodes(node.Node, (n) => n.position.x),
+                (node.Node.childIds.Count > 1).ToMenuStatus()
+            );
+            menuEvt.menu.AppendAction("Order childs by position (y)",
+                _ => node.GraphView.graphData.OrderChildNodes(node.Node, (n) => n.position.y),
+                (node.Node.childIds.Count > 1).ToMenuStatus()
+            );
         }
 
         protected override void SetUpDetails(NodeView nodeView)
         {
             var contents = nodeView.Q("contents");
-            if (nodeView.Node.Node is Transition)
+            if (nodeView.Node.node is Transition)
             {
                 nodeView.ChangeTypeColor(BehaviourAPISettings.instance.TransitionColor);
                 nodeView.Q("node-status").ChangeBorderColor(new Color(0,0,0,0));
@@ -71,7 +77,7 @@ namespace BehaviourAPI.Unity.Editor
                 contents.style.width = 200;
             }
 
-            if (nodeView.Node.Node is ExitTransition)
+            if (nodeView.Node.node is ExitTransition)
             {
                 var label = nodeView.RootElement.Q<Label>("node-root-label");
                 label.text = "Exit";
@@ -83,11 +89,11 @@ namespace BehaviourAPI.Unity.Editor
 
         protected override GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change)
         {
-            var rootNode = graphView.GraphAsset.Nodes.FirstOrDefault(n => n.Node is State);
+            var rootNode = graphView.graphData.nodes.FirstOrDefault(n => n.node is State);
 
             if (rootNode != null)
             {
-                graphView.GraphAsset.Nodes.MoveAtFirst(rootNode);
+                graphView.graphData.nodes.MoveAtFirst(rootNode);
                 var view = graphView.nodes.Select(n => n as NodeView).ToList().Find(n => n.Node == rootNode);
                 ChangeEntryState(view);
             }
@@ -96,7 +102,7 @@ namespace BehaviourAPI.Unity.Editor
 
         void ChangeEntryState(NodeView newStartNode)
         {
-            if (newStartNode == null || newStartNode.Node.Node is not State) return;
+            if (newStartNode == null || newStartNode.Node.node is not State) return;
 
             var graphView = newStartNode.GraphView;
 
@@ -108,8 +114,8 @@ namespace BehaviourAPI.Unity.Editor
             _entryStateView = newStartNode;
             if (_entryStateView != null)
             {
-                graphView.GraphAsset.Nodes.MoveAtFirst(_entryStateView.Node);
-                BehaviourEditorWindow.Instance.OnModifyAsset();
+                graphView.graphData.nodes.MoveAtFirst(_entryStateView.Node);
+                BehaviourEditorWindow.Instance.RegisterChanges();
                 _entryStateView.RootElement.Enable();
             }
         }
@@ -118,13 +124,13 @@ namespace BehaviourAPI.Unity.Editor
         {
             menuEvt.menu.AppendAction("Order all node's child by position (x)", _ =>
             {
-                graph.nodes.ForEach(n => (n as NodeView).OrderChilds(n => n.Position.x, false));
-                BehaviourEditorWindow.Instance.OnModifyAsset();
+                graph.graphData.OrderAllChildNodes((n) => n.position.x);
+                BehaviourEditorWindow.Instance.RegisterChanges();
             });
             menuEvt.menu.AppendAction("Order all node's child by position (y)", _ =>
             {
-                graph.nodes.ForEach(n => (n as NodeView).OrderChilds(n => n.Position.y, false));
-                BehaviourEditorWindow.Instance.OnModifyAsset();
+                graph.graphData.OrderAllChildNodes((n) => n.position.y);
+                BehaviourEditorWindow.Instance.RegisterChanges();
             });
         }
 

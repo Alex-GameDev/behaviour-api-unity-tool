@@ -10,8 +10,8 @@ namespace BehaviourAPI.Unity.Runtime
         public BehaviourSystem System;
 
         /// <summary>
-        /// Returns the system asset to generate a runtime copy
+        /// Returns the system asset data to generate a runtime copy
         /// </summary>
-        protected override BehaviourSystem GetEditorSystem() => System;
+        protected override SystemData GetEditorSystemData() => System.Data;
     }
 }

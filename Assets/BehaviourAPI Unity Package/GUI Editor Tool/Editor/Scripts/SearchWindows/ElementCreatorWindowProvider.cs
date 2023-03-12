@@ -1,28 +1,26 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Contexts;
+
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    public abstract class CreationWindow : ScriptableObject, ISearchWindowProvider
+    public abstract class ElementCreatorWindowProvider : ScriptableObject, ISearchWindowProvider
     {
-        Action<Type> _selectEntryCallback;
-
+        Action<Type> _callback;
         public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
         {
-            var list = new List<SearchTreeEntry>();
+            List<SearchTreeEntry> searchTreeEntries = new List<SearchTreeEntry>();
             var hierarchyNode = GetHierarchyNode();
 
-            list.AddGroup(hierarchyNode.name, 0);
+            searchTreeEntries.AddGroup(hierarchyNode.name, 0);
             foreach (var subNode in hierarchyNode.Childs)
             {
-                GetSubSearchTreeEntry(subNode, list, 1);
+                GetSubSearchTreeEntry(subNode, searchTreeEntries, 1);
             }
-            return list;
+            return searchTreeEntries;
         }
 
         void GetSubSearchTreeEntry(EditorHierarchyNode node, List<SearchTreeEntry> list, int level)
@@ -41,47 +39,37 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        protected abstract EditorHierarchyNode GetHierarchyNode();
-
-        public void Open(Action<Type> callback, SearchWindowContext context)
-        {
-            _selectEntryCallback = callback;
-            SearchWindow.Open(context, this);
-        }
-
-        public void Open(Action<Type> callback)
-        {
-            _selectEntryCallback = callback;
-            var mousePos = Event.current.mousePosition;
-            mousePos += BehaviourEditorWindow.Instance.position.position;
-
-            SearchWindow.Open(new SearchWindowContext(mousePos), this);
-        }
-
         public bool OnSelectEntry(SearchTreeEntry SearchTreeEntry, SearchWindowContext context)
         {
-            _selectEntryCallback?.Invoke((Type)SearchTreeEntry.userData);
-            _selectEntryCallback = null;
+            _callback?.Invoke(SearchTreeEntry.userData as Type);
             return true;
+        }
+
+        protected abstract EditorHierarchyNode GetHierarchyNode();
+
+        public static T Create<T>(Action<Type> callback) where T : ElementCreatorWindowProvider
+        {
+            T window = CreateInstance<T>();
+            window._callback = callback;
+            return window;
         }
     }
 
     /// <summary>
     /// Creation window for actions
     /// </summary>
-    public class ActionCreationWindow : CreationWindow
+    public class ActionCreationWindow : ElementCreatorWindowProvider
     {
         protected override EditorHierarchyNode GetHierarchyNode()
         {
             return BehaviourAPISettings.instance.ActionHierarchy;
-
         }
     }
 
     /// <summary>
     /// Creation window for perceptions
     /// </summary>
-    public class PerceptionCreationWindow : CreationWindow
+    public class PerceptionCreationWindow : ElementCreatorWindowProvider
     {
         protected override EditorHierarchyNode GetHierarchyNode()
         {
@@ -92,7 +80,7 @@ namespace BehaviourAPI.Unity.Editor
     /// <summary>
     /// Creation window for nodes
     /// </summary>
-    public class NodeCreationWindow : CreationWindow
+    public class NodeCreationWindow : ElementCreatorWindowProvider
     {
         private Type _adapterType;
 

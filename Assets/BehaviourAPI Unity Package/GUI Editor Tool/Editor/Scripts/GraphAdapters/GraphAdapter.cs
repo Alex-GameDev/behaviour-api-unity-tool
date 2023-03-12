@@ -24,17 +24,17 @@ namespace BehaviourAPI.Unity.Editor
 
         public abstract List<Type> MainTypes { get; }
         public abstract List<Type> ExcludedTypes { get; }
-        protected abstract NodeView GetLayout(Framework.NodeData asset, BehaviourGraphView graphView);
+        protected abstract NodeView GetLayout(NodeData data, BehaviourGraphView graphView);
         protected abstract void SetUpDetails(NodeView node);
         protected abstract void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt);
         protected abstract void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt);
-        protected abstract void DrawGraphDetails(GraphAsset graphAsset, BehaviourGraphView graphView, List<NodeView> nodeViews);
+        protected abstract void DrawGraphDetails(GraphData data, BehaviourGraphView graphView);
         protected abstract GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change);
 
         /// <summary>
         /// Draw a data view
         /// </summary>
-        public void DrawNode(Framework.NodeData asset, BehaviourGraphView graphView)
+        public void DrawNode(NodeData asset, BehaviourGraphView graphView)
         {
             var nodeView = GetLayout(asset, graphView);
             SetUpDetails(nodeView);
@@ -58,55 +58,23 @@ namespace BehaviourAPI.Unity.Editor
             graphView.AddNodeView(nodeView);
         }
 
-        public void DrawNode(UnityTool.Framework.NodeData node, GraphView graphView)
+        void DebugNode(NodeData data)
         {
-            var nodeView = new NodeDataView(node, graphView, BehaviourAPISettings.instance.EditorLayoutsPath + "/Nodes/Tree Node.uxml");
-            graphView.AddNode(nodeView);
+            Debug.Log($"Name: {data.name}\nType: {data.node.TypeName()} / Pos: {data.position}\n" +
+                $"Parents: {data.parentIds.Count} ({data.parentIds.Select(p => p).Join()})\n" +
+                $"Childs: {data.childIds.Count} ({data.childIds.Select(p => p).Join()})");            
         }
 
-
-        void DebugNode(Framework.NodeData asset)
+        void DebugGraph(GraphData data)
         {
-            Debug.Log($"Name: {asset.Name}\nType: {asset.Node.TypeName()} / Pos: {asset.Position}\n" +
-                $"Parents: {asset.Parents.Count} ({asset.Parents.Select(p => p.Name).Join()})\n" +
-                $"Childs: {asset.Childs.Count} ({asset.Childs.Select(p => p.Name).Join()})");            
-        }
-
-        void DebugGraph(GraphAsset asset)
-        {
-            Debug.Log($"Name: {asset.Name}\nType: {asset.Graph.TypeName()}\n" +
-                $"Nodes: {asset.Nodes.Count} ({asset.Nodes.Select(p => p.Name).Join()})\n");
+            Debug.Log($"Name: {data.name}\nType: {data.graph.TypeName()}\n" +
+                $"Nodes: {data.nodes.Count} ({data.nodes.Select(p => p.name).Join()})\n");
         }
 
         /// <summary>
         /// Draw all connections that begins in a data.
         /// </summary>
-        public void DrawConnections(Framework.NodeData asset, BehaviourGraphView graphView, List<NodeView> nodeViews)
-        {
-            if (asset.Node != null && asset.Node.MaxOutputConnections == 0) return;
-
-            var sourceView = graphView.GetViewOf(asset);
-
-            int id = 1;
-            foreach (Framework.NodeData child in asset.Childs)
-            {
-                var targetView = graphView.GetViewOf(child);
-
-                var srcPort = sourceView.GetBestPort(targetView, Direction.Output);
-                var tgtPort = targetView.GetBestPort(sourceView, Direction.Input);
-
-                EdgeView edge = srcPort.ConnectTo<EdgeView>(tgtPort);
-                graphView.AddConnectionView(edge);
-
-                srcPort.node.RefreshPorts();
-                tgtPort.node.RefreshPorts();
-                sourceView.OnConnected(edge, targetView, srcPort, ignoreConnection: true);
-                targetView.OnConnected(edge, sourceView, tgtPort, ignoreConnection: true);
-                id++;
-            }
-        }
-
-        public void DrawConnections(UnityTool.Framework.NodeData data, GraphView graphView)
+        public void DrawConnections(NodeData data, BehaviourGraphView graphView)
         {
             if (data.node != null && data.node.MaxInputConnections == 0) return;
 
@@ -115,7 +83,7 @@ namespace BehaviourAPI.Unity.Editor
             for(int i = 0; i < data.childIds.Count; i++)
             {
                 string childId = data.childIds[i];
-                UnityTool.Framework.NodeData child = nodeIdMap[childId];
+                NodeData child = nodeIdMap[childId];
                 var childView = graphView.GetViewOf(child);
                 var srcPort = sourceView.GetBestPort(childView, Direction.Output);
                 var tgtPort = childView.GetBestPort(sourceView, Direction.Input);
@@ -133,18 +101,7 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Draw a graph
         /// </summary>
-        public void DrawGraph(GraphAsset graphAsset, BehaviourGraphView graphView)
-        {
-            graphAsset.Nodes.ForEach(node => DrawNode(node, graphView));
-
-            var nodeViews = graphView.nodes.Select(n => n as NodeView).ToList();
-
-            graphAsset.Nodes.ForEach(node => DrawConnections(node, graphView, nodeViews));            
-
-            DrawGraphDetails(graphAsset, graphView, nodeViews);           
-        }
-
-        public void DrawGraph(GraphData data, GraphView graphView)
+        public void DrawGraph(GraphData data, BehaviourGraphView graphView)
         {
             foreach(var node in data.nodes)
             {
@@ -155,6 +112,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 DrawConnections(node, graphView);
             }
+            DrawGraphDetails(data, graphView);
         }
 
         public void BuildGraphContextualMenu(ContextualMenuPopulateEvent menuEvt, BehaviourGraphView graphView)
@@ -162,7 +120,7 @@ namespace BehaviourAPI.Unity.Editor
             menuEvt.menu.AppendSeparator();
             menuEvt.menu.AppendAction("Refresh", _ => graphView.RefreshView());
             menuEvt.menu.AppendAction("Auto layout", _ => AutoLayoutGraph(graphView));
-            menuEvt.menu.AppendAction("Debug (Graph)", _ => DebugGraph(graphView.GraphAsset));
+            menuEvt.menu.AppendAction("Debug (Graph)", _ => DebugGraph(graphView.graphData));
 
             if (!BehaviourEditorWindow.Instance.IsRuntime)  SetUpGraphContextMenu(graphView, menuEvt);
 
@@ -171,45 +129,22 @@ namespace BehaviourAPI.Unity.Editor
 
         private void AutoLayoutGraph(BehaviourGraphView graphView)
         {
-            var asset = graphView.GraphAsset;
-            LayoutUtilities.ComputeLayout(asset);
+            var asset = graphView.graphData;
+            var layoutHandler = new LayoutHandler();
+            layoutHandler.ComputeLayout(asset);
             graphView.RefreshView();
         }
-
-        /// <summary>
-        /// Get the valid ports for a new connection
-        /// </summary>
-        public List<Port> GetValidPorts(UQueryState<Port> ports, Port startPort, bool allowLoops)
-        {
-            List<Port> validPorts = new List<Port>();
-            var startPortNodeView = startPort.node as NodeView;
-
-            if (startPortNodeView == null) return validPorts;
-
-            var bannedTargetPorts = allowLoops ? new HashSet<Framework.NodeData>() : startPortNodeView.Node.GetPathToLeaves();
-            var bannedSourcePorts = allowLoops ? new HashSet<Framework.NodeData>() : startPortNodeView.Node.GetPathFromRoot();
-
-            foreach(var port in ports)
-            {
-                if (ValidatePort(startPort, port, bannedTargetPorts, bannedSourcePorts))
-                {
-                    validPorts.Add(port);
-                }
-            }
-            return validPorts;
-        }
-
 
         public List<Port> ValidatePorts(UQueryState<Port> ports, Port startPort, GraphData data, bool allowLoops)
         {
             List<Port> validPorts = new List<Port>();
 
-            NodeDataView startNodeView = startPort.node as NodeDataView;
+            NodeView startNodeView = startPort.node as NodeView;
 
             if (startNodeView != null)
             {
-                var bannedTargetPorts = allowLoops ? new HashSet<UnityTool.Framework.NodeData>() : data.GetChildPathing((UnityTool.Framework.NodeData)startNodeView.data);
-                var bannedSourcePorts = allowLoops ? new HashSet<UnityTool.Framework.NodeData>() : data.GetParentPathing((UnityTool.Framework.NodeData)startNodeView.data);
+                var bannedTargetPorts = allowLoops ? new HashSet<NodeData>() : data.GetChildPathing(startNodeView.Node);
+                var bannedSourcePorts = allowLoops ? new HashSet<NodeData>() : data.GetParentPathing(startNodeView.Node);
 
                 foreach (var port in ports)
                 {
@@ -222,23 +157,23 @@ namespace BehaviourAPI.Unity.Editor
             return validPorts;
         }
 
-        private bool ValidatePort(Port startPort, Port port, HashSet<UnityTool.Framework.NodeData> bannedTargetPorts, HashSet<UnityTool.Framework.NodeData> bannedSourcePorts)
+        private bool ValidatePort(Port startPort, Port port, HashSet<NodeData> bannedTargetPorts, HashSet<NodeData> bannedSourcePorts)
         {
             if (startPort.direction == port.direction) return false;    // Same port direction
             if (startPort.node == port.node) return false;              // Same data
 
-            var node = port.node as NodeDataView;
+            var node = port.node as NodeView;
             if (node == null) return false;                             // view without data assigned
 
             if (startPort.direction == Direction.Input)
             {
                 if (!port.portType.IsAssignableFrom(startPort.portType)) return false;      // Type missmatch
-                if (bannedTargetPorts.Contains(node.data)) return false;                   // Loop
+                if (bannedTargetPorts.Contains(node.Node)) return false;                   // Loop
             }
             else
             {
                 if (!startPort.portType.IsAssignableFrom(port.portType)) return false;     // Type missmatch
-                if (bannedSourcePorts.Contains(node.data)) return false;                   // Loop
+                if (bannedSourcePorts.Contains(node.Node)) return false;                   // Loop
             }
 
             return true;
@@ -275,28 +210,6 @@ namespace BehaviourAPI.Unity.Editor
         public GraphViewChange OnViewChanged(BehaviourGraphView graphView, GraphViewChange change)
         {
             return ViewChanged(graphView, change);
-        }
-
-        bool ValidatePort(Port startPort, Port port, HashSet<Framework.NodeData> bannedTargetPorts, HashSet<Framework.NodeData> bannedSourcePorts)
-        {
-            if (startPort.direction == port.direction) return false;    // Same port direction
-            if (startPort.node == port.node) return false;              // Same data
-
-            var node = port.node as NodeView;
-            if (node == null) return false;                             // view without data assigned
-
-            if (startPort.direction == Direction.Input)
-            {
-                if (!port.portType.IsAssignableFrom(startPort.portType)) return false;      // Type missmatch
-                if (bannedTargetPorts.Contains(node.Node)) return false;                   // Loop
-            }
-            else
-            {
-                if (!startPort.portType.IsAssignableFrom(port.portType)) return false;     // Type missmatch
-                if (bannedSourcePorts.Contains(node.Node)) return false;                   // Loop
-            }
-
-            return true;
         }
 
         #endregion

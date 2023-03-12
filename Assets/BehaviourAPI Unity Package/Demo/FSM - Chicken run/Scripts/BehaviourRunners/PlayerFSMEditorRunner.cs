@@ -28,7 +28,6 @@ public class PlayerFSMEditorRunner : EditorBehaviourRunner
         base.OnUpdate();
     }
 
-    [CustomMethod]
     public bool CheckDistanceToChicken()
     {
         return Vector3.Distance(transform.position, chicken.transform.position) < minDistanceToChicken;

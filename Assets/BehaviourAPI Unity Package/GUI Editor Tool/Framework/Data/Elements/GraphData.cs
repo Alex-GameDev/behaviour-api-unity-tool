@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 
@@ -6,14 +5,15 @@ using System.Linq;
 
 using UnityEngine;
 
-
 namespace BehaviourAPI.Unity.Framework
 {
     using Core;
     using Core.Serialization;
+
     /// <summary>
     /// Stores a behaviour graph as an unity object.
     /// </summary>
+    [Serializable]
     public class GraphData : ICloneable
     {
         [HideInInspector] public string id;

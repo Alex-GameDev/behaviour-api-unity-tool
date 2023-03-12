@@ -17,7 +17,6 @@ public class ChickenFSMEditorRunner : EditorBehaviourRunner
         base.OnAwake();
     }
 
-    [CustomMethod]
     public bool CheckWatchTarget()
     {
         if (_visionCollider.bounds.Contains(_target.position))
