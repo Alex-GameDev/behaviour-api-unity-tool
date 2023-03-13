@@ -51,7 +51,6 @@ namespace BehaviourAPI.Unity.Editor
         private static readonly string _endProperty = ".parentIds";
         public NodeInspector() : base("Node", Side.Left)
         {
-
         }
 
         public override void UpdateInspector(NodeData element)
@@ -67,6 +66,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 var obj = new SerializedObject(BehaviourEditorWindow.Instance.System.ObjectReference);
                 var path = $"data.graphs.Array.data[{graphId}].nodes.Array.data[{nodeId}]";
+
                 var namePath = path + ".name";
                 var nameProp = obj.FindProperty(namePath);
                 EditorGUILayout.PropertyField(nameProp, true);

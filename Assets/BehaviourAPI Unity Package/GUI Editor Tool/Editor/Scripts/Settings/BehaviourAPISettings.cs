@@ -84,7 +84,7 @@ namespace BehaviourAPI.Unity.Editor
         public EditorHierarchyNode ActionHierarchy => _actionHierarchy;
         public EditorHierarchyNode PerceptionHierarchy => _perceptionHierarchy;
         public EditorHierarchyNode NodeHierarchy(Type type) => _nodeHierarchyMap[type];
-        public Type Adapter(Type type) => _graphAdapterMap[type];
+        public Type GetAdapter(Type type) => _graphAdapterMap[type];
 
 
         public void Save() => Save(true);
@@ -176,7 +176,6 @@ namespace BehaviourAPI.Unity.Editor
                 }
                 return new EditorHierarchyNode($"{graphType.Name} nodes", graphType, list);
             });           
-
         }
 
         EditorHierarchyNode GetUnityActionHierarchy(List<System.Type> allTypes)

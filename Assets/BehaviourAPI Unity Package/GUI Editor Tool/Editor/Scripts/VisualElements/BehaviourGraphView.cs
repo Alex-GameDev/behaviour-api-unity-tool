@@ -1,18 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using BehaviourAPI.Core;
-using BehaviourAPI.New.Unity.Editor;
 using BehaviourAPI.Unity.Framework;
-using BehaviourAPI.Unity.Runtime;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.Windows;
-using static UnityEditor.PlayerSettings;
 using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Editor

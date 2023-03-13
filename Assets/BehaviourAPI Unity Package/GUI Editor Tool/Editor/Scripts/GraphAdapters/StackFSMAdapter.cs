@@ -33,9 +33,9 @@ namespace BehaviourAPI.Unity.Editor
             typeof(PopTransition)
         };
 
-        protected override void SetUpDetails(NodeView nodeView)
+        protected override void DrawNodeDetails(NodeView nodeView)
         {
-            base.SetUpDetails(nodeView);
+            base.DrawNodeDetails(nodeView);
 
             if(nodeView.Node.node is PushTransition)
             {

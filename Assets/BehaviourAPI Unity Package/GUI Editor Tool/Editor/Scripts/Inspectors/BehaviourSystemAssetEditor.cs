@@ -10,6 +10,7 @@ namespace BehaviourAPI.Unity.Editor
     {
         public override void OnInspectorGUI()
         {
+            base.OnInspectorGUI();
             BehaviourSystem system = target as BehaviourSystem;
 
             EditorGUILayout.Space(10f, true);

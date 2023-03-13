@@ -4,6 +4,7 @@ using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Runtime;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -31,7 +32,9 @@ namespace BehaviourAPI.Unity.Editor
             typeof(CompositeNode), 
             typeof(DecoratorNode), 
             typeof(LeafNode) 
-        };       
+        };
+
+        protected override NodeView GetLayout(NodeData asset, BehaviourGraphView graphView) => new TreeNodeView(asset, graphView);
 
         protected override void DrawGraphDetails(GraphData data, BehaviourGraphView graphView)
         {
@@ -39,18 +42,7 @@ namespace BehaviourAPI.Unity.Editor
             if (firstNode != null) ChangeRootNode(graphView.nodeViews.Find(n => n.Node == firstNode));
         }
 
-        protected override NodeView GetLayout(NodeData asset, BehaviourGraphView graphView) => new TreeNodeView(asset, graphView);
-
-        protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
-        {
-            menuEvt.menu.AppendAction("Set root node", _ => SetRootNode(node), _ => (node != _rootView).ToMenuStatus());
-            menuEvt.menu.AppendAction("Order childs by position (x)", 
-                _ => node.GraphView.graphData.OrderChildNodes(node.Node, (n) => n.position.x),
-                (node.Node.childIds.Count > 1).ToMenuStatus()
-            );
-        }
-
-        protected override void SetUpDetails(NodeView nodeView)
+        protected override void DrawNodeDetails(NodeView nodeView)
         {
             var node = nodeView.Node.node;
             if (node is BehaviourTrees.LeafNode)
@@ -64,15 +56,38 @@ namespace BehaviourAPI.Unity.Editor
                 if (node is SequencerNode) nodeView.IconElement.Add(new Label("-->"));
                 else if (node is SelectorNode) nodeView.IconElement.Add(new Label("?"));
             }
-            else if(node is DecoratorNode)
+            else if (node is DecoratorNode)
             {
                 nodeView.IconElement.Enable();
                 nodeView.ChangeTypeColor(BehaviourAPISettings.instance.DecoratorColor);
                 nodeView.IconElement.Add(new Label(node.TypeName().CamelCaseToSpaced().ToUpper()));
-            }       
-        }                
+            }
+        }
 
-        // Reload the root data when the old one is removed
+        protected override void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt)
+        {
+            menuEvt.menu.AppendAction("Order childs by position (x)", _ =>
+            {
+                graph.graphData.OrderAllChildNodes((n) => n.position.x);
+                BehaviourEditorWindow.Instance.RegisterChanges();
+                graph.nodeViews.ForEach(n => n.UpdateEdgeViews());
+            });
+        }
+
+        protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
+        {
+            menuEvt.menu.AppendAction("Set root node", _ => SetRootNode(node), _ => (node != _rootView).ToMenuStatus());
+            menuEvt.menu.AppendAction("Order childs by position (x)", _ =>
+            {
+                node.GraphView.graphData.OrderChildNodes(node.Node, (n) => n.position.x);
+                BehaviourEditorWindow.Instance.RegisterChanges();
+                node.UpdateEdgeViews();
+            },
+                (node.Node.childIds.Count > 1).ToMenuStatus()
+            );
+        }
+               
+
         protected override GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change)
         {
             var rootNode = graphView.graphData.nodes.Find(n => n.parentIds.Count == 0);
@@ -91,7 +106,6 @@ namespace BehaviourAPI.Unity.Editor
             nodeView.DisconnectPorts(nodeView.inputContainer);
             ChangeRootNode(nodeView);
         }
-
         void ChangeRootNode(NodeView newRootNode)
         {
             if (newRootNode == null || newRootNode.Node.parentIds.Count > 0) return;
@@ -115,15 +129,64 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        protected override void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt)
+        #endregion
+
+        #region ------------------------------ Generate code ------------------------------
+
+       
+        #endregion
+    }
+
+    public class TreeNodeView : NodeView
+    {
+        public TreeNodeView(NodeData node, BehaviourGraphView graphView) : base(node, graphView, BehaviourAPISettings.instance.EditorLayoutsPath + "/Nodes/Tree Node.uxml")
         {
-            menuEvt.menu.AppendAction("Order childs by position (x)", _ =>
-            {
-                graph.graphData.OrderAllChildNodes((n) => n.position.x);
-                BehaviourEditorWindow.Instance.RegisterChanges();
-            });
         }
 
-        #endregion
+        public override string LayoutPath => "/Nodes/Tree Node.uxml";
+
+        public override void SetUpPorts()
+        {
+            if (Node.node == null || Node.node.MaxInputConnections != 0)
+            {
+                var port = InstantiatePort(Direction.Input, PortOrientation.Bottom);
+            }
+            else
+            {
+                inputContainer.style.display = DisplayStyle.None;
+            }
+
+            if (Node.node == null || Node.node.MaxOutputConnections != 0)
+            {
+                var port = InstantiatePort(Direction.Output, PortOrientation.Top);
+            }
+            else
+            {
+                outputContainer.style.display = DisplayStyle.None;
+            }
+        }
+
+        public override void OnConnected(EdgeView edgeView, NodeView other, Port port, bool ignoreConnection = false)
+        {
+            base.OnConnected(edgeView, other, port, ignoreConnection);
+
+            if (GraphView.Runtime && port.direction == Direction.Output)
+            {
+                if (other.Node.node is BTNode btNode)
+                {
+                    btNode.LastExecutionStatusChanged += (status) => edgeView.control.UpdateStatus(status);
+                    edgeView.control.UpdateStatus(btNode.LastExecutionStatus);
+                }
+            }
+        }
+
+        public void ResetStatus()
+        {
+            outputEdges.ForEach(edge =>
+            {
+                edge.control.UpdateStatus(Status.None);
+                (edge.input.node as TreeNodeView).ResetStatus();
+            });
+        }
     }
 }

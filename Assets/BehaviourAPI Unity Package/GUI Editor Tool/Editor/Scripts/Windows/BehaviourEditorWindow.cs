@@ -47,11 +47,6 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public bool IsAsset { get; private set; }
 
-        /// <summary>
-        /// The current selected graph.
-        /// </summary>
-        public GraphData CurrentGraphAsset { get; private set; }
-
         #endregion
 
         #region ------------------------------- private fields --------------------------------
@@ -197,7 +192,7 @@ namespace BehaviourAPI.Unity.Editor
 
         void OpenClearGraphWindow()
         {
-            if (CurrentGraphAsset == null) return;
+            if (_graphView.graphData == null) return;
             AlertWindow.CreateAlertWindow("¿Clear current graph?", ClearCurrentGraph);
         }
 
@@ -279,7 +274,7 @@ namespace BehaviourAPI.Unity.Editor
                     _selectGraphMenu.menu.AppendAction(
                         actionName: $"{i + 1} - {graph.name} ({graph.graph.TypeName()})",
                         action: _ => DisplayGraph(graph),
-                        status: CurrentGraphAsset == graph ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal
+                        status: _graphView.graphData == graph ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal
                     );
                 }                
             }

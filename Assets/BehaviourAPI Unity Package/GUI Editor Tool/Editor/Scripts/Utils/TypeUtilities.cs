@@ -23,5 +23,18 @@ namespace BehaviourAPI.Unity.Editor
 
             return types;
         }
+
+        public static Type FindComponentType(string name)
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            foreach(Assembly assembly in assemblies)
+            {
+                var type = assembly.GetType(name, false);
+                if (type != null) return type;
+            }
+
+            return null;            
+        }
     }
 }

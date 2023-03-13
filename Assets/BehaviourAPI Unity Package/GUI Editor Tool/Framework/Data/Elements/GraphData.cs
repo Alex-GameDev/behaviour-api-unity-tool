@@ -42,12 +42,37 @@ namespace BehaviourAPI.Unity.Framework
 
         public void OrderChildNodes(NodeData nodeData, Func<NodeData, float> sortFunction)
         {
-
+            var dict = GetNodeIdMap();
+            nodeData.childIds = nodeData.childIds.OrderBy(id =>
+            {
+                if(dict.TryGetValue(id, out NodeData data))
+                {
+                    return sortFunction(data);
+                }
+                else
+                {
+                    return float.MaxValue;
+                }
+            }).ToList();
         }
 
         public void OrderAllChildNodes(Func<NodeData, float> sortFunction)
         {
-
+            var dict = GetNodeIdMap();
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                nodes[i].childIds = nodes[i].childIds.OrderBy(id =>
+                {
+                    if (dict.TryGetValue(id, out NodeData data))
+                    {
+                        return sortFunction(data);
+                    }
+                    else
+                    {
+                        return float.MaxValue;
+                    }
+                }).ToList();
+            }
         }
 
         public HashSet<NodeData> GetChildPathing(NodeData start)

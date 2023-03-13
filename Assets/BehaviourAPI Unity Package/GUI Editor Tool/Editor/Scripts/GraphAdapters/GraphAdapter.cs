@@ -1,5 +1,4 @@
 using BehaviourAPI.Core;
-using BehaviourAPI.New.Unity.Editor;
 using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.UnityTool.Framework;
 using System;
@@ -8,10 +7,8 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UIElements;
-using GraphView = BehaviourAPI.New.Unity.Editor.GraphView;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -24,20 +21,22 @@ namespace BehaviourAPI.Unity.Editor
 
         public abstract List<Type> MainTypes { get; }
         public abstract List<Type> ExcludedTypes { get; }
+
+
         protected abstract NodeView GetLayout(NodeData data, BehaviourGraphView graphView);
-        protected abstract void SetUpDetails(NodeView node);
+        protected abstract void DrawNodeDetails(NodeView node);
         protected abstract void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt);
         protected abstract void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt);
         protected abstract void DrawGraphDetails(GraphData data, BehaviourGraphView graphView);
         protected abstract GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change);
 
         /// <summary>
-        /// Draw a data view
+        /// Draw a node view
         /// </summary>
         public void DrawNode(NodeData asset, BehaviourGraphView graphView)
         {
             var nodeView = GetLayout(asset, graphView);
-            SetUpDetails(nodeView);
+            DrawNodeDetails(nodeView);
             nodeView.AddManipulator(new ContextualMenuManipulator(menuEvt =>
             {
                 menuEvt.menu.AppendSeparator();
@@ -218,12 +217,16 @@ namespace BehaviourAPI.Unity.Editor
 
         public static GraphAdapter FindAdapter(BehaviourGraph graph)
         {
-            var types = BehaviourAPISettings.instance.GetTypes().FindAll(t =>
-               t.IsSubclassOf(typeof(GraphAdapter)) &&
-               t.GetCustomAttributes().Any(a => a is CustomAdapterAttribute crAttrib && crAttrib.type == graph.GetType()));
+            var type = BehaviourAPISettings.instance.GetAdapter(graph.GetType());
 
-            if (types.Count() > 0) return Activator.CreateInstance(types[0]) as GraphAdapter;
-            else return null;
+            if(type != null)
+            {
+                return (GraphAdapter)Activator.CreateInstance(type);
+            }
+            else
+            {
+                return null;
+            }            
         }
 
         #endregion

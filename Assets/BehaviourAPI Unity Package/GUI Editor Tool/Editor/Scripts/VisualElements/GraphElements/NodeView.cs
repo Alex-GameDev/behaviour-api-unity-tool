@@ -286,7 +286,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (port.direction == Direction.Input)
                 {
-                    Node.parentIds.Add(other.Node.id);
+                    Node.parentIds.Remove(other.Node.id);
                 }
                 else
                 {

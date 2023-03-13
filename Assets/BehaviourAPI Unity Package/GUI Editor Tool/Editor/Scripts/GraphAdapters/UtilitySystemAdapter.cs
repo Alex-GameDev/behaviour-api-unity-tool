@@ -38,11 +38,11 @@ namespace BehaviourAPI.Unity.Editor
             typeof(UtilitySystems.VariableFactor)
         };
 
+        protected override NodeView GetLayout(NodeData asset, BehaviourGraphView graphView) => new LayeredNodeView(asset, graphView);
+
         protected override void DrawGraphDetails(GraphData graphAsset, BehaviourGraphView graphView)
         {            
         }
-
-        protected override NodeView GetLayout(NodeData asset, BehaviourGraphView graphView) => new LayeredNodeView(asset, graphView);
 
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
         {
@@ -52,40 +52,18 @@ namespace BehaviourAPI.Unity.Editor
             );
         }
 
-        protected override void SetUpDetails(NodeView nodeView)
+        protected override void DrawNodeDetails(NodeView nodeView)
         {
             var node = nodeView.Node.node;
-            if (node is UtilitySystems.VariableFactor)
-            {
-                //nodeView.ChangeTypeColor(BehaviourAPISettings.instance.LeafFactorColor);
-                //if (node is VariableFactor vf)
-                //{
-                //    var obj = new SerializedObject(nodeView.Node);
+            if (node is UtilitySystems.VariableFactor) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.LeafFactorColor);
+            else if(node is CurveFactor) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.CurveFactorColor);
+            else if(node is FusionFactor) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.FusionFactorColor);
+            else if(node is UtilityExecutableNode) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.SelectableNodeColor);
+            else if(node is UtilityBucket) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.BucketColor);
 
-                //    Label componentLabel = new Label();
-                //    componentLabel.Bind(obj);                    
-                //    componentLabel.AddToClassList("node-text");
-                //    componentLabel.bindingPath = "node.variableFunction.component";
-                //    nodeView.extensionContainer.Add(componentLabel);
-
-                //    Label methodLabel = new Label();
-                //    methodLabel.Bind(obj);
-                //    methodLabel.AddToClassList("node-text");
-                //    methodLabel.bindingPath = "node.variableFunction.methodName";
-                //    nodeView.extensionContainer.Add(methodLabel);
-                //}
-            }
-            else
-            {
-                if(node is CurveFactor) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.CurveFactorColor);
-                else if(node is FusionFactor) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.FusionFactorColor);
-                else if(node is UtilityExecutableNode) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.SelectableNodeColor);
-                else if(node is UtilityBucket) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.BucketColor);
-
-                nodeView.IconElement.Enable();
-                if(node is Factor) nodeView.IconElement.Add(new Label(node.TypeName().CamelCaseToSpaced().Split().First().ToUpper()));
-                else nodeView.IconElement.Add(new Label(node.TypeName().CamelCaseToSpaced().ToUpper()));
-            }
+            nodeView.IconElement.Enable();
+            if(node is Factor) nodeView.IconElement.Add(new Label(node.TypeName().CamelCaseToSpaced().Split().First().ToUpper()));
+            else nodeView.IconElement.Add(new Label(node.TypeName().CamelCaseToSpaced().ToUpper()));
 
             if(nodeView.GraphView.Runtime)
             {
@@ -126,5 +104,33 @@ namespace BehaviourAPI.Unity.Editor
         }
 
         #endregion
+    }
+
+    public class LayeredNodeView : NodeView
+    {
+        public LayeredNodeView(NodeData node, BehaviourGraphView graphView) : base(node, graphView, BehaviourAPISettings.instance.EditorLayoutsPath + "/Nodes/DAG Node.uxml")
+        {
+        }
+
+        public override string LayoutPath => "/Nodes/DAG Node.uxml";
+
+        public override void SetUpPorts()
+        {
+            if (Node.node == null || Node.node.MaxInputConnections != 0)
+            {
+                var port = InstantiatePort(Direction.Input, PortOrientation.Right);
+            }
+            else
+            {
+                inputContainer.style.display = DisplayStyle.None;
+            }
+
+            if (Node.node == null || Node.node.MaxOutputConnections != 0)
+            {
+                var port = InstantiatePort(Direction.Output, PortOrientation.Left);
+            }
+            else
+                outputContainer.style.display = DisplayStyle.None;
+        }
     }
 }
