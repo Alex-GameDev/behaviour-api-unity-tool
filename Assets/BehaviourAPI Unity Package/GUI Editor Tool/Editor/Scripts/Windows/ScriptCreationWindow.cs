@@ -50,7 +50,7 @@ namespace BehaviourAPI.Unity.Editor
             bool useFullNameVar = useFullNameVarToggle.value;
             bool includeNodeNames = includeNodeNamesToggle.value;
 
-            //if(system != null) ScriptGeneration.GenerateScript(path, scriptName, system, useFullNameVar, includeNodeNames);
+            if(system != null) ScriptGeneration.GenerateScript(path, scriptName, system, useFullNameVar, includeNodeNames);
             Close();
         }
     }
