@@ -7,44 +7,46 @@ namespace BehaviourAPI.Unity.Runtime
 {
     using UnityExtensions;
  
-    [RequireComponent(typeof(BehaviourRunner))]
     [DefaultExecutionOrder(1000)]
 
     /// <summary>
-    /// Component used for display the status of
+    /// Component used for debug a behaviour system runner
     /// </summary>   
-    public class BSRuntimeDebugger : MonoBehaviour
+    public class BSRuntimeDebugger : MonoBehaviour , IBehaviourSystem
     {
         public SystemData Data { get; private set; }
 
-        [SerializeField] bool debugStatusChanges;
-
-        Dictionary<IStatusHandler, Status> _lastFinishedStatusMap = new Dictionary<IStatusHandler, Status>();
+        [SerializeField] bool debugStatusChanges;      
 
         public bool IsDebuggerReady { get; private set; } = false;
 
+        public Object ObjectReference => null;
+
         void Awake()
         {
-            Data = GetComponent<BehaviourRunner>().GetBehaviourSystemAsset();
-            IsDebuggerReady = true;
+            var runner = GetComponent<BehaviourRunner>();
 
-            Data.graphs.ForEach(g =>
+            if(runner == null)
             {
-                var dict = g.graph.GetNodeNames();
-                foreach (var node in g.graph.NodeList)
-                {
-                    if (node is IStatusHandler handler)
-                    {
-                        handler.StatusChanged += (status) => DebugStatusChanged(dict.GetValueOrDefault(node) ?? "unnamed", status, g.name);
+                Debug.LogWarning("BSRuntimeDebugger need a BehaviourRunner component to work");
+            }
 
-                        handler.StatusChanged += (status) =>
+            Data = runner.GetBehaviourSystemAsset();
+
+            if(Data != null)
+            {
+                Data.graphs.ForEach(g =>
+                {
+                    var dict = g.graph.GetNodeNames();
+                    foreach (var node in g.graph.NodeList)
+                    {
+                        if (node is IStatusHandler handler)
                         {
-                            if (status != Status.None) 
-                                _lastFinishedStatusMap[handler] = status;
-                        };
+                            handler.StatusChanged += (status) => DebugStatusChanged(dict.GetValueOrDefault(node) ?? "unnamed", status, g.name);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         void DebugStatusChanged(string name, Status status, string graphName)

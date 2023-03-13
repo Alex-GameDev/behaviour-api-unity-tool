@@ -42,11 +42,6 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public bool IsRuntime { get; private set; }
 
-        /// <summary>
-        /// Is <see cref="System"/> an asset.
-        /// </summary>
-        public bool IsAsset { get; private set; }
-
         #endregion
 
         #region ------------------------------- private fields --------------------------------
@@ -84,7 +79,6 @@ namespace BehaviourAPI.Unity.Editor
             if (Instance.System != system || Instance.IsRuntime != runtime)
             {
                 Instance.System = system;
-                Instance.IsAsset = AssetDatabase.Contains((UnityEngine.Object)system);
                 Instance.IsRuntime = runtime;
 
                 window.Refresh();
@@ -225,14 +219,14 @@ namespace BehaviourAPI.Unity.Editor
 
             if (IsRuntime)
             {
-                _nodeInspector?.Hide();
-                _editToolbar?.Hide();
+                _nodeInspector?.Disable();
+                _editToolbar?.Disable();
                 _container?.Hide();
             }
             else
             {
-                _nodeInspector?.Show();
-                _editToolbar?.Show();
+                _nodeInspector?.Enable();
+                _editToolbar?.Enable();
                 _container.Show();
             }
         }
@@ -438,7 +432,6 @@ namespace BehaviourAPI.Unity.Editor
             if (playModeStateChange == PlayModeStateChange.ExitingPlayMode)
             {
                 System = null;
-                IsAsset = false;
                 IsRuntime = false;
                 Refresh();
             }

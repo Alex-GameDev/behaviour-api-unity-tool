@@ -79,7 +79,7 @@ namespace BehaviourAPI.Unity.Editor
 
             nodeCreationRequest = context =>
             {
-                if (graphData == null || _adapter == null) return;
+                if (BehaviourEditorWindow.Instance.IsRuntime || graphData == null || _adapter == null) return;
 
                 var nodeCreationWindowProvider = ElementCreatorWindowProvider.Create<NodeCreationWindow>(type => CreateNode(type, context.screenMousePosition));
                 nodeCreationWindowProvider.SetAdapterType(_adapter.GetType());

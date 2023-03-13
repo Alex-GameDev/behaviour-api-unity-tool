@@ -56,6 +56,8 @@ namespace BehaviourAPI.Unity.Editor
         public override void UpdateInspector(NodeData element)
         {
             base.UpdateInspector(element);
+
+            if (BehaviourEditorWindow.Instance.IsRuntime) return;
             if (element == null) return;
 
             var system = BehaviourEditorWindow.Instance.System;

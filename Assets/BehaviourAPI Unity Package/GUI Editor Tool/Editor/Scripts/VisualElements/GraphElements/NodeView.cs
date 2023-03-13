@@ -49,6 +49,8 @@ namespace BehaviourAPI.Unity.Editor
 
         protected List<EdgeView> outputEdges = new List<EdgeView>();
 
+        TextField _titleInputField;
+
         #endregion     
 
         #region --------------------------- Set up ---------------------------
@@ -63,20 +65,23 @@ namespace BehaviourAPI.Unity.Editor
             IconElement = this.Q("node-icon");
             BorderElement = this.Q("node-border");
 
+            _titleInputField = this.Q<TextField>(name: "title-input-field");
+
             SetPosition(new Rect(node.position, Vector2.zero));
 
             SetUpPorts();
-
-            SetUpDataBinding();
 
             if(Node.node != null)
             {
                 if(graphView.Runtime)
                 {
+                    _titleInputField.value = node.name;
+                    _titleInputField.isReadOnly = true;
                     AddRuntimeLayout();
                 }
                 else
                 {
+                    SetUpDataBinding();
                     DrawExtensionContainer();
                     SetUpContextualMenu();
                 }
@@ -177,14 +182,15 @@ namespace BehaviourAPI.Unity.Editor
 
         void SetUpDataBinding()
         {
-            var titleInputField = this.Q<TextField>(name: "title-input-field");
-
-            titleInputField.bindingPath = _property.propertyPath + ".name";
-            titleInputField.Bind(_property.serializedObject);
+            if(_titleInputField == null) _titleInputField = this.Q<TextField>(name: "title-input-field");
+            _titleInputField.bindingPath = _property.propertyPath + ".name";
+            _titleInputField.Bind(_property.serializedObject);
         }
 
         public void RefreshProperty()
         {
+            if (BehaviourEditorWindow.Instance.IsRuntime) return;
+
             _property = GetPropertyPath();
             SetUpDataBinding();
         }

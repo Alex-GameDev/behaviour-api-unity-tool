@@ -19,6 +19,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             base.UpdateInspector(element);
 
+            if (BehaviourEditorWindow.Instance.IsRuntime) return;
             var index = BehaviourEditorWindow.Instance.System.Data.graphs.IndexOf(element);
 
             if (index == -1) return;
