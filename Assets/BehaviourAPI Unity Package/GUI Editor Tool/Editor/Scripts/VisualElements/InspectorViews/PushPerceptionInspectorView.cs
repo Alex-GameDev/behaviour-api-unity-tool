@@ -23,6 +23,8 @@ namespace BehaviourAPI.Unity.Editor
 
         ListView _listView, _targetListView;
 
+        List<string> _targetNames;
+
         public PushPerceptionInspectorView() : base("Push Perceptions", Side.Right)
         {
             _listView = AddListView();
@@ -48,7 +50,7 @@ namespace BehaviourAPI.Unity.Editor
 
         void AddElement()
         {
-            var pushPerceptionData = new PushPerceptionData();
+            var pushPerceptionData = new PushPerceptionData("new push perception");
             BehaviourEditorWindow.Instance.System.Data.pushPerceptions.Add(pushPerceptionData);
             BehaviourEditorWindow.Instance.RegisterChanges();
             ForceRefresh();
@@ -61,6 +63,7 @@ namespace BehaviourAPI.Unity.Editor
             if (System.Data.pushPerceptions.Remove(data))
             {
                 BehaviourEditorWindow.Instance.RegisterChanges();
+                UpdateInspector(null);
             }
             ForceRefresh();
         }
@@ -77,6 +80,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             base.UpdateInspector(element);
             if (element == null) return;
+
 
             int pIndex = System.Data.pushPerceptions.IndexOf(element);
             _inspectorContent.Add(new IMGUIContainer(() =>
@@ -100,11 +104,25 @@ namespace BehaviourAPI.Unity.Editor
 
         private void SearchTargetNode()
         {
-            BehaviourEditorWindow.Instance.OpenSearchNodeWindow(AddPushHandler, nodeAsset => nodeAsset.node is IPushActivable && !_selectedElement.targetNodeIds.Contains(nodeAsset.id));
+            if(_selectedElement == null)
+            {
+                Debug.LogError("Not element selected");
+                return;
+            }
+
+            BehaviourEditorWindow.Instance.OpenSearchNodeWindow(
+                AddPushHandler, 
+                nodeData => nodeData != null && nodeData?.node is IPushActivable &&
+                !_selectedElement.targetNodeIds.Contains(nodeData.id));
         }
 
         void AddPushHandler(NodeData obj)
         {
+            if(_selectedElement.targetNodeIds == null)
+            {
+                Debug.LogWarning("A");
+                return;
+            }
             _selectedElement.targetNodeIds.Add(obj.id);
             BehaviourEditorWindow.Instance.RegisterChanges();
             _targetListView.RefreshItems();
@@ -121,7 +139,8 @@ namespace BehaviourAPI.Unity.Editor
             var pushPerceptionData = GetList()[id];
             
             var label = element.Q<Label>("li-name");
-            label.bindingPath = $"data.pushPerception.Array.data[{id}].name";
+            label.text = System.Data.pushPerceptions[id].name;
+            label.bindingPath = $"data.pushPerceptions.Array.data[{id}].name";
             label.Bind(new SerializedObject(System.ObjectReference));
 
             var button = element.Q<Button>("li-remove-btn");
@@ -133,6 +152,7 @@ namespace BehaviourAPI.Unity.Editor
             var targetNode = _selectedElement.targetNodeIds[id];
 
             var label = element.Q<Label>("li-name");
+            label.text = System.Data.graphs.SelectMany(g => g.nodes).ToList().Find(n => n.id == _selectedElement.targetNodeIds[id])?.name ?? "missing";
 
             var button = element.Q<Button>("li-remove-btn");
             button.clicked += () => RemovePushHandlerListItem(targetNode);

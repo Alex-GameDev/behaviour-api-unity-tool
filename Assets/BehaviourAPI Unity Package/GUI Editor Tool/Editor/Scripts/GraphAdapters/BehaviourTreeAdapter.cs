@@ -12,6 +12,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
 using LeafNode = BehaviourAPI.Unity.Framework.Adaptations.LeafNode;
+using System.ComponentModel;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -104,9 +105,10 @@ namespace BehaviourAPI.Unity.Editor
         void SetRootNode(NodeView nodeView)
         {
             nodeView.DisconnectPorts(nodeView.inputContainer);
-            ChangeRootNode(nodeView);
+            ChangeRootNode(nodeView, true);
         }
-        void ChangeRootNode(NodeView newRootNode)
+
+        void ChangeRootNode(NodeView newRootNode, bool changeData = false)
         {
             if (newRootNode == null || newRootNode.Node.parentIds.Count > 0) return;
 
@@ -121,8 +123,12 @@ namespace BehaviourAPI.Unity.Editor
             _rootView = newRootNode;
             if (_rootView != null)
             {
-                graphView.graphData.nodes.MoveAtFirst(_rootView.Node);
-                BehaviourEditorWindow.Instance.RegisterChanges();
+                if(changeData)
+                {
+                    graphView.graphData.nodes.MoveAtFirst(_rootView.Node);
+                    BehaviourEditorWindow.Instance.RegisterChanges();
+                    graphView.RefreshProperties();
+                }
 
                 _rootView.inputContainer.Disable();
                 _rootView.RootElement.Enable();

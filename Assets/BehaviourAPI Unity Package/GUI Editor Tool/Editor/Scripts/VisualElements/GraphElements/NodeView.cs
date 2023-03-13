@@ -126,8 +126,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if(Node.node is IPerceptionAssignable perceptionAssignable)
             {
-                Debug.Log("Extension");
-                var label = new Label($"if {GetPerceptionInfo(perceptionAssignable.PerceptionReference)}");
+                 var label = new Label($"if {GetPerceptionInfo(perceptionAssignable.PerceptionReference)}");
                 label.AddToClassList("node-text");
                 extensionContainer.Add(label);
             }

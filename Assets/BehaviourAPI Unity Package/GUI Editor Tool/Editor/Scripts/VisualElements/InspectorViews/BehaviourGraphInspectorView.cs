@@ -31,16 +31,15 @@ namespace BehaviourAPI.Unity.Editor
 
                 EditorGUILayout.PropertyField(obj.FindProperty(path + ".name"));
                 EditorGUILayout.Space(10f);
-                EditorGUILayout.PropertyField(obj.FindProperty(path + ".graph"), true);
-
-                //var prop = obj.FindProperty(path + ".graph");
-                //var end = obj.FindProperty(path + ".nodes");
-                //bool child = true;
-                //while (prop.Next(child) && !SerializedProperty.EqualContents(prop, end))
-                //{
-                //    EditorGUILayout.PropertyField(prop, true);
-                //    child = false;
-                //}
+ 
+                var prop = obj.FindProperty(path + ".graph");
+                var end = obj.FindProperty(path + ".nodes");
+                bool child = true;
+                while (prop.Next(child) && !SerializedProperty.EqualContents(prop, end))
+                {
+                    EditorGUILayout.PropertyField(prop, true);
+                    child = false;
+                }
                 obj.ApplyModifiedProperties();
 
             });

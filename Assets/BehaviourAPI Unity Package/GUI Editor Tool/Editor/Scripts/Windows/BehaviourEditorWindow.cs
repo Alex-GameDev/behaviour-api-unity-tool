@@ -132,7 +132,7 @@ namespace BehaviourAPI.Unity.Editor
             // Toolbar:
             SetUpToolbar();
 
-            Undo.undoRedoPerformed += Refresh;
+            //Undo.undoRedoPerformed += Refresh;
         }
 
         private T AddInspector<T>() where T : VisualElement, new()

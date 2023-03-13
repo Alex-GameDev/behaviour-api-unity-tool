@@ -130,7 +130,7 @@ namespace BehaviourAPI.Unity.Editor
             AddElement(edge);
         }
 
-        #endregion ------------------------------------------------------------------
+        #endregion
 
 
         #region --------------------------- CHANGE EVENTS ---------------------------
@@ -225,7 +225,6 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public void RefreshProperties()
         {
-            Debug.Log("Refresh properties");
             foreach (var view in _assetViewMap.Values)
             {
                 view.RefreshProperty();

@@ -18,8 +18,8 @@ namespace BehaviourAPI.Unity.Framework
     {
         [HideInInspector] public string id;
         public string name;
-        [HideInInspector] public List<NodeData> nodes;
         [SerializeReference] public BehaviourGraph graph;
+        [HideInInspector] public List<NodeData> nodes;
 
         public GraphData(Type graphType)
         {

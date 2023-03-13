@@ -12,6 +12,7 @@ using CustomFunction = BehaviourAPI.Unity.Framework.Adaptations.CustomFunction;
 using VariableFactor = BehaviourAPI.Unity.Framework.Adaptations.VariableFactor;
 using UnityEditor.UIElements;
 using BehaviourAPI.Unity.Framework.Adaptations;
+using BehaviourAPI.UtilitySystems.Factors;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -29,6 +30,7 @@ namespace BehaviourAPI.Unity.Editor
             typeof(FusionFactor),
             typeof(CurveFactor),
             typeof(VariableFactor),
+            typeof(ConstantFactor)
         };
         public override List<Type> ExcludedTypes => new List<Type>
         {
@@ -46,10 +48,24 @@ namespace BehaviourAPI.Unity.Editor
 
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
         {
-            menuEvt.menu.AppendAction("Order childs by position (y)",
-                _ => node.GraphView.graphData.OrderChildNodes(node.Node, (n) => n.position.y),
+            menuEvt.menu.AppendAction("Order childs by position (y)", _ =>
+            {
+                node.GraphView.graphData.OrderChildNodes(node.Node, (n) => n.position.y);
+                BehaviourEditorWindow.Instance.RegisterChanges();
+                node.UpdateEdgeViews();
+            },
                 (node.Node.childIds.Count > 1).ToMenuStatus()
             );
+        }
+
+        protected override void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt)
+        {
+            menuEvt.menu.AppendAction("Order childs by position (y)", _ =>
+            {
+                graph.graphData.OrderAllChildNodes((n) => n.position.y);
+                BehaviourEditorWindow.Instance.RegisterChanges();
+                graph.nodeViews.ForEach(n => n.UpdateEdgeViews());
+            });
         }
 
         protected override void DrawNodeDetails(NodeView nodeView)
@@ -94,14 +110,6 @@ namespace BehaviourAPI.Unity.Editor
             return change;
         }
 
-        protected override void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt)
-        {
-            menuEvt.menu.AppendAction("Order childs by position (y)", _ =>
-            {
-                graph.graphData.OrderAllChildNodes((n) => n.position.y);
-                BehaviourEditorWindow.Instance.RegisterChanges();
-            });
-        }
 
         #endregion
     }
