@@ -19,15 +19,44 @@ namespace BehaviourAPI.Unity.Editor
     {
         #region ------------------- Rendering -------------------
 
+        /// <summary>
+        /// The main node types of the target graph
+        /// </summary>
         public abstract List<Type> MainTypes { get; }
+
+        /// <summary>
+        /// The types that can't be used in the editor
+        /// </summary>
         public abstract List<Type> ExcludedTypes { get; }
 
-
+        /// <summary>
+        /// Create a new node view in the graph view.
+        /// </summary>
         protected abstract NodeView GetLayout(NodeData data, BehaviourGraphView graphView);
+
+        /// <summary>
+        /// Render the specific details in the node.
+        /// </summary>
         protected abstract void DrawNodeDetails(NodeView node);
+
+        /// <summary>
+        /// Create the node context menu actions
+        /// </summary>
         protected abstract void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt);
-        protected abstract void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt);
+
+        /// <summary>
+        /// Create the graph context menu actions in editor mode
+        /// </summary>
+        protected abstract void SetUpGraphEditorContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt);
+
+        /// <summary>
+        /// Draw the graph details
+        /// </summary>
         protected abstract void DrawGraphDetails(GraphData data, BehaviourGraphView graphView);
+
+        /// <summary>
+        /// Call when an element of the graph changes
+        /// </summary>
         protected abstract GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change);
 
         /// <summary>
@@ -61,7 +90,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             Debug.Log($"Name: {data.name}\nType: {data.node.TypeName()} / Pos: {data.position}\n" +
                 $"Parents: {data.parentIds.Count} ({data.parentIds.Select(p => p).Join()})\n" +
-                $"Childs: {data.childIds.Count} ({data.childIds.Select(p => p).Join()})");            
+                $"Childs: {data.childIds.Count} ({data.childIds.Select(p => p).Join()})");
         }
 
         void DebugGraph(GraphData data)
@@ -79,7 +108,7 @@ namespace BehaviourAPI.Unity.Editor
 
             var sourceView = graphView.GetViewOf(data);
             var nodeIdMap = graphView.graphData.GetNodeIdMap();
-            for(int i = 0; i < data.childIds.Count; i++)
+            for (int i = 0; i < data.childIds.Count; i++)
             {
                 string childId = data.childIds[i];
                 NodeData child = nodeIdMap[childId];
@@ -102,18 +131,21 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public void DrawGraph(GraphData data, BehaviourGraphView graphView)
         {
-            foreach(var node in data.nodes)
+            foreach (var node in data.nodes)
             {
                 DrawNode(node, graphView);
             }
 
-            foreach(var node in data.nodes)
+            foreach (var node in data.nodes)
             {
                 DrawConnections(node, graphView);
             }
             DrawGraphDetails(data, graphView);
         }
 
+        /// <summary>
+        /// Create the graph context menu actions in any mode
+        /// </summary>
         public void BuildGraphContextualMenu(ContextualMenuPopulateEvent menuEvt, BehaviourGraphView graphView)
         {
             menuEvt.menu.AppendSeparator();
@@ -121,7 +153,7 @@ namespace BehaviourAPI.Unity.Editor
             menuEvt.menu.AppendAction("Auto layout", _ => AutoLayoutGraph(graphView));
             menuEvt.menu.AppendAction("Debug (Graph)", _ => DebugGraph(graphView.graphData));
 
-            if (!BehaviourEditorWindow.Instance.IsRuntime)  SetUpGraphContextMenu(graphView, menuEvt);
+            if (!BehaviourEditorWindow.Instance.IsRuntime) SetUpGraphEditorContextMenu(graphView, menuEvt);
 
             menuEvt.StopPropagation();
         }
@@ -178,34 +210,6 @@ namespace BehaviourAPI.Unity.Editor
             return true;
         }
 
-        /// <summary>
-        /// Return a tree entry list with the hierarchy of classes from the current graph class
-        /// </summary>
-        public List<SearchTreeEntry> GetNodeHierarchyEntries()
-        {
-            List<SearchTreeEntry> entries = new List<SearchTreeEntry>();
-
-            entries.Add(new SearchTreeGroupEntry(new GUIContent("Nodes")));
-
-            foreach (var type in MainTypes)
-            {  
-                var subtypes = TypeUtilities.GetSubClasses(type, includeSelf: true, excludeAbstract: true).Except(ExcludedTypes).ToList();
-                if (subtypes.Count == 1)
-                {
-                    entries.AddEntry(subtypes[0].Name.CamelCaseToSpaced(), 1, subtypes[0]);
-                }
-                else if (subtypes.Count > 1)
-                {
-                    entries.AddGroup(type.Name.CamelCaseToSpaced() + "(s)", 1);
-                    foreach (var subtype in subtypes)
-                    {
-                        entries.AddEntry(subtype.Name.CamelCaseToSpaced(), 2, subtype);
-                    }
-                }
-            }
-            return entries;
-        }
-
         public GraphViewChange OnViewChanged(BehaviourGraphView graphView, GraphViewChange change)
         {
             return ViewChanged(graphView, change);
@@ -219,14 +223,14 @@ namespace BehaviourAPI.Unity.Editor
         {
             var type = BehaviourAPISettings.instance.GetAdapter(graph.GetType());
 
-            if(type != null)
+            if (type != null)
             {
                 return (GraphAdapter)Activator.CreateInstance(type);
             }
             else
             {
                 return null;
-            }            
+            }
         }
 
         #endregion

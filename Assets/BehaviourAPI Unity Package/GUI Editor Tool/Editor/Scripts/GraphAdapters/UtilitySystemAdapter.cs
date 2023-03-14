@@ -39,7 +39,7 @@ namespace BehaviourAPI.Unity.Editor
         protected override NodeView GetLayout(NodeData asset, BehaviourGraphView graphView) => new LayeredNodeView(asset, graphView);
 
         protected override void DrawGraphDetails(GraphData graphAsset, BehaviourGraphView graphView)
-        {            
+        {
         }
 
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
@@ -54,7 +54,7 @@ namespace BehaviourAPI.Unity.Editor
             );
         }
 
-        protected override void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt)
+        protected override void SetUpGraphEditorContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt)
         {
             menuEvt.menu.AppendAction("Order childs by position (y)", _ =>
             {
@@ -68,18 +68,18 @@ namespace BehaviourAPI.Unity.Editor
         {
             var node = nodeView.Node.node;
             if (node is UtilitySystems.VariableFactor) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.LeafFactorColor);
-            else if(node is CurveFactor) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.CurveFactorColor);
-            else if(node is FusionFactor) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.FusionFactorColor);
-            else if(node is UtilityExecutableNode) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.SelectableNodeColor);
-            else if(node is UtilityBucket) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.BucketColor);
+            else if (node is CurveFactor) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.CurveFactorColor);
+            else if (node is FusionFactor) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.FusionFactorColor);
+            else if (node is UtilityExecutableNode) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.SelectableNodeColor);
+            else if (node is UtilityBucket) nodeView.ChangeTypeColor(BehaviourAPISettings.instance.BucketColor);
 
             nodeView.IconElement.Enable();
-            if(node is Factor) nodeView.IconElement.Add(new Label(node.TypeName().CamelCaseToSpaced().Split().First().ToUpper()));
+            if (node is Factor) nodeView.IconElement.Add(new Label(node.TypeName().CamelCaseToSpaced().Split().First().ToUpper()));
             else nodeView.IconElement.Add(new Label(node.TypeName().CamelCaseToSpaced().ToUpper()));
 
-            if(nodeView.GraphView.Runtime)
+            if (nodeView.GraphView.Runtime)
             {
-                if(node is UtilityNode utilityHandler)
+                if (node is UtilityNode utilityHandler)
                 {
                     var utilityBar = new ProgressBar()
                     {

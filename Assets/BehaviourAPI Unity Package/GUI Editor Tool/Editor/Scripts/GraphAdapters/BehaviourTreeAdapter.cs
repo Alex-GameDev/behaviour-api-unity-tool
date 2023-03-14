@@ -23,16 +23,16 @@ namespace BehaviourAPI.Unity.Editor
 
         NodeView _rootView;
 
-        public override List<Type> ExcludedTypes => new List<Type> { 
-            typeof(BehaviourTrees.ConditionNode), 
+        public override List<Type> ExcludedTypes => new List<Type> {
+            typeof(BehaviourTrees.ConditionNode),
             typeof(BehaviourTrees.LeafNode),
-            typeof(BehaviourTrees.SwitchDecoratorNode) 
+            typeof(BehaviourTrees.SwitchDecoratorNode)
         };
 
-        public override List<Type> MainTypes => new List<Type> { 
-            typeof(CompositeNode), 
-            typeof(DecoratorNode), 
-            typeof(LeafNode) 
+        public override List<Type> MainTypes => new List<Type> {
+            typeof(CompositeNode),
+            typeof(DecoratorNode),
+            typeof(LeafNode)
         };
 
         protected override NodeView GetLayout(NodeData asset, BehaviourGraphView graphView) => new TreeNodeView(asset, graphView);
@@ -65,7 +65,7 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        protected override void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt)
+        protected override void SetUpGraphEditorContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt)
         {
             menuEvt.menu.AppendAction("Order childs by position (x)", _ =>
             {
@@ -87,7 +87,7 @@ namespace BehaviourAPI.Unity.Editor
                 (node.Node.childIds.Count > 1).ToMenuStatus()
             );
         }
-               
+
 
         protected override GraphViewChange ViewChanged(BehaviourGraphView graphView, GraphViewChange change)
         {
@@ -123,7 +123,7 @@ namespace BehaviourAPI.Unity.Editor
             _rootView = newRootNode;
             if (_rootView != null)
             {
-                if(changeData)
+                if (changeData)
                 {
                     graphView.graphData.nodes.MoveAtFirst(_rootView.Node);
                     BehaviourEditorWindow.Instance.RegisterChanges();
@@ -139,7 +139,7 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ------------------------------ Generate code ------------------------------
 
-       
+
         #endregion
     }
 

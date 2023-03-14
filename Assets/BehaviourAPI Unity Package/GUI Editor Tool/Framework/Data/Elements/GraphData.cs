@@ -135,7 +135,7 @@ namespace BehaviourAPI.Unity.Framework
             {
                 if (nodes[i].node is IBuildable buildable) buildable.Build(data);
 
-                builder.AddNode(nodes[i].node,
+                builder.AddNode(nodes[i].name, nodes[i].node,
                     nodes[i].parentIds.Select(id => nodeIdMap[id].node).ToList(),
                     nodes[i].childIds.Select(id => nodeIdMap[id].node).ToList()
                     );

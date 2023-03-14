@@ -1,20 +1,18 @@
-using BehaviourAPI.BehaviourTrees;
-using BehaviourAPI.Core;
-using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.Unity.Framework.Adaptations;
-using BehaviourAPI.Unity.Runtime;
-using BehaviourAPI.UnityExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
-using Action = BehaviourAPI.Core.Actions.Action;
 
 namespace BehaviourAPI.Unity.Editor
 {
+    using Core;
+    using Core.Perceptions;
+    using Core.Actions;
+    using Framework.Adaptations;
+    using UnityExtensions;
+
     [FilePath("ProjectSettings/BehaviourAPISettings.asset", FilePathAttribute.Location.ProjectFolder)]
     public class BehaviourAPISettings : ScriptableSingleton<BehaviourAPISettings>
     {
@@ -31,9 +29,23 @@ namespace BehaviourAPI.Unity.Editor
         private static readonly Color k_SelectableNodeColor = new Color(1f, 0.65f, 0.15f, 1f);
         private static readonly Color k_BucketColor = new Color(1f, 0.65f, 0.15f, 1f);
 
+        private static readonly string[] k_DefaultAssemblies = new[]
+        {
+            "Assembly-CSharp",
+            "BehaviourAPI.Core",
+            "BehaviourAPI.StateMachines",
+            "BehaviourAPI.BehaviourTrees",
+            "BehaviourAPI.UtilitySystems",
+            "BehaviourAPI.UnityExtensions",
+            "BehaviourAPI.Unity.Runtime",
+            "BehaviourAPI.UnityTool.Framework",
+            "BehaviourAPI.Unity.Editor"
+        };
+
+        private static readonly string k_RootPath = "Assets/BehaviourAPI Unity Tool";
         #endregion
 
-        #region ----------------------- Script generation -----------------------
+        #region ----------------------- Editor settings -----------------------
 
         public string GenerateScriptDefaultPath = "Assets/Scripts/";
         public string GenerateScriptDefaultName = "NewBehaviourRunner";
@@ -52,26 +64,20 @@ namespace BehaviourAPI.Unity.Editor
         public Color SelectableNodeColor = k_SelectableNodeColor;
         public Color BucketColor = k_BucketColor;
 
+        private string RootPath = k_RootPath;
+        private string CustomAssemblies = string.Empty;
+
         #endregion
 
-        public string RootPath = "Assets/BehaviourAPI Unity Tool";
+        /// <summary>
+        /// Root path of editor layout elements
+        /// </summary>
         public string EditorLayoutsPath => $"{RootPath}/Editor/uxml/";
+
+        /// <summary>
+        /// Root path of editor style sheets
+        /// </summary>
         public string EditorStylesPath => $"{RootPath}/Editor/uss/";
-
-        public string CustomAssemblies;
-
-        public readonly string[] DefaultAssemblies = new[]
-        {
-            "Assembly-CSharp",
-            "BehaviourAPI.Core",
-            "BehaviourAPI.StateMachines",
-            "BehaviourAPI.BehaviourTrees",
-            "BehaviourAPI.UtilitySystems",
-            "BehaviourAPI.UnityExtensions",
-            "BehaviourAPI.Unity.Runtime",
-            "BehaviourAPI.UnityTool.Framework",
-            "BehaviourAPI.Unity.Editor"
-        };
 
         List<Assembly> assemblies = new List<Assembly>();
 
@@ -96,10 +102,13 @@ namespace BehaviourAPI.Unity.Editor
             return GetAssemblies().SelectMany(a => a.GetTypes()).ToList();
         }
 
+        /// <summary>
+        /// Create the type hierarchies used in the editor when Unity reloads.
+        /// </summary>
         public void ReloadAssemblies()
         {
             var customAssemblies = CustomAssemblies.Split(';').ToList();
-            var allAssemblyNames = customAssemblies.Union(DefaultAssemblies).ToHashSet();
+            var allAssemblyNames = customAssemblies.Union(k_DefaultAssemblies).ToHashSet();
             assemblies = System.AppDomain.CurrentDomain.GetAssemblies().ToList().FindAll(assembly =>
                 allAssemblyNames.Contains(assembly.GetName().Name));
 
@@ -110,37 +119,20 @@ namespace BehaviourAPI.Unity.Editor
         {
             var types = GetTypes();
 
-            var unityActionTypes = GetValidSubTypes(typeof(UnityAction), types)
-                .Select(t => new EditorHierarchyNode(t.Name.CamelCaseToSpaced(), t));
+            var unityActionNode = EditorHierarchyNode.CreateGroupedHierarchyNode(types, typeof(UnityAction), "Unity Actions", true);
 
-            var unityActionNode = GetUnityActionHierarchy(types);
+            _actionHierarchy = new EditorHierarchyNode("Actions", typeof(Action));
+            _actionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(CustomAction)));
+            _actionHierarchy.Childs.Add(unityActionNode);
+            _actionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(SubgraphAction)));
 
-            _actionHierarchy = new EditorHierarchyNode("Actions", typeof(Action), new List<EditorHierarchyNode>()
-            {
-                new EditorHierarchyNode("Custom Action", typeof(CustomAction)),
-                new EditorHierarchyNode("Custom Action (Context)", typeof(CustomAction)),
-                unityActionNode,
-                new EditorHierarchyNode("Subgraph Action", typeof(SubgraphAction))
-            });
+            var unityPerceptionNode = EditorHierarchyNode.CreateGroupedHierarchyNode(types, typeof(UnityPerception), "Unity Perceptions", true);
+            var compoundPerceptionNode = EditorHierarchyNode.CreateGroupedHierarchyNode(types, typeof(CompoundPerception), "Compound perceptions");
 
-            var unityPerceptionTypes =GetValidSubTypes(typeof(UnityPerception), types)
-                .Select(t => new EditorHierarchyNode(t.Name.CamelCaseToSpaced(), t)).ToList();
-
-            var compoundPerceptionTypes = types.FindAll(t => t.IsSubclassOf(typeof(CompoundPerception)) &&
-                 t.GetConstructors().Any(c => c.GetParameters().Length == 0))
-                .Select(t => new EditorHierarchyNode(t.Name.CamelCaseToSpaced(), t)).ToList();
-
-            _perceptionHierarchy = new EditorHierarchyNode("Perceptions", typeof(Perception), new List<EditorHierarchyNode>()
-            {
-                new EditorHierarchyNode("Custom Perception", typeof(CustomPerception)),
-                new EditorHierarchyNode("Custom Perception (Context)", typeof(CustomPerception)),
-                new EditorHierarchyNode("Unity Perception(s)",typeof(UnityPerception), unityPerceptionTypes),
-                new EditorHierarchyNode("Compound Perception(s)", typeof(CompoundPerception), compoundPerceptionTypes),
-                new EditorHierarchyNode("Status Perception", typeof(ExecutionStatusPerception))
-            });
-
-            _nodeHierarchyMap = new Dictionary<System.Type, EditorHierarchyNode>();
-            _graphAdapterMap = new Dictionary<System.Type, System.Type>();
+            _perceptionHierarchy = new EditorHierarchyNode("Perceptions", typeof(Perception));
+            _perceptionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(CustomPerception)));
+            _perceptionHierarchy.Childs.Add(unityPerceptionNode);
+            _perceptionHierarchy.Childs.Add(compoundPerceptionNode);
 
             var graphAdapters = types.FindAll(t => t.IsSubclassOf(typeof(GraphAdapter)) &&
                 !t.IsAbstract &&
@@ -149,73 +141,14 @@ namespace BehaviourAPI.Unity.Editor
 
             _graphAdapterMap = graphAdapters.ToDictionary(g => g.GetCustomAttribute<CustomAdapterAttribute>().type, g => g);
 
-            _nodeHierarchyMap = graphAdapters.ToDictionary(g => g, g =>
+            _nodeHierarchyMap = graphAdapters.ToDictionary(adapterType => adapterType, adapterType =>
             {
-                var graphType = g.GetCustomAttribute<CustomAdapterAttribute>().type;
-                var adapter = (GraphAdapter) Activator.CreateInstance(g);
+                var graphType = adapterType.GetCustomAttribute<CustomAdapterAttribute>().type;
+                var adapter = (GraphAdapter)Activator.CreateInstance(adapterType);
 
-                var list = new List<EditorHierarchyNode>();
-
-                foreach (var type in adapter.MainTypes)
-                {
-                    var subtypes = GetValidSubTypes(type, types).ToList();
-                    if(!type.IsAbstract) subtypes.Add(type);
-
-                    subtypes = subtypes.Except(adapter.ExcludedTypes).ToList();
-
-                    if(subtypes.Count == 1)
-                    {
-                        var elemType = subtypes.First();
-                        list.Add(new EditorHierarchyNode(elemType.Name.CamelCaseToSpaced(), elemType));
-                    }
-                    else if(subtypes.Count > 1)
-                    {
-                        list.Add(new EditorHierarchyNode(type.Name.CamelCaseToSpaced() + "(s)", type,
-                            subtypes.Select(subType => new EditorHierarchyNode(subType.Name.CamelCaseToSpaced(), subType)).ToList()));
-                    }
-                }
-                return new EditorHierarchyNode($"{graphType.Name} nodes", graphType, list);
-            });           
-        }
-
-        EditorHierarchyNode GetUnityActionHierarchy(List<System.Type> allTypes)
-        {
-            var types = GetValidSubTypes(typeof(UnityAction), allTypes);
-
-            Dictionary<string, EditorHierarchyNode> groups = new Dictionary<string, EditorHierarchyNode>();
-            List<EditorHierarchyNode> ungroupedActions = new List<EditorHierarchyNode>();
-
-            foreach(var actionType in types)
-            {
-                var group = actionType.GetCustomAttributes<SelectionGroupAttribute>();
-                var actionNode = new EditorHierarchyNode(actionType.Name.CamelCaseToSpaced(), actionType);
-
-                if(group.Count() == 0)
-                {
-                    ungroupedActions.Add(actionNode);
-                }
-                else
-                {
-                    foreach (var attribute in group)
-                    {
-                        var groupName = attribute.name;
-                        var groupNode = new EditorHierarchyNode(groupName, null);
-                        groups.TryAdd(groupName, groupNode);
-                        groups[groupName].Childs.Add(actionNode);
-                    }
-                }
-            }
-
-            var unityActionNode = new EditorHierarchyNode("Unity Actions", typeof(UnityAction),
-                groups.Values.Union(ungroupedActions).ToList());
-            return unityActionNode;
-        }
-
-        static IEnumerable<System.Type> GetValidSubTypes(System.Type type, List<System.Type> allTypes)
-        {
-            return allTypes.FindAll(t => t.IsSubclassOf(type) &&
-                !t.IsAbstract &&
-                 t.GetConstructors().Any(c => c.GetParameters().Length == 0));
+                return EditorHierarchyNode.CreateCustomHierarchyNode(types, graphType,
+                    $"{graphType.Name} nodes", adapter.MainTypes, adapter.ExcludedTypes);
+            });
         }
     }
 }

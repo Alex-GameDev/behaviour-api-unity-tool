@@ -33,16 +33,16 @@ namespace BehaviourAPI.Unity.Editor
             typeof(ExitTransition)
         };
 
-        public override List<Type> ExcludedTypes => new List<Type> { 
-            typeof(State), 
-            typeof(ExitTransition), 
-            typeof(StateTransition), 
+        public override List<Type> ExcludedTypes => new List<Type> {
+            typeof(State),
+            typeof(ExitTransition),
+            typeof(StateTransition),
             typeof(ProbabilisticState)
         };
 
         protected override NodeView GetLayout(NodeData asset, BehaviourGraphView graphView) => new CyclicNodeView(asset, graphView);
 
-        protected override void SetUpGraphContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt)
+        protected override void SetUpGraphEditorContextMenu(BehaviourGraphView graph, ContextualMenuPopulateEvent menuEvt)
         {
             menuEvt.menu.AppendAction("Order childs by position (x)", _ =>
             {
@@ -59,7 +59,7 @@ namespace BehaviourAPI.Unity.Editor
         }
         protected override void SetUpNodeContextMenu(NodeView node, ContextualMenuPopulateEvent menuEvt)
         {
-            menuEvt.menu.AppendAction("Set entry state", _ => ChangeEntryState(node, true), 
+            menuEvt.menu.AppendAction("Set entry state", _ => ChangeEntryState(node, true),
                 _ => (node.Node != null && node.Node.node is State) ? (node != _entryStateView).ToMenuStatus() : DropdownMenuAction.Status.Hidden);
 
             menuEvt.menu.AppendAction("Order childs by position (x)", _ =>
@@ -92,7 +92,7 @@ namespace BehaviourAPI.Unity.Editor
             if (nodeView.Node.node is Transition)
             {
                 nodeView.ChangeTypeColor(BehaviourAPISettings.instance.TransitionColor);
-                nodeView.Q("node-status").ChangeBorderColor(new Color(0,0,0,0));
+                nodeView.Q("node-status").ChangeBorderColor(new Color(0, 0, 0, 0));
                 contents.style.width = 125;
             }
             else
