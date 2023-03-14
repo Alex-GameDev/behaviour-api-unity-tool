@@ -20,23 +20,25 @@ using Object = UnityEngine.Object;
 
 using Action = BehaviourAPI.Core.Actions.Action;
 
-using Transition = BehaviourAPI.StateMachines.Transition;
-using State = BehaviourAPI.StateMachines.State;
-using ExitTransition = BehaviourAPI.StateMachines.ExitTransition;
-
-
-using UtilityAction = BehaviourAPI.UtilitySystems.UtilityAction;
-using VariableFactor = BehaviourAPI.Unity.Framework.Adaptations.VariableFactor;
-using StateTransition = BehaviourAPI.StateMachines.StateTransition;
-using PopTransition = BehaviourAPI.StateMachines.StackFSMs.PopTransition;
-using PushTransition = BehaviourAPI.StateMachines.StackFSMs.PushTransition;
-using ProbabilisticState = BehaviourAPI.StateMachines.ProbabilisticState;
-using behaviourAPI.Unity.Framework.Adaptations;
-using BehaviourAPI.UnityExtensions;
 using LeafNode = BehaviourAPI.Unity.Framework.Adaptations.LeafNode;
+
+using UtilityAction = BehaviourAPI.Unity.Framework.Adaptations.UtilityAction;
+using VariableFactor = BehaviourAPI.Unity.Framework.Adaptations.VariableFactor;
+
+using PopTransition = BehaviourAPI.Unity.Framework.Adaptations.PopTransition;
+using PushTransition = BehaviourAPI.Unity.Framework.Adaptations.PushTransition;
+using ExitTransition = BehaviourAPI.Unity.Framework.Adaptations.ExitTransition;
+using StateTransition = BehaviourAPI.Unity.Framework.Adaptations.StateTransition;
+
+using State = BehaviourAPI.Unity.Framework.Adaptations.State;
+using ProbabilisticState = BehaviourAPI.Unity.Framework.Adaptations.ProbabilisticState;
+
+using BehaviourAPI.UnityExtensions;
+
 using System;
-using BehaviourAPI.UtilitySystems.Factors;
-using UnityEditor.VersionControl;
+using BehaviourAPI.StateMachines.StackFSMs;
+using UnityEngine.Events;
+using UnityAction = BehaviourAPI.UnityExtensions.UnityAction;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -51,7 +53,8 @@ namespace BehaviourAPI.Unity.Editor
             "BehaviourAPI.Unity.Runtime",
             "BehaviourAPI.Core",
             "BehaviourAPI.Core.Actions",
-            "BehaviourAPI.Core.Perceptions"
+            "BehaviourAPI.Core.Perceptions",
+            "BehaviourAPI.UnityExtensions"
         };
 
 
@@ -67,7 +70,7 @@ namespace BehaviourAPI.Unity.Editor
         /// </ summary >
         /// < param name="path">The destination PATH to the script.</param>
         /// <param name = "name" > The script class name.</param>
-        /// <param name = "asset" > The system asset.</param>
+        /// <param name = "asset" > The system data.</param>
         public static void GenerateScript(string path, string name, IBehaviourSystem asset, bool useFullNameVar = true, bool includeNodeNames = true)
         {
             if (asset == null)
@@ -205,11 +208,10 @@ namespace BehaviourAPI.Unity.Editor
         /// Add the instruction line to create a push perception
         /// PushPerception p = new PushPerception(h1, h2, ...);
         /// </summary>
-        /// <param name="pushPerception">The push perception asset</param>
+        /// <param name="pushPerception">The push perception data</param>
         /// <param name="template">YThe script template</param>
         private static void GenerateCodeForPushPerception(PushPerceptionData pushPerception, ScriptTemplate template)
         {
-
             var targets = pushPerception.targetNodeIds.Select(id => template.FindNode(id)).ToList().FindAll(tgt => tgt.node is IPushActivable);  
             template.AddVariableInstantiationLine(typeof(PushPerception), pushPerception.name, pushPerception, targets);
         }       
@@ -218,16 +220,16 @@ namespace BehaviourAPI.Unity.Editor
         /// Generates code for a action inline.
         /// new ACTIONTYPE(args)
         /// </summary>
-        static string GenerateActionCode(Action action, ScriptTemplate scriptTemplate)
+        static string GenerateActionCode(Action action, ScriptTemplate template)
         {
             switch (action)
             {
                 case CustomAction custom:
                     List<string> actionParameters = new List<string>();
 
-                    string startMethodArg = GenerateMethodCode(custom.start, scriptTemplate, null);
-                    string updateMethodArg = GenerateMethodCode(custom.update, scriptTemplate, null, typeof(Status));
-                    string stopMethodArg = GenerateMethodCode(custom.stop, scriptTemplate, null);
+                    string startMethodArg = GenerateMethodCode(custom.start, template, null);
+                    string updateMethodArg = GenerateMethodCode(custom.update, template, null, typeof(Status));
+                    string stopMethodArg = GenerateMethodCode(custom.stop, template, null);
 
                     if (startMethodArg != null) actionParameters.Add(startMethodArg);
 
@@ -236,15 +238,18 @@ namespace BehaviourAPI.Unity.Editor
 
                     if (stopMethodArg != null) actionParameters.Add(stopMethodArg);
 
-                    return $"new {nameof(FunctionalAction)}({string.Join(", ", actionParameters)})";
+                    return template.AddVariableDeclarationLine(typeof(FunctionalAction), "action", action, 
+                        $"new {nameof(FunctionalAction)}({actionParameters.Join()})");
+                    //return $"new {nameof(FunctionalAction)}({string.Join(", ", actionParameters)})";
 
                 case UnityAction unityAction:
-                    return GenerateConstructorCode(unityAction, scriptTemplate);
-
+                    var code = GenerateConstructorCode(unityAction, template);
+                    return template.AddVariableDeclarationLine(unityAction.GetType(), "action", action, code);
                 case SubgraphAction subgraphAction:
-                    var subgraphName = scriptTemplate.FindGraphVarName(subgraphAction.subgraphId);
-                    return $"new {nameof(SubsystemAction)}({subgraphName ?? "null /* Missing subgraph */"})";
-
+                    var subgraphName = template.FindGraphVarName(subgraphAction.subgraphId);
+                    return template.AddVariableDeclarationLine(typeof(SubsystemAction), "subAction", action,
+                        $"new {nameof(SubsystemAction)}({subgraphName})");
+                    //return $"new {nameof(SubsystemAction)}({subgraphName ?? "null /* Missing subgraph */"})";
                 default:
                     return null;
             }
@@ -268,16 +273,23 @@ namespace BehaviourAPI.Unity.Editor
 
                     if (resetMethodArg != null) perceptionParameters.Add(resetMethodArg);
 
-                    return $"new {nameof(ConditionPerception)}({string.Join(", ", perceptionParameters)})";
+                    return template.AddVariableDeclarationLine(typeof(ConditionPerception), "perception", perception,
+                       $"new {nameof(ConditionPerception)}({perceptionParameters.Join()})");
+                //return $"new {nameof(ConditionPerception)}({string.Join(", ", perceptionParameters)})";
 
                 case UnityPerception unityPerception:
-                    return GenerateConstructorCode(unityPerception, template);
+                    var code = GenerateConstructorCode(unityPerception, template);
+                    return template.AddVariableDeclarationLine(unityPerception.GetType(), "perception", perception, code);
+                    //return GenerateConstructorCode(unityPerception, template);
 
                 case CompoundPerceptionWrapper compound:
                     if (compound.compoundPerception != null)
                     {
                         IEnumerable<string> subPerceptionvariableNames = compound.subPerceptions.Select(sub => GeneratePerceptionCode(sub.perception, template));
-                        return $"new {compound.compoundPerception.TypeName()}({subPerceptionvariableNames.Join()})";
+
+                        return template.AddVariableDeclarationLine(compound.compoundPerception.GetType(), "perception", perception,
+                            $"new {compound.compoundPerception.TypeName()}({subPerceptionvariableNames.Join()})");
+                        //return $"new {compound.compoundPerception.TypeName()}({subPerceptionvariableNames.Join()})";
                     }
                     else return null;
 
@@ -308,13 +320,13 @@ namespace BehaviourAPI.Unity.Editor
 
                 foreach (var state in states)
                 {
-                    //GenerateCodeForState(state, scriptTemplate, graphName, includeNodeName);
+                    GenerateCodeForState(state, scriptTemplate, graphName, includeNodeName);
                 }
                 scriptTemplate.AddLine("");
 
                 foreach (var transition in transitions)
                 {
-                    //GenerateCodeForTransition(transition, scriptTemplate, graphName, includeNodeName);
+                    GenerateCodeForTransition(transition, scriptTemplate, graphName, includeNodeName);
                 }
 
                 if (states.Count > 0)
@@ -354,7 +366,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     if (scriptTemplate.FindVariableName(factorAsset) == null)
                     {
-                        //GenerateCodeForFactor(factorAsset, scriptTemplate, graphName, includeNodeName);
+                        //GenerateCodeForFactor(factorAsset, template, graphName, includeNodeName);
                     }
                 }
 
@@ -364,7 +376,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     if (scriptTemplate.FindVariableName(selectableAsset) == null)
                     {
-                        //GenerateCodeForSelectableNode(selectableAsset, scriptTemplate, graphName, includeNodeName);
+                        //GenerateCodeForSelectableNode(selectableAsset, template, graphName, includeNodeName);
                     }
                 }
             }
@@ -373,124 +385,137 @@ namespace BehaviourAPI.Unity.Editor
 
         #region --------------------------------------- UtilitySystems ---------------------------------------
 
-        /// <summary>
-        /// Generates code for a utility system's factor. If the factor has childs, the method generates code recursively.
-        /// FACTORTYPE VARNAME = USNAME.CreateFACTORTYPE(args).SetVARNAME(VARVALUE)...;
-        /// </summary>
-        //static string GenerateCodeForFactor(NodeData asset, ScriptTemplate template, string graphName, bool includeNodeName)
-        //{
-        //    var factor = asset.node as Factor;
+        static string GenerateCodeForFactor(NodeData data, ScriptTemplate template, string graphName, bool includeNodeName)
+        {
+            switch (data.node)
+            {
+                case VariableFactor variableFactor: return GenerateVariableFactorCode(data, variableFactor, template, graphName, includeNodeName);
+                case ConstantFactor constantFactor: return GenerateConstantFactorCode(data, constantFactor, template, graphName, includeNodeName);
+                case FusionFactor fusionFactor: return GenerateFusionFactorCode(data, fusionFactor, template, graphName, includeNodeName);
+                case CurveFactor curveFactor: return GenerateCurveFactorCode(data, curveFactor, template, graphName, includeNodeName);
+                default: return null;
+            }
+        }
 
-        //    if (factor == null)
-        //    {
-        //        return k_CodeForMissingNode;
-        //    }
+        static string GenerateVariableFactorCode(NodeData data, VariableFactor variableFactor, ScriptTemplate template, string graphName, bool includeNodeName)
+        {
+            string method = GenerateMethodCode(variableFactor.variableFunction, template, null, typeof(float));
+            return template.AddVariableDeclarationLine(typeof(VariableFactor), data.name, data,
+                $"{graphName}.CreateVariable({method})");
+        }
 
-        //    var nodeName = !string.IsNullOrEmpty(asset.name) ? asset.name : factor.TypeName().ToLower();
-        //    string typeName = factor.TypeName();
+        static string GenerateConstantFactorCode(NodeData data, ConstantFactor constantFactor, ScriptTemplate template, string graphName, bool includeNodeName)
+        {
+            return template.AddVariableDeclarationLine(typeof(ConstantFactor), data.name, data,
+                $"{graphName}.CreateConstant({constantFactor.value.ToCodeFormat()})");
+        }
 
-        //    var methodCode = "";
-        //    var args = new List<string>();
+        static string GenerateCurveFactorCode(NodeData data, CurveFactor curveFactor, ScriptTemplate template, string graphName, bool includeNodeName)
+        {
+            var child = template.FindNode(data.childIds.FirstOrDefault());
+            string childName = child != null ? template.FindVariableName(child) ??
+                GenerateCodeForFactor(child, template, graphName, includeNodeName) : k_CodeForMissingNode;
 
-        //    if (includeNodeName && !string.IsNullOrEmpty(asset.name)) args.Add($"\"{asset.name}\"");
+            return template.AddVariableDeclarationLine(curveFactor.GetType(), data.name, data,
+                $"{graphName}.CreateCurve<{curveFactor.TypeName()}>({childName})");
+        }
 
-        //    // If is a variable factor, generates code for the serialized method.
-        //    if (factor is VariableFactor variableFactor)
-        //    {
-        //        var functionCode = GenerateMethodCode(variableFactor.variableFunction, template, null, typeof(float)) ?? "() => 0f /*Missing function*/";
-        //        args.Add(functionCode);
-        //        args.Add(variableFactor.min.ToCodeFormat());
-        //        args.Add(variableFactor.max.ToCodeFormat());
-        //        methodCode = $"CreateVariableFactor({args.Join()})";
-        //    }
-        //    else if(factor is ConstantFactor constantFactor)
-        //    {
-        //        args.Add(constantFactor.value.ToCodeFormat());
-        //        methodCode = $"CreateConstantFactor({args.Join()})";
-        //    }
-        //    // If is a function factor, generates also code for the child if wasn't generated yet. The generates code for the setters.
-        //    else if (factor is CurveFactor functionFactor)
-        //    {
-        //        var child = template.FindNode(asset.childIds.FirstOrDefault());
-        //        string childName = child != null ? template.FindVariableName(child) ?? GenerateCodeForFactor(child, template, graphName, includeNodeName) : k_CodeForMissingNode;
-        //        args.Add(childName);
-        //        string setterCode = GenerateSetterCode(functionFactor, template);
-        //        methodCode = $"CreateCurveFactor<{typeName}>({args.Join()}){setterCode}";
-        //    }
-        //    // If is a fusion factor, generates also code for all its children if wasn't generated yet. Also generates code for the weights if necessary.
-        //    else if (factor is FusionFactor fusionFactor)
-        //    {
-        //        foreach (var childId in asset.childIds)
-        //        {
-        //            var child = template.FindNode(asset.childIds.FirstOrDefault());
-        //            var childName = template.FindVariableName(child) ?? GenerateCodeForFactor(child, template, graphName, includeNodeName);
-        //            if (childName != null) args.Add(childName);
-        //        }
-        //        methodCode = $"CreateFusionFactor<{typeName}>({args.Join()})";
+        static string GenerateFusionFactorCode(NodeData data, FusionFactor fusionFactor, ScriptTemplate template, string graphName, bool includeNodeName)
+        {
+            List<string> args = new List<string>();
+            for (int i = 0; i < data.childIds.Count; i++)
+            {
+                var child = template.FindNode(data.childIds[i]);
+                if (child != null) args.Add(template.FindVariableName(child) ?? GenerateCodeForFactor(child, template, graphName, includeNodeName));
+            }
 
-        //        if (fusionFactor is WeightedFusionFactor weightedFusionFactor)
-        //        {
-        //            var weightArgs = weightedFusionFactor.Weights.Select(w => w.ToCodeFormat());
-        //            if (weightArgs.Count() > 0) methodCode += $".SetWeights({weightArgs.Join()})";
-        //        }
-        //    }
-        //    return template.AddVariableDeclarationLine(factor.GetType(), nodeName, asset, $"{graphName}.{methodCode}");
-        //}
+            return template.AddVariableDeclarationLine(fusionFactor.GetType(), data.name, data,
+                $"{graphName}.CreateFusion<{fusionFactor.TypeName()}>({args.Join()})");
+        }
 
-        ///// <summary>
-        ///// Generates code for an Utility Selectable Node. If the data has childs, generates code recursively.
-        ///// NODETYPE VARNAME = USNAME.CreateNODETYPE(args)...;
-        ///// </summary>
-        //static string GenerateCodeForSelectableNode(NodeData asset, ScriptTemplate template, string graphName, bool includeNodeName)
-        //{
-        //    UtilitySelectableNode selectableNode = asset.node as UtilitySelectableNode;
+        static string GenerateCodeForSelectableNode(NodeData data, ScriptTemplate template, string graphName, bool includeNodeName)
+        {
+            switch (data.node)
+            {
+                case UtilityAction uAction: return GenerateUtilityActionCode(data, uAction, template, graphName, includeNodeName);
+                case UtilityExitNode uExitNode: return GenerateUtilityExitNodeCode(data, uExitNode, template, graphName, includeNodeName);
+                case UtilityBucket uBucket: return GenerateUtilityBucketCode(data, uBucket, template, graphName, includeNodeName);
+                default: return null;
+            }
+        }
 
-        //    if (selectableNode == null)
-        //    {
-        //        return k_CodeForMissingNode;
-        //    }
+        static string GenerateUtilityBucketCode(NodeData data, UtilityBucket uBucket, ScriptTemplate template, string graphName, bool includeNodeName)
+        {
+            List<string> args = new List<string>();
 
-        //    var nodeName = !string.IsNullOrEmpty(asset.name) ? asset.name : selectableNode.TypeName().ToLower();
+            args.Add(uBucket.Inertia.ToCodeFormat());
+            args.Add(uBucket.BucketThreshold.ToCodeFormat());
 
-        //    var method = "";
-        //    var args = new List<string>();
+            if (data.parentIds.Count > 0)
+            {
+                var parent = template.FindNode(data.parentIds.FirstOrDefault());
+                if (parent.node is UtilityBucket)
+                {
+                    string group = template.FindVariableName(parent) ?? GenerateCodeForSelectableNode(parent, template, graphName, includeNodeName);
+                    args.Add("group: " + group);
+                }
+            }
 
-        //    if (includeNodeName && !string.IsNullOrEmpty(asset.name)) args.Add($"\"{asset.name}\"");
+            return template.AddVariableDeclarationLine(typeof(UtilityBucket), data.name, data,
+                $"{graphName}.CreateBucket({args.Join()})");
+        }
 
-        //    // If is an utility action, generates code for the child factor and for the action if necessary.
-        //    if (selectableNode is UtilityAction action)
-        //    {
-        //        args.Add(template.FindVariableName(asset.Childs.FirstOrDefault()) ?? k_CodeForMissingNode);
+        static string GenerateUtilityExitNodeCode(NodeData data, UtilityExitNode uExitNode, ScriptTemplate template, string graphName, bool includeNodeName)
+        {
+            List<string> args = new List<string>();
+            var child = template.FindNode(data.childIds.FirstOrDefault());
+            string childName = child != null ? template.FindVariableName(child) ??
+                GenerateCodeForFactor(child, template, graphName, includeNodeName) : k_CodeForMissingNode;
 
-        //        if (action.Action != null) args.Add(GenerateActionCode(action as IActionAssignable, template));
-        //        if (action.FinishSystemOnComplete) args.Add("finishOnComplete: true");
-        //        method = $"CreateAction";
-        //    }
-        //    // If is an utility exit data, generates code for the child factor and the exit status.
-        //    else if (selectableNode is UtilityExitNode exitNode)
-        //    {
-        //        args.Add(template.FindVariableName(asset.Childs.FirstOrDefault()) ?? k_CodeForMissingNode);
-        //        args.Add(exitNode.ExitStatus.ToCodeFormat());
-        //        method = $"CreateExitNode";
-        //    }
-        //    // If is an utility bucket, only generates code for the variables
-        //    else if (selectableNode is UtilityBucket bucket)
-        //    {
-        //        args.Add($"{bucket.Inertia.ToCodeFormat()}");
-        //        args.Add($"{bucket.BucketThreshold.ToCodeFormat()}");
-        //        method = $"CreateBucket";
-        //    }
+            args.Add(childName);
+            args.Add(uExitNode.ExitStatus.ToCodeFormat());
 
-        //    // If the element is part of a group, the group must be created before it
-        //    if (asset.parentIds.Count > 0)
-        //    {
-        //        var groupAsset = asset.Parents.First();
-        //        string group = template.FindVariableName(groupAsset) ?? GenerateCodeForSelectableNode(asset.Parents.First(), template, graphName, includeNodeName);
-        //        args.Add("group: " + group);
-        //    }
+            if (data.parentIds.Count > 0)
+            {
+                var parent = template.FindNode(data.parentIds.FirstOrDefault());
+                if (parent.node is UtilityBucket)
+                {
+                    string group = template.FindVariableName(parent) ?? GenerateCodeForSelectableNode(parent, template, graphName, includeNodeName);
+                    args.Add("group: " + group);
+                }
+            }
 
-        //    return template.AddVariableDeclarationLine(selectableNode.GetType(), nodeName, asset, $"{graphName}.{method}({args.Join()})");
-        //}
+            return template.AddVariableDeclarationLine(typeof(UtilityBucket), data.name, data,
+                $"{graphName}.CreateExitNode({args.Join()})");
+        }
+
+        static string GenerateUtilityActionCode(NodeData data, UtilityAction uAction, ScriptTemplate template, string graphName, bool includeNodeName)
+        {
+            List<string> args = new List<string>();
+            var child = template.FindNode(data.childIds.FirstOrDefault());
+            string childName = child != null ? template.FindVariableName(child) ??
+                GenerateCodeForFactor(child, template, graphName, includeNodeName) : k_CodeForMissingNode;
+            args.Add(childName);
+
+            var actionCode = GenerateActionCode(uAction.ActionReference, template);
+            args.Add(actionCode);
+
+            if (uAction.FinishSystemOnComplete) args.Add("true");
+
+            if (data.parentIds.Count > 0)
+            {
+                var parent = template.FindNode(data.parentIds.FirstOrDefault());
+                if (parent.node is UtilityBucket)
+                {
+                    string group = template.FindVariableName(parent) ?? GenerateCodeForSelectableNode(parent, template, graphName, includeNodeName);
+                    args.Add("group: " + group);
+                }
+            }
+
+            return template.AddVariableDeclarationLine(typeof(UtilityAction), data.name, data,
+                $"{graphName}.CreateAction({args.Join()})");
+        }
+
         #endregion
 
         #region ----------------------------------------- BTNodes -----------------------------------------
@@ -548,128 +573,128 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ------------------------------------------- FSMs ------------------------------------------
 
-        //static string GenerateCodeForState(NodeData asset, ScriptTemplate template, string graphName, bool includeNodeName)
-        //{
+        static string GenerateCodeForState(NodeData data, ScriptTemplate template, string graphName, bool includeNodeName)
+        {
+            string stateName = null;
+            switch (data.node)
+            {
+                case Framework.Adaptations.State state:
+                    var actionCode = GenerateActionCode(state.ActionReference, template);
+                    stateName = template.AddVariableDeclarationLine(typeof(State), data.name, data,
+                        $"{graphName}.CreateState({actionCode})");
+                    break;
+                case ProbabilisticState:
+                    break;
+            }
+            return stateName;
+        }
 
-        //    switch(asset.node)
-        //    {
-        //        case Framework.Adaptations.State:
+        static string GenerateCodeForTransition(NodeData data, ScriptTemplate template, string graphName, bool includeNodeName)
+        {
+            switch (data.node)
+            {
+                case StateTransition transition: return GenerateStateTransitionCode(data, transition, template, graphName, includeNodeName);
+                case ExitTransition exit: return GenerateExitTransitionCode(data, exit, template, graphName, includeNodeName);
+                case PushTransition pushTransition: return GeneratePushTransitionCode(data, pushTransition, template, graphName, includeNodeName);
+                case PopTransition popTransition: return GeneratePopTransitionCode(data, popTransition, template, graphName, includeNodeName);
+                default: return null;
+            }
+        }
 
-        //                return template.AddVariableDeclarationLine
-        //    }
-        //    var state = asset.node as Framework.AdaptationsState;
+        static string GeneratePopTransitionCode(NodeData data, PopTransition popTransition, ScriptTemplate template, string graphName, bool includeNodeName)
+        {
+            List<string> args = new List<string>();
 
-        //    if (state == null)
-        //    {
-        //        return k_CodeForMissingNode;
-        //    }
+            var parent = template.FindNode(data.parentIds.FirstOrDefault());
+            string parentName = parent != null ? template.FindVariableName(parent) ??
+                GenerateCodeForState(parent, template, graphName, includeNodeName) : k_CodeForMissingNode;
+            args.Add(parentName);
 
-        //    var nodeName = !string.IsNullOrEmpty(asset.name) ? asset.name : state.TypeName().ToLower();
-        //    var args = new List<string>();
+            var actionCode = GenerateActionCode(popTransition.ActionReference, template);
+            if(actionCode != null) args.Add("action: " + actionCode);
 
-        //    string actionCode = GenerateActionCode(state.Action, template);
-        //    string method = "CreateState";
-        //    if (state is ProbabilisticState)
-        //    {
-        //        method += "<ProbabilisticState>";
-        //    }
+            var perceptionCode = GeneratePerceptionCode(popTransition.PerceptionReference, template);
+            if(perceptionCode != null) args.Add("perception: " + perceptionCode);
 
-        //    if (includeNodeName && !string.IsNullOrEmpty(asset.Name)) args.Add($"\"{asset.Name}\"");
+            if(popTransition.StatusFlags != StatusFlags.Actived) args.Add("statusFlags: " + popTransition.StatusFlags.ToCodeFormat());
 
-        //    if (!string.IsNullOrEmpty(actionCode)) args.Add(actionCode);
-        //    return template.AddVariableDeclarationLine(state.GetType(), nodeName, asset, $"{graphName}.{method}({args.Join()})");
-        //}
+            return template.AddVariableDeclarationLine(popTransition.GetType(), data.name, data,
+                $"{graphName}.CreatePopTransition({args.Join()})");
 
-        //static string GenerateCodeForTransition(NodeData asset, ScriptTemplate template, string graphName, bool includeNodeName)
-        //{
-        //    var transition = asset.Node as Transition;
+        }
 
-        //    if (transition == null)
-        //    {
-        //        return k_CodeForMissingNode;
-        //    }
+        static string GeneratePushTransitionCode(NodeData data, PushTransition pushTransition, ScriptTemplate template, string graphName, bool includeNodeName)
+        {
+            List<string> args = new List<string>();
 
-        //    var nodeName = asset.Name ?? transition.TypeName().ToLower();
-        //    var method = "";
+            var child = template.FindNode(data.childIds.FirstOrDefault());
+            string childName = child != null ? template.FindVariableName(child) ??
+                GenerateCodeForBTNode(child, template, graphName, includeNodeName) : k_CodeForMissingNode;
+            args.Add(childName);
 
+            var parent = template.FindNode(data.parentIds.FirstOrDefault());
+            string parentName = parent != null ? template.FindVariableName(parent) ??
+                GenerateCodeForState(parent, template, graphName, includeNodeName) : k_CodeForMissingNode;
+            args.Add(parentName);
 
-        //    bool perceptionAdded = false;
+            var actionCode = GenerateActionCode(pushTransition.ActionReference, template);
+            if (actionCode != null) args.Add("action: " + actionCode);
 
-        //    var args = new List<string>();
+            var perceptionCode = GeneratePerceptionCode(pushTransition.PerceptionReference, template);
+            if (perceptionCode != null) args.Add("perception: " + perceptionCode);
+            if (pushTransition.StatusFlags != StatusFlags.Actived) args.Add("statusFlags: " + pushTransition.StatusFlags.ToCodeFormat());
 
-        //    if (includeNodeName && !string.IsNullOrEmpty(asset.Name)) args.Add($"\"{asset.Name}\"");
+            return template.AddVariableDeclarationLine(pushTransition.GetType(), data.name, data,
+                $"{graphName}.CreatePushTransition({args.Join()})");
+        }
 
-        //    var sourceState = template.FindVariableName(asset.Parents.FirstOrDefault()) ?? "null/*ERROR*/";
-        //    args.Add(sourceState);
+        private static string GenerateExitTransitionCode(NodeData data, ExitTransition exit, ScriptTemplate template, string graphName, bool includeNodeName)
+        {
+            List<string> args = new List<string>();
 
-        //    var perceptionCode = "";
+            var parent = template.FindNode(data.parentIds.FirstOrDefault());
+            string parentName = parent != null ? template.FindVariableName(parent) ??
+                GenerateCodeForState(parent, template, graphName, includeNodeName) : k_CodeForMissingNode;
+            args.Add(parentName);
 
-        //    if (transition is StateTransition stateTransition)
-        //    {
-        //        var targetState = template.FindVariableName(asset.Childs.FirstOrDefault()) ?? "null/*ERROR*/";
-        //        args.Add(targetState);
+            args.Add(exit.ExitStatus.ToCodeFormat());
 
-        //        if (stateTransition is Framework.Adaptations.StateTransition sta)
-        //        {
-        //            perceptionCode = template.FindVariableName(sta.PerceptionReference);
-        //        }
+            var actionCode = GenerateActionCode(exit.ActionReference, template);
+            if (actionCode != null) args.Add("action: " + actionCode);
 
-        //        method = "CreateTransition";
-        //    }
-        //    else if (transition is ExitTransition exitTransition)
-        //    {
-        //        args.Add(exitTransition.ExitStatus.ToCodeFormat());
+            var perceptionCode = GeneratePerceptionCode(exit.PerceptionReference, template);
+            if (perceptionCode != null) args.Add("perception: " + perceptionCode);
 
+            if (exit.StatusFlags != StatusFlags.Actived) args.Add("statusFlags: " + exit.StatusFlags.ToCodeFormat());
 
-        //        if (exitTransition is Framework.Adaptations.ExitTransition sta)
-        //        {
-        //            perceptionCode = template.FindVariableName(sta.PerceptionReference);
-        //        }
+            return template.AddVariableDeclarationLine(exit.GetType(), data.name, data,
+                $"{graphName}.CreateExitTransition({args.Join()})");
+        }
 
-        //        method = "CreateExitTransition";
-        //    }
-        //    else if (transition is PopTransition popTransition)
-        //    {
-        //        if (popTransition is Framework.Adaptations.PopTransition sta)
-        //        {
-        //            perceptionCode = template.FindVariableName(sta.PerceptionReference);
-        //        }
+        private static string GenerateStateTransitionCode(NodeData data, StateTransition stateTransition, ScriptTemplate template, string graphName, bool includeNodeName)
+        {
+            List<string> args = new List<string>();
 
-        //        method = "CreatePopTransition";
-        //    }
-        //    else if (transition is PushTransition pushTransition)
-        //    {
-        //        var targetState = template.FindVariableName(asset.Childs.FirstOrDefault()) ?? "null/*ERROR*/";
-        //        args.Add(targetState);
+            var child = template.FindNode(data.childIds.FirstOrDefault());
+            string childName = child != null ? template.FindVariableName(child) ??
+                GenerateCodeForBTNode(child, template, graphName, includeNodeName) : k_CodeForMissingNode;
+            args.Add(childName);
 
-        //        if (pushTransition is Framework.Adaptations.PushTransition sta)
-        //        {
-        //            perceptionCode = template.FindVariableName(sta.PerceptionReference);
-        //        }
+            var parent = template.FindNode(data.parentIds.FirstOrDefault());
+            string parentName = parent != null ? template.FindVariableName(parent) ??
+                GenerateCodeForState(parent, template, graphName, includeNodeName) : k_CodeForMissingNode;
+            args.Add(parentName);
 
-        //        method = "CreatePushTransition";
-        //    }
+            var actionCode = GenerateActionCode(stateTransition.ActionReference, template);
+            if (actionCode != null) args.Add("action: " + actionCode);
 
-        //    if (!string.IsNullOrEmpty(perceptionCode))
-        //    {
-        //        args.Add(perceptionCode);
-        //        perceptionAdded = true;
-        //    }
+            var perceptionCode = GeneratePerceptionCode(stateTransition.PerceptionReference, template);
+            if (perceptionCode != null) args.Add("perception: " + perceptionCode);
+            if (stateTransition.StatusFlags != StatusFlags.Actived) args.Add("statusFlags: " + stateTransition.StatusFlags.ToCodeFormat());
 
-        //    if (transition.Action != null)
-        //    {
-        //        var actionCode = GenerateActionCode(transition as IActionAssignable, template);
-        //        if (!string.IsNullOrEmpty(actionCode))
-        //        {
-        //            if (!perceptionAdded) actionCode = "action: " + actionCode;
-        //            args.Add(actionCode);
-        //        }
-        //    }
-
-        //    if (transition.StatusFlags != StatusFlags.Actived) args.Add($"statusFlags: {transition.StatusFlags.ToCodeFormat()}");
-
-        //    return template.AddVariableDeclarationLine(transition.GetType(), nodeName, asset, $"{graphName}.{method}({args.Join()})");
-        //}
+            return template.AddVariableDeclarationLine(stateTransition.GetType(), data.name, data,
+                $"{graphName}.CreateTransition({args.Join()})");
+        }
 
         #endregion
 

@@ -1,4 +1,4 @@
-﻿namespace BehaviourAPI.UtilitySystems.Factors
+﻿namespace BehaviourAPI.UtilitySystems
 {
     public class ConstantFactor : Factor
     {

@@ -4,11 +4,8 @@ using System.Linq;
 
 namespace BehaviourAPI.UtilitySystems
 {
-    using BehaviourAPI.UtilitySystems.Factors;
     using Core;
     using Core.Exceptions;
-    using System.Net.Sockets;
-    using System.Xml.Linq;
     using Action = Core.Actions.Action;
 
     /// <summary>

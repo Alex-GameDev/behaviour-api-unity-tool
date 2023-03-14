@@ -3,16 +3,12 @@ using BehaviourAPI.UtilitySystems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
 using UtilityAction = BehaviourAPI.Unity.Framework.Adaptations.UtilityAction;
 using CustomFunction = BehaviourAPI.Unity.Framework.Adaptations.CustomFunction;
 using VariableFactor = BehaviourAPI.Unity.Framework.Adaptations.VariableFactor;
-using UnityEditor.UIElements;
-using BehaviourAPI.Unity.Framework.Adaptations;
-using BehaviourAPI.UtilitySystems.Factors;
 
 namespace BehaviourAPI.Unity.Editor
 {
