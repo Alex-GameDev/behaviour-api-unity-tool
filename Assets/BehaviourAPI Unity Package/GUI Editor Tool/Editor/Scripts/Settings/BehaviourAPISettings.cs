@@ -92,7 +92,6 @@ namespace BehaviourAPI.Unity.Editor
         public EditorHierarchyNode NodeHierarchy(Type type) => _nodeHierarchyMap[type];
         public Type GetAdapter(Type type) => _graphAdapterMap[type];
 
-
         public void Save() => Save(true);
 
         public List<Assembly> GetAssemblies() => assemblies;

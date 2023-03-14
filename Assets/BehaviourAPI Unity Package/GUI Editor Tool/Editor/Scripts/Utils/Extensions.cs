@@ -28,11 +28,6 @@ namespace BehaviourAPI.Unity.Editor
             "namespace", "using", "class", "struct", "interface", "enum", "delegate", "checked", "unchecked", "unsafe", "operator", "implicit", "explicit"
         };
 
-        private static readonly char[] k_NumberChars = new[]
-        {
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
-        };
-
         public static string CamelCaseToSpaced(this string input)
         {
             return Regex.Replace(input, "([A-Z])", " $1").Trim();
@@ -71,74 +66,6 @@ namespace BehaviourAPI.Unity.Editor
         public static string ToCodeFormat(this bool b) => b.ToString().ToLower();
         public static string ToCodeFormat(this Status s) => "Status." + s.ToString();
         public static string ToCodeFormat(this StatusFlags s) => "StatusFlags." + ((int)s < 0 ? StatusFlags.Actived.ToString() : s.ToString());
-
-        #endregion
-
-        #region -------------------------------- Visual elements --------------------------------
-
-        public static void Disable(this VisualElement visualElement) => visualElement.style.display = DisplayStyle.None;
-        public static void Enable(this VisualElement visualElement) => visualElement.style.display = DisplayStyle.Flex;
-        public static void Hide(this VisualElement visualElement) => visualElement.style.visibility = Visibility.Hidden;
-        public static void Show(this VisualElement visualElement) => visualElement.style.visibility = Visibility.Visible;
-
-        public static void ChangeBorderColor(this VisualElement visualElement, Color color)
-        {
-            visualElement.style.borderBottomColor = color;
-            visualElement.style.borderTopColor = color;
-            visualElement.style.borderLeftColor = color;
-            visualElement.style.borderRightColor = color;
-        }
-
-        public static void ChangeBackgroundColor(this VisualElement visualElement, Color color)
-        {
-            visualElement.style.backgroundColor = color;
-        }
-
-        public static void AddGroup(this List<SearchTreeEntry> searchTreeEntries, string title, int level)
-        {
-            searchTreeEntries.Add(new SearchTreeGroupEntry(new GUIContent(title), level));
-        }
-
-        public static void AddEntry(this List<SearchTreeEntry> searchTreeEntries, string title, int level, object userData)
-        {
-            searchTreeEntries.Add(new SearchTreeEntry(new GUIContent("     " + title)) { level = level, userData = userData});
-        }
-
-        public static DropdownMenuAction.Status ToMenuStatus(this bool b) => b ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
-
-
-        public static void Align(this Port port, PortOrientation orientation, Direction dir)
-        {
-            var middleValue = new StyleLength(new Length(50, LengthUnit.Percent));
-            if (orientation == PortOrientation.None) return;
-
-            port.style.position = Position.Absolute;
-            if (orientation == PortOrientation.Top)
-            {
-                port.style.top = 0;
-                if (dir == Direction.Input) port.style.right = middleValue;
-                else port.style.left = middleValue;
-            }
-            else if (orientation == PortOrientation.Right)
-            {
-                port.style.right = 0;
-                if (dir == Direction.Input) port.style.bottom = middleValue;
-                else port.style.top = middleValue;
-            }
-            else if (orientation == PortOrientation.Bottom)
-            {
-                port.style.bottom = 0;
-                if (dir == Direction.Input) port.style.left = middleValue;
-                else port.style.right = middleValue;
-            }
-            else
-            {
-                port.style.left = 0;
-                if (dir == Direction.Input) port.style.top = middleValue;
-                else port.style.bottom = middleValue;
-            }
-        }
-
 
         #endregion
     }
