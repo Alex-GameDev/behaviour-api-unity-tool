@@ -10,7 +10,7 @@ namespace BehaviourAPI.Unity.Editor
     {
         TextField scriptNameTextField, pathTextField;
 
-        Toggle useFullNameVarToggle, includeNodeNamesToggle;
+        Toggle includeNodeNamesToggle;
         private static string path => BehaviourAPISettings.instance.EditorLayoutsPath + "/Windows/createscriptwindow.uxml";
 
         public static void Create()
@@ -37,7 +37,6 @@ namespace BehaviourAPI.Unity.Editor
             rootVisualElement.Q<Button>("csw-create-button").clicked += GenerateScript;
 
             includeNodeNamesToggle = rootVisualElement.Q<Toggle>("csw-includenodename-toggle");
-            useFullNameVarToggle = rootVisualElement.Q<Toggle>("csw-usefullvarname-toggle");
         }
 
         void GenerateScript()
@@ -47,10 +46,9 @@ namespace BehaviourAPI.Unity.Editor
 
             var system = BehaviourEditorWindow.Instance.System;
 
-            bool useFullNameVar = useFullNameVarToggle.value;
             bool includeNodeNames = includeNodeNamesToggle.value;
 
-            if(system != null) ScriptGeneration.GenerateScript(path, scriptName, system, useFullNameVar, includeNodeNames);
+            if(system != null) ScriptGeneration.GenerateScript(path, scriptName, system, false, includeNodeNames);
             Close();
         }
     }
