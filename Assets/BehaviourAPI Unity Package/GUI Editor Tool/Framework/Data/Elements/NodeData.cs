@@ -33,6 +33,8 @@ namespace BehaviourAPI.Unity.Framework
 
         public NodeData()
         {
+            parentIds = new List<string>();
+            childIds = new List<string>();
         }
 
         public object Clone()
@@ -46,17 +48,19 @@ namespace BehaviourAPI.Unity.Framework
             copy.childIds = new List<string>(childIds);
             return copy;
         }
-        
+
         /// <summary>
         /// Creates a copy in the same graph, changing the id and name
         /// </summary>
         /// <returns></returns>
         public NodeData Duplicate()
         {
-            var copy = (NodeData)Clone();
-            copy.name += " (copy)";
-            id = Guid.NewGuid().ToString();
-            return copy;
+            NodeData duplicate = new NodeData();
+            duplicate.name = name + " (copy)";
+            duplicate.id = Guid.NewGuid().ToString();
+            duplicate.position = position + UnityEngine.Vector2.one * 50;
+            duplicate.node = (Node)node.Clone();
+            return duplicate;
         }
     }
 }
