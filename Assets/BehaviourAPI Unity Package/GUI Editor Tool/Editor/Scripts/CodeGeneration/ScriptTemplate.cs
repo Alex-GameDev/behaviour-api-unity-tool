@@ -320,5 +320,17 @@ namespace BehaviourAPI.Unity.Editor
             m_graphMap[graphAsset.id] = graphAsset;
             graphAsset.nodes.ForEach(n => m_nodeMap[n.id] = n);
         }
+
+        /// <summary>
+        /// Varname = value;
+        /// </summary>
+        /// <param name="v1">The variable name</param>
+        /// <param name="v2">The variable value</param>
+        internal void AddvariableReasignation(Type varType, string varName, string defaultName, object value)
+        {
+            string valueToCode = AddVariableDeclaration(varType, defaultName, value);
+            var line = $"{varName} = {valueToCode};";
+            AddLine(line);
+        }
     }
 }

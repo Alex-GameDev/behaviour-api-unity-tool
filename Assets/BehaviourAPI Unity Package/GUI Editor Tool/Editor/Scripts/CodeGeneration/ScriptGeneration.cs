@@ -217,10 +217,10 @@ namespace BehaviourAPI.Unity.Editor
         }       
 
         /// <summary>
-        /// Generates code for a action inline.
-        /// new ACTIONTYPE(args)
+        /// Generates code for a action.
+        /// Action action = new ACTIONTYPE(args);
         /// </summary>
-        static string GenerateActionCode(Action action, ScriptTemplate template)
+        static string GenerateActionCode(Action action, ScriptTemplate template, bool inline = false)
         {
             switch (action)
             {
@@ -238,24 +238,44 @@ namespace BehaviourAPI.Unity.Editor
 
                     if (stopMethodArg != null) actionParameters.Add(stopMethodArg);
 
-                    return template.AddVariableDeclarationLine(typeof(FunctionalAction), "action", action, 
+                    if(inline)
+                    {
+                        return $"new {nameof(FunctionalAction)}({string.Join(", ", actionParameters)})";
+                    }
+                    else
+                    {
+                        return template.AddVariableDeclarationLine(typeof(FunctionalAction), "action", action,
                         $"new {nameof(FunctionalAction)}({actionParameters.Join()})");
-                    //return $"new {nameof(FunctionalAction)}({string.Join(", ", actionParameters)})";
+                    }
 
                 case UnityAction unityAction:
                     var code = GenerateConstructorCode(unityAction, template);
-                    return template.AddVariableDeclarationLine(unityAction.GetType(), "action", action, code);
+                    if(inline)
+                    {
+                        return code;
+                    }
+                    else
+                    {
+                        return template.AddVariableDeclarationLine(unityAction.GetType(), "action", action, code);
+                    }
+                    
                 case SubgraphAction subgraphAction:
                     var subgraphName = template.FindGraphVarName(subgraphAction.subgraphId);
-                    return template.AddVariableDeclarationLine(typeof(SubsystemAction), "subAction", action,
+                    if (inline)
+                    {
+                        return $"new {nameof(SubsystemAction)}({subgraphName ?? "null /* Missing subgraph */"})";
+                    }
+                    else
+                    {
+                        return template.AddVariableDeclarationLine(typeof(SubsystemAction), "subAction", action,
                         $"new {nameof(SubsystemAction)}({subgraphName})");
-                    //return $"new {nameof(SubsystemAction)}({subgraphName ?? "null /* Missing subgraph */"})";
+                    }                    
                 default:
                     return null;
             }
         }
 
-        static string GeneratePerceptionCode(Perception perception, ScriptTemplate template)
+        static string GeneratePerceptionCode(Perception perception, ScriptTemplate template, bool inline = false)
         {
             switch (perception)
             {
@@ -263,7 +283,7 @@ namespace BehaviourAPI.Unity.Editor
                     List<string> perceptionParameters = new List<string>();
 
                     string initMethodArg = GenerateMethodCode(custom.init, template, null);
-                    string checkMethodArg = GenerateMethodCode(custom.check, template, null, typeof(Status));
+                    string checkMethodArg = GenerateMethodCode(custom.check, template, null, typeof(bool));
                     string resetMethodArg = GenerateMethodCode(custom.reset, template, null);
 
                     if (initMethodArg != null) perceptionParameters.Add(initMethodArg);
@@ -273,23 +293,40 @@ namespace BehaviourAPI.Unity.Editor
 
                     if (resetMethodArg != null) perceptionParameters.Add(resetMethodArg);
 
-                    return template.AddVariableDeclarationLine(typeof(ConditionPerception), "perception", perception,
+                    if (inline)
+                    {
+                        return $"new {nameof(ConditionPerception)}({string.Join(", ", perceptionParameters)})";
+                    }
+                    else
+                    {
+                        return template.AddVariableDeclarationLine(typeof(ConditionPerception), "perception", perception,
                        $"new {nameof(ConditionPerception)}({perceptionParameters.Join()})");
-                //return $"new {nameof(ConditionPerception)}({string.Join(", ", perceptionParameters)})";
-
+                    }
                 case UnityPerception unityPerception:
                     var code = GenerateConstructorCode(unityPerception, template);
-                    return template.AddVariableDeclarationLine(unityPerception.GetType(), "perception", perception, code);
-                    //return GenerateConstructorCode(unityPerception, template);
+                    if (inline)
+                    {
+                        return GenerateConstructorCode(unityPerception, template);
+                    }
+                    else
+                    {
+                        return template.AddVariableDeclarationLine(unityPerception.GetType(), "perception", perception, code);
+                    }
 
                 case CompoundPerceptionWrapper compound:
                     if (compound.compoundPerception != null)
                     {
                         IEnumerable<string> subPerceptionvariableNames = compound.subPerceptions.Select(sub => GeneratePerceptionCode(sub.perception, template));
 
-                        return template.AddVariableDeclarationLine(compound.compoundPerception.GetType(), "perception", perception,
+                        if (inline)
+                        {
+                            return $"new {compound.compoundPerception.TypeName()}({subPerceptionvariableNames.Join()})";
+                        }
+                        else
+                        {
+                            return template.AddVariableDeclarationLine(compound.compoundPerception.GetType(), "perception", perception,
                             $"new {compound.compoundPerception.TypeName()}({subPerceptionvariableNames.Join()})");
-                        //return $"new {compound.compoundPerception.TypeName()}({subPerceptionvariableNames.Join()})";
+                        }                       
                     }
                     else return null;
 
@@ -550,8 +587,11 @@ namespace BehaviourAPI.Unity.Editor
             string childName = child != null ? template.FindVariableName(child) ??
                 GenerateCodeForBTNode(child, template, graphName, includeNodeName) : k_CodeForMissingNode;
 
-            return template.AddVariableDeclarationLine(decoratorNode.GetType(), nodeData.name, nodeData,
+            var name = template.AddVariableDeclarationLine(decoratorNode.GetType(), nodeData.name, nodeData,
                 $"{graphName}.CreateDecorator<{decoratorNode.TypeName()}>({childName ?? "missing action"});");
+
+            GenerateNodePropertiesCode(decoratorNode, name, template);
+            return name;
         }
         static string GenerateCompositeNodeCode(NodeData nodeData, CompositeNode compositeNode, ScriptTemplate template, string graphName, bool includeNodeName)
         {
@@ -738,39 +778,38 @@ namespace BehaviourAPI.Unity.Editor
         /// Generates code for properties initialized with setter methods.
         /// .SetVARNAME(VARVALUE).Set...
         /// </summary>
-        static string GenerateSetterCode(Node node, ScriptTemplate scriptTemplate)
+        static void GenerateNodePropertiesCode(Node node, string nodeVariableName, ScriptTemplate template)
         {
             var type = node.GetType();
             var fields = type.GetFields();
-            var functionCode = "";
-            foreach (var field in fields)
+            foreach(var field in fields)
             {
-                var methodName = $"Set{field.Name}";
-                var method = type.GetMethod(methodName);
-                if (method != null)
+                if (field.FieldType.IsAssignableFrom(typeof(Action)))
                 {
-                    var parameters = method.GetParameters();
-                    if (parameters.Count() == 1 && parameters[0].ParameterType == field.FieldType)
+                    var value = (Action)field.GetValue(node);
+                    if(value != null)
                     {
-                        var argCode = "";
-                        if (field.FieldType.IsAssignableFrom(typeof(Action)))
-                        {
-                            break;
-                        }
-                        else if (field.FieldType.IsAssignableFrom(typeof(Perception)))
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            argCode = scriptTemplate.AddVariableDeclaration(parameters[0].ParameterType, field.Name, field.GetValue(node));
-                        }
-                        functionCode += $".{methodName}({argCode})";
+                        var actionCode = GenerateActionCode((Action)field.GetValue(node), template, true);
+                        template.AddLine($"{nodeVariableName}.Action = {actionCode};");
+                    }                    
+                }
+                else if (field.FieldType.IsAssignableFrom(typeof(Perception)))
+                {
+                    var value = (Perception)field.GetValue(node);
+                    if (value != null)
+                    {
+                        var perceptionCode = GeneratePerceptionCode((Perception)field.GetValue(node), template, true);
+                        template.AddLine($"{nodeVariableName}.Perception = {perceptionCode};");
                     }
                 }
+                else
+                {
+                    template.AddvariableReasignation(field.FieldType, $"{nodeVariableName}.{field.Name}",
+                    $"{nodeVariableName}_{field.Name}", field.GetValue(node));
+                }
             }
-            return functionCode;
         }
+
         #endregion
 
         static string GenerateMethodCode(SerializedContextMethod serializedMethod, ScriptTemplate template, Type[] args, Type returnType = null)
