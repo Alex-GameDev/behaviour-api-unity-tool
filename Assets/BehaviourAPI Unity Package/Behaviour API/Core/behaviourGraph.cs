@@ -121,7 +121,7 @@ namespace BehaviourAPI.Core
                 throw new ArgumentException("Can't add node to dictionary if the name is null or whitespaced");
             }
 
-            _nodeDict.Add(name, node);
+            _nodeDict.TryAdd(name, node);
         }
 
         /// <summary>

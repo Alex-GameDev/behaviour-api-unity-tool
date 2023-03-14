@@ -32,7 +32,7 @@ namespace BehaviourAPI.BehaviourTrees
             if (children.Count > 0 && children[0] is BTNode bTNode)
                 m_childNode = bTNode;
             else
-                throw new MissingChildException(this, $"Child {children[0]} is not BTNode");
+                throw new MissingChildException(this, $"Child is null or is not BTNode");
         }
 
         #endregion
