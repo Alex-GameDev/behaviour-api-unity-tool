@@ -159,16 +159,25 @@ MonoBehaviour:
     graphs:
     - id: 2c2b21f0-0393-4ae3-ad90-496a54a76a9b
       name: BehaviourTree
+      graph:
+        rid: 6537695325249077273
       nodes:
       - name: a
         id: 4e099509-c3d5-4ef3-aa2b-55e0b026d2ff
-        position: {x: 473, y: -10}
+        position: {x: 505, y: 22}
         node:
           rid: 6537695325249077274
         parentIds: []
+        childIds:
+        - 1cbc5815-7e1e-4503-8b1e-2c094bca5eb4
+      - name: LeafNode
+        id: 1cbc5815-7e1e-4503-8b1e-2c094bca5eb4
+        position: {x: 528, y: 320}
+        node:
+          rid: 6537695388248571904
+        parentIds:
+        - 4e099509-c3d5-4ef3-aa2b-55e0b026d2ff
         childIds: []
-      graph:
-        rid: 6537695325249077273
     pushPerceptions: []
   _target: {fileID: 0}
   _visionCollider: {fileID: 0}
@@ -181,19 +190,47 @@ MonoBehaviour:
       type: {class: ConditionNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
         perception:
-          rid: 6537695325249077297
-    - rid: 6537695325249077297
+          rid: 6537695388248571933
+    - rid: 6537695388248571904
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        action:
+          rid: 6537695388248571942
+    - rid: 6537695388248571933
+      type: {class: CompoundPerceptionWrapper, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        compoundPerception:
+          rid: 6537695388248571934
+        subPerceptions:
+        - perception:
+            rid: 6537695388248571935
+        - perception:
+            rid: 6537695388248571936
+    - rid: 6537695388248571934
+      type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
+    - rid: 6537695388248571935
       type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
         init:
-          componentName: 
-          methodName: 
+          componentName: a
+          methodName: a
         check:
-          componentName: 
-          methodName: 
+          componentName: a
+          methodName: a
         reset:
-          componentName: 
-          methodName: 
+          componentName: a
+          methodName: a
+    - rid: 6537695388248571936
+      type: {class: DistancePerception, ns: BehaviourAPI.UnityExtensions, asm: BehaviourAPI.UnityExtensions}
+      data:
+        OtherTransform: {fileID: 1314463089}
+        Maxdistance: 10
+    - rid: 6537695388248571942
+      type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        ExecuteOnLoop: 0
+        DontStopOnInterrupt: 0
+        subgraphId: 
 --- !u!4 &1314463089
 Transform:
   m_ObjectHideFlags: 0

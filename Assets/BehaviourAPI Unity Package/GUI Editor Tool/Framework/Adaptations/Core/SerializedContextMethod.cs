@@ -17,11 +17,8 @@ namespace BehaviourAPI.Unity.Framework
 
         public object Clone()
         {
-            return new SerializedContextMethod
-            {
-                componentName = componentName,
-                methodName = methodName,
-            };
+            var copy = (SerializedContextMethod)MemberwiseClone();
+            return copy;
         }
     }
 
@@ -79,7 +76,7 @@ namespace BehaviourAPI.Unity.Framework
     /// Serialized method for PerceptionReference check event with context
     /// </summary>
     [Serializable]
-    public class ContextualSerializedBoolFunction : SerializedContextMethod<Func<bool>> 
+    public class ContextualSerializedBoolFunction : SerializedContextMethod<Func<bool>>
     {
     }
 
@@ -97,6 +94,6 @@ namespace BehaviourAPI.Unity.Framework
     [Serializable]
     public class ContextualSerializedFloatFloatFunction : SerializedContextMethod<Func<float, float>>
     {
-        protected override Type[] FunctionArgs => new Type[] {  typeof(float) };
+        protected override Type[] FunctionArgs => new Type[] { typeof(float) };
     }
 }

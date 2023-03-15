@@ -38,9 +38,9 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         public override object Clone()
         {
             var copy = (CustomPerception)base.Clone();
-            copy.init = (ContextualSerializedAction)init.Clone();
-            copy.check = (ContextualSerializedBoolFunction)check.Clone();
-            copy.reset = (ContextualSerializedAction)reset.Clone();
+            copy.init = (ContextualSerializedAction)init?.Clone();
+            copy.check = (ContextualSerializedBoolFunction)check?.Clone();
+            copy.reset = (ContextualSerializedAction)reset?.Clone();
             return copy;
         }
     }

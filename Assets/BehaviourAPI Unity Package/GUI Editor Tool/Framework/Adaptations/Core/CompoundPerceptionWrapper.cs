@@ -34,6 +34,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         {
             var copy = (CompoundPerceptionWrapper)base.Clone();
             copy.compoundPerception = (CompoundPerception)compoundPerception.Clone();
+            copy.subPerceptions = subPerceptions.Select(p => (PerceptionWrapper)p.Clone()).ToList();
             return copy;
         }
 

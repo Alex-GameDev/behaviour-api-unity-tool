@@ -42,10 +42,13 @@ namespace BehaviourAPI.Unity.Editor
             "BehaviourAPI.Unity.Editor"
         };
 
-        private static readonly string k_RootPath = "Assets/BehaviourAPI Unity Tool";
+        private static readonly string k_RootPath = "Assets/BehaviourAPI Unity Package/GUI Editor Tool";
         #endregion
 
         #region ----------------------- Editor settings -----------------------
+
+        [SerializeField] private string RootPath = k_RootPath;
+        [SerializeField] private string CustomAssemblies = string.Empty;
 
         public string GenerateScriptDefaultPath = "Assets/Scripts/";
         public string GenerateScriptDefaultName = "NewBehaviourRunner";
@@ -63,9 +66,6 @@ namespace BehaviourAPI.Unity.Editor
         public Color FusionFactorColor = k_FusionFactorColor;
         public Color SelectableNodeColor = k_SelectableNodeColor;
         public Color BucketColor = k_BucketColor;
-
-        private string RootPath = k_RootPath;
-        private string CustomAssemblies = string.Empty;
 
         #endregion
 

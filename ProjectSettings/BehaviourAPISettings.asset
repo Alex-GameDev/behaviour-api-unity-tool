@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c7c430cdc1a9db41aa9253710cfd647, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RootPath: Assets/BehaviourAPI Unity Tool/GUI Editor Tool
+  CustomAssemblies: 
   GenerateScriptDefaultPath: Assets/Scripts/
   GenerateScriptDefaultName: NewBehaviourRunner
   LeafNodeColor: {r: 1, g: 0.4324402, b: 0.1490196, a: 1}
@@ -24,5 +26,3 @@ MonoBehaviour:
   FusionFactorColor: {r: 0.7074133, g: 0.27033645, b: 0.7075472, a: 1}
   SelectableNodeColor: {r: 1, g: 0.43137258, b: 0.14901961, a: 1}
   BucketColor: {r: 0.7264151, g: 0.3198031, b: 0.24328054, a: 1}
-  RootPath: Assets/BehaviourAPI Unity Package/GUI Editor Tool
-  CustomAssemblies: 

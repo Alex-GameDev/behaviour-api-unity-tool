@@ -20,7 +20,7 @@ namespace BehaviourAPI.Unity.Editor
     {
         #region --------------------------------- File paths ----------------------------------
 
-        private static string PATH => BehaviourAPISettings.instance.EditorLayoutsPath + "windows/behavioursystemwindow.uxml";        
+        private static string PATH => BehaviourAPISettings.instance.EditorLayoutsPath + "windows/behavioursystemwindow.uxml";
         private static string EMPTYPANELPATH => BehaviourAPISettings.instance.EditorLayoutsPath + "emptygraphpanel.uxml";
 
         #endregion
@@ -171,7 +171,7 @@ namespace BehaviourAPI.Unity.Editor
                 var graphType = adapter.GetCustomAttribute<CustomAdapterAttribute>().type;
                 if (graphType.IsSubclassOf(typeof(BehaviourGraph)))
                 {
-                    addGraphMenu.menu.AppendAction(graphType.Name, 
+                    addGraphMenu.menu.AppendAction(graphType.Name,
                         _ => CreateGraph($"new {graphType.Name}", graphType)
                     );
                 }
@@ -187,7 +187,7 @@ namespace BehaviourAPI.Unity.Editor
         void OpenClearGraphWindow()
         {
             if (_graphView.graphData == null) return;
-            AlertWindow.CreateAlertWindow("¿Clear current graph?", ClearCurrentGraph);
+            AlertWindow.CreateAlertWindow("ï¿½Clear current graph?", ClearCurrentGraph);
         }
 
         void DisplayDeleteGraphAlertWindow()
@@ -262,7 +262,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 var graph = System.Data.graphs[i];
 
-                if(graph != null)
+                if (graph != null)
                 {
                     var id = i;
                     _selectGraphMenu.menu.AppendAction(
@@ -270,7 +270,7 @@ namespace BehaviourAPI.Unity.Editor
                         action: _ => DisplayGraph(graph),
                         status: _graphView.graphData == graph ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal
                     );
-                }                
+                }
             }
         }
 
@@ -366,7 +366,7 @@ namespace BehaviourAPI.Unity.Editor
 
             Toast("Graph deleted");
         }
- 
+
 
         /// <summary>
         /// Remove all nodes from <see cref="CurrentGraphAsset"/>.
@@ -409,7 +409,7 @@ namespace BehaviourAPI.Unity.Editor
         public void OpenSearchGraphWindow(Action<GraphData> callback)
         {
             SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)),
-                 GraphSearchWindowProvider.Create<GraphSearchWindowProvider>(this, callback,  g => g != _graphView.graphData));
+                 GraphSearchWindowProvider.Create<GraphSearchWindowProvider>(this, callback, g => g != _graphView.graphData));
         }
 
         public void OpenSearchNodeWindow(Action<NodeData> callback, Func<NodeData, bool> filter)

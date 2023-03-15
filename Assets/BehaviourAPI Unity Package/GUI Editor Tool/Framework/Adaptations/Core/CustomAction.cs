@@ -39,9 +39,9 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         public override object Clone()
         {
             var copy = (CustomAction)base.Clone();
-            //copy.start = (ContextualSerializedAction)start?.Clone();
-            //copy.update = (ContextualSerializedStatusFunction)update?.Clone();
-            //copy.stop = (ContextualSerializedAction)stop?.Clone();
+            copy.start = (ContextualSerializedAction)start?.Clone();
+            copy.update = (ContextualSerializedStatusFunction)update?.Clone();
+            copy.stop = (ContextualSerializedAction)stop?.Clone();
             return copy;
         }
     }

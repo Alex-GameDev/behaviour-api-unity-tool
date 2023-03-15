@@ -22,7 +22,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
             copy.perception = (Perception)perception.Clone();
             return copy;
         }
-                    
+
         public override void SetExecutionContext(ExecutionContext context)
         {
             perception.SetExecutionContext(context);
