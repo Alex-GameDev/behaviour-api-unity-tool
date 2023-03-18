@@ -164,7 +164,7 @@ MonoBehaviour:
       nodes:
       - name: a
         id: 4e099509-c3d5-4ef3-aa2b-55e0b026d2ff
-        position: {x: 505, y: 22}
+        position: {x: 561, y: 60}
         node:
           rid: 6537695325249077274
         parentIds: []
@@ -172,7 +172,7 @@ MonoBehaviour:
         - 1cbc5815-7e1e-4503-8b1e-2c094bca5eb4
       - name: LeafNode
         id: 1cbc5815-7e1e-4503-8b1e-2c094bca5eb4
-        position: {x: 528, y: 320}
+        position: {x: 545, y: 336}
         node:
           rid: 6537695388248571904
         parentIds:
@@ -206,6 +206,8 @@ MonoBehaviour:
             rid: 6537695388248571935
         - perception:
             rid: 6537695388248571936
+        - perception:
+            rid: 6537695457532182528
     - rid: 6537695388248571934
       type: {class: AndPerception, ns: BehaviourAPI.Core.Perceptions, asm: BehaviourAPI.Core}
     - rid: 6537695388248571935
@@ -231,6 +233,8 @@ MonoBehaviour:
         ExecuteOnLoop: 0
         DontStopOnInterrupt: 0
         subgraphId: 
+    - rid: 6537695457532182528
+      type: {class: IsGroundedPerception, ns: BehaviourAPI.UnityExtensions, asm: BehaviourAPI.UnityExtensions}
 --- !u!4 &1314463089
 Transform:
   m_ObjectHideFlags: 0

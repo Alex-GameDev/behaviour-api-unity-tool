@@ -112,6 +112,11 @@ namespace BehaviourAPI.Unity.Editor
                 allAssemblyNames.Contains(assembly.GetName().Name));
 
             BuildHierarchies();
+
+            if (!System.IO.Directory.Exists(RootPath))
+            {
+                Debug.LogWarning("BehaviourAPISettings: Root path doesn't exist. Change the path in ProyectSetting > BehaviourAPI");
+            }
         }
 
         private void BuildHierarchies()

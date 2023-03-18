@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c7c430cdc1a9db41aa9253710cfd647, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RootPath: Assets/BehaviourAPI Unity Tool/GUI Editor Tool
+  RootPath: Assets/BehaviourAPI Unity Package/GUI Editor Tool
   CustomAssemblies: 
   GenerateScriptDefaultPath: Assets/Scripts/
   GenerateScriptDefaultName: NewBehaviourRunner

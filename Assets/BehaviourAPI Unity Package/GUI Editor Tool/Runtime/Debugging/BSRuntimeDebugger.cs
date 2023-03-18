@@ -6,17 +6,17 @@ using UnityEngine;
 namespace BehaviourAPI.Unity.Runtime
 {
     using UnityExtensions;
- 
+
     [DefaultExecutionOrder(1000)]
 
     /// <summary>
     /// Component used for debug a behaviour system runner
     /// </summary>   
-    public class BSRuntimeDebugger : MonoBehaviour , IBehaviourSystem
+    public class BSRuntimeDebugger : MonoBehaviour, IBehaviourSystem
     {
         public SystemData Data { get; private set; }
 
-        [SerializeField] bool debugStatusChanges;      
+        [SerializeField] bool debugStatusChanges;
 
         public bool IsDebuggerReady { get; private set; } = false;
 
@@ -26,14 +26,14 @@ namespace BehaviourAPI.Unity.Runtime
         {
             var runner = GetComponent<BehaviourRunner>();
 
-            if(runner == null)
+            if (runner == null)
             {
                 Debug.LogWarning("BSRuntimeDebugger need a BehaviourRunner component to work");
+                return;
             }
 
             Data = runner.GetBehaviourSystemAsset();
-
-            if(Data != null)
+            if (Data != null)
             {
                 Data.graphs.ForEach(g =>
                 {
@@ -52,7 +52,7 @@ namespace BehaviourAPI.Unity.Runtime
         void DebugStatusChanged(string name, Status status, string graphName)
         {
             if (!debugStatusChanges) return;
-            
+
             var colorTag = $"#{ColorUtility.ToHtmlStringRGB(status.ToColor())}";
             Debug.Log($"<color=cyan>[DEBUGGER]</color> - Node <color=cyan>{name}</color> changed to <b><color={colorTag}>{status}</color></b>\n" +
                 $"Graph: {graphName} | Frame: {Time.frameCount}", this);

@@ -19,20 +19,45 @@ namespace BehaviourAPI.Unity.Framework
         [HideInInspector] public string id;
         public string name;
         [SerializeReference] public BehaviourGraph graph;
-        [HideInInspector] public List<NodeData> nodes;
+        [HideInInspector] public List<NodeData> nodes = new List<NodeData>();
 
         public GraphData(Type graphType)
         {
-            nodes = new List<NodeData>();
             graph = (BehaviourGraph)Activator.CreateInstance(graphType);
-            nodes = new List<NodeData>();
-
             name = graphType.Name;
             id = Guid.NewGuid().ToString();
         }
 
         public GraphData()
         {
+        }
+
+        public GraphData(BehaviourGraph graph, string name)
+        {
+            this.graph = graph;
+            this.name = name;
+            this.id = Guid.NewGuid().ToString();
+            var nodes = graph.NodeList;
+            Dictionary<Node, string> map = nodes.ToDictionary(n => n, n => Guid.NewGuid().ToString());
+
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                string id = map[nodes[i]];
+                NodeData nodeData = new NodeData(nodes[i], id);
+                for (int j = 0; j < nodes[i].ParentCount; j++)
+                {
+                    nodeData.parentIds.Add(map[nodes[i].GetParentAt(j)]);
+                }
+
+                for (int j = 0; j < nodes[i].ChildCount; j++)
+                {
+                    nodeData.childIds.Add(map[nodes[i].GetChildAt(j)]);
+                }
+
+                this.nodes.Add(nodeData);
+            }
+            LayoutHandler layoutHandler = new LayoutHandler();
+            layoutHandler.ComputeLayout(this);
         }
 
         public Dictionary<string, NodeData> GetNodeIdMap()
@@ -45,7 +70,7 @@ namespace BehaviourAPI.Unity.Framework
             var dict = GetNodeIdMap();
             nodeData.childIds = nodeData.childIds.OrderBy(id =>
             {
-                if(dict.TryGetValue(id, out NodeData data))
+                if (dict.TryGetValue(id, out NodeData data))
                 {
                     return sortFunction(data);
                 }

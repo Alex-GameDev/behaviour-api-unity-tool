@@ -18,23 +18,25 @@ namespace BehaviourAPI.Unity.Framework
 
         [SerializeReference] public Node node;
 
-        [HideInInspector] public List<string> parentIds;
-        [HideInInspector] public List<string> childIds;
+        [HideInInspector] public List<string> parentIds = new List<string>();
+        [HideInInspector] public List<string> childIds = new List<string>();
 
         public NodeData(Type type, UnityEngine.Vector2 position)
         {
             this.position = position;
             node = (Node)Activator.CreateInstance(type);
-            parentIds = new List<string>();
-            childIds = new List<string>();
             name = type.Name;
             id = Guid.NewGuid().ToString();
         }
 
         public NodeData()
         {
-            parentIds = new List<string>();
-            childIds = new List<string>();
+        }
+
+        public NodeData(Node node, string id)
+        {
+            this.node = node;
+            this.id = id;
         }
 
         public object Clone()

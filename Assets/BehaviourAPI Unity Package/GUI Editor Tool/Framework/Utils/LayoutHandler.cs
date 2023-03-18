@@ -1,15 +1,12 @@
 using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.StateMachines;
-using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.UtilitySystems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.VersionControl;
 using UnityEngine;
-using UnityEngine.Assertions;
 
-namespace BehaviourAPI.UnityTool.Framework
+namespace BehaviourAPI.Unity.Framework
 {
     public class LayoutHandler
     {
@@ -249,7 +246,7 @@ namespace BehaviourAPI.UnityTool.Framework
         {
             int currentLevel = 0;
 
-            for(int i = 0; i < nodeData.childIds.Count; i++)
+            for (int i = 0; i < nodeData.childIds.Count; i++)
             {
                 NodeData child = _nodeIdMap[nodeData.childIds[i]];
                 int childValue = nodeLevelMap.TryGetValue(child, out int level) ? level : CheckLevel(child);

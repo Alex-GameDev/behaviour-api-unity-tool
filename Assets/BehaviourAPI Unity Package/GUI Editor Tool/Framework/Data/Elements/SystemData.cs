@@ -1,5 +1,4 @@
 using BehaviourAPI.Core;
-using BehaviourAPI.UnityTool.Framework;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,15 +13,15 @@ namespace BehaviourAPI.Unity.Framework
 
         public SystemData()
         {
-            graphs = new List<GraphData>();
-            pushPerceptions = new List<PushPerceptionData>();
         }
 
         //TODO: 
         public SystemData(Dictionary<BehaviourGraph, string> graphMap)
         {
-            graphs = new List<GraphData>();
-            pushPerceptions = new List<PushPerceptionData>();
+            foreach (var graph in graphMap)
+            {
+                graphs.Add(new GraphData(graph.Key, graph.Value));
+            }
         }
 
         public BehaviourGraph BuildSystem()

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.Graphs;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -102,7 +101,15 @@ namespace BehaviourAPI.Unity.Editor
 
         void CreateGUI()
         {
-            var windownFromUXML = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(PATH).Instantiate();
+            VisualTreeAsset windowAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(PATH);
+
+            if (windowAsset == null)
+            {
+                Debug.LogWarning($"Window layout path was not found ({PATH}). Check the path in BehaviourAPISettings script");
+                return;
+            }
+
+            var windownFromUXML = windowAsset.Instantiate();
             rootVisualElement.Add(windownFromUXML);
 
             _container = rootVisualElement.Q("bw-content");
@@ -205,6 +212,8 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         void Refresh()
         {
+            if (_graphView == null) return;
+
             if (System != null)
             {
                 DisplayGraph(System.Data.graphs.FirstOrDefault(), forceRefresh: true);
@@ -281,6 +290,8 @@ namespace BehaviourAPI.Unity.Editor
         /// <param name="forceRefresh">True for repaint even if the selected graph didn't changed.</param>
         void DisplayGraph(GraphData graphData, bool forceRefresh = false)
         {
+            if (_graphView == null) return;
+
             if (graphData != null && _graphView.graphData == graphData && !forceRefresh) return;
 
             _graphView.SetGraphData(graphData);
