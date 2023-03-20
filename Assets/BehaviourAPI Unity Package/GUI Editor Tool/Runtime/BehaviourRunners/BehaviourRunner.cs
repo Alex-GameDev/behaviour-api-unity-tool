@@ -56,9 +56,9 @@ namespace BehaviourAPI.Unity.Runtime
         {
             _executionGraph = GetExecutionGraph();
 
-            if(_executionGraph != null)
+            if (_executionGraph != null)
             {
-                UnityExecutionContext context = new UnityExecutionContext(gameObject);
+                UnityExecutionContext context = new UnityExecutionContext(this);
                 _executionGraph.SetExecutionContext(context);
             }
         }
@@ -68,7 +68,7 @@ namespace BehaviourAPI.Unity.Runtime
         /// </summary>
         protected virtual void OnStart()
         {
-            if(_executionGraph != null)
+            if (_executionGraph != null)
             {
                 _executionGraph.Start();
                 _systemRunning = true;
@@ -89,7 +89,7 @@ namespace BehaviourAPI.Unity.Runtime
             {
                 _executionGraph.Update();
 
-                if(ExecuteOnLoop && _executionGraph.Status != Status.Running)
+                if (ExecuteOnLoop && _executionGraph.Status != Status.Running)
                 {
                     _executionGraph.Restart();
                 }
@@ -106,9 +106,9 @@ namespace BehaviourAPI.Unity.Runtime
         /// </summary>
         protected virtual void OnEnableSystem()
         {
-            if(!DontStopOnDisable && _systemRunning)
+            if (!DontStopOnDisable && _systemRunning)
             {
-                if(_executionGraph != null)
+                if (_executionGraph != null)
                 {
                     _executionGraph.Start();
                 }

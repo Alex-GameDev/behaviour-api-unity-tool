@@ -32,9 +32,12 @@ namespace BehaviourAPI.Unity.Framework
 
         public void SetContext(UnityExecutionContext context)
         {
-            if (!string.IsNullOrEmpty(componentName) && !string.IsNullOrEmpty(methodName))
+            if (string.IsNullOrWhiteSpace(methodName)) return;
+
+            Component component = string.IsNullOrWhiteSpace(componentName) ? context.RunnerComponent : context.GameObject.GetComponent(componentName);
+
+            if (component != null)
             {
-                var component = context.GameObject.GetComponent(componentName);
                 if (component != null)
                 {
                     Type[] arguments = FunctionArgs;

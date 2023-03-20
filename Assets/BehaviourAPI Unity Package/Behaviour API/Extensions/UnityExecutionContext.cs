@@ -9,6 +9,7 @@ namespace BehaviourAPI.UnityExtensions
     /// </summary>
     public class UnityExecutionContext : ExecutionContext
     {
+        public Component RunnerComponent { get; private set; }
         public GameObject GameObject { get; private set; }
         public Transform Transform { get; private set; }
         public NavMeshAgent NavMeshAgent { get; private set; }
@@ -21,10 +22,15 @@ namespace BehaviourAPI.UnityExtensions
 
         public CharacterController CharacterController { get; private set; }
 
+        public UnityExecutionContext(Component runnerComponent) : this(runnerComponent.gameObject)
+        {
+            RunnerComponent = runnerComponent;
+        }
+
         public UnityExecutionContext(GameObject gameObject)
         {
             GameObject = gameObject;
-            if(gameObject != null)
+            if (gameObject != null)
             {
                 Transform = gameObject.transform;
                 NavMeshAgent = gameObject.GetComponent<NavMeshAgent>();
