@@ -123,201 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: 0c64dbdc7df2616469dc6600b172d8d9, type: 2}
---- !u!114 &45362158
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: main
-  graph:
-    rid: 3601718049242873867
-  nodes:
-  - {fileID: 1537846795}
-  - {fileID: 1079840609}
-  - {fileID: 1662362550}
-  - {fileID: 1409024041}
-  - {fileID: 1285226151}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873867
-      type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
---- !u!114 &256196647
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: chose ham and cheese
-  node:
-    rid: 3601718049242873890
-  position: {x: 600, y: 233.33333}
-  parents: []
-  childs:
-  - {fileID: 2086040612}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873890
-      type: {class: UtilityAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        FinishSystemOnComplete: 1
-        _action:
-          rid: 3601718049242873898
-    - rid: 3601718049242873898
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        start:
-          component: {fileID: 1401791164}
-          methodName: CreateRecipe_0
-        update:
-          component: {fileID: 1401791164}
-          methodName: RecipeCreated
-        stop:
-          component: {fileID: 0}
-          methodName: 
---- !u!114 &256291798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: select recipe
-  graph:
-    rid: 3601718049242873887
-  nodes:
-  - {fileID: 644692882}
-  - {fileID: 1090384575}
-  - {fileID: 256196647}
-  - {fileID: 2133808395}
-  - {fileID: 311332629}
-  - {fileID: 2086040612}
-  - {fileID: 920176713}
-  - {fileID: 464440411}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873887
-      type: {class: UtilitySystem, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
-      data:
-        Inertia: 1.3
---- !u!114 &286952423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: put mass
-  node:
-    rid: 3601718049242873877
-  position: {x: -476, y: 11}
-  parents: []
-  childs:
-  - {fileID: 2003673328}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873877
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        _action:
-          rid: 3601718049242873884
-    - rid: 3601718049242873884
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        start:
-          component: {fileID: 1401791164}
-          methodName: PutMass
-        update:
-          component: {fileID: 1401791164}
-          methodName: WaitToPutIngredient
-        stop:
-          component: {fileID: 0}
-          methodName: 
---- !u!114 &311332629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: hawaiian
-  node:
-    rid: 3601718049242873892
-  position: {x: 300, y: 33.333332}
-  parents:
-  - {fileID: 1090384575}
-  childs:
-  - {fileID: 920176713}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873892
-      type: {class: ExponentialFunction, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
-      data:
-        Exponent: 0.7
-        DespX: 0
-        DespY: 0
---- !u!114 &464440411
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: peperoni factor
-  node:
-    rid: 3601718049242873895
-  position: {x: 0, y: 200}
-  parents:
-  - {fileID: 2086040612}
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873895
-      type: {class: VariableFactor, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        min: 0
-        max: 4
-        variableFunction:
-          component: {fileID: 1401791164}
-          methodName: PeperoniFactor
 --- !u!1 &501985588
 GameObject:
   m_ObjectHideFlags: 0
@@ -398,78 +203,6 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1.97
   m_Text: Ham and cheese
---- !u!114 &644692882
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: choose vegetarian
-  node:
-    rid: 3601718049242873888
-  position: {x: 600, y: -166.66667}
-  parents: []
-  childs:
-  - {fileID: 2133808395}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873888
-      type: {class: UtilityAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        FinishSystemOnComplete: 1
-        _action:
-          rid: 3601718049242873896
-    - rid: 3601718049242873896
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        start:
-          component: {fileID: 1401791164}
-          methodName: CreateRecipe_1
-        update:
-          component: {fileID: 1401791164}
-          methodName: RecipeCreated
-        stop:
-          component: {fileID: 0}
-          methodName: 
---- !u!114 &778526137
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: toppings left
-  node:
-    rid: 3601718049242873882
-  position: {x: 600, y: -206}
-  parents:
-  - {fileID: 1547125966}
-  childs:
-  - {fileID: 1547125966}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601718049242873882
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        StatusFlags: 4
-        _action:
-          rid: -2
-        perception: {fileID: 0}
 --- !u!1 &868694229
 GameObject:
   m_ObjectHideFlags: 0
@@ -582,70 +315,6 @@ RectTransform:
   m_AnchoredPosition: {x: -0, y: -8}
   m_SizeDelta: {x: 4.6, y: 1.6}
   m_Pivot: {x: 0.5, y: 0}
---- !u!114 &920176713
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: pizza factor
-  node:
-    rid: 3601718049242873894
-  position: {x: 0, y: 0}
-  parents:
-  - {fileID: 311332629}
-  - {fileID: 2086040612}
-  - {fileID: 2133808395}
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873894
-      type: {class: VariableFactor, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        min: 0
-        max: 10
-        variableFunction:
-          component: {fileID: 1401791164}
-          methodName: PizzaFactor
---- !u!114 &1006800647
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: tomato putted
-  node:
-    rid: 3601718049242873880
-  position: {x: 300, y: -9}
-  parents:
-  - {fileID: 1668522930}
-  childs:
-  - {fileID: 1547125966}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601718049242873880
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        StatusFlags: 6
-        _action:
-          rid: -2
-        perception: {fileID: 0}
 --- !u!1 &1037886235
 GameObject:
   m_ObjectHideFlags: 0
@@ -677,103 +346,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1079840609
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  node:
-    rid: 3601718049242873869
-  position: {x: 0, y: 200}
-  parents:
-  - {fileID: 1537846795}
-  childs:
-  - {fileID: 1662362550}
-  - {fileID: 1409024041}
-  - {fileID: 1285226151}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873869
-      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        IsRandomized: 0
---- !u!114 &1090384575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: choose hawaiian
-  node:
-    rid: 3601718049242873889
-  position: {x: 600, y: 33.33333}
-  parents: []
-  childs:
-  - {fileID: 311332629}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873889
-      type: {class: UtilityAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        FinishSystemOnComplete: 1
-        _action:
-          rid: 3601718049242873897
-    - rid: 3601718049242873897
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        start:
-          component: {fileID: 1401791164}
-          methodName: CreateRecipe_2
-        update:
-          component: {fileID: 1401791164}
-          methodName: RecipeCreated
-        stop:
-          component: {fileID: 0}
-          methodName: 
---- !u!114 &1172181477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: prepare pizza
-  graph:
-    rid: 3601718049242873876
-  nodes:
-  - {fileID: 286952423}
-  - {fileID: 2003673328}
-  - {fileID: 1668522930}
-  - {fileID: 1006800647}
-  - {fileID: 1547125966}
-  - {fileID: 778526137}
-  - {fileID: 1736906016}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873876
-      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
 --- !u!1 &1192636332
 GameObject:
   m_ObjectHideFlags: 0
@@ -940,45 +512,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1193058492}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1285226151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  node:
-    rid: 3601718049242873872
-  position: {x: 300, y: 400}
-  parents:
-  - {fileID: 1079840609}
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873872
-      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        SerializedAction:
-          rid: 3601718049242873873
-    - rid: 3601718049242873873
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        start:
-          component: {fileID: 1401791164}
-          methodName: BakePizza
-        update:
-          component: {fileID: 1401791164}
-          methodName: pizzaBaked
-        stop:
-          component: {fileID: 1401791164}
-          methodName: BakedActionCompleted
 --- !u!1 &1370048889
 GameObject:
   m_ObjectHideFlags: 0
@@ -1121,7 +654,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6491168963557050248, guid: 933da4993cc93944496c58aa55824825, type: 3}
   m_PrefabInstance: {fileID: 1401791154}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1401791157 stripped
+--- !u!4 &1401791156 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1219031990548499839, guid: 933da4993cc93944496c58aa55824825, type: 3}
   m_PrefabInstance: {fileID: 1401791154}
@@ -1138,7 +671,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  systemAsset: {fileID: 0}
+  debugStatusChanges: 0
 --- !u!114 &1401791164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1153,62 +686,516 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ExecuteOnLoop: 0
   DontStopOnDisable: 0
-  nodeNamingSettings: 1
-  perceptionNamingSettings: 1
-  pushPerceptionNamingSettings: 1
-  graphs:
-  - {fileID: 45362158}
-  - {fileID: 1172181477}
-  - {fileID: 256291798}
-  pushPerceptions: []
-  pullPerceptions: []
+  data:
+    graphs:
+    - id: d53ea6ca-172a-4645-bdc5-1469fae65b5f
+      name: Main
+      graph:
+        rid: 6537695503399780367
+      nodes:
+      - name: IteratorNode
+        id: cc469a5d-59e2-4fab-a68a-eabf50574363
+        position: {x: 0, y: 0}
+        node:
+          rid: 6537695503399780369
+        parentIds: []
+        childIds:
+        - 89ee794c-bb88-44f0-953a-e1d8f1cede30
+      - name: SequencerNode
+        id: 89ee794c-bb88-44f0-953a-e1d8f1cede30
+        position: {x: 0, y: 200}
+        node:
+          rid: 6537695503399780370
+        parentIds:
+        - cc469a5d-59e2-4fab-a68a-eabf50574363
+        childIds:
+        - c3a7b82e-2da1-4c0c-b86f-a0ce040be058
+        - e9069775-71da-466d-a1c7-ede7989087e0
+        - 0a8c6cd3-4c19-4e7d-9832-a7d7c49cf7be
+      - name: LeafNode
+        id: c3a7b82e-2da1-4c0c-b86f-a0ce040be058
+        position: {x: -300, y: 400}
+        node:
+          rid: 6537695503399780371
+        parentIds:
+        - 89ee794c-bb88-44f0-953a-e1d8f1cede30
+        childIds: []
+      - name: LeafNode
+        id: e9069775-71da-466d-a1c7-ede7989087e0
+        position: {x: 0, y: 400}
+        node:
+          rid: 6537695503399780372
+        parentIds:
+        - 89ee794c-bb88-44f0-953a-e1d8f1cede30
+        childIds: []
+      - name: LeafNode
+        id: 0a8c6cd3-4c19-4e7d-9832-a7d7c49cf7be
+        position: {x: 300, y: 400}
+        node:
+          rid: 6537695503399780373
+        parentIds:
+        - 89ee794c-bb88-44f0-953a-e1d8f1cede30
+        childIds: []
+    - id: b883ab31-3023-488a-bbb4-50ff2a25b066
+      name: Make pizza FSM
+      graph:
+        rid: 6537695503399780374
+      nodes:
+      - name: State
+        id: f180aa8c-c95d-4066-88a5-2a9d02f9dfeb
+        position: {x: -191, y: 330}
+        node:
+          rid: 6537695503399780379
+        parentIds: []
+        childIds:
+        - 8f55bd72-b2a7-4fe4-ab01-aa3c7cd2989e
+      - name: State
+        id: 8fe50bac-3f7c-412f-9341-f31dc39514eb
+        position: {x: 258, y: 306}
+        node:
+          rid: 6537695503399780380
+        parentIds:
+        - 8f55bd72-b2a7-4fe4-ab01-aa3c7cd2989e
+        childIds:
+        - b14e88cd-13fe-4dc8-aee5-51509dded391
+      - name: ExitTransition
+        id: ca9996a7-cf38-4525-9839-419d741d2f71
+        position: {x: 1084, y: 318}
+        node:
+          rid: 6537695503399780381
+        parentIds:
+        - 559b49e5-6888-4fd2-83cb-9ed5ada701a2
+        childIds: []
+      - name: State
+        id: 559b49e5-6888-4fd2-83cb-9ed5ada701a2
+        position: {x: 723, y: 310}
+        node:
+          rid: 6537695503399780382
+        parentIds:
+        - b14e88cd-13fe-4dc8-aee5-51509dded391
+        - f761050e-74b8-4a0a-9043-60504df64506
+        childIds:
+        - ca9996a7-cf38-4525-9839-419d741d2f71
+        - f761050e-74b8-4a0a-9043-60504df64506
+      - name: StateTransition
+        id: 8f55bd72-b2a7-4fe4-ab01-aa3c7cd2989e
+        position: {x: 55, y: 302}
+        node:
+          rid: 6537695503399780383
+        parentIds:
+        - f180aa8c-c95d-4066-88a5-2a9d02f9dfeb
+        childIds:
+        - 8fe50bac-3f7c-412f-9341-f31dc39514eb
+      - name: StateTransition
+        id: b14e88cd-13fe-4dc8-aee5-51509dded391
+        position: {x: 528, y: 309}
+        node:
+          rid: 6537695503399780384
+        parentIds:
+        - 8fe50bac-3f7c-412f-9341-f31dc39514eb
+        childIds:
+        - 559b49e5-6888-4fd2-83cb-9ed5ada701a2
+      - name: StateTransition
+        id: f761050e-74b8-4a0a-9043-60504df64506
+        position: {x: 777, y: 85}
+        node:
+          rid: 6537695503399780385
+        parentIds:
+        - 559b49e5-6888-4fd2-83cb-9ed5ada701a2
+        childIds:
+        - 559b49e5-6888-4fd2-83cb-9ed5ada701a2
+    - id: 83a6a2f6-d924-4743-9c35-444504d0c2d9
+      name: Recipe US
+      graph:
+        rid: 6537695503399780375
+      nodes:
+      - name: ham and cheese
+        id: 95ca99fb-d874-42c2-b0e0-bff4b4c534ed
+        position: {x: 600, y: 233.33333}
+        node:
+          rid: 6537695503399780389
+        parentIds: []
+        childIds:
+        - e00dbb6d-4f6c-46cb-ac72-fb44e9d8d7f8
+      - name: hawaiian
+        id: 75222d57-418b-4fb2-bac1-430f77823547
+        position: {x: 600, y: -166.66667}
+        node:
+          rid: 6537695503399780392
+        parentIds: []
+        childIds:
+        - 51e76747-a01a-4d08-9ffe-446c0613ee4f
+      - name: vegetarian
+        id: d14f4053-078a-4324-b310-ee414c6b23cd
+        position: {x: 600, y: 33.33333}
+        node:
+          rid: 6537695503399780394
+        parentIds: []
+        childIds:
+        - e066c888-223e-4d62-b93f-d9e139b6f694
+      - name: UnityCurveFactor
+        id: e066c888-223e-4d62-b93f-d9e139b6f694
+        position: {x: 300, y: 33.333332}
+        node:
+          rid: 6537695503399780396
+        parentIds:
+        - d14f4053-078a-4324-b310-ee414c6b23cd
+        childIds:
+        - ec2c6e8d-e9ab-4728-9fed-d0f2390d3959
+      - name: ExponentialCurveFactor
+        id: 51e76747-a01a-4d08-9ffe-446c0613ee4f
+        position: {x: 300, y: -166.66667}
+        node:
+          rid: 6537695503399780397
+        parentIds:
+        - 75222d57-418b-4fb2-bac1-430f77823547
+        childIds:
+        - ec2c6e8d-e9ab-4728-9fed-d0f2390d3959
+      - name: Pizza factor
+        id: ec2c6e8d-e9ab-4728-9fed-d0f2390d3959
+        position: {x: 0, y: 0}
+        node:
+          rid: 6537695503399780398
+        parentIds:
+        - e00dbb6d-4f6c-46cb-ac72-fb44e9d8d7f8
+        - e066c888-223e-4d62-b93f-d9e139b6f694
+        - 51e76747-a01a-4d08-9ffe-446c0613ee4f
+        childIds: []
+      - name: Peperoni factor
+        id: 113256db-f0dc-430a-a371-080dbd32dcb5
+        position: {x: 0, y: 200}
+        node:
+          rid: 6537695503399780400
+        parentIds:
+        - e00dbb6d-4f6c-46cb-ac72-fb44e9d8d7f8
+        childIds: []
+      - name: WeightedFusionFactor
+        id: e00dbb6d-4f6c-46cb-ac72-fb44e9d8d7f8
+        position: {x: 300, y: 233.33333}
+        node:
+          rid: 6537695503399780401
+        parentIds:
+        - 95ca99fb-d874-42c2-b0e0-bff4b4c534ed
+        childIds:
+        - ec2c6e8d-e9ab-4728-9fed-d0f2390d3959
+        - 113256db-f0dc-430a-a371-080dbd32dcb5
+    pushPerceptions: []
   _pizzaMass: {fileID: 11400000, guid: 6a56fc729e5dc424d8851517b3a2b13e, type: 2}
   _tomato: {fileID: 11400000, guid: 42c417143ccf45d45a802773e120696e, type: 2}
   _allRecipes:
   - {fileID: 11400000, guid: 3adeeea1b5afb034abab2665351182cd, type: 2}
-  - {fileID: 11400000, guid: dd625effc1a48564fba80b8d693bb104, type: 2}
   - {fileID: 11400000, guid: af22c8addc8f8994abccf1c7a82a4e73, type: 2}
+  - {fileID: 11400000, guid: dd625effc1a48564fba80b8d693bb104, type: 2}
   _timeToAddIngredient: 2
   _pizzaTransform: {fileID: 2113832839}
   _table: {fileID: 1512374334}
   _oven: {fileID: 1037886236}
-  _handsHandler: {fileID: 1401791157}
+  _handsHandler: {fileID: 1401791156}
   _tableHandler: {fileID: 868694230}
   _pizza: {fileID: 2113832838}
   _recipePaper: {fileID: 1993031429}
---- !u!114 &1409024041
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 6537695503399780367
+      type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+    - rid: 6537695503399780369
+      type: {class: IteratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        Iterations: -1
+    - rid: 6537695503399780370
+      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
+    - rid: 6537695503399780371
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        action:
+          rid: 6537695503399780376
+    - rid: 6537695503399780372
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        action:
+          rid: 6537695503399780377
+    - rid: 6537695503399780373
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        action:
+          rid: 6537695503399780378
+    - rid: 6537695503399780374
+      type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
+    - rid: 6537695503399780375
+      type: {class: UtilitySystem, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        Inertia: 1.3
+    - rid: 6537695503399780376
+      type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        ExecuteOnLoop: 0
+        DontStopOnInterrupt: 0
+        subgraphId: 83a6a2f6-d924-4743-9c35-444504d0c2d9
+    - rid: 6537695503399780377
+      type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        ExecuteOnLoop: 0
+        DontStopOnInterrupt: 0
+        subgraphId: b883ab31-3023-488a-bbb4-50ff2a25b066
+    - rid: 6537695503399780378
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: BakePizza
+        update:
+          componentName: 
+          methodName: pizzaBaked
+        stop:
+          componentName: 
+          methodName: BakedActionCompleted
+    - rid: 6537695503399780379
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        action:
+          rid: 6537695503399780386
+    - rid: 6537695503399780380
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        action:
+          rid: 6537695503399780387
+    - rid: 6537695503399780381
+      type: {class: ExitTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        StatusFlags: 2
+        ExitStatus: 2
+        action:
+          rid: -2
+        perception:
+          rid: -2
+    - rid: 6537695503399780382
+      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        action:
+          rid: 6537695503399780388
+    - rid: 6537695503399780383
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        StatusFlags: 6
+        action:
+          rid: -2
+        perception:
+          rid: -2
+    - rid: 6537695503399780384
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        StatusFlags: 6
+        action:
+          rid: -2
+        perception:
+          rid: -2
+    - rid: 6537695503399780385
+      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        StatusFlags: 4
+        action:
+          rid: -2
+        perception:
+          rid: -2
+    - rid: 6537695503399780386
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: PutMass
+        update:
+          componentName: 
+          methodName: WaitToPutIngredient
+        stop:
+          componentName: 
+          methodName: 
+    - rid: 6537695503399780387
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: PutTomato
+        update:
+          componentName: 
+          methodName: WaitToPutIngredient
+        stop:
+          componentName: 
+          methodName: 
+    - rid: 6537695503399780388
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: PutNextTopping
+        update:
+          componentName: 
+          methodName: WaitToPutIngredient
+        stop:
+          componentName: 
+          methodName: 
+    - rid: 6537695503399780389
+      type: {class: UtilityAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        FinishSystemOnComplete: 1
+        action:
+          rid: 6537695503399780391
+    - rid: 6537695503399780391
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: CreateRecipe_0
+        update:
+          componentName: 
+          methodName: RecipeCreated
+        stop:
+          componentName: 
+          methodName: CreateRecipeCompleted
+    - rid: 6537695503399780392
+      type: {class: UtilityAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        FinishSystemOnComplete: 1
+        action:
+          rid: 6537695503399780393
+    - rid: 6537695503399780393
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: CreateRecipe_1
+        update:
+          componentName: 
+          methodName: RecipeCreated
+        stop:
+          componentName: 
+          methodName: CreateRecipeCompleted
+    - rid: 6537695503399780394
+      type: {class: UtilityAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        FinishSystemOnComplete: 1
+        action:
+          rid: 6537695503399780395
+    - rid: 6537695503399780395
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: CreateRecipe_2
+        update:
+          componentName: 
+          methodName: RecipeCreated
+        stop:
+          componentName: 
+          methodName: CreateRecipeCompleted
+    - rid: 6537695503399780396
+      type: {class: UnityCurveFactor, ns: BehaviourAPI.UnityExtensions, asm: BehaviourAPI.UnityExtensions}
+      data:
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0.99710083
+            inSlope: -0.121251
+            outSlope: -2.4768603
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.7761194
+          - serializedVersion: 3
+            time: 0.19920391
+            value: 0.48580387
+            inSlope: -2.6806548
+            outSlope: -1.8339791
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.49933684
+            outWeight: 0.6959716
+          - serializedVersion: 3
+            time: 0.4008513
+            value: 0.100596935
+            inSlope: -1.9343458
+            outSlope: 1.4058577
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.99944186
+            outWeight: 0.5084123
+          - serializedVersion: 3
+            time: 0.6000538
+            value: 0.4017744
+            inSlope: 1.804771
+            outSlope: -0.97869253
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.58340704
+            outWeight: 0.9363243
+          - serializedVersion: 3
+            time: 0.7971687
+            value: 0.20057487
+            inSlope: -1.2097466
+            outSlope: -0.9678025
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 1
+            outWeight: 1
+          - serializedVersion: 3
+            time: 1.0032349
+            value: -0.01852417
+            inSlope: -1.0969076
+            outSlope: -1.0969076
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 1
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    - rid: 6537695503399780397
+      type: {class: ExponentialCurveFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        Exponent: 0.7
+        DespX: 0
+        DespY: 0
+    - rid: 6537695503399780398
+      type: {class: VariableFactor, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        min: 0
+        max: 10
+        variableFunction:
+          componentName: 
+          methodName: PizzaFactor
+    - rid: 6537695503399780400
+      type: {class: VariableFactor, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        min: 0
+        max: 4
+        variableFunction:
+          componentName: 
+          methodName: PeperoniFactor
+    - rid: 6537695503399780401
+      type: {class: WeightedFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
+      data:
+        Weights:
+        - 0
+        - 0
+--- !u!114 &1401791170
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1401791155}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
+  m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
-  node:
-    rid: 3601718049242873871
-  position: {x: 0, y: 400}
-  parents:
-  - {fileID: 1079840609}
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873871
-      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        SerializedAction:
-          rid: 3601718049242873875
-    - rid: 3601718049242873875
-      type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        ExecuteOnLoop: 0
-        DontStopOnInterrupt: 0
-        subgraph: {fileID: 1172181477}
+  debugStatusChanges: 0
 --- !u!1 &1434616177
 GameObject:
   m_ObjectHideFlags: 0
@@ -1324,74 +1311,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1537846795
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  node:
-    rid: 3601718049242873868
-  position: {x: 0, y: 0}
-  parents: []
-  childs:
-  - {fileID: 1079840609}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873868
-      type: {class: IteratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        Iterations: -1
---- !u!114 &1547125966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: put topping
-  node:
-    rid: 3601718049242873881
-  position: {x: 565, y: 12}
-  parents:
-  - {fileID: 1006800647}
-  - {fileID: 778526137}
-  childs:
-  - {fileID: 1736906016}
-  - {fileID: 778526137}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873881
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        _action:
-          rid: 3601718049242873885
-    - rid: 3601718049242873885
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        start:
-          component: {fileID: 1401791164}
-          methodName: PutNextTopping
-        update:
-          component: {fileID: 1401791164}
-          methodName: CheckToppings
-        stop:
-          component: {fileID: 0}
-          methodName: 
 --- !u!1 &1630363459
 GameObject:
   m_ObjectHideFlags: 0
@@ -1486,111 +1405,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!114 &1662362550
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  node:
-    rid: 3601718049242873870
-  position: {x: -300, y: 400}
-  parents:
-  - {fileID: 1079840609}
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873870
-      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        SerializedAction:
-          rid: 3601718049242873874
-    - rid: 3601718049242873874
-      type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        ExecuteOnLoop: 0
-        DontStopOnInterrupt: 0
-        subgraph: {fileID: 256291798}
---- !u!114 &1668522930
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: put tomato
-  node:
-    rid: 3601718049242873879
-  position: {x: 0, y: 0}
-  parents:
-  - {fileID: 2003673328}
-  childs:
-  - {fileID: 1006800647}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873879
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        _action:
-          rid: 3601718049242873886
-    - rid: 3601718049242873886
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        start:
-          component: {fileID: 1401791164}
-          methodName: PutTomato
-        update:
-          component: {fileID: 1401791164}
-          methodName: WaitToPutIngredient
-        stop:
-          component: {fileID: 0}
-          methodName: 
---- !u!114 &1736906016
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: finished
-  node:
-    rid: 3601718049242873883
-  position: {x: 880, y: 16}
-  parents:
-  - {fileID: 1547125966}
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601718049242873883
-      type: {class: ExitTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        StatusFlags: 2
-        ExitStatus: 2
-        _action:
-          rid: -2
-        perception: {fileID: 0}
 --- !u!1 &1755207645
 GameObject:
   m_ObjectHideFlags: 0
@@ -1984,68 +1798,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 37, y: 36, z: 0}
---- !u!114 &2003673328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: mass putted
-  node:
-    rid: 3601718049242873878
-  position: {x: -195, y: -5}
-  parents:
-  - {fileID: 286952423}
-  childs:
-  - {fileID: 1668522930}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601718049242873878
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        StatusFlags: 6
-        _action:
-          rid: -2
-        perception: {fileID: 0}
---- !u!114 &2086040612
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: peperoni
-  node:
-    rid: 3601718049242873893
-  position: {x: 300, y: 233.33333}
-  parents:
-  - {fileID: 256196647}
-  childs:
-  - {fileID: 920176713}
-  - {fileID: 464440411}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873893
-      type: {class: WeightedFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
-      data:
-        Weights:
-        - 0.6
-        - 0.4
 --- !u!1 &2113832837
 GameObject:
   m_ObjectHideFlags: 0
@@ -2090,92 +1842,6 @@ Transform:
   m_Father: {fileID: 868694230}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2133808395
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: vegetarian
-  node:
-    rid: 3601718049242873891
-  position: {x: 300, y: -166.66667}
-  parents:
-  - {fileID: 644692882}
-  childs:
-  - {fileID: 920176713}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718049242873891
-      type: {class: CurveFunction, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: BehaviourAPI.Unity.Runtime}
-      data:
-        curve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0.9862671
-            inSlope: -2.3861973
-            outSlope: -2.3861973
-            tangentMode: 1
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.33333334
-          - serializedVersion: 3
-            time: 0.20439163
-            value: 0.49854833
-            inSlope: -2.2371538
-            outSlope: -2.078274
-            tangentMode: 1
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 1
-          - serializedVersion: 3
-            time: 0.40078646
-            value: 0.08845428
-            inSlope: -2.0260477
-            outSlope: 1.5801554
-            tangentMode: 1
-            weightedMode: 0
-            inWeight: 1
-            outWeight: 0.9951232
-          - serializedVersion: 3
-            time: 0.60413057
-            value: 0.4017042
-            inSlope: 1.3913088
-            outSlope: -1.0399747
-            tangentMode: 1
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0.9949658
-          - serializedVersion: 3
-            time: 0.8017164
-            value: 0.19003463
-            inSlope: -1.1916538
-            outSlope: -0.9305977
-            tangentMode: 1
-            weightedMode: 0
-            inWeight: 1
-            outWeight: 0.99132985
-          - serializedVersion: 3
-            time: 1.00177
-            value: 0.0054779053
-            inSlope: -0.9879496
-            outSlope: -0.92253625
-            tangentMode: 1
-            weightedMode: 0
-            inWeight: 0.970318
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
 --- !u!33 &4562433647093192612
 MeshFilter:
   m_ObjectHideFlags: 0

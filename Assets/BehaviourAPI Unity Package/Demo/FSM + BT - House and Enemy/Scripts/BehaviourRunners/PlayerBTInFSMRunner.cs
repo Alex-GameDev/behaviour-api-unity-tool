@@ -1,14 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using BehaviourAPI.Core;
 using UnityEngine;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Runtime;
 using BehaviourAPI.BehaviourTrees;
-using UnityEditor.UIElements;
-using BehaviourAPI.Unity.Runtime.Extensions;
 using BehaviourAPI.UnityExtensions;
 
 namespace BehaviourAPI.Unity.Demo

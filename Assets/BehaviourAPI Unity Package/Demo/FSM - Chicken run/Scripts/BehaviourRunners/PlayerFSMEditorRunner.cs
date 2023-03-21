@@ -1,8 +1,5 @@
 using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Runtime;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerFSMEditorRunner : EditorBehaviourRunner

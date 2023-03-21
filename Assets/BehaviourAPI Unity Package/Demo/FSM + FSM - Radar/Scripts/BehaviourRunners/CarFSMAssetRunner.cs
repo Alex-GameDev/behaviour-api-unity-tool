@@ -1,4 +1,5 @@
 using BehaviourAPI.Core.Perceptions;
+using BehaviourAPI.StateMachines;
 using BehaviourAPI.Unity.Runtime;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,8 +17,12 @@ public class CarFSMAssetRunner : AssetBehaviourRunner, ICar
         base.OnAwake();
         IRadar radar = GameObject.FindGameObjectWithTag("Radar").GetComponent<IRadar>();
 
-        //FindPerception<ExecutionStatusPerception>("radar is broken").StatusHandler = radar.GetBrokenState();
-        //FindPerception<ExecutionStatusPerception>("radar is fixed").StatusHandler = radar.GetWorkingState();  
+        var mainGraph = FindGraph("main");
+        var speedUp = mainGraph.FindNode<StateTransition>("speed up");
+        var speedDown = mainGraph.FindNode<StateTransition>("speed down");
+
+        speedUp.Perception = new ExecutionStatusPerception(radar.GetBrokenState(), StatusFlags.Running);
+        speedDown.Perception = new ExecutionStatusPerception(radar.GetWorkingState(), StatusFlags.Running);
     }
 
     public float GetSpeed() => _rb.velocity.magnitude;

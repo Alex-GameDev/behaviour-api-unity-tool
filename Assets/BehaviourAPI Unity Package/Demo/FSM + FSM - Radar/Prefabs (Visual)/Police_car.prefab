@@ -413,9 +413,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c52e40fea89e22a4d962f06c613bf54e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodeNamingSettings: 1
-  perceptionNamingSettings: 1
-  pushPerceptionNamingSettings: 1
+  ExecuteOnLoop: 0
+  DontStopOnDisable: 0
   System: {fileID: 11400000, guid: 6d534a20583df114383f152d5945ceb0, type: 2}
 --- !u!114 &-3681252227086290847
 MonoBehaviour:
@@ -429,7 +428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  systemAsset: {fileID: 0}
+  debugStatusChanges: 0
 --- !u!1 &1770694637400948
 GameObject:
   m_ObjectHideFlags: 0

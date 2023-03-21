@@ -3,10 +3,7 @@ using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.StateMachines;
 using BehaviourAPI.Unity.Runtime;
-using BehaviourAPI.Unity.Runtime.Extensions;
 using BehaviourAPI.UnityExtensions;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerBTInFSMEditorRunner : EditorBehaviourRunner
@@ -37,10 +34,12 @@ public class PlayerBTInFSMEditorRunner : EditorBehaviourRunner
         var mainGraph = FindGraph("main");
         var subgraph = FindGraph("key subtree");
 
-        mainGraph.FindNode<State>("go to home").SetAction(new WalkAction(_doorPos, 5f));
-        mainGraph.FindNode<State>("enter house").SetAction(new FunctionalAction(EnterTheHouse));
+        mainGraph.FindNode<State>("go to home").Action = new WalkAction(_doorPos, 5f);
+        mainGraph.FindNode<State>("enter house").Action = new FunctionalAction(EnterTheHouse);
 
-        //FindPerception<DistancePerception>("distance to enemy").OtherTransform = _enemyTransform;
+        Perception enemyPerception = new DistancePerception(_enemyTransform, 10);
+        mainGraph.FindNode<StateTransition>("house to running").Perception = enemyPerception;
+        mainGraph.FindNode<StateTransition>("key to running").Perception = enemyPerception;
 
         subgraph.FindNode<ConditionNode>("has no key").SetPerception(new ConditionPerception(() => !_hasKey));
         subgraph.FindNode<LeafNode>("walk to key").SetAction(new WalkAction(_keyPos, 5f));

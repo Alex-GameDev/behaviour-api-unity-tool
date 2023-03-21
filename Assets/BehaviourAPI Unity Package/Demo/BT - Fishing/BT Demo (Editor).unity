@@ -199,11 +199,242 @@ PrefabInstance:
     - {fileID: 8335097774737004306, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
     - {fileID: 922734696, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+--- !u!1 &90416562 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4600201873981623957, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+  m_PrefabInstance: {fileID: 90416561}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &90416563 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
   m_PrefabInstance: {fileID: 90416561}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &90416564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 90416562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e693077d91cc3394791faadbd922de3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ExecuteOnLoop: 0
+  DontStopOnDisable: 0
+  data:
+    graphs:
+    - id: 9e7a0e64-9663-4dd5-9d1e-076f10c7e687
+      name: BehaviourTree
+      graph:
+        rid: 6537695503399780352
+      nodes:
+      - name: IteratorNode
+        id: 50df7978-7284-477d-8f9a-41cdf6c16dc0
+        position: {x: 75, y: 0}
+        node:
+          rid: 6537695503399780353
+        parentIds: []
+        childIds:
+        - ef9cf995-5bbe-4375-8a1f-73eb0bbd0377
+      - name: SequencerNode
+        id: ef9cf995-5bbe-4375-8a1f-73eb0bbd0377
+        position: {x: 75, y: 200}
+        node:
+          rid: 6537695503399780354
+        parentIds:
+        - 50df7978-7284-477d-8f9a-41cdf6c16dc0
+        childIds:
+        - d2509810-1aaa-44a9-9ba2-b96b388d0765
+        - 2ab61c38-8b3e-4713-8ad2-8bb3f1878610
+        - 36f8b9f7-3315-419d-8e78-4166ba2212e2
+      - name: LeafNode
+        id: d2509810-1aaa-44a9-9ba2-b96b388d0765
+        position: {x: -300, y: 400}
+        node:
+          rid: 6537695503399780355
+        parentIds:
+        - ef9cf995-5bbe-4375-8a1f-73eb0bbd0377
+        childIds: []
+      - name: UnityTimerDecorator
+        id: 2ab61c38-8b3e-4713-8ad2-8bb3f1878610
+        position: {x: 0, y: 400}
+        node:
+          rid: 6537695503399780356
+        parentIds:
+        - ef9cf995-5bbe-4375-8a1f-73eb0bbd0377
+        childIds:
+        - bccb08f0-a430-4ad2-94f2-083dcbda5b6d
+      - name: LeafNode
+        id: bccb08f0-a430-4ad2-94f2-083dcbda5b6d
+        position: {x: 0, y: 600}
+        node:
+          rid: 6537695503399780357
+        parentIds:
+        - 2ab61c38-8b3e-4713-8ad2-8bb3f1878610
+        childIds: []
+      - name: SelectorNode
+        id: 36f8b9f7-3315-419d-8e78-4166ba2212e2
+        position: {x: 450, y: 400}
+        node:
+          rid: 6537695503399780358
+        parentIds:
+        - ef9cf995-5bbe-4375-8a1f-73eb0bbd0377
+        childIds:
+        - 57f1b324-085a-45f9-bfb0-4e2ee37f2a45
+        - a5cedc0e-9ec5-4cbb-9168-fbde0588c19d
+      - name: ConditionNode
+        id: 57f1b324-085a-45f9-bfb0-4e2ee37f2a45
+        position: {x: 300, y: 600}
+        node:
+          rid: 6537695503399780359
+        parentIds:
+        - 36f8b9f7-3315-419d-8e78-4166ba2212e2
+        childIds:
+        - 9afc671b-abb9-4b1e-b9b0-a87628513874
+      - name: LeafNode
+        id: 9afc671b-abb9-4b1e-b9b0-a87628513874
+        position: {x: 316, y: 815}
+        node:
+          rid: 6537695503399780360
+        parentIds:
+        - 57f1b324-085a-45f9-bfb0-4e2ee37f2a45
+        childIds: []
+      - name: LeafNode
+        id: a5cedc0e-9ec5-4cbb-9168-fbde0588c19d
+        position: {x: 600, y: 600}
+        node:
+          rid: 6537695503399780361
+        parentIds:
+        - 36f8b9f7-3315-419d-8e78-4166ba2212e2
+        childIds: []
+    pushPerceptions: []
+  _fishPrefab: {fileID: 5281474623226569190, guid: c63f1f735b851024faf98461c4931367, type: 3}
+  _bootPrefab: {fileID: 2808376287602457127, guid: 273a344fd2f2c1e4984ab8bc8754d7e3, type: 3}
+  _fishDropTarget: {fileID: 1013018739}
+  _bootDropTarget: {fileID: 1847852898}
+  _baitTarget: {fileID: 394313093}
+  _rod: {fileID: 1026007597}
+  references:
+    version: 2
+    RefIds:
+    - rid: 6537695503399780352
+      type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+    - rid: 6537695503399780353
+      type: {class: IteratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        Iterations: -1
+    - rid: 6537695503399780354
+      type: {class: SequencerNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
+    - rid: 6537695503399780355
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        action:
+          rid: 6537695503399780362
+    - rid: 6537695503399780356
+      type: {class: UnityTimerDecorator, ns: BehaviourAPI.UnityExtensions, asm: BehaviourAPI.UnityExtensions}
+      data:
+        TotalTime: 3
+    - rid: 6537695503399780357
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        action:
+          rid: 6537695503399780363
+    - rid: 6537695503399780358
+      type: {class: SelectorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        IsRandomized: 0
+    - rid: 6537695503399780359
+      type: {class: ConditionNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        perception:
+          rid: 6537695503399780364
+    - rid: 6537695503399780360
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        action:
+          rid: 6537695503399780365
+    - rid: 6537695503399780361
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        action:
+          rid: 6537695503399780366
+    - rid: 6537695503399780362
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: StartThrow
+        update:
+          componentName: 
+          methodName: RodThrownStatus
+        stop:
+          componentName: 
+          methodName: 
+    - rid: 6537695503399780363
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: StartCatch
+        update:
+          componentName: 
+          methodName: RodPickedStatus
+        stop:
+          componentName: 
+          methodName: 
+    - rid: 6537695503399780364
+      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        init:
+          componentName: 
+          methodName: 
+        check:
+          componentName: 
+          methodName: IsFishCatched
+        reset:
+          componentName: 
+          methodName: 
+    - rid: 6537695503399780365
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: StoreCaptureInBasket
+        update:
+          componentName: 
+          methodName: CompleteOnSuccess
+        stop:
+          componentName: 
+          methodName: 
+    - rid: 6537695503399780366
+      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        start:
+          componentName: 
+          methodName: DropCaptureInWater
+        update:
+          componentName: 
+          methodName: CompleteOnSuccess
+        stop:
+          componentName: 
+          methodName: 
+--- !u!114 &90416568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 90416562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugStatusChanges: 1
 --- !u!1 &178529728
 GameObject:
   m_ObjectHideFlags: 0

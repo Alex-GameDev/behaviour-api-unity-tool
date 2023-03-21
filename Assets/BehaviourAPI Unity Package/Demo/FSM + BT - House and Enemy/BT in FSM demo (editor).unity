@@ -154,58 +154,6 @@ Transform:
   m_Father: {fileID: 1224425213}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &51627590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: patrol
-  node:
-    rid: 3601718103268392985
-  position: {x: 0, y: 200}
-  parents:
-  - {fileID: 318497023}
-  childs: []
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3601718103268392985
-      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.Unity.Framework}
-      data:
-        SerializedAction:
-          rid: -2
---- !u!114 &59125842
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ad568a5eece5a449ae7430a9fa4dfac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: main
-  graph:
-    rid: 3601718103268392983
-  nodes:
-  - {fileID: 318497023}
-  - {fileID: 51627590}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718103268392983
-      type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
 --- !u!1 &317209091
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,32 +185,6 @@ Transform:
   m_Father: {fileID: 1224425213}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &318497023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d77f4c136ed5cd459f31760c60925b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: root
-  node:
-    rid: 3601718103268392984
-  position: {x: 0, y: 0}
-  parents: []
-  childs:
-  - {fileID: 51627590}
-  references:
-    version: 2
-    RefIds:
-    - rid: 3601718103268392984
-      type: {class: IteratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
-      data:
-        Iterations: -1
 --- !u!114 &427898289 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1139414962, guid: cc5de5e674870ca479a40105f80555ad, type: 3}
@@ -778,13 +700,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de77f3c5db8e9024aa85e58e2883ccf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodeNamingSettings: 1
-  perceptionNamingSettings: 1
-  pushPerceptionNamingSettings: 1
-  graphs:
-  - {fileID: 59125842}
-  pushPerceptions: []
-  pullPerceptions: []
+  ExecuteOnLoop: 0
+  DontStopOnDisable: 0
+  data:
+    graphs:
+    - id: 075e914e-d82f-46d0-bde2-a93651dc3460
+      name: main
+      graph:
+        rid: 6537695503399780485
+      nodes:
+      - name: IteratorNode
+        id: 1fc0f671-e0e8-4a87-b8bf-846ca6557355
+        position: {x: 272, y: 110}
+        node:
+          rid: 6537695503399780486
+        parentIds: []
+        childIds:
+        - 551d6625-e39c-45eb-9b99-c374ca602976
+      - name: patrol
+        id: 551d6625-e39c-45eb-9b99-c374ca602976
+        position: {x: 270, y: 320}
+        node:
+          rid: 6537695503399780487
+        parentIds:
+        - 1fc0f671-e0e8-4a87-b8bf-846ca6557355
+        childIds: []
+    pushPerceptions: []
   routePoints:
   - {fileID: 2128227414}
   - {fileID: 317209092}
@@ -792,6 +733,22 @@ MonoBehaviour:
   - {fileID: 1193483298}
   - {fileID: 1392549}
   - {fileID: 1604960911}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 6537695503399780485
+      type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+    - rid: 6537695503399780486
+      type: {class: IteratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      data:
+        Iterations: -1
+    - rid: 6537695503399780487
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        action:
+          rid: -2
 --- !u!114 &1072078562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -804,7 +761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  systemAsset: {fileID: 0}
+  debugStatusChanges: 0
 --- !u!1 &1193483297
 GameObject:
   m_ObjectHideFlags: 0
@@ -1076,7 +1033,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9e911668858a1e4ca26ae00e0486a2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testBoy: {fileID: 114033676026946300, guid: 3b29c26c083a1cb4e8c86dfd947fa115, type: 3}
+  testBoy: {fileID: 8841883541597954724, guid: 9e9ca7f956b474d4183b5275d6053b2e, type: 3}
   spawnPoint: {fileID: 550914970}
   key: {fileID: 427898289}
 --- !u!1 &1567641567

@@ -1642,7 +1642,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b57e1bf202f077340a42f2d2a334e18c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testBoyPrefab: {fileID: 4600201873981623957, guid: 82dd731270ffa2d4aa2817f7683c803d, type: 3}
+  testBoyPrefab: {fileID: 8663427095336082182, guid: 82dd731270ffa2d4aa2817f7683c803d, type: 3}
   door: {fileID: 1475841487}
   spawnPoint: {fileID: 132424646}
   key: {fileID: 1058697823}

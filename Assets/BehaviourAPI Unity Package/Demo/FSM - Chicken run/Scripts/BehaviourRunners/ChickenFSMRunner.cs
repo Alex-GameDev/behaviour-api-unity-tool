@@ -28,7 +28,7 @@ public class ChickenFSMRunner : CodeBehaviourRunner
         var fsm = new BehaviourAPI.StateMachines.FSM();
 
         // Percepciones pull
-        var chickenNear = new ConditionPerception(CheckWatchTarget);
+        var watchPlayer = new ConditionPerception(CheckWatchTarget);
         var timeToStartMoving = new UnityTimePerception(3f);
 
         // Estados
@@ -44,8 +44,8 @@ public class ChickenFSMRunner : CodeBehaviourRunner
         fsm.CreateTransition("runaway to idle", chasing, idle, statusFlags: StatusFlags.Finished);
 
         // Las transiciones que pasan al estado "chasing" se activan con la percepción "watchPlayer".
-        fsm.CreateTransition("idle to runaway", idle, chasing, chickenNear);
-        fsm.CreateTransition("moving to runaway", moving, chasing, chickenNear);
+        fsm.CreateTransition("idle to runaway", idle, chasing, watchPlayer);
+        fsm.CreateTransition("moving to runaway", moving, chasing, watchPlayer);
 
         RegisterGraph(fsm);
         return fsm;
