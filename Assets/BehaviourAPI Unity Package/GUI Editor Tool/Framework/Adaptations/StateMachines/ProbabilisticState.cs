@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
-    public class ProbabilisticState : StateMachines.ProbabilisticState, IActionAssignable
+    public class ProbabilisticState : StateMachines.ProbabilisticState, IActionAssignable, IBuildable
     {
         [SerializeReference] Action action;
 

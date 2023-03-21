@@ -26,6 +26,7 @@ namespace BehaviourAPI.Unity.Framework
 
         public BehaviourGraph BuildSystem()
         {
+            BehaviourGraph maingraph;
             if (graphs.Count > 0)
             {
                 for (int i = 0; i < graphs.Count; i++)
@@ -33,12 +34,19 @@ namespace BehaviourAPI.Unity.Framework
                     graphs[i].Build(this);
                 }
 
-                return graphs[0].graph;
+                maingraph = graphs[0].graph;
             }
             else
             {
-                return null;
+                maingraph = null;
             }
+
+            foreach (var pushPerception in pushPerceptions)
+            {
+                pushPerception.Build(this);
+            }
+
+            return maingraph;
         }
 
         public SystemData GetRuntimeCopy() => (SystemData)Clone();

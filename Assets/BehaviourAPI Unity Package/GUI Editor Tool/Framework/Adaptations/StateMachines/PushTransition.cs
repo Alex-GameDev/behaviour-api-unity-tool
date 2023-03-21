@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
-    public class PushTransition : StateMachines.StackFSMs.PushTransition, IActionAssignable, IPerceptionAssignable
+    public class PushTransition : StateMachines.StackFSMs.PushTransition, IActionAssignable, IPerceptionAssignable, IBuildable
     {
         [SerializeReference] Action action;
         [SerializeReference] Perception perception;

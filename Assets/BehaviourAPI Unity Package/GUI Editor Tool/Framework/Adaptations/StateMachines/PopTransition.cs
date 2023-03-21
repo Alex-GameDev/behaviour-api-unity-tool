@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
-    public class PopTransition : StateMachines.StackFSMs.PopTransition, IActionAssignable, IPerceptionAssignable
+    public class PopTransition : StateMachines.StackFSMs.PopTransition, IActionAssignable, IPerceptionAssignable, IBuildable
     {
         [SerializeReference] Action action;
         [SerializeReference] Perception perception;

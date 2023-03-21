@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
-    public class State : StateMachines.State, IActionAssignable
+    public class State : StateMachines.State, IActionAssignable, IBuildable
     {
         [SerializeReference] Action action;
 

@@ -21,10 +21,10 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
 
         public void Build(SystemData data)
         {
-            if(!string.IsNullOrEmpty(subgraphId))
+            if (!string.IsNullOrEmpty(subgraphId))
             {
                 var subgraphData = data.graphs.Find(g => g.id == subgraphId);
-                if(subgraphData != null)
+                if (subgraphData != null)
                 {
                     SubSystem = subgraphData.graph;
                 }
@@ -32,7 +32,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
                 {
                     Debug.LogWarning("Build error: The subgraphId didn't match with any graph in the system");
                 }
-            }           
+            }
         }
     }
 }

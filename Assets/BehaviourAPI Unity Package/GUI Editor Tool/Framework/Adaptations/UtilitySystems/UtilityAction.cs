@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
-    public class UtilityAction : UtilitySystems.UtilityAction, IActionAssignable
+    public class UtilityAction : UtilitySystems.UtilityAction, IActionAssignable, IBuildable
     {
         [SerializeReference] Action action;
 

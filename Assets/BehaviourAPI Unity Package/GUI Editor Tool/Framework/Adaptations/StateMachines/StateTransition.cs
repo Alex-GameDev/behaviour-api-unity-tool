@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
-    public class StateTransition : StateMachines.StateTransition, IActionAssignable, IPerceptionAssignable
+    public class StateTransition : StateMachines.StateTransition, IActionAssignable, IPerceptionAssignable, IBuildable
     {
         [SerializeReference] Action action;
         [SerializeReference] Perception perception;

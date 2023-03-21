@@ -6,7 +6,7 @@ namespace BehaviourAPI.UnityExtensions
     public abstract class UnityAction : Action
     {
         protected UnityExecutionContext context;
-        public virtual string DisplayInfo => "Unity ActionReference";
+        public virtual string DisplayInfo => "Unity Action";
 
         public override void SetExecutionContext(ExecutionContext context)
         {
