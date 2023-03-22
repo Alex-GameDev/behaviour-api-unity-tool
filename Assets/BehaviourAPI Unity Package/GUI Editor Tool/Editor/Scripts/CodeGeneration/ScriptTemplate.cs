@@ -1,14 +1,7 @@
-using BehaviourAPI.Core;
 using BehaviourAPI.Unity.Framework;
-using BehaviourAPI.Unity.Runtime;
-using Codice.Utils;
-using Palmmedia.ReportGenerator.Core.Parser.Analysis;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Xml.Linq;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 
@@ -48,7 +41,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public string FindVariableName(object obj)
         {
-            if(obj == null) return null;
+            if (obj == null) return null;
             else return m_variableNamingMap.GetValueOrDefault(obj);
         }
 
@@ -65,7 +58,7 @@ namespace BehaviourAPI.Unity.Editor
             var codeText = $"{includeLines}\n\npublic class {m_className}";
             if (m_inheritedClassNames.Length > 0) codeText += $" : {string.Join(", ", m_inheritedClassNames)}";
             codeText += $"\n{{\n\t{propertyLines}\n\n\t{codeLines}\n";
-            codeText += "\n" + methodLines + "\n}";            
+            codeText += "\n" + methodLines + "\n}";
             return codeText;
         }
 
@@ -74,7 +67,7 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public void AddUsingDirective(string include)
         {
-             if(!string.IsNullOrEmpty(include)) namespaces.Add(include);
+            if (!string.IsNullOrEmpty(include)) namespaces.Add(include);
         }
 
         /// <summary>
@@ -101,7 +94,7 @@ namespace BehaviourAPI.Unity.Editor
         /// Returns true if the variable didn't exist yet.
         private bool AddVariable(object obj, ref string varName)
         {
-            if(m_variableNamingMap.TryGetValue(obj, out string existingName))
+            if (m_variableNamingMap.TryGetValue(obj, out string existingName))
             {
                 varName = existingName;
                 return false;
@@ -111,11 +104,11 @@ namespace BehaviourAPI.Unity.Editor
                 varName = GetValidIdentificatorName(varName);
             }
 
-            if(obj.ToString() != "null")
+            if (obj.ToString() != "null")
             {
                 m_variableNamingMap.Add(obj, varName);
-            }           
-            
+            }
+
             return true;
         }
 
@@ -151,13 +144,13 @@ namespace BehaviourAPI.Unity.Editor
             {
                 return $"{varType.Name}.{obj}";
             }
-            else if(varType.IsValueType)
+            else if (varType.IsValueType)
             {
                 return ToCode(obj);
             }
             else
             {
-                if(varType == typeof(string))
+                if (varType == typeof(string))
                 {
                     return $"\"{obj}\"";
                 }
@@ -171,7 +164,7 @@ namespace BehaviourAPI.Unity.Editor
                     properties.Add(line);
                 }
                 return varName;
-            }         
+            }
         }
 
         /// <summary>
@@ -252,15 +245,15 @@ namespace BehaviourAPI.Unity.Editor
         public void CloseCreateNodeLine(bool finishInstruction = true)
         {
             currentCodeLine += ")";
-            if(finishInstruction)
+            if (finishInstruction)
             {
                 currentCodeLine += ";";
                 CommitCurrentLine();
             }
-        }     
+        }
 
-        #endregion             
-         
+        #endregion
+
 
         private void OpenBrackets()
         {
@@ -311,7 +304,7 @@ namespace BehaviourAPI.Unity.Editor
         internal string FindGraphVarName(string subgraphId)
         {
             var graphData = m_graphMap.GetValueOrDefault(subgraphId);
-            if(graphData == null) return null;
+            if (graphData == null) return null;
             return m_variableNamingMap.GetValueOrDefault(graphData);
         }
 
