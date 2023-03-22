@@ -20,10 +20,11 @@ namespace BehaviourAPI.StateMachines
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
-        public override void Perform()
+        public override bool Perform()
         {
-            base.Perform();
-            _fsm.Finish(ExitStatus);
+            bool canBePerformed = base.Perform();
+            if (canBePerformed) _fsm.Finish(ExitStatus);
+            return canBePerformed;
         }
 
         #endregion

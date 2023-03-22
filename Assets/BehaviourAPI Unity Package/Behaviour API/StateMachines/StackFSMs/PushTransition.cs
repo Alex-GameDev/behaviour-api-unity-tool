@@ -36,12 +36,15 @@ namespace BehaviourAPI.StateMachines.StackFSMs
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
-        public override void Perform()
+        public override bool Perform()
         {
-            base.Perform();
-            if (_targetState == null) throw new MissingChildException(this, "The target state can't be null.");
-
-            _stackFSM.Push(_targetState, this);
+            bool canBePerformed = base.Perform();
+            if (canBePerformed)
+            {
+                if (_targetState == null) throw new MissingChildException(this, "The target state can't be null.");
+                _stackFSM.Push(_targetState, this);
+            }
+            return canBePerformed;
         }
 
         #endregion

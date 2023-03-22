@@ -21,8 +21,9 @@ namespace BehaviourAPI.StateMachines
         /// <summary>
         /// The status that the source state had when this transition was triggered
         /// </summary>
-        public Status SourceStateLastStatus {
-            get => _sourceStateLastStatus; 
+        public Status SourceStateLastStatus
+        {
+            get => _sourceStateLastStatus;
             set
             {
                 _sourceStateLastStatus = value;
@@ -91,9 +92,9 @@ namespace BehaviourAPI.StateMachines
             return Perception?.Check() ?? true;
         }
 
-        public virtual void Perform()
+        public virtual bool Perform()
         {
-            if (!_fsm.IsCurrentState(_sourceState)) return;
+            if (!_fsm.IsCurrentState(_sourceState)) return false;
 
             if (Action != null)
             {
@@ -104,6 +105,7 @@ namespace BehaviourAPI.StateMachines
 
             TransitionTriggered?.Invoke();
             SourceStateLastStatus = _sourceState.Status;
+            return true;
         }
 
         public void Fire() => Perform();

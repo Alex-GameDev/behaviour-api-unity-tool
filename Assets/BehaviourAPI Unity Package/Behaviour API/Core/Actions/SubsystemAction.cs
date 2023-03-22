@@ -38,10 +38,11 @@ namespace BehaviourAPI.Core.Actions
             if (SubSystem == null)
                 throw new MissingSubsystemException(this, "Subsystem cannot be null");
 
+            SubSystem.Update();
+
             if (ExecuteOnLoop && SubSystem.Status != Status.Running)
                 SubSystem.Restart();
 
-            SubSystem.Update();
             return SubSystem.Status;
         }
 
@@ -51,7 +52,7 @@ namespace BehaviourAPI.Core.Actions
                 throw new MissingSubsystemException(this, "Subsystem cannot be null");
 
             if (DontStopOnInterrupt && SubSystem.Status == Status.Running) return;
-            
+
             SubSystem?.Stop();
         }
 

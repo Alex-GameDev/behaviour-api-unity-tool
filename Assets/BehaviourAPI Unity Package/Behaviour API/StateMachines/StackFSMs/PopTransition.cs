@@ -10,10 +10,11 @@
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
-        public override void Perform()
+        public override bool Perform()
         {
-            base.Perform();
-            _stackFSM.Pop(this);
+            bool canBePerformed = base.Perform();
+            if (canBePerformed) _stackFSM.Pop(this);
+            return canBePerformed;
         }
 
         #endregion
