@@ -216,6 +216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ExecuteOnLoop: 0
   DontStopOnDisable: 0
+  UseNodeNames: 1
   data:
     graphs:
     - id: 6fc51b0e-377e-4e13-8d42-ec1d6f37f6e3
@@ -261,7 +262,7 @@ MonoBehaviour:
         parentIds:
         - ea0a4dad-259c-4c06-b8fb-ce2f85e5f8f7
         childIds: []
-      - name: StateTransition
+      - name: home to key
         id: 04dd38bb-2f70-4dad-bc88-60ff2ddc59d6
         position: {x: 430, y: 60}
         node:
@@ -279,7 +280,7 @@ MonoBehaviour:
         - 6fcb84b6-2f72-4886-8f72-005f4a83834e
         childIds:
         - 9e065d07-7e7e-46be-ba15-10a1b9f158c4
-      - name: StateTransition
+      - name: key to enter
         id: ea0a4dad-259c-4c06-b8fb-ce2f85e5f8f7
         position: {x: 674, y: 392}
         node:
@@ -297,7 +298,7 @@ MonoBehaviour:
         - 3afc4b1a-5ee5-46a0-ab5a-10a139cee8b2
         childIds:
         - 9e065d07-7e7e-46be-ba15-10a1b9f158c4
-      - name: StateTransition
+      - name: running to house
         id: 5470e2be-e766-441f-9372-48975fc269c7
         position: {x: 43, y: 374}
         node:

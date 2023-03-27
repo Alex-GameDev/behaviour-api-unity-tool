@@ -5,18 +5,26 @@
     /// </summary>
     public class ExecutionStatusPerception : Perception
     {
+        /// <summary>
+        /// The status handler checked
+        /// </summary>
         public IStatusHandler StatusHandler;
 
+        /// <summary>
+        /// The status flags that trigger the perception
+        /// </summary>
         public StatusFlags StatusFlags;
 
-
+        /// <summary>
+        /// Create a new execution status perception.
+        /// </summary>
         public ExecutionStatusPerception()
         {
             StatusFlags = StatusFlags.Running;
         }
 
         /// <summary>
-        /// Create a perception that checks if a element's status matches the given flags.
+        /// Create a execution perception that checks if a element's status matches the given flags.
         /// </summary>
         /// <param name="statusHandler">The element checked</param>
         public ExecutionStatusPerception(IStatusHandler statusHandler, StatusFlags flags = StatusFlags.Running)
@@ -25,6 +33,10 @@
             StatusFlags = flags;
         }
 
+        /// <summary>
+        /// Returns true if the <see cref="StatusHandler"/> current status value matches with <see cref="StatusFlags"/>.
+        /// </summary>
+        /// <returns></returns>
         public override bool Check()
         {
             if(StatusHandler == null) return false;
@@ -33,53 +45,13 @@
             return (handlerStatusFlag & StatusFlags) != 0;
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// (The context in Execution status perceptions is not used).
+        /// </summary>
         public override void SetExecutionContext(ExecutionContext context)
         {
             return;
         }
-    }
-
-    [System.Flags]
-    public enum StatusFlags
-    {
-        /// <summary>
-        /// Equivalent to Status.None
-        /// </summary>
-        None = 0,
-
-        /// <summary>
-        /// Equivalent to Status.Running
-        /// </summary>
-        Running = 1,
-
-        /// <summary>
-        /// Equivalent to Status.Success
-        /// </summary>
-        Success = 2,
-
-        /// <summary>
-        /// Equivalent to Status.Running | Status.Success
-        /// </summary>
-        NotFailure = 3,
-
-        /// <summary>
-        /// Equivalent to Status.Failure
-        /// </summary>
-        Failure = 4,
-
-        /// <summary>
-        /// Equivalent to Status.Running | Status.Failure
-        /// </summary>
-        NotSuccess = 5,
-
-        /// <summary>
-        /// Equivalent to Status.Success | Status.Failure
-        /// </summary>
-        Finished = 6,
-
-        /// <summary>
-        /// Equivalent to Status.Running | Status.Success | Status.Failure
-        /// </summary>
-        Actived = 7
-    }
+    }   
 }

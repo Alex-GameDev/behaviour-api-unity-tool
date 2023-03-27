@@ -2,17 +2,22 @@ using System;
 
 namespace BehaviourAPI.BehaviourTrees
 {
+    using BehaviourAPI.Core.Exceptions;
+    using BehaviourAPI.Core.Perceptions;
     using Core;
 
     /// <summary>
     /// The base node in the <see cref="BehaviourTree"/>.
     /// </summary>
-    public abstract class BTNode : Node, IStatusHandler
+    public abstract class BTNode : Node, IStatusHandler, IPushActivable
     {
         #region ------------------------------------------ Properties -----------------------------------------
         public override int MaxInputConnections => 1;
         public override Type ChildType => typeof(BTNode);
 
+        /// <summary>
+        /// The execution status of the node.
+        /// </summary>
         public Status Status
         {
             get => _status;
@@ -25,6 +30,11 @@ namespace BehaviourAPI.BehaviourTrees
                 }
             }
         }
+
+        /// <summary>
+        /// The final status of this node in the current iteration loop. 
+        /// This value can only reset by loops.
+        /// </summary>
         public Status LastExecutionStatus
         {
             get => _lastExecutionStatus;
@@ -35,52 +45,90 @@ namespace BehaviourAPI.BehaviourTrees
             }
         }
 
+        /// <summary>
+        /// Event called when current status changed.
+        /// </summary>
         public Action<Status> StatusChanged { get; set; }
+
+        /// <summary>
+        /// Event called when last execution status changed.
+        /// </summary>
         public Action<Status> LastExecutionStatusChanged { get; set; }
+
+        #endregion
+
 
         Status _status;
         Status _lastExecutionStatus;
 
-        #endregion
+
 
         #region ----------------------------------------- Build methods --------------------------------------
 
         public override object Clone()
         {
             var btNode = (BTNode)base.Clone();
-            btNode.StatusChanged = delegate { };
+            btNode.StatusChanged = (Action<Status>)StatusChanged?.Clone();
+            btNode.LastExecutionStatusChanged = (Action<Status>)LastExecutionStatusChanged?.Clone();
             return btNode;
         }
         #endregion
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
+        /// <summary>
+        /// Starts the node execution, changing <see cref="Status"/> to Running. 
+        /// Reset the <see cref="LastExecutionStatus"/> value if its necessary.
+        /// </summary>
+        /// <exception cref="ExecutionStatusException">If the node execution already started. </exception>
         public virtual void Start()
         {
             if (Status != Status.None)
-                throw new Exception("ERROR: This node is already been executed");
+                throw new ExecutionStatusException(this, "ERROR: This node is already been executed");
 
             Status = Status.Running;
             ResetLastStatus();
         }
 
+        /// <summary>
+        /// Update the execution of the node.
+        /// </summary>
+        /// <exception cref="ExecutionStatusException">If the node is not executing.</exception>
         public void Update()
         {
+            if(Status == Status.None)
+                throw new ExecutionStatusException(this, "ERROR: This node must be started before update.");
+
             if (Status != Status.Running) return;
+
             Status = UpdateStatus();
         }
 
+        /// <summary>
+        /// Stop the node execution, changing <see cref="Status"/> to None. 
+        /// Save the final execution status in <see cref="LastExecutionStatus"/>
+        /// </summary>
+        /// <exception cref="Exception">If was already stopped.</exception>
         public virtual void Stop()
         {
             if (Status == Status.None)
-                throw new Exception("ERROR: This node is already been stopped");
+                throw new ExecutionStatusException(this, "ERROR: This node is already been stopped");
 
             LastExecutionStatus = Status;
             Status = Status.None;
         }
 
+        /// <summary>
+        /// Get the updated status of the node.
+        /// </summary>
+        /// <returns>The new status of the node.</returns>
         protected abstract Status UpdateStatus();
 
+        /// <summary>
+        /// Set the current last execution status to none and return
+        /// true if the previous value was different from none.
+        /// </summary>
+        /// <returns>True if the <see cref="LastExecutionStatus"/> value changed.</returns>
         public virtual bool ResetLastStatus()
         {
             if(LastExecutionStatus != Status.None)
@@ -93,6 +141,19 @@ namespace BehaviourAPI.BehaviourTrees
                 return false;
             }
         }
+
+        /// <summary>
+        /// End the execution of the node externally.
+        /// </summary>
+        public void Fire(Status status)
+        {
+            if(Status == Status.Running)
+            {
+                if(status != Status.None)
+                    Status = status;
+            }
+        }
+
         #endregion
     }
 }

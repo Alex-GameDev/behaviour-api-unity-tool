@@ -5,8 +5,12 @@ namespace BehaviourAPI.StateMachines
     using Core;
     using Core.Perceptions;
     using Core.Actions;
-    using System.Xml.Linq;
+    using BehaviourAPI.Core.Exceptions;
 
+    /// <summary>
+    /// Decision system builded as a State machine. Each frame, the current state is executed and check its
+    /// transitions.
+    /// </summary>
     public class FSM : BehaviourGraph
     {
         #region ------------------------------------------ Properties -----------------------------------------
@@ -17,19 +21,37 @@ namespace BehaviourAPI.StateMachines
 
         public override bool CanCreateLoops => true;
 
+        /// <summary>
+        /// The last triggered transition in the state machine.
+        /// </summary>
         public Transition LastPerformedTransition { get; private set; }
 
         #endregion
 
         #region ------------------------------------------- Fields -------------------------------------------
 
+        /// <summary>
+        /// The current active state of the graph
+        /// </summary>
         protected State _currentState;
-
 
         #endregion
 
         #region ---------------------------------------- Build methods ---------------------------------------
 
+        /// <summary>
+        /// Create a new <see cref="Transition"/> of type <typeparamref name="T"/> named <paramref name="name"/> from <paramref name="from"/> state. 
+        /// The transition will check <paramref name="perception"/> when <paramref name="from"/> Status matches
+        /// <paramref name="flags"/>. If <paramref name="perception"/> is null, check always return true.
+        /// When the transition is triggered, <paramref name="action"/> is performed.
+        /// </summary>
+        /// <typeparam name="T">The type of the transition.</typeparam>
+        /// <param name="name">The name of the transition.</param>
+        /// <param name="from">The source status of the transition.</param>
+        /// <param name="perception">The perception that the transition checks.</param>
+        /// <param name="action">The action performed by the transition.</param>
+        /// <param name="flags">The status flags that <paramref name="from"/> must match to check the transition.</param>
+        /// <returns>The created <typeparamref name="T"/>.</returns>
         protected T CreateInternalTransition<T>(string name, State from, Perception perception, Action action, StatusFlags flags) where T : Transition, new()
         {
             T transition = CreateNode<T>(name);
@@ -43,6 +65,18 @@ namespace BehaviourAPI.StateMachines
             return transition;
         }
 
+        /// <summary>
+        /// Create a new <see cref="Transition"/> of type <typeparamref name="T"/> named from <paramref name="from"/> state. 
+        /// <para>The transition will check <paramref name="perception"/> when <paramref name="from"/> Status matches
+        /// <paramref name="flags"/>. If <paramref name="perception"/> is null, check always return true. </para>
+        /// <para>When the transition is triggered, <paramref name="action"/> is performed.</para>
+        /// </summary>
+        /// <typeparam name="T">The type of the transition.</typeparam>
+        /// <param name="from">The source status of the transition.</param>
+        /// <param name="perception">The perception that the transition checks.</param>
+        /// <param name="action">The action performed by the transition.</param>
+        /// <param name="flags">The status flags that <paramref name="from"/> must match to check the transition.</param>
+        /// <returns>The created <typeparamref name="T"/>.</returns>
         protected T CreateInternalTransition<T>(State from, Perception perception, Action action, StatusFlags flags) where T : Transition, new()
         {
             T transition = CreateNode<T>();
@@ -57,7 +91,7 @@ namespace BehaviourAPI.StateMachines
         }
 
         /// <summary>
-        /// Create a new State in this <see cref="FSM"/> that executes the <see cref="Action"/> specified in <paramref name="action"/>.
+        /// Create a new <see cref="State"/> that executes <paramref name="action"/> when is the current state.
         /// </summary>
         /// <param name="action">The action this state executes.</param>
         /// <returns>The <see cref="State"/> created.</returns>
@@ -69,10 +103,10 @@ namespace BehaviourAPI.StateMachines
         }
 
         /// <summary>
-        /// Create a new State named <paramref name="name"/> in this <see cref="FSM"/> that executes the <see cref="Action"/> specified in <paramref name="action"/>.
+        /// Create a new <see cref="State"/> named <paramref name="name"/> that executes <paramref name="action"/> when is the current state of the.
         /// </summary>
         /// <param name="name">The name of this node.</param>
-        /// <param name="action">The action this state executes.</param>
+        /// <param name="action">The action executed by the state.</param>
         /// <returns>The <see cref="State"/> created.</returns>
         public State CreateState(string name, Action action = null)
         {
@@ -84,35 +118,36 @@ namespace BehaviourAPI.StateMachines
 
 
         /// <summary>
-        /// Create a new State of type <typeparamref name="T"/> in this <see cref="FSM"/> that executes the given action.
+        /// Create a new <see cref="ProbabilisticState"/> that executes <paramref name="action"/> when is the current state of the fsm.
         /// </summary>
-        /// <param name="action">The action this state wil executes</param>
-        /// <returns>The State created</returns>
-        public T CreateState<T>(Action action = null) where T : State, new()
+        /// <param name="action">The action executed by the state.</param>
+        /// <returns>The <see cref="ProbabilisticState"/> created.</returns>
+        public ProbabilisticState CreateProbabilisticState(Action action = null)
         {
-            T state = CreateNode<T>();
+            ProbabilisticState state = CreateNode<ProbabilisticState>();
             state.Action = action;
             return state;
         }
 
         /// <summary>
-        /// Create a new State of type <typeparamref name="T"/> named <paramref name="name"/> in this <see cref="FSM"/> that executes the <see cref="Action"/> specified in <paramref name="action"/>.
+        /// Create a new <see cref="ProbabilisticState"/> named <paramref name="name"/> that executes <paramref name="action"/> when is the current state of the fsm.
         /// </summary>
         /// <param name="name">The name of this node.</param>
-        /// <param name="action">The action this state executes.</param>
-        /// <returns>The <typeparamref name="T"/> created.</returns>
-        public T CreateState<T>(string name, Action action = null) where T : State, new()
+        /// <param name="action">The action executed by the state.</param>
+        /// <returns>The <see cref="ProbabilisticState"/> created.</returns>
+        public ProbabilisticState CreateProbabilisticState(string name, Action action = null)
         {
-            T state = CreateNode<T>(name);
+            ProbabilisticState state = CreateNode<ProbabilisticState>(name);
             state.Action = action;
             return state;
         }
 
 
         /// <summary>
-        /// Create a new <see cref="StateTransition"/> of type <typeparamref name="T"/> named <paramref name="name"/> in this <see cref="FSM"/> that goes from the state <paramref name="from"/> to the state <paramref name="to"/>.
-        /// The transition checks <paramref name="perception"/> and executes <paramref name="action"/> when is performed. If <paramref name="perception"/> is not specified or is null, the transition works as a lambda transition.
-        /// To disable the transition from being checked from the source state, set <paramref name="isPulled"/> to false. 
+        /// Create a new <see cref="StateTransition"/> named <paramref name="name"/> that goes from the state <paramref name="from"/> to the state <paramref name="to"/>.
+        /// This transition will check <paramref name="perception"/> when <paramref name="from"/> Status matches
+        /// <paramref name="flags"/>. If <paramref name="perception"/> is null, check always return true.
+        /// When the transition is triggered, <paramref name="action"/> is performed and fsm current status changes to <paramref name="to"/> state.
         /// </summary>
         /// <param name="name">The name of the transition.</param>
         /// <param name="from">The source state of the transition and it's parent node.</param>
@@ -120,20 +155,21 @@ namespace BehaviourAPI.StateMachines
         /// <param name="perception">The perception checked by the transition.</param>
         /// <param name="action">The action executed by the transition.</param>
         /// <param name="statusFlags">The status that the source state can have to check the perception. If none, the transition will never be checked.</param>
-        /// <returns>The <see cref="ExitTransition"/> created.</returns>
+        /// <returns>The <see cref="StateTransition"/> created.</returns>
 
-        public StateTransition CreateTransition(string name, State from, State to, Perception perception = null, Action action = null, StatusFlags statusFlags = StatusFlags.Actived)
+        public StateTransition CreateTransition(string name, State from, State to, Perception perception = null, Action action = null, StatusFlags statusFlags = StatusFlags.Active)
         {
             StateTransition transition = CreateInternalTransition<StateTransition>(name, from, perception, action, statusFlags);
             Connect(transition, to);
             transition.SetTargetState(to);
-            return transition;       
+            return transition;
         }
 
         /// <summary>
-        /// Create a new <see cref="StateTransition"/> of type <typeparamref name="T"/> in this <see cref="FSM"/> that goes from the state <paramref name="from"/> to the state <paramref name="to"/>.
-        /// The transition checks <paramref name="perception"/> and executes <paramref name="action"/> when is performed. If <paramref name="perception"/> is not specified or is null, the transition works as a lambda transition.
-        /// To disable the transition from being checked from the source state, set <paramref name="isPulled"/> to false. 
+        /// Create a new <see cref="StateTransition"/> that goes from the state <paramref name="from"/> to the state <paramref name="to"/>.
+        /// This transition will check <paramref name="perception"/> when <paramref name="from"/> Status matches <paramref name="flags"/>. 
+        /// If <paramref name="perception"/> is null, check always return true.
+        /// When the transition is triggered, <paramref name="action"/> is performed and fsm current status changes to <paramref name="to"/> state.
         /// </summary>
         /// <param name="from">The source state of the transition and it's parent node.</param>
         /// <param name="to">The target state of the transition and it's child node.</param>
@@ -141,7 +177,7 @@ namespace BehaviourAPI.StateMachines
         /// <param name="action">The action executed by the transition.</param>
         /// <param name="statusFlags">The status that the source state can have to check the perception. If none, the transition will never be checked.</param>
         /// <returns>The <see cref="StateTransition"/> created.</returns>
-        public StateTransition CreateTransition(State from, State to, Perception perception = null, Action action = null, StatusFlags statusFlags = StatusFlags.Actived)
+        public StateTransition CreateTransition(State from, State to, Perception perception = null, Action action = null, StatusFlags statusFlags = StatusFlags.Active)
         {
             StateTransition transition = CreateInternalTransition<StateTransition>(from, perception, action, statusFlags);
             Connect(transition, to);
@@ -152,9 +188,10 @@ namespace BehaviourAPI.StateMachines
 
 
         /// <summary>
-        /// Create a new <see cref="ExitTransition"/> named <paramref name="name"/> in this <see cref="FSM"/> that goes from the state <paramref name="from"/>  to exit the graph with value of <paramref name="exitStatus"/>.
-        /// The transition checks <paramref name="perception"/> and executes <paramref name="action"/> when is performed. If <paramref name="perception"/> is not specified or is null, the transition works as a lambda transition.
-        /// To disable the transition from being checked from the source state, set <paramref name="isPulled"/> to false. 
+        /// Create a new <see cref="ExitTransition"/> named <paramref name="name"/> from the state <paramref name="from"/>.
+        /// This transition will check <paramref name="perception"/> when <paramref name="from"/> Status matches <paramref name="flags"/>. 
+        /// If <paramref name="perception"/> is null, check always return true.
+        /// When the transition is triggered, <paramref name="action"/> is performed and the fsm execution will end with <paramref name="exitStatus"/>.
         /// </summary>
         /// <param name="name">The name of the transition.</param>
         /// <param name="from">The source state of the transition and it's parent node.</param>
@@ -162,7 +199,7 @@ namespace BehaviourAPI.StateMachines
         /// <param name="action">The action executed by the transition.</param>
         /// <param name="statusFlags">The status that the source state can have to check the perception. If none, the transition will never be checked.</param>
         /// <returns>The <see cref="ExitTransition"/> created.</returns>
-        public ExitTransition CreateExitTransition(string name, State from, Status exitStatus, Perception perception = null, Action action = null, StatusFlags statusFlags = StatusFlags.Actived)
+        public ExitTransition CreateExitTransition(string name, State from, Status exitStatus, Perception perception = null, Action action = null, StatusFlags statusFlags = StatusFlags.Active)
         {
             ExitTransition transition = CreateInternalTransition<ExitTransition>(name, from, perception, action, statusFlags);
             transition.ExitStatus = exitStatus;
@@ -170,16 +207,16 @@ namespace BehaviourAPI.StateMachines
         }
 
         /// <summary>
-        /// Create a new <see cref="ExitTransition"/> in this <see cref="FSM"/> that goes from the state <paramref name="from"/> to exit the graph with value of <paramref name="exitStatus"/>.
-        /// The transition checks <paramref name="perception"/> and executes <paramref name="action"/> when is performed. If <paramref name="perception"/> is not specified or is null, the transition works as a lambda transition.
-        /// To disable the transition from being checked from the source state, set <paramref name="isPulled"/> to false. 
+        /// Create a new <see cref="ExitTransition"/> from the state <paramref name="from"/>.
+        /// This transition will check <paramref name="perception"/> when <paramref name="from"/> Status matches <paramref name="flags"/>. 
+        /// If <paramref name="perception"/> is null, check always return true.
+        /// When the transition is triggered, <paramref name="action"/> is performed and the fsm execution will end with <paramref name="exitStatus"/>.
         /// </summary>
         /// <param name="from">The source state of the transition and it's parent node.</param>
         /// <param name="perception">The perception checked by the transition.</param>
         /// <param name="action">The action executed by the transition.</param>
-        /// <param name="statusFlags">The status that the source state can have to check the perception. If none, the transition will never be checked.</param>
-        /// <returns>The <see cref="ExitTransition"/> created.</returns>
-        public ExitTransition CreateExitTransition(State from, Status exitStatus, Perception perception = null, Action action = null, StatusFlags statusFlags = StatusFlags.Actived)
+        /// <param name="statusFlags">The status that the source state can h
+        public ExitTransition CreateExitTransition(State from, Status exitStatus, Perception perception = null, Action action = null, StatusFlags statusFlags = StatusFlags.Active)
         {
             ExitTransition transition = CreateInternalTransition<ExitTransition>(from, perception, action, statusFlags);
             transition.ExitStatus = exitStatus;
@@ -190,33 +227,57 @@ namespace BehaviourAPI.StateMachines
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
+        /// <summary>
+        /// Change the entry state of the fsm.
+        /// </summary>
+        /// <param name="state">The new entry state.</param>
         public void SetEntryState(State state)
         {
             StartNode = state;
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Set the entry state as the current state and start its execution.
+        /// </summary>
+        /// <exception cref="EmptyGraphException">If this graph has no nodes. </exception>
         public override void Start()
         {
             base.Start();
+            if (Nodes.Count == 0)
+                throw new EmptyGraphException(this);
 
             _currentState = StartNode as State;
             _currentState?.Start();
         }
 
-        public override void Execute()
+        /// <summary>
+        /// <inheritdoc/>
+        /// Update the current state.
+        /// </summary>
+        protected override void Execute()
         {
             _currentState?.Update();
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Stop the current state.
+        /// </summary>
         public override void Stop()
         {
             base.Stop();
             _currentState?.Stop();
         }
 
+        /// <summary>
+        /// Change the current state of the fsm.
+        /// </summary>
+        /// <param name="state">The selected state.</param>
+        /// <param name="transition">The transition that triggered the change.</param>
         public virtual void SetCurrentState(State state, Transition transition)
         {
-            if(LastPerformedTransition != null)
+            if (LastPerformedTransition != null)
                 LastPerformedTransition.SourceStateLastStatus = Status.None;
 
             LastPerformedTransition = transition;
@@ -225,6 +286,11 @@ namespace BehaviourAPI.StateMachines
             _currentState?.Start();
         }
 
+        /// <summary>
+        /// Check if <paramref name="state"/> is the current state of the fsm.
+        /// </summary>
+        /// <param name="state">The state checked.</param>
+        /// <returns>true if <paramref name="state"/> is the current state, false otherwise.</returns>
         public bool IsCurrentState(State state) => _currentState == state;
 
         #endregion

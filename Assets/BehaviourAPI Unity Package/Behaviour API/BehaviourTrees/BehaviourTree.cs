@@ -170,7 +170,7 @@ namespace BehaviourAPI.BehaviourTrees
             m_rootNode.Start();
         }
 
-        public override void Execute()
+        protected override void Execute()
         {
             m_rootNode.Update();
             Status = m_rootNode.Status;

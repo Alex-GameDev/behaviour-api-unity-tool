@@ -212,9 +212,9 @@ namespace BehaviourAPI.Unity.Editor
         /// <param name="template">YThe script template</param>
         private static void GenerateCodeForPushPerception(PushPerceptionData pushPerception, ScriptTemplate template)
         {
-            var targets = pushPerception.targetNodeIds.Select(id => template.FindNode(id)).ToList().FindAll(tgt => tgt.node is IPushActivable);  
+            var targets = pushPerception.targetNodeIds.Select(id => template.FindNode(id)).ToList().FindAll(tgt => tgt.node is IPushActivable);
             template.AddVariableInstantiationLine(typeof(PushPerception), pushPerception.name, pushPerception, targets);
-        }       
+        }
 
         /// <summary>
         /// Generates code for a action.
@@ -238,7 +238,7 @@ namespace BehaviourAPI.Unity.Editor
 
                     if (stopMethodArg != null) actionParameters.Add(stopMethodArg);
 
-                    if(inline)
+                    if (inline)
                     {
                         return $"new {nameof(FunctionalAction)}({string.Join(", ", actionParameters)})";
                     }
@@ -250,7 +250,7 @@ namespace BehaviourAPI.Unity.Editor
 
                 case UnityAction unityAction:
                     var code = GenerateConstructorCode(unityAction, template);
-                    if(inline)
+                    if (inline)
                     {
                         return code;
                     }
@@ -258,7 +258,7 @@ namespace BehaviourAPI.Unity.Editor
                     {
                         return template.AddVariableDeclarationLine(unityAction.GetType(), "action", action, code);
                     }
-                    
+
                 case SubgraphAction subgraphAction:
                     var subgraphName = template.FindGraphVarName(subgraphAction.subgraphId);
                     if (inline)
@@ -269,7 +269,7 @@ namespace BehaviourAPI.Unity.Editor
                     {
                         return template.AddVariableDeclarationLine(typeof(SubsystemAction), "subAction", action,
                         $"new {nameof(SubsystemAction)}({subgraphName})");
-                    }                    
+                    }
                 default:
                     return null;
             }
@@ -326,7 +326,7 @@ namespace BehaviourAPI.Unity.Editor
                         {
                             return template.AddVariableDeclarationLine(compound.compoundPerception.GetType(), "perception", perception,
                             $"new {compound.compoundPerception.TypeName()}({subPerceptionvariableNames.Join()})");
-                        }                       
+                        }
                     }
                     else return null;
 
@@ -569,7 +569,7 @@ namespace BehaviourAPI.Unity.Editor
                 case DecoratorNode decoratorNode: return GenerateDecoratorNodeCode(data, decoratorNode, template, graphName, includeNodeName);
                 case CompositeNode compositeNode: return GenerateCompositeNodeCode(data, compositeNode, template, graphName, includeNodeName);
                 default: return null;
-            }                  
+            }
         }
 
         static string GenerateLeafNodeCode(NodeData nodeData, LeafNode leafNode, ScriptTemplate template, string graphName, bool includeNodeName)
@@ -598,10 +598,10 @@ namespace BehaviourAPI.Unity.Editor
             List<string> args = new List<string>();
             args.Add(compositeNode.IsRandomized.ToCodeFormat());
 
-            for(int i = 0; i < nodeData.childIds.Count; i++)
+            for (int i = 0; i < nodeData.childIds.Count; i++)
             {
                 var child = template.FindNode(nodeData.childIds[i]);
-                if(child != null) args.Add(template.FindVariableName(child) ?? GenerateCodeForBTNode(child, template, graphName, includeNodeName));
+                if (child != null) args.Add(template.FindVariableName(child) ?? GenerateCodeForBTNode(child, template, graphName, includeNodeName));
             }
 
             return template.AddVariableDeclarationLine(compositeNode.GetType(), nodeData.name, nodeData,
@@ -651,12 +651,12 @@ namespace BehaviourAPI.Unity.Editor
             args.Add(parentName);
 
             var actionCode = GenerateActionCode(popTransition.ActionReference, template);
-            if(actionCode != null) args.Add("action: " + actionCode);
+            if (actionCode != null) args.Add("action: " + actionCode);
 
             var perceptionCode = GeneratePerceptionCode(popTransition.PerceptionReference, template);
-            if(perceptionCode != null) args.Add("perception: " + perceptionCode);
+            if (perceptionCode != null) args.Add("perception: " + perceptionCode);
 
-            if(popTransition.StatusFlags != StatusFlags.Actived) args.Add("statusFlags: " + popTransition.StatusFlags.ToCodeFormat());
+            if (popTransition.StatusFlags != StatusFlags.Active) args.Add("statusFlags: " + popTransition.StatusFlags.ToCodeFormat());
 
             return template.AddVariableDeclarationLine(popTransition.GetType(), data.name, data,
                 $"{graphName}.CreatePopTransition({args.Join()})");
@@ -682,7 +682,7 @@ namespace BehaviourAPI.Unity.Editor
 
             var perceptionCode = GeneratePerceptionCode(pushTransition.PerceptionReference, template);
             if (perceptionCode != null) args.Add("perception: " + perceptionCode);
-            if (pushTransition.StatusFlags != StatusFlags.Actived) args.Add("statusFlags: " + pushTransition.StatusFlags.ToCodeFormat());
+            if (pushTransition.StatusFlags != StatusFlags.Active) args.Add("statusFlags: " + pushTransition.StatusFlags.ToCodeFormat());
 
             return template.AddVariableDeclarationLine(pushTransition.GetType(), data.name, data,
                 $"{graphName}.CreatePushTransition({args.Join()})");
@@ -705,7 +705,7 @@ namespace BehaviourAPI.Unity.Editor
             var perceptionCode = GeneratePerceptionCode(exit.PerceptionReference, template);
             if (perceptionCode != null) args.Add("perception: " + perceptionCode);
 
-            if (exit.StatusFlags != StatusFlags.Actived) args.Add("statusFlags: " + exit.StatusFlags.ToCodeFormat());
+            if (exit.StatusFlags != StatusFlags.Active) args.Add("statusFlags: " + exit.StatusFlags.ToCodeFormat());
 
             return template.AddVariableDeclarationLine(exit.GetType(), data.name, data,
                 $"{graphName}.CreateExitTransition({args.Join()})");
@@ -730,7 +730,7 @@ namespace BehaviourAPI.Unity.Editor
 
             var perceptionCode = GeneratePerceptionCode(stateTransition.PerceptionReference, template);
             if (perceptionCode != null) args.Add("perception: " + perceptionCode);
-            if (stateTransition.StatusFlags != StatusFlags.Actived) args.Add("statusFlags: " + stateTransition.StatusFlags.ToCodeFormat());
+            if (stateTransition.StatusFlags != StatusFlags.Active) args.Add("statusFlags: " + stateTransition.StatusFlags.ToCodeFormat());
 
             return template.AddVariableDeclarationLine(stateTransition.GetType(), data.name, data,
                 $"{graphName}.CreateTransition({args.Join()})");
@@ -782,16 +782,16 @@ namespace BehaviourAPI.Unity.Editor
         {
             var type = node.GetType();
             var fields = type.GetFields();
-            foreach(var field in fields)
+            foreach (var field in fields)
             {
                 if (field.FieldType.IsAssignableFrom(typeof(Action)))
                 {
                     var value = (Action)field.GetValue(node);
-                    if(value != null)
+                    if (value != null)
                     {
                         var actionCode = GenerateActionCode((Action)field.GetValue(node), template, true);
                         template.AddLine($"{nodeVariableName}.Action = {actionCode};");
-                    }                    
+                    }
                 }
                 else if (field.FieldType.IsAssignableFrom(typeof(Perception)))
                 {

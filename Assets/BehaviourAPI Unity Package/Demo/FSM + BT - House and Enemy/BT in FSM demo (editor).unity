@@ -702,6 +702,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ExecuteOnLoop: 0
   DontStopOnDisable: 0
+  UseNodeNames: 1
   data:
     graphs:
     - id: 075e914e-d82f-46d0-bde2-a93651dc3460

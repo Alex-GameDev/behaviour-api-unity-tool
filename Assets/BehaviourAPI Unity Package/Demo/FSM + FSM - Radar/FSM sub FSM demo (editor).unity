@@ -927,6 +927,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ExecuteOnLoop: 0
   DontStopOnDisable: 0
+  UseNodeNames: 1
   data:
     graphs:
     - id: 27b9c0af-d28a-42aa-afbb-fbd4dc77a2bc
@@ -952,7 +953,7 @@ MonoBehaviour:
         - 04cb793c-9c09-4101-ae64-4db724a90fb2
         childIds:
         - b43f5331-9d14-4117-9f32-1961c3554c6d
-      - name: StateTransition
+      - name: break
         id: 04cb793c-9c09-4101-ae64-4db724a90fb2
         position: {x: 416, y: 76}
         node:
@@ -961,7 +962,7 @@ MonoBehaviour:
         - 904f368f-1ce1-43b0-98c0-630e5603a366
         childIds:
         - 5b8e22ac-b99b-4fc1-91ce-0d92e16628e2
-      - name: StateTransition
+      - name: fix
         id: b43f5331-9d14-4117-9f32-1961c3554c6d
         position: {x: 408, y: 250}
         node:
@@ -975,7 +976,7 @@ MonoBehaviour:
       graph:
         rid: 6537695503399780411
       nodes:
-      - name: State
+      - name: idle
         id: d2e71371-70f4-4acf-8209-81757d7714a7
         position: {x: 337, y: 168}
         node:
@@ -986,7 +987,7 @@ MonoBehaviour:
         childIds:
         - b3d53275-8cbb-4cef-bf18-83b826601f6a
         - bb51ab5e-702e-45b1-a3e4-bf2e5bd223e4
-      - name: State
+      - name: under speed
         id: a4a73fc8-913d-4968-b39d-74ae65d0425d
         position: {x: -152, y: 191}
         node:
@@ -995,7 +996,7 @@ MonoBehaviour:
         - b3d53275-8cbb-4cef-bf18-83b826601f6a
         childIds:
         - 67f09970-554f-4b21-8c97-9a2c675917c1
-      - name: State
+      - name: over speed
         id: c12b422f-faea-42a0-bb2e-56cb0314ede2
         position: {x: 907, y: 146}
         node:
@@ -1004,7 +1005,7 @@ MonoBehaviour:
         - bb51ab5e-702e-45b1-a3e4-bf2e5bd223e4
         childIds:
         - fc77abd5-7255-463f-acbb-021fd0fd9da2
-      - name: StateTransition
+      - name: under to idle
         id: 67f09970-554f-4b21-8c97-9a2c675917c1
         position: {x: 124, y: 49}
         node:
@@ -1013,7 +1014,7 @@ MonoBehaviour:
         - a4a73fc8-913d-4968-b39d-74ae65d0425d
         childIds:
         - d2e71371-70f4-4acf-8209-81757d7714a7
-      - name: StateTransition
+      - name: idle to under
         id: b3d53275-8cbb-4cef-bf18-83b826601f6a
         position: {x: 132, y: 280}
         node:
@@ -1022,7 +1023,7 @@ MonoBehaviour:
         - d2e71371-70f4-4acf-8209-81757d7714a7
         childIds:
         - a4a73fc8-913d-4968-b39d-74ae65d0425d
-      - name: StateTransition
+      - name: idle to over
         id: bb51ab5e-702e-45b1-a3e4-bf2e5bd223e4
         position: {x: 652, y: 12}
         node:
@@ -1031,7 +1032,7 @@ MonoBehaviour:
         - d2e71371-70f4-4acf-8209-81757d7714a7
         childIds:
         - c12b422f-faea-42a0-bb2e-56cb0314ede2
-      - name: StateTransition
+      - name: over to idle
         id: fc77abd5-7255-463f-acbb-021fd0fd9da2
         position: {x: 652, y: 288}
         node:

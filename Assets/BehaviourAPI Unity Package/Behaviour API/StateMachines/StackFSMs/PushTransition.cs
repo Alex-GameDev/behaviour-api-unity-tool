@@ -6,20 +6,30 @@ namespace BehaviourAPI.StateMachines.StackFSMs
     using Core;
     using Core.Exceptions;
 
+    /// <summary>
+    /// Stack transition between two states that saves the source state in the stack when is performed.
+    /// </summary>
     public class PushTransition : StackTransition
     {
         #region ------------------------------------------ Properties -----------------------------------------
 
         public override int MaxOutputConnections => 1;
 
-        protected State _targetState;
+        #endregion
 
+        #region -------------------------------------- Private variables -------------------------------------
+
+        State _targetState;
 
         #endregion
 
         #region ---------------------------------------- Build methods ---------------------------------------
 
-        public void SetTargetState(State target) => _targetState = target;
+        /// <summary>
+        /// Set the target state of the transition.
+        /// </summary>
+        /// <param name="target">The target state.</param>
+        protected internal void SetTargetState(State target) => _targetState = target;
 
         protected override void BuildConnections(List<Node> parents, List<Node> children)
         {
@@ -31,11 +41,16 @@ namespace BehaviourAPI.StateMachines.StackFSMs
                 throw new ArgumentException();
         }
 
-
         #endregion
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Set target state to the current state of the fsm and push source state in the stack.
+        /// </summary>
+        /// <returns><inheritdoc/></returns>
+        /// <exception cref="MissingChildException">If target state is null.</exception>
         public override bool Perform()
         {
             bool canBePerformed = base.Perform();

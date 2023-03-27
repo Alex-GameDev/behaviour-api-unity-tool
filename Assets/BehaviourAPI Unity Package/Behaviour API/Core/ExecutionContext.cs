@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BehaviourAPI.Core
+﻿namespace BehaviourAPI.Core
 {
+    /// <summary>
+    /// Override this class to create a custom data class shared between all elements in a behaviour system.
+    /// </summary>
     public abstract class ExecutionContext
     {
     }

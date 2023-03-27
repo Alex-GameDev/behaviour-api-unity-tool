@@ -3,9 +3,7 @@ using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework;
 using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 
 namespace BehaviourAPI.Unity.Runtime
 {
@@ -70,9 +68,9 @@ namespace BehaviourAPI.Unity.Runtime
         void BuildDictionaries()
         {
             _graphMap = new Dictionary<string, BehaviourGraph>();
-            foreach(GraphData data in _executionSystem.graphs)
+            foreach (GraphData data in _executionSystem.graphs)
             {
-                if(!string.IsNullOrWhiteSpace(data.name))
+                if (!string.IsNullOrWhiteSpace(data.name))
                 {
                     if (!_graphMap.TryAdd(data.name, data.graph))
                     {

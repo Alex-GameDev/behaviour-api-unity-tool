@@ -11,6 +11,12 @@ namespace BehaviourAPI.BehaviourTrees
     {
         #region --------------------------------------- Runtime methods --------------------------------------
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Get the inverted value of <paramref name="childStatus"/>.
+        /// </summary>
+        /// <param name="childStatus"><inheritdoc/></param>
+        /// <returns>Success if <paramref name="childStatus"/> is Failure, Failure if <paramref name="childStatus"/> is success, Running otherwise.</returns>
         protected override Status ModifyStatus(Status childStatus)
         {
             return childStatus.Inverted();

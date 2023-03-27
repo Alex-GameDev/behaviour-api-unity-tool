@@ -2,10 +2,11 @@
 
 namespace BehaviourAPI.Core
 {
+    /// <summary>
+    /// Extension math method class.
+    /// </summary>
     public static class MathUtilities
     {
-        public static Random Random = new Random();
-
         /// <summary>
         /// Clamp the float value between 0 and 1.
         /// </summary>

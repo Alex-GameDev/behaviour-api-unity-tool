@@ -16,6 +16,8 @@ namespace BehaviourAPI.Unity.Framework
     [Serializable]
     public class GraphData : ICloneable
     {
+
+
         [HideInInspector] public string id;
         public string name;
         [SerializeReference] public BehaviourGraph graph;
@@ -156,16 +158,39 @@ namespace BehaviourAPI.Unity.Framework
         {
             var builder = new BehaviourGraphBuilder(graph);
             var nodeIdMap = GetNodeIdMap();
+
+            FixNodeNames();
             for (int i = 0; i < nodes.Count; i++)
             {
                 if (nodes[i].node is IBuildable buildable) buildable.Build(data);
-
-                builder.AddNode(nodes[i].name, nodes[i].node,
-                    nodes[i].parentIds.Select(id => nodeIdMap[id].node).ToList(),
-                    nodes[i].childIds.Select(id => nodeIdMap[id].node).ToList()
+                {
+                    builder.AddNode(nodes[i].name, nodes[i].node,
+                        nodes[i].parentIds.Select(id => nodeIdMap[id].node).ToList(),
+                        nodes[i].childIds.Select(id => nodeIdMap[id].node).ToList()
                     );
+                }
             }
             builder.Build();
+        }
+
+        private void FixNodeNames()
+        {
+            HashSet<string> usedNames = new HashSet<string>();
+            foreach (NodeData node in nodes)
+            {
+                if (!string.IsNullOrEmpty(node.name))
+                {
+                    var fixedName = node.name;
+                    int index = 1;
+                    while (usedNames.Contains(fixedName))
+                    {
+                        fixedName = node.name + "_" + index;
+                        index++;
+                    }
+                    node.name = fixedName;
+                    usedNames.Add(fixedName);
+                }
+            }
         }
 
         public object Clone()

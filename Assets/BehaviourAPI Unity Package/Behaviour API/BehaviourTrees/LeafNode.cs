@@ -4,26 +4,25 @@ using BehaviourAPI.Core.Perceptions;
 
 namespace BehaviourAPI.BehaviourTrees
 {
-    using BehaviourAPI.Core.Exceptions;
+    using Core.Exceptions;
     using Core.Actions;
+
     /// <summary>
-    /// BTNode type that has no children.
+    /// BTNode type that has no children and executes an <see cref="Core.Actions.Action"/>.
     /// </summary>
     public class LeafNode : BTNode
     {
         #region ------------------------------------------ Properties -----------------------------------------
         public sealed override int MaxOutputConnections => 0;
+
+        /// <summary>
+        /// The action executed by this node.
+        /// </summary>
         public Action Action; 
 
         #endregion
 
         #region ---------------------------------------- Build methods ---------------------------------------
-
-        public LeafNode SetAction(Action action)
-        {
-            Action = action;
-            return this;
-        }
 
         public override object Clone()
         {
@@ -36,6 +35,11 @@ namespace BehaviourAPI.BehaviourTrees
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Starts the action execution.
+        /// </summary>
+        /// <exception cref="MissingActionException">If the action is null</exception>
         public override void Start()
         {
             base.Start();
@@ -45,6 +49,12 @@ namespace BehaviourAPI.BehaviourTrees
             Action.Start();
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Updates the action execution.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="MissingActionException"></exception>
         protected override Status UpdateStatus()
         {
             if (Action == null)
@@ -54,6 +64,11 @@ namespace BehaviourAPI.BehaviourTrees
             return Status;
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Stops the action execution.
+        /// </summary>
+        /// <exception cref="MissingActionException"></exception>
         public override void Stop()
         {
             base.Stop();
@@ -64,9 +79,17 @@ namespace BehaviourAPI.BehaviourTrees
             Action.Stop();
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Pass the execution context to the action.
+        /// </summary>
+        /// <param name="context"><inheritdoc/></param>
         public override void SetExecutionContext(ExecutionContext context)
         {
-            Action?.SetExecutionContext(context);
+            if (Action == null)
+                throw new MissingActionException(this, "Leaf nodes need an action to work.");
+
+            Action.SetExecutionContext(context);
         }
 
         #endregion

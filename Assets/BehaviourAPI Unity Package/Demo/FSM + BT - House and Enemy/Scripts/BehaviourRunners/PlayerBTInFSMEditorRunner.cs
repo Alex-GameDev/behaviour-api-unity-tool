@@ -42,8 +42,8 @@ public class PlayerBTInFSMEditorRunner : EditorBehaviourRunner
         mainGraph.FindNode<StateTransition>("key to running").Perception = enemyPerception;
 
         subgraph.FindNode<ConditionNode>("has no key").SetPerception(new ConditionPerception(() => !_hasKey));
-        subgraph.FindNode<LeafNode>("walk to key").SetAction(new WalkAction(_keyPos, 5f));
-        subgraph.FindNode<LeafNode>("return to door").SetAction(new WalkAction(_doorPos, 5f));
+        subgraph.FindNode<LeafNode>("walk to key").Action = new WalkAction(_keyPos, 5f);
+        subgraph.FindNode<LeafNode>("return to door").Action = new WalkAction(_doorPos, 5f);
     }
 
     private void EnterTheHouse()

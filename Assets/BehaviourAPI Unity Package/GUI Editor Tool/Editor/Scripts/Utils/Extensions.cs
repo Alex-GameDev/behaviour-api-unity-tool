@@ -65,7 +65,7 @@ namespace BehaviourAPI.Unity.Editor
         public static string ToCodeFormat(this float f) => f.ToString().Replace(',', '.') + "f";
         public static string ToCodeFormat(this bool b) => b.ToString().ToLower();
         public static string ToCodeFormat(this Status s) => "Status." + s.ToString();
-        public static string ToCodeFormat(this StatusFlags s) => "StatusFlags." + ((int)s < 0 ? StatusFlags.Actived.ToString() : s.ToString());
+        public static string ToCodeFormat(this StatusFlags s) => "StatusFlags." + ((int)s < 0 ? StatusFlags.Active.ToString() : s.ToString());
 
         #endregion
     }

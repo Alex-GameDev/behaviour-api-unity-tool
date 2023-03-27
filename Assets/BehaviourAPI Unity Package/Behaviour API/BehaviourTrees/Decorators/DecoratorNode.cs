@@ -14,12 +14,21 @@ namespace BehaviourAPI.BehaviourTrees
 
         public sealed override int MaxOutputConnections => 1;
 
+        /// <summary>
+        /// The behaviour tree child node.
+        /// </summary>
         protected BTNode m_childNode;
 
         #endregion
 
         #region ---------------------------------------- Build methods ---------------------------------------
-        public void SetChild(BTNode child)
+        
+        /// <summary>
+        /// Set the current child node (only used internally).
+        /// </summary>
+        /// <param name="child">The new child node.</param>
+        /// <exception cref="MissingChildException">If <paramref name="child"/> is null</exception>
+        protected internal void SetChild(BTNode child)
         {
             if (child != null) m_childNode = child;
             else throw new MissingChildException(this, "Can't set null node as child");
@@ -37,11 +46,15 @@ namespace BehaviourAPI.BehaviourTrees
 
         #endregion
 
+        #region ------------------------------------- Runtime methods ------------------------------------
+        
         public override bool ResetLastStatus()
         {
             bool b = base.ResetLastStatus();
             if(b) m_childNode.ResetLastStatus();
             return b;
         }
+
+        #endregion
     }
 }

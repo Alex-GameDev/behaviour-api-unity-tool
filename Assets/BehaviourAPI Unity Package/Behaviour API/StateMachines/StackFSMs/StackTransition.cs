@@ -4,10 +4,28 @@ using System.Collections.Generic;
 namespace BehaviourAPI.StateMachines.StackFSMs
 {
     using Core;
+
+    /// <summary>
+    /// Base class for stack fsm transitions 
+    /// </summary>
     public abstract class StackTransition : Transition
     {
+        #region -------------------------------------- Private variables -------------------------------------
+        
+        /// <summary>
+        /// The stack fsm of this transition.
+        /// </summary>
         protected StackFSM _stackFSM;
-        public void SetStackFSM(StackFSM stackFSM) => _stackFSM = stackFSM;
+
+        #endregion
+
+        #region ---------------------------------------- Build methods ---------------------------------------
+
+        /// <summary>
+        /// Set the stack fsm of the transition
+        /// </summary>
+        /// <param name="stackFSM">The stack fsm.</param>
+        protected internal void SetStackFSM(StackFSM stackFSM) => _stackFSM = stackFSM;
 
         protected override void BuildConnections(List<Node> parents, List<Node> children)
         {
@@ -18,5 +36,7 @@ namespace BehaviourAPI.StateMachines.StackFSMs
 
             base.BuildConnections(parents, children);
         }
+
+        #endregion
     }
 }

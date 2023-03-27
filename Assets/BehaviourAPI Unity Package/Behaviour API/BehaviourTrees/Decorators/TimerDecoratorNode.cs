@@ -10,7 +10,7 @@ namespace BehaviourAPI.BehaviourTrees
     /// </summary>
     public class TimerDecoratorNode : DecoratorNode
     {
-        #region ------------------------------------------ Properties -----------------------------------------
+        #region --------------------------------------- Private fields ---------------------------------------
         
         Timer _timer;
 
@@ -21,18 +21,34 @@ namespace BehaviourAPI.BehaviourTrees
 
         #region ------------------------------------------- Fields -------------------------------------------
 
+        /// <summary>
+        /// The total time that the decorator waits to execute its child.
+        /// </summary>
         public float Time;
 
         #endregion
 
         #region ---------------------------------------- Build methods ---------------------------------------
 
+        /// <summary>
+        /// Set the <see cref="Time"/> value to <paramref name="time"/>.
+        /// </summary>
+        /// <param name="time">The new time value.</param>
+        /// <returns>The <see cref="TimerDecoratorNode"/> itself.</returns>
         public TimerDecoratorNode SetTime(float time)
         {
             Time = time;
             return this;
         }
 
+        #endregion
+
+        #region --------------------------------------- Runtime methods --------------------------------------
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// Starts the timer.
+        /// </summary>
         public override void Start()
         {
             base.Start();
@@ -45,10 +61,12 @@ namespace BehaviourAPI.BehaviourTrees
             _timer.Start();
         }
 
-        #endregion
-
-        #region --------------------------------------- Runtime methods --------------------------------------
-
+        /// <summary>
+        /// <inheritdoc/>
+        /// If the timer elapsed this frame, starts the child executions. Then update it.
+        /// </summary>
+        /// <returns>Running if the child is not executing yet, its status otherwise.</returns>
+        /// <exception cref="MissingChildException">If child is null.</exception>
         protected override Status UpdateStatus()
         {
             if (!_isTimeout) return Status.Running;
@@ -66,6 +84,11 @@ namespace BehaviourAPI.BehaviourTrees
             throw new MissingChildException(this);
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Reset the timer and stops the child if its executing.
+        /// </summary>
+        /// <exception cref="MissingChildException">If child is null.</exception>
         public override void Stop()
         {
             base.Stop();

@@ -17,39 +17,39 @@ namespace BehaviourAPI.UtilitySystems
         public override Type ChildType => typeof(UtilitySelectableNode);
         public override int MaxOutputConnections => -1;
 
-        public UtilitySelectableNode DefaultSelectedElement
-        {
-            get
-            {
-                if (_utilityCandidates.Count == 0)
-                    throw new MissingChildException(this, "The list of utility candidates is empty.");
-
-                else return _utilityCandidates[0];
-            }
-        }
-
-        List<UtilitySelectableNode> _utilityCandidates;
-
-        UtilitySelectableNode _currentBestElement;
-        UtilitySelectableNode _lastExecutedElement;
-
         #endregion
 
         #region ------------------------------------------- Fields -------------------------------------------
 
+        /// <summary>
+        /// 
+        /// </summary>
         public float Inertia = 1.3f;
+
+        /// <summary>
+        /// The minimum value of utility that the actions of the bucket must have to execute it with priority.
+        /// </summary>
         public float BucketThreshold = .3f;
 
         #endregion
 
+        #region -------------------------------------- Private variables -------------------------------------
+
+        List<UtilitySelectableNode> _utilityCandidates = new List<UtilitySelectableNode>();
+
+        UtilitySelectableNode _currentBestElement;
+        UtilitySelectableNode _lastExecutedElement;
+
+        #endregion       
+
         #region ---------------------------------------- Build methods ---------------------------------------
 
-        public UtilityBucket()
-        {
-            _utilityCandidates = new List<UtilitySelectableNode>();
-        }
-
-        public void AddElement(UtilitySelectableNode elem)
+        /// <summary>
+        /// Add a utility selectable node to the bucket.
+        /// </summary>
+        /// <param name="elem">The new selectable node.</param>
+        /// <exception cref="MissingChildException">If <paramref name="elem"/> is null.</exception>
+        protected internal void AddElement(UtilitySelectableNode elem)
         {
             if(elem != null)
             {
@@ -78,6 +78,10 @@ namespace BehaviourAPI.UtilitySystems
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <exception cref="MissingChildException">If utility candidate list is empty.</exception>
         public override void Start()
         {
             base.Start();
@@ -86,6 +90,12 @@ namespace BehaviourAPI.UtilitySystems
                 throw new MissingChildException(this, "The list of utility candidates of this bucket is empty.");
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// The utility will be the max utility of the actions in this group.
+        /// Also updates the current best action.
+        /// </summary>
+        /// <returns>The maximum utility of the actions in the group or 0 if is empty.</returns>
         protected override float GetUtility()
         {
             _currentBestElement = ComputeCurrentBestAction();
@@ -130,6 +140,11 @@ namespace BehaviourAPI.UtilitySystems
             return newBestElement;
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Execute the current best action. If the best action changes, stops the last
+        /// best action and starts the new one.
+        /// </summary>
         public override void Update()
         {
             if(_currentBestElement != _lastExecutedElement)
@@ -147,6 +162,10 @@ namespace BehaviourAPI.UtilitySystems
         }
 
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Stop the last executed action.
+        /// </summary>
         public override void Stop()
         {
             base.Stop();
@@ -154,8 +173,6 @@ namespace BehaviourAPI.UtilitySystems
             _lastExecutedElement = null;
             _currentBestElement = null;
         }
-
-        public override bool FinishExecutionWhenActionFinishes() => _lastExecutedElement?.FinishExecutionWhenActionFinishes() ?? false;
 
         #endregion
     }

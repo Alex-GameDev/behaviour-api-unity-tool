@@ -7,7 +7,10 @@ namespace BehaviourAPI.Core
     {
         #region ------------------------------------------ Properties -----------------------------------------
 
-        public BehaviourGraph BehaviourGraph { get; set; }
+        /// <summary>
+        /// The graph of the node.
+        /// </summary>
+        public BehaviourGraph BehaviourGraph { get; internal set; }
 
         /// <summary>
         /// The type of nodes that this node can handle as a child(s).
@@ -24,19 +27,23 @@ namespace BehaviourAPI.Core
         /// </summary>
         public abstract int MaxOutputConnections { get; }
 
+        public int ChildCount => Children.Count;
+
+        public int ParentCount => Parents.Count;
+
+        #endregion
+
+        #region -------------------------------------- Private variables ----------------------------------------
+
         /// <summary>
         /// List of connections in the graph with this node as target.
         /// </summary>
-        internal List<Node> Parents;
+        protected internal List<Node> Parents;
 
         /// <summary>
         /// List of connections in the graph with this node as source.
         /// </summary>
-        internal List<Node> Children;
-
-        public int ChildCount => Children.Count;
-
-        public int ParentCount => Parents.Count;
+        protected internal List<Node> Children;
 
         #endregion
 
@@ -50,8 +57,18 @@ namespace BehaviourAPI.Core
             Parents = new List<Node>();
         }
 
+        /// <summary>
+        /// Get the child node at specified position.
+        /// </summary>
+        /// <param name="index">The index of the node.</param>
+        /// <returns>The node at <paramref name="index"/> position in child list.</returns>
         public Node GetChildAt(int index) => Children[index];
 
+        /// <summary>
+        /// Get the parent node at specified position.
+        /// </summary>
+        /// <param name="index">The index of the node.</param>
+        /// <returns>The node at <paramref name="index"/> position in parent list.</returns>
         public Node GetParentAt(int index) => Parents[index];
 
         /// <summary>
@@ -74,8 +91,16 @@ namespace BehaviourAPI.Core
             return Children.Contains(node);
         }
 
+        /// <summary>
+        /// Get the fists child node.
+        /// </summary>
+        /// <returns>The first element in the child list or null if the list is empty.</returns>
         public Node GetFirstChild() => Children.Count > 0 ? Children[0] : null;
 
+        /// <summary>
+        /// Get the fists parent node.
+        /// </summary>
+        /// <returns>The first element in the parent list or null if the list is empty.</returns>
         public Node GetFirstParent() => Parents.Count > 0 ? Parents[0] : null;
 
         /// <summary>
@@ -108,18 +133,24 @@ namespace BehaviourAPI.Core
         /// <summary>
         /// Build the internal connection references.
         /// </summary>
+        /// <param name="parents">The list of parent nodes.</param>
+        /// <param name="children">The list of child nodes.</param>
         protected internal virtual void BuildConnections(List<Node> parents, List<Node> children)
         {
             if (MaxInputConnections != -1 && parents.Count > MaxInputConnections)
-                throw new ArgumentException();
+                throw new ArgumentException($"The parent list has to many elements ({parents.Count}, when the maximum in this node is {MaxInputConnections})");
 
             if (MaxOutputConnections != -1 && children.Count > MaxOutputConnections)
-                throw new ArgumentException();
+                throw new ArgumentException($"The child list has to many elements ({children.Count}, when the maximum in this node is {MaxOutputConnections})");
 
             Parents = parents;
             Children = children;
         }
 
+        /// <summary>
+        /// Create a shallow copy of the node with empty parent and child lists. 
+        /// </summary>
+        /// <returns>A field copy of the node. </returns>
         public virtual object Clone()
         {
             var node = (Node)MemberwiseClone();
@@ -130,7 +161,7 @@ namespace BehaviourAPI.Core
         }
 
         /// <summary>
-        /// Set the execution context
+        /// Set the execution context. 
         /// </summary>
         public virtual void SetExecutionContext(ExecutionContext context)
         {

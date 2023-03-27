@@ -1,20 +1,24 @@
-﻿using BehaviourAPI.Core;
-using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Core.Perceptions;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Action = BehaviourAPI.Core.Actions.Action;
 
 namespace BehaviourAPI.StateMachines
 {
+    using Core;
+    using Core.Actions;
+    using Core.Exceptions;
+    /// <summary>
+    /// Represents a state in a FSM graph.
+    /// </summary>
     public class State : FSMNode, IStatusHandler
     {
         #region ------------------------------------------ Properties -----------------------------------------
         public override Type ChildType => typeof(Transition);
-
         public override int MaxInputConnections => -1;
         public override int MaxOutputConnections => -1;
 
+        /// <summary>
+        /// The execution status of the state.
+        /// </summary>
         public Status Status
         {
             get => _status;
@@ -28,16 +32,29 @@ namespace BehaviourAPI.StateMachines
             }
         }
 
+        /// <summary>
+        /// Event called when current status changed.
+        /// </summary>
         public Action<Status> StatusChanged { get; set; }
-
-        Status _status;
 
         #endregion
 
         #region -------------------------------------------- Fields ------------------------------------------
 
+        /// <summary>
+        /// The action that this state executes.
+        /// </summary>
         public Action Action;
 
+        #endregion
+
+        #region -------------------------------------- Private variables -------------------------------------
+
+        Status _status;
+
+        /// <summary>
+        /// The list of transitions that have this state as source state.
+        /// </summary>
         protected List<Transition> _transitions;
 
         #endregion
@@ -49,7 +66,11 @@ namespace BehaviourAPI.StateMachines
             _transitions = new List<Transition>();
         }
 
-        public void AddTransition(Transition transition) => _transitions.Add(transition);
+        /// <summary>
+        /// Add a new transition to the list.
+        /// </summary>
+        /// <param name="transition">The added transition.</param>
+        protected internal void AddTransition(Transition transition) => _transitions.Add(transition);
 
         protected override void BuildConnections(List<Node> parents, List<Node> children)
         {
@@ -65,17 +86,11 @@ namespace BehaviourAPI.StateMachines
             }
         }
 
-        public State SetAction(Action action)
-        {
-            Action = action;
-            return this;
-        }
-
         public override object Clone()
         {
             var node = (State)base.Clone();
             node.Action = (Action)Action?.Clone();
-            node.StatusChanged = delegate { };
+            node.StatusChanged = (Action<Status>)StatusChanged?.Clone();
             return node;
         }
 
@@ -83,16 +98,24 @@ namespace BehaviourAPI.StateMachines
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
+        /// <summary>
+        /// Change status to Running.
+        /// Starts the action execution and initialize the transitions.
+        /// </summary>
+        /// <exception cref="ExecutionStatusException">If the node execution already started. </exception>
         public virtual void Start()
         {
             if (Status != Status.None)
-                throw new Exception("ERROR: This node is already been executed");
+                throw new ExecutionStatusException(this, "ERROR: This node is already been executed");
 
             Status = Status.Running;
-            _transitions.ForEach(t => t?.Start());
             Action?.Start();
+            _transitions.ForEach(t => t?.Start());
         }
 
+        /// <summary>
+        /// Update the action and check the transitions.
+        /// </summary>
         public virtual void Update()
         {
             if (Status == Status.Running) 
@@ -101,16 +124,24 @@ namespace BehaviourAPI.StateMachines
             CheckTransitions();
         }
 
+        /// <summary>
+        /// Change status to none.
+        /// Stop the action and reset the transitions
+        /// </summary>
+        /// <exception cref="Exception">If was already stopped.</exception>
         public virtual void Stop()
         {
             if (Status == Status.None)
                 throw new Exception("ERROR: This node is already been stopped");
 
             Status = Status.None;
-            _transitions.ForEach(t => t?.Stop());
             Action?.Stop();
+            _transitions.ForEach(t => t?.Stop());
         }
 
+        /// <summary>
+        /// Check the transitions until one of them is triggered.
+        /// </summary>
         protected virtual void CheckTransitions()
         {
             for (int i = 0; i < _transitions.Count; i++)
@@ -122,6 +153,11 @@ namespace BehaviourAPI.StateMachines
             }
         }
 
+        /// <summary>
+        /// Check if <paramref name="t"/> flags matches the current status and then check the transition.
+        /// </summary>
+        /// <param name="t">The transition checked.</param>
+        /// <returns>True if the flags matches and the transition was triggered.</returns>
         protected bool CheckTransition(Transition t)
         {
             if (((uint)Status & (uint)t.StatusFlags) != 0)
@@ -134,6 +170,11 @@ namespace BehaviourAPI.StateMachines
             }
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Passes the context to the action.
+        /// </summary>
+        /// <param name="context"><inheritdoc/></param>
         public override void SetExecutionContext(ExecutionContext context)
         {
             Action?.SetExecutionContext(context);

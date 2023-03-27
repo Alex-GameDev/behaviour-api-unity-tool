@@ -15,7 +15,6 @@ namespace BehaviourAPI.Unity.Framework
         {
         }
 
-        //TODO: 
         public SystemData(Dictionary<BehaviourGraph, string> graphMap)
         {
             foreach (var graph in graphMap)

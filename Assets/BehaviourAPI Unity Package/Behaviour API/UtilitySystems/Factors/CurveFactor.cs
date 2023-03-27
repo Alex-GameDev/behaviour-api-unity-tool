@@ -13,13 +13,18 @@ namespace BehaviourAPI.UtilitySystems
         #region ------------------------------------------ Properties -----------------------------------------
         public override int MaxOutputConnections => 1;
 
-        Factor m_childFactor;
-
         #endregion
+
+        Factor m_childFactor;
 
         #region ---------------------------------------- Build methods ---------------------------------------
 
-        public void SetChild(Factor factor)
+        /// <summary>
+        /// Set the child factor of this curve factor.
+        /// </summary>
+        /// <param name="factor">The new child factor. </param>
+        /// <exception cref="MissingChildException">If factor is null.</exception>
+        protected internal void SetChild(Factor factor)
         {
             if(factor != null)
             {
@@ -45,12 +50,21 @@ namespace BehaviourAPI.UtilitySystems
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
+        /// <summary>
+        /// Compute its utility applying a function to the utility of its child factor.
+        /// </summary>
+        /// <returns>The result of apply the evaluate function to the child, or 0 if the child is null.</returns>
         protected override float ComputeUtility()
         {
             m_childFactor?.UpdateUtility();
             return Evaluate(m_childFactor?.Utility ?? 0f);
         }
 
+        /// <summary>
+        /// Modify the child utility with a function.
+        /// </summary>
+        /// <param name="childUtility">The child utility.</param>
+        /// <returns>The child utility modified.</returns>
         protected abstract float Evaluate(float childUtility);
 
         #endregion

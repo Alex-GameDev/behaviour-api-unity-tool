@@ -26,7 +26,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
 
         public ExitTransition()
         {
-            StatusFlags = StatusFlags.Actived;
+            StatusFlags = StatusFlags.Active;
         }
 
         public override object Clone()

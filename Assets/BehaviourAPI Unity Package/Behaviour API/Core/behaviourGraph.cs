@@ -18,13 +18,13 @@ namespace BehaviourAPI.Core
         public abstract Type NodeType { get; }
 
         /// <summary>
-        /// The default entry point of the graph
+        /// The default entry point of the graph. Its always the first element in the node list.
         /// </summary>
         public Node StartNode
         {
             get
             {
-                if(Nodes.Count == 0) 
+                if (Nodes.Count == 0)
                     throw new EmptyGraphException(this, "This graph is empty.");
                 return Nodes[0];
             }
@@ -48,18 +48,22 @@ namespace BehaviourAPI.Core
         /// </summary>
         public abstract bool CanCreateLoops { get; }
 
+        /// <summary>
+        /// The amount of nodes in the graph.
+        /// </summary>
         public int NodeCount => Nodes.Count;
 
         #endregion
 
-        #region ------------------------------------------- Fields ---------------------------------------------
+        #region -------------------------------------- Private variables ----------------------------------------
 
+        /// <summary>
+        /// The graph node list.
+        /// </summary>
         protected List<Node> Nodes = new List<Node>();
 
-        // Used internally to find nodes by name
         Dictionary<string, Node> _nodeDict = new Dictionary<string, Node>();
 
-        // Used internally to reduce complexity of creating connections from O(N) to O(1)
         HashSet<Node> _nodeSet = new HashSet<Node>();
 
         #endregion
@@ -76,7 +80,7 @@ namespace BehaviourAPI.Core
         {
             T node = new T();
             AddNode(name, node);
-            return node;     
+            return node;
         }
 
         /// <summary>
@@ -92,15 +96,15 @@ namespace BehaviourAPI.Core
         }
 
         /// <summary>
-        /// Add an existing node (Use only to build a graph from serialized data like json)
+        /// Add an existing node to the graph
         /// </summary>
-        /// <param name="node"></param>
-        /// <exception cref="ArgumentException"></exception>
+        /// <param name="node">The node added.</param>
+        /// <exception cref="ArgumentException">If the node type is not compatible with the graph.</exception>
         protected internal virtual void AddNode(Node node)
         {
             if (!NodeType.IsAssignableFrom(node.GetType()))
-                throw new ArgumentException($"Error adding a node: An instance of type {node.GetType()} cannot be " +
-                    $"added, this graph only handles nodes of types derived from {NodeType}");
+                throw new ArgumentException($"Error adding a node: An instance of type {node.GetType()} cannot be added, " +
+                    $"this graph only handles nodes of types derived from {NodeType}");
 
             Nodes.Add(node);
             _nodeSet.Add(node);
@@ -108,20 +112,24 @@ namespace BehaviourAPI.Core
         }
 
         /// <summary>
-        /// Add an existing node (Use only to build a graph from serialized data like json)
+        /// Add an existing node and identify it with a name.
         /// </summary>
-        /// <param name="node"></param>
-        /// <exception cref="ArgumentException"></exception>
-        protected internal virtual void AddNode(string name, Node node)
+        /// <param name="node">The node added.</param>
+        /// <param name="name">The name of the node.</param>
+        /// <exception cref="ArgumentException">If <paramref name="name"/> is null or whitespaced.</exception>
+        /// <exception cref="ArgumentException">If <paramref name="name"/> was already used as key.</exception>
+        protected internal void AddNode(string name, Node node)
         {
             AddNode(node);
 
-            if(string.IsNullOrWhiteSpace(name))
-            {
+            if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Can't add node to dictionary if the name is null or whitespaced");
-            }
 
-            _nodeDict.TryAdd(name, node);
+            if (_nodeDict.ContainsKey(name))
+                throw new ArgumentException($"A node with the specified name ({name}) already exists");
+
+            _nodeDict.Add(name, node);
+
         }
 
         /// <summary>
@@ -129,7 +137,7 @@ namespace BehaviourAPI.Core
         /// </summary>
         /// <param name="source">The source node</param>
         /// <param name="target">The target node</param>
-        /// <exception cref="ArgumentException">Thown if <paramref name="source"/> or <paramref name="target"/> values are unvalid.</exception>
+        /// <exception cref="ArgumentException">if <paramref name="source"/> or <paramref name="target"/> values are unvalid.</exception>
         protected void Connect(Node source, Node target)
         {
             if (source == target)
@@ -138,8 +146,11 @@ namespace BehaviourAPI.Core
             if (!source.ChildType.IsAssignableFrom(target.GetType()))
                 throw new ArgumentException($"ERROR: Source node child type({source.GetType()}) can handle target's type ({target.GetType()}) as a child. It should be {source.ChildType}");
 
-            if (!_nodeSet.Contains(source) || !_nodeSet.Contains(target))
-                throw new ArgumentException("ERROR: Source and/or target nodes are not in the graph.");                       // O(1)
+            if (!_nodeSet.Contains(source))
+                throw new ArgumentException("ERROR: Source node is not in the graph.");
+
+            if (!_nodeSet.Contains(target))
+                throw new ArgumentException("ERROR: Target node is not in the graph.");
 
             if (!source.CanAddAChild())
                 throw new ArgumentException("ERROR: Maximum child count reached in source");
@@ -148,17 +159,17 @@ namespace BehaviourAPI.Core
                 throw new ArgumentException("ERROR: Maximum parent count reached in target");
 
             if (!CanRepeatConnection && AreNodesDirectlyConnected(source, target))
-                throw new ArgumentException("ERROR: Can't create two connections with the same source and target.");          // O(N) -> N = src.children.count(), tgt.parent.count()
+                throw new ArgumentException("ERROR: Can't create two connections with the same source and target.");
 
             if (!CanCreateLoops && AreNodesConnected(target, source))
-                throw new ArgumentException("ERROR: Can't create a loop in this graph.");                                     // O(N) -> N = Reachable nodes from target            
+                throw new ArgumentException("ERROR: Can't create a loop in this graph.");
 
             source.Children.Add(target);
             target.Parents.Add(source);
-        } 
+        }
 
         /// <summary>
-        /// Returns if graph has a connection path between a and b -> O(n).
+        /// Returns if graph has a connection path between <paramref name="source"/> and <paramref name="target"/>.
         /// </summary>
         /// <param name="source">The source node.</param>
         /// <param name="target">The target node.</param>
@@ -168,18 +179,18 @@ namespace BehaviourAPI.Core
             HashSet<Node> unvisitedNodes = new HashSet<Node>();
             HashSet<Node> visitedNodes = new HashSet<Node>();
             unvisitedNodes.Add(source);
-            while(unvisitedNodes.Count > 0)
+            while (unvisitedNodes.Count > 0)
             {
                 Node n = unvisitedNodes.First();
                 unvisitedNodes.Remove(n);
                 visitedNodes.Add(n);
-                foreach(var child in n.Children)
+                foreach (var child in n.Children)
                 {
                     if (child == null) continue;
 
                     if (child == target)
                         return true;
-                    if(!visitedNodes.Contains(child))
+                    if (!visitedNodes.Contains(child))
                         unvisitedNodes.Add(child);
                 }
             }
@@ -187,7 +198,7 @@ namespace BehaviourAPI.Core
         }
 
         /// <summary>
-        /// Return true if a connection (source -> target) already exists.
+        /// Return true if a connection (<paramref name="source"/> -> <paramref name="target"/>) already exists.
         /// </summary>
         /// <param name="source">The source node.</param>
         /// <param name="target">The target node.</param>
@@ -199,16 +210,23 @@ namespace BehaviourAPI.Core
         }
 
         /// <summary>
-        /// Gets a field copy of the graph without all the nodes (only copies the fields)
+        /// Gets a field copy of the graph without all the nodes (only copies the fields). 
         /// </summary>
-        /// <returns>The graph copy</returns>
+        /// <returns>The graph copy. </returns>
         public virtual object Clone()
         {
-            var graph = (BehaviourGraph) MemberwiseClone();
+            var graph = (BehaviourGraph)MemberwiseClone();
             graph.Nodes = new List<Node>();
             graph._nodeDict = new Dictionary<string, Node>();
             graph._nodeSet = new HashSet<Node>();
             return graph;
+        }
+
+        /// <summary>
+        /// Override this method to buid the internal references after create a graph from serialized data.
+        /// </summary>
+        protected internal virtual void Build()
+        {
         }
 
         /// <summary>
@@ -227,8 +245,13 @@ namespace BehaviourAPI.Core
 
         #endregion
 
-        #region ---------------------------------------- Find nodes ----------------------------------------
+        #region --------------------------------------- Runtime methods --------------------------------------
 
+        /// <summary>
+        /// FInd a node using index operator.
+        /// </summary>
+        /// <param name="key">The name of the node.</param>
+        /// <returns>The node with the specified name.</returns>
         public Node this[string key] => FindNode(key);
 
         /// <summary>
@@ -236,7 +259,7 @@ namespace BehaviourAPI.Core
         /// </summary>
         /// <param name="name">The name of the node.</param>
         /// <returns>The node with the given <paramref name="name"/> in this graph.</returns>
-        /// <exception cref="KeyNotFoundException"></exception>
+        /// <exception cref="KeyNotFoundException">If the key doesn't exist.</exception>
         public Node FindNode(string name)
         {
             if (_nodeDict.TryGetValue(name, out Node node))
@@ -250,10 +273,10 @@ namespace BehaviourAPI.Core
         }
 
         /// <summary>
-        /// Find a node in this graph by it's <paramref name="name"/>
+        /// Find a node in this graph by it's <paramref name="name"/>.
         /// </summary>
         /// <param name="name">The name of the node.</param>
-        /// <returns>The node with the given <paramref name="name"/> in this graph or null if was not found</returns>
+        /// <returns>The node with the given <paramref name="name"/> in this graph or null if was not found.</returns>
         public Node FindNodeOrDefault(string name)
         {
             if (_nodeDict.TryGetValue(name, out Node node))
@@ -267,13 +290,13 @@ namespace BehaviourAPI.Core
         }
 
         /// <summary>
-        /// Find a node of type <typeparamref name="T"/> in this graph by it's <paramref name="name"/>
+        /// Find a node of type <typeparamref name="T"/> in this graph by it's <paramref name="name"/>.
         /// </summary>
         /// <typeparam name="T">The type of the node.</typeparam>
         /// <param name="name">The name of the node.</param>
         /// <returns>The node with the given <paramref name="name"/> in this graph.</returns>
-        /// <exception cref="InvalidCastException"></exception>
-        /// <exception cref="KeyNotFoundException"></exception>
+        /// <exception cref="InvalidCastException">If the found node is not an instance of <typeparamref name="T"/></exception>
+        /// <exception cref="KeyNotFoundException">If the key doesn't exist.</exception>
         public T FindNode<T>(string name) where T : Node
         {
             if (_nodeDict.TryGetValue(name, out Node node))
@@ -306,20 +329,20 @@ namespace BehaviourAPI.Core
                 if (node is T element)
                 {
                     return element;
-                }                
+                }
             }
             return null;
         }
 
-        #endregion
-
         /// <summary>
-        /// Set the execution context of the graph
+        /// <inheritdoc/>
+        /// Passes the context to all its nodes.
         /// </summary>
-        /// <param name="context"></param>
         public override void SetExecutionContext(ExecutionContext context)
         {
             Nodes.ForEach(node => node.SetExecutionContext(context));
-        }        
+        }
+
+        #endregion
     }
 }
