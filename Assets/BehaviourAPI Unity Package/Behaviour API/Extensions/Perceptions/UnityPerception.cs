@@ -9,7 +9,7 @@ namespace BehaviourAPI.UnityExtensions
         public virtual string DisplayInfo => "Unity Perception";
         public Perception Build() => new ConditionPerception(Initialize, Check, Reset);
 
-        public override void SetExecutionContext(ExecutionContext context)
+        public sealed override void SetExecutionContext(ExecutionContext context)
         {
             this.context = (UnityExecutionContext)context;
             OnSetContext();
@@ -17,6 +17,7 @@ namespace BehaviourAPI.UnityExtensions
 
         protected virtual void OnSetContext()
         {
+            return;
         }
     }
 }

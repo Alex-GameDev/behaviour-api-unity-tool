@@ -79,6 +79,11 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public string EditorStylesPath => $"{RootPath}/Editor/uss/";
 
+        /// <summary>
+        /// Root path of the script templates
+        /// </summary>
+        public string ScriptTemplatePath => $"{RootPath}/Editor/Templates";
+
         List<Assembly> assemblies = new List<Assembly>();
 
         EditorHierarchyNode _actionHierarchy;
@@ -89,6 +94,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public EditorHierarchyNode ActionHierarchy => _actionHierarchy;
         public EditorHierarchyNode PerceptionHierarchy => _perceptionHierarchy;
+
         public EditorHierarchyNode NodeHierarchy(Type type) => _nodeHierarchyMap[type];
         public Type GetAdapter(Type type) => _graphAdapterMap[type];
 

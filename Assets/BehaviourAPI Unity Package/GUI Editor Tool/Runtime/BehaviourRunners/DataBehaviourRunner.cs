@@ -1,12 +1,13 @@
-using BehaviourAPI.Core;
-using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.Unity.Framework;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
 {
+    using Core;
+    using Core.Perceptions;
+    using Unity.Framework;
+
     public abstract class DataBehaviourRunner : BehaviourRunner
     {
         #region -------------------------------- private fields ---------------------------------

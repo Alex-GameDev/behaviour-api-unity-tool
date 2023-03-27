@@ -1,9 +1,9 @@
-using BehaviourAPI.Core;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace BehaviourAPI.UnityExtensions
 {
+    using Core;
     /// <summary>
     /// The execution context in unity with references to the gameObject and the main components.
     /// </summary>

@@ -1,10 +1,10 @@
-using BehaviourAPI.Core;
-using BehaviourAPI.Unity.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
 {
+    using Core;
+    using Framework;
     using UnityExtensions;
 
     [DefaultExecutionOrder(1000)]

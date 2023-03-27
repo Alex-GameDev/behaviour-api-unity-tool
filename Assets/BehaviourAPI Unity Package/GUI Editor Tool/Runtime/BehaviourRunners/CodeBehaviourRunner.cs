@@ -23,7 +23,7 @@ namespace BehaviourAPI.Unity.Runtime
             return new SystemData(allgraphs);
         }
 
-        protected override BehaviourGraph GetExecutionGraph() => CreateGraph();
+        protected sealed override BehaviourGraph GetExecutionGraph() => CreateGraph();
 
         /// <summary>
         /// Register a graph to use it in a <see cref="BSRuntimeDebugger"/>.

@@ -1,10 +1,8 @@
-using BehaviourAPI.Core;
-using BehaviourAPI.Unity.Framework;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
 {
+    using Framework;
     public abstract class EditorBehaviourRunner : DataBehaviourRunner, IBehaviourSystem
     {
         #region ------------------------------- Private fields --------------------------------
@@ -23,7 +21,7 @@ namespace BehaviourAPI.Unity.Runtime
 
         #region --------------------------------- properties ----------------------------------
 
-        protected override SystemData GetEditorSystemData() => data;
+        protected sealed override SystemData GetEditorSystemData() => data;
 
         #endregion
     }

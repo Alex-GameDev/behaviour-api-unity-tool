@@ -1,11 +1,11 @@
 using UnityEngine;
-using BehaviourAPI.Unity.Framework;
-using System;
-using BehaviourAPI.Core;
-using BehaviourAPI.UnityExtensions;
 
 namespace BehaviourAPI.Unity.Runtime
 {
+    using Core;
+    using UnityExtensions;
+    using Framework;
+
     /// <summary>
     /// Base class for behaviour system runners
     /// </summary>
