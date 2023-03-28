@@ -1,7 +1,6 @@
 using BehaviourAPI.Unity.Framework;
 using UnityEditor;
 using UnityEngine.UIElements;
-using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -47,6 +46,7 @@ namespace BehaviourAPI.Unity.Editor
 
     public class NodeInspector : Inspector<NodeData>
     {
+        SerializedObject obj;
         private static readonly string _nodeProperty = ".node";
         private static readonly string _endProperty = ".parentIds";
         public NodeInspector() : base("Node", Side.Left)
@@ -56,6 +56,11 @@ namespace BehaviourAPI.Unity.Editor
         public override void UpdateInspector(NodeData element)
         {
             base.UpdateInspector(element);
+            obj?.Dispose();
+
+            if (BehaviourEditorWindow.Instance.System == null) return;
+
+            obj = new SerializedObject(BehaviourEditorWindow.Instance.System.ObjectReference);
 
             if (BehaviourEditorWindow.Instance.IsRuntime) return;
             if (element == null) return;
@@ -66,7 +71,6 @@ namespace BehaviourAPI.Unity.Editor
 
             IMGUIContainer container = new IMGUIContainer(() =>
             {
-                var obj = new SerializedObject(BehaviourEditorWindow.Instance.System.ObjectReference);
                 var path = $"data.graphs.Array.data[{graphId}].nodes.Array.data[{nodeId}]";
 
                 var namePath = path + ".name";
