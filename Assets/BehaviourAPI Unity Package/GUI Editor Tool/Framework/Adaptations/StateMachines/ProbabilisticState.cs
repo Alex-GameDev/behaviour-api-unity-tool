@@ -1,9 +1,6 @@
 using behaviourAPI.Unity.Framework.Adaptations;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.StateMachines;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +8,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
 {
     public class ProbabilisticState : StateMachines.ProbabilisticState, IActionAssignable, IBuildable
     {
+        [SerializeField] List<float> probabilities = new List<float>();
         [SerializeReference] Action action;
 
         public Action ActionReference
@@ -35,6 +33,16 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         {
             base.BuildConnections(parents, children);
             Action = action;
+
+            var count = Mathf.Min(_transitions.Count, probabilities.Count);
+
+            for (int i = 0; i < count; i++)
+            {
+                if (probabilities[i] > 0)
+                {
+                    SetProbability(_transitions[i], probabilities[i]);
+                }
+            }
         }
     }
 }
