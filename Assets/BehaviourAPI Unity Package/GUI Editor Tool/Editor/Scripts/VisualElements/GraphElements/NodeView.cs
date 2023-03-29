@@ -16,7 +16,6 @@ namespace BehaviourAPI.Unity.Editor
 
     using Framework;
     using UnityExtensions;
-    using behaviourAPI.Unity.Framework.Adaptations;
     using BehaviourAPI.Unity.Framework.Adaptations;
     using BehaviourAPI.Core.Perceptions;
 

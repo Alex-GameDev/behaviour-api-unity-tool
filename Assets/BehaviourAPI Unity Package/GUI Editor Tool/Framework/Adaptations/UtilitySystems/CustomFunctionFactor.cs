@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
     using Core;
@@ -7,10 +5,22 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     using UtilitySystems;
     using UnityExtensions;
 
+    /// <summary>
+    /// Adaptation wrapper class for use <see cref="CustomCurveFactor"/> in editor tools. 
+    /// <para>! -- Don't use this class directly in code.</para>
+    /// </summary>
     public class CustomFunction : CurveFactor
     {
+        /// <summary>
+        /// Method reference for <see cref="CustomCurveFactor.Function"/>.
+        /// </summary>
         public ContextualSerializedFloatFloatFunction function;
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Build the <see cref="function"/> delegate with the context.
+        /// </summary>
+        /// <param name="context"><inheritdoc/></param>
         public override void SetExecutionContext(ExecutionContext context)
         {
             var unityContext = (UnityExecutionContext)context;
@@ -24,6 +34,12 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
             }
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Use <see cref="function"/> internal delegate to modify the utility.
+        /// </summary>
+        /// <param name="childUtility"><inheritdoc/></param>
+        /// <returns>The result of invoke <see cref="function"/> deledate. </returns>
         protected override float Evaluate(float childUtility) => function.GetFunction()?.Invoke(childUtility) ?? 0f;
     }
 }

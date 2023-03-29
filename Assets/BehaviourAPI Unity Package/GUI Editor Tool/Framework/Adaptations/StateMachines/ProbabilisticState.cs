@@ -1,14 +1,25 @@
-using behaviourAPI.Unity.Framework.Adaptations;
-using BehaviourAPI.Core;
-using BehaviourAPI.Core.Actions;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
+    using Core;
+    using Core.Actions;
+
+    /// <summary>
+    /// Adaptation wrapper class for use <see cref="StateMachines.ProbabilisticState"/> in editor tools. 
+    /// <para>! -- Don't use this class directly in code.</para>
+    /// </summary>
     public class ProbabilisticState : StateMachines.ProbabilisticState, IActionAssignable, IBuildable
     {
+        /// <summary>
+        /// List of probabilities. Allow to assign probabilities in the editor tool.
+        /// </summary>
         [SerializeField] List<float> probabilities = new List<float>();
+
+        /// <summary>
+        /// Serializable Wrapper for <see cref="StateMachines.State.Action"/>.
+        /// </summary>
         [SerializeReference] Action action;
 
         public Action ActionReference

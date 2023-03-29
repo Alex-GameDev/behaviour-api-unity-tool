@@ -6,23 +6,40 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     using Core.Actions;
     using UnityExtensions;
 
-
+    /// <summary>
+    /// Adaptation class for use custom <see cref="FunctionalAction"/> in editor tools.
+    /// <para>! -- Don't use this class directly in code.</para>
+    /// </summary>
     public class CustomAction : Action
     {
-        private UnityExecutionContext _context;
-
+        /// <summary>
+        /// Method reference for start event.
+        /// </summary>
         public ContextualSerializedAction start;
+
+        /// <summary>
+        /// Method reference for update event.
+        /// </summary>
         public ContextualSerializedStatusFunction update;
+
+        /// <summary>
+        /// Method reference for stop event.
+        /// </summary>
         public ContextualSerializedAction stop;
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Build the delegates using <paramref name="context"/> and the method references.
+        /// </summary>
+        /// <param name="context"><inheritdoc/></param>
         public override void SetExecutionContext(ExecutionContext context)
         {
-            _context = (UnityExecutionContext)context;
-            if (_context != null)
+            var unityContext = (UnityExecutionContext)context;
+            if (unityContext != null)
             {
-                start.SetContext(_context);
-                update.SetContext(_context);
-                stop.SetContext(_context);
+                start.SetContext(unityContext);
+                update.SetContext(unityContext);
+                stop.SetContext(unityContext);
             }
             else
             {
@@ -30,12 +47,29 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
             }
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Invoke the method stored in <see cref="start"/>.
+        /// </summary>
         public override void Start() => start.GetFunction()?.Invoke();
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Invoke the method stored in <see cref="stop"/>.
+        /// </summary>
         public override void Stop() => stop.GetFunction()?.Invoke();
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Invoke the method stored in <see cref="update"/>.
+        /// </summary>
         public override Status Update() => update.GetFunction()?.Invoke() ?? Status.Running;
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Copy the method references too.
+        /// </summary>
+        /// <returns><inheritdoc/></returns>
         public override object Clone()
         {
             var copy = (CustomAction)base.Clone();

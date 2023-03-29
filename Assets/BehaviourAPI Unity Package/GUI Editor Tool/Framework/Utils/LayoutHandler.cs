@@ -1,6 +1,3 @@
-using BehaviourAPI.BehaviourTrees;
-using BehaviourAPI.StateMachines;
-using BehaviourAPI.UtilitySystems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +5,18 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework
 {
+    using BehaviourAPI.BehaviourTrees;
+    using BehaviourAPI.StateMachines;
+    using BehaviourAPI.UtilitySystems;
+
+    /// <summary>
+    /// Utility class to auto layout the graphs in editor window.
+    /// </summary>
     public class LayoutHandler
     {
+        /// <summary>
+        /// The
+        /// </summary>
         public static readonly Vector2 nodeOffset = new Vector2(300, 200);
 
         Dictionary<string, NodeData> _nodeIdMap;

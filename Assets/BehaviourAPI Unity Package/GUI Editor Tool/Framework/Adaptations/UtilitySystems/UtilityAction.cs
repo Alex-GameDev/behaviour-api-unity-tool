@@ -1,4 +1,3 @@
-using behaviourAPI.Unity.Framework.Adaptations;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-
 using System.Linq;
-
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework
@@ -11,18 +9,35 @@ namespace BehaviourAPI.Unity.Framework
     using Core.Serialization;
 
     /// <summary>
-    /// Stores a behaviour graph as an unity object.
+    /// Class that serializes graph data
     /// </summary>
     [Serializable]
     public class GraphData : ICloneable
     {
-
-
+        /// <summary>
+        /// The unique id of this element.
+        /// </summary>
         [HideInInspector] public string id;
+
+        /// <summary>
+        /// The name of the graph.
+        /// </summary>
         public string name;
+
+        /// <summary>
+        /// The serializable reference of the graph.
+        /// </summary>
         [SerializeReference] public BehaviourGraph graph;
+
+        /// <summary>
+        /// The serialized list of graph nodes.
+        /// </summary>
         [HideInInspector] public List<NodeData> nodes = new List<NodeData>();
 
+        /// <summary>
+        /// Create a new <see cref="GraphData"/> by its graph type.
+        /// </summary>
+        /// <param name="graphType">The type of the <see cref="BehaviourGraph"/> stored.</param>
         public GraphData(Type graphType)
         {
             graph = (BehaviourGraph)Activator.CreateInstance(graphType);
@@ -30,15 +45,23 @@ namespace BehaviourAPI.Unity.Framework
             id = Guid.NewGuid().ToString();
         }
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public GraphData()
         {
         }
 
+        /// <summary>
+        /// Create a new graph data by a Behaviour graph and name.
+        /// </summary>
+        /// <param name="graph">The <see cref="graph"/> reference.</param>
+        /// <param name="name">The name of the graph.</param>
         public GraphData(BehaviourGraph graph, string name)
         {
             this.graph = graph;
             this.name = name;
-            this.id = Guid.NewGuid().ToString();
+            id = Guid.NewGuid().ToString();
             var nodes = graph.NodeList;
             Dictionary<Node, string> map = nodes.ToDictionary(n => n, n => Guid.NewGuid().ToString());
 
@@ -62,11 +85,20 @@ namespace BehaviourAPI.Unity.Framework
             layoutHandler.ComputeLayout(this);
         }
 
+        /// <summary>
+        /// Gets a dictionary in which the key is the id of the node and the value is the node itself.
+        /// </summary>
+        /// <returns>The id - node dictionary.</returns>
         public Dictionary<string, NodeData> GetNodeIdMap()
         {
             return nodes.ToDictionary(n => n.id, n => n);
         }
 
+        /// <summary>
+        /// Sort <paramref name="nodeData"/> children list by a function delegate applied in the nodes.
+        /// </summary>
+        /// <param name="nodeData">The node whose childs are being ordered.</param>
+        /// <param name="sortFunction">The function applied in the nodes.</param>
         public void OrderChildNodes(NodeData nodeData, Func<NodeData, float> sortFunction)
         {
             var dict = GetNodeIdMap();
@@ -83,6 +115,10 @@ namespace BehaviourAPI.Unity.Framework
             }).ToList();
         }
 
+        /// <summary>
+        /// Sort all node's children list by a function delegate applied in the nodes.
+        /// </summary>
+        /// <param name="sortFunction">The function applied in the nodes.</param>
         public void OrderAllChildNodes(Func<NodeData, float> sortFunction)
         {
             var dict = GetNodeIdMap();
@@ -102,6 +138,12 @@ namespace BehaviourAPI.Unity.Framework
             }
         }
 
+        /// <summary>
+        /// Gets a set with all reachable nodes from <paramref name="start"/> if the direction
+        /// goes from parents to children.
+        /// </summary>
+        /// <param name="start">The source node.</param>
+        /// <returns>The set with all reachable nodes.</returns>
         public HashSet<NodeData> GetChildPathing(NodeData start)
         {
             Dictionary<string, NodeData> nodeIdMap = GetNodeIdMap();
@@ -128,6 +170,12 @@ namespace BehaviourAPI.Unity.Framework
             return visitedNodes;
         }
 
+        /// <summary>
+        /// Gets a set with all reachable nodes from <paramref name="start"/> if the direction
+        /// goes from children to parents.
+        /// </summary>
+        /// <param name="start">The source node.</param>
+        /// <returns>The set with all reachable nodes.</returns>
         public HashSet<NodeData> GetParentPathing(NodeData start)
         {
             Dictionary<string, NodeData> nodeIdMap = GetNodeIdMap();
@@ -154,6 +202,10 @@ namespace BehaviourAPI.Unity.Framework
             return visitedNodes;
         }
 
+        /// <summary>
+        /// Build the internal references.
+        /// </summary>
+        /// <param name="data"></param>
         public void Build(SystemData data)
         {
             var builder = new BehaviourGraphBuilder(graph);
@@ -193,6 +245,11 @@ namespace BehaviourAPI.Unity.Framework
             }
         }
 
+        /// <summary>
+        /// Create a copy of the graph data. 
+        /// Used to create a runtime copy.
+        /// </summary>
+        /// <returns>A deep copy of the data.</returns>
         public object Clone()
         {
             GraphData copy = new GraphData();
