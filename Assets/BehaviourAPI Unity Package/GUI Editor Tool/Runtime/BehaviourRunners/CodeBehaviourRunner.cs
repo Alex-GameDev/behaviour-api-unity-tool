@@ -1,12 +1,13 @@
-using BehaviourAPI.Core;
-using BehaviourAPI.Unity.Framework;
+
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
 {
+    using Core;
+    using Unity.Framework;
+
     /// <summary>
-    /// Subclass of <see cref="BehaviourRunner"/> that creates the behaviour system in code.
+    /// Unity Component that creates a behaviour system in code.
     /// </summary>
     public abstract class CodeBehaviourRunner : BehaviourRunner
     {

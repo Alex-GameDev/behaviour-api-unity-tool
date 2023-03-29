@@ -4,7 +4,7 @@ namespace BehaviourAPI.Unity.Runtime
 {
     using Framework;
     /// <summary>
-    /// Stores a behaviour system data in a asset file
+    /// Stores a behaviour system data in a asset file.
     /// </summary>
     [CreateAssetMenu(fileName = "newBehaviourSystem", menuName = "BehaviourAPI/BehaviourSystem", order = 0)]
     public class BehaviourSystem : ScriptableObject, IBehaviourSystem

@@ -8,6 +8,9 @@ namespace BehaviourAPI.Unity.Runtime
     using Core.Perceptions;
     using Unity.Framework;
 
+    /// <summary>
+    /// Base class of components that use an editable behavior system.
+    /// </summary>
     public abstract class DataBehaviourRunner : BehaviourRunner
     {
         #region -------------------------------- private fields ---------------------------------
