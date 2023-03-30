@@ -54,7 +54,8 @@ namespace BehaviourAPI.Unity.Editor
         PushPerceptionInspectorView _pushPerceptionInspector;
 
         Toolbar _editToolbar;
-        ToolbarMenu _selectGraphMenu;
+
+        DropdownField _selectGraphField;
 
         #endregion
 
@@ -161,7 +162,9 @@ namespace BehaviourAPI.Unity.Editor
         void SetUpToolbar()
         {
             var mainToolbar = rootVisualElement.Q<Toolbar>("bw-toolbar-main");
-            _selectGraphMenu = mainToolbar.Q<ToolbarMenu>("bw-toolbar-graph-menu");
+            _selectGraphField = mainToolbar.Q<DropdownField>("bw-toolbar-graph-dropdown");
+
+            _selectGraphField.RegisterValueChangedCallback(OnChangeSelectedGraph);
 
             _editToolbar = rootVisualElement.Q<Toolbar>("bw-toolbar-edit");
 
@@ -183,6 +186,14 @@ namespace BehaviourAPI.Unity.Editor
                     );
                 }
             }
+        }
+
+        void OnChangeSelectedGraph(ChangeEvent<string> change)
+        {
+            if (System == null) return;
+            if (change.previousValue == change.newValue) return;
+
+            DisplayGraph(System.Data.graphs[_selectGraphField.index]);
         }
 
         void OpenCreateScriptWindow()
@@ -263,24 +274,10 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         void UpdateGraphSelectionToolbar()
         {
-            _selectGraphMenu?.menu.MenuItems().Clear();
-
             if (System == null) return;
 
-            for (int i = 0; i < System.Data.graphs.Count; i++)
-            {
-                var graph = System.Data.graphs[i];
-
-                if (graph != null)
-                {
-                    var id = i;
-                    _selectGraphMenu.menu.AppendAction(
-                        actionName: $"{i + 1} - {graph.name} ({graph.graph.TypeName()})",
-                        action: _ => DisplayGraph(graph),
-                        status: _graphView.graphData == graph ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal
-                    );
-                }
-            }
+            _selectGraphField.choices = System.Data.graphs.Select(g => g.name).ToList();
+            _selectGraphField.value = _graphView.graphData.name;
         }
 
         /// <summary>

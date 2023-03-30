@@ -693,16 +693,16 @@ MonoBehaviour:
       graph:
         rid: 6537695503399780367
       nodes:
-      - name: IteratorNode
-        id: cc469a5d-59e2-4fab-a68a-eabf50574363
+      - id: cc469a5d-59e2-4fab-a68a-eabf50574363
+        name: IteratorNode
         position: {x: 0, y: 0}
         node:
           rid: 6537695503399780369
         parentIds: []
         childIds:
         - 89ee794c-bb88-44f0-953a-e1d8f1cede30
-      - name: SequencerNode
-        id: 89ee794c-bb88-44f0-953a-e1d8f1cede30
+      - id: 89ee794c-bb88-44f0-953a-e1d8f1cede30
+        name: SequencerNode
         position: {x: 0, y: 200}
         node:
           rid: 6537695503399780370
@@ -712,25 +712,25 @@ MonoBehaviour:
         - c3a7b82e-2da1-4c0c-b86f-a0ce040be058
         - e9069775-71da-466d-a1c7-ede7989087e0
         - 0a8c6cd3-4c19-4e7d-9832-a7d7c49cf7be
-      - name: LeafNode
-        id: c3a7b82e-2da1-4c0c-b86f-a0ce040be058
+      - id: c3a7b82e-2da1-4c0c-b86f-a0ce040be058
+        name: LeafNode
         position: {x: -300, y: 400}
         node:
           rid: 6537695503399780371
         parentIds:
         - 89ee794c-bb88-44f0-953a-e1d8f1cede30
         childIds: []
-      - name: LeafNode
-        id: e9069775-71da-466d-a1c7-ede7989087e0
-        position: {x: 7, y: 433}
+      - id: e9069775-71da-466d-a1c7-ede7989087e0
+        name: LeafNode
+        position: {x: 0, y: 400}
         node:
           rid: 6537695503399780372
         parentIds:
         - 89ee794c-bb88-44f0-953a-e1d8f1cede30
         childIds: []
-      - name: LeafNode
-        id: 0a8c6cd3-4c19-4e7d-9832-a7d7c49cf7be
-        position: {x: 317, y: 416}
+      - id: 0a8c6cd3-4c19-4e7d-9832-a7d7c49cf7be
+        name: LeafNode
+        position: {x: 300, y: 400}
         node:
           rid: 6537695503399780373
         parentIds:
@@ -741,16 +741,16 @@ MonoBehaviour:
       graph:
         rid: 6537695503399780374
       nodes:
-      - name: State
-        id: f180aa8c-c95d-4066-88a5-2a9d02f9dfeb
+      - id: f180aa8c-c95d-4066-88a5-2a9d02f9dfeb
+        name: State
         position: {x: -191, y: 330}
         node:
           rid: 6537695503399780379
         parentIds: []
         childIds:
         - 8f55bd72-b2a7-4fe4-ab01-aa3c7cd2989e
-      - name: State
-        id: 8fe50bac-3f7c-412f-9341-f31dc39514eb
+      - id: 8fe50bac-3f7c-412f-9341-f31dc39514eb
+        name: State
         position: {x: 258, y: 306}
         node:
           rid: 6537695503399780380
@@ -758,16 +758,16 @@ MonoBehaviour:
         - 8f55bd72-b2a7-4fe4-ab01-aa3c7cd2989e
         childIds:
         - b14e88cd-13fe-4dc8-aee5-51509dded391
-      - name: ExitTransition
-        id: ca9996a7-cf38-4525-9839-419d741d2f71
+      - id: ca9996a7-cf38-4525-9839-419d741d2f71
+        name: ExitTransition
         position: {x: 1084, y: 318}
         node:
           rid: 6537695503399780381
         parentIds:
         - 559b49e5-6888-4fd2-83cb-9ed5ada701a2
         childIds: []
-      - name: State
-        id: 559b49e5-6888-4fd2-83cb-9ed5ada701a2
+      - id: 559b49e5-6888-4fd2-83cb-9ed5ada701a2
+        name: State
         position: {x: 723, y: 310}
         node:
           rid: 6537695503399780382
@@ -777,8 +777,8 @@ MonoBehaviour:
         childIds:
         - ca9996a7-cf38-4525-9839-419d741d2f71
         - f761050e-74b8-4a0a-9043-60504df64506
-      - name: StateTransition
-        id: 8f55bd72-b2a7-4fe4-ab01-aa3c7cd2989e
+      - id: 8f55bd72-b2a7-4fe4-ab01-aa3c7cd2989e
+        name: StateTransition
         position: {x: 55, y: 302}
         node:
           rid: 6537695503399780383
@@ -786,8 +786,8 @@ MonoBehaviour:
         - f180aa8c-c95d-4066-88a5-2a9d02f9dfeb
         childIds:
         - 8fe50bac-3f7c-412f-9341-f31dc39514eb
-      - name: StateTransition
-        id: b14e88cd-13fe-4dc8-aee5-51509dded391
+      - id: b14e88cd-13fe-4dc8-aee5-51509dded391
+        name: StateTransition
         position: {x: 528, y: 309}
         node:
           rid: 6537695503399780384
@@ -795,8 +795,8 @@ MonoBehaviour:
         - 8fe50bac-3f7c-412f-9341-f31dc39514eb
         childIds:
         - 559b49e5-6888-4fd2-83cb-9ed5ada701a2
-      - name: StateTransition
-        id: f761050e-74b8-4a0a-9043-60504df64506
+      - id: f761050e-74b8-4a0a-9043-60504df64506
+        name: StateTransition
         position: {x: 777, y: 85}
         node:
           rid: 6537695503399780385
@@ -809,32 +809,32 @@ MonoBehaviour:
       graph:
         rid: 6537695503399780375
       nodes:
-      - name: ham and cheese
-        id: 95ca99fb-d874-42c2-b0e0-bff4b4c534ed
+      - id: 95ca99fb-d874-42c2-b0e0-bff4b4c534ed
+        name: ham and cheese
         position: {x: 600, y: 233.33333}
         node:
           rid: 6537695503399780389
         parentIds: []
         childIds:
         - e00dbb6d-4f6c-46cb-ac72-fb44e9d8d7f8
-      - name: hawaiian
-        id: 75222d57-418b-4fb2-bac1-430f77823547
+      - id: 75222d57-418b-4fb2-bac1-430f77823547
+        name: hawaiian
         position: {x: 600, y: -166.66667}
         node:
           rid: 6537695503399780392
         parentIds: []
         childIds:
         - 51e76747-a01a-4d08-9ffe-446c0613ee4f
-      - name: vegetarian
-        id: d14f4053-078a-4324-b310-ee414c6b23cd
+      - id: d14f4053-078a-4324-b310-ee414c6b23cd
+        name: vegetarian
         position: {x: 600, y: 33.33333}
         node:
           rid: 6537695503399780394
         parentIds: []
         childIds:
         - e066c888-223e-4d62-b93f-d9e139b6f694
-      - name: UnityCurveFactor
-        id: e066c888-223e-4d62-b93f-d9e139b6f694
+      - id: e066c888-223e-4d62-b93f-d9e139b6f694
+        name: UnityCurveFactor
         position: {x: 300, y: 33.333332}
         node:
           rid: 6537695503399780396
@@ -842,8 +842,8 @@ MonoBehaviour:
         - d14f4053-078a-4324-b310-ee414c6b23cd
         childIds:
         - ec2c6e8d-e9ab-4728-9fed-d0f2390d3959
-      - name: ExponentialCurveFactor
-        id: 51e76747-a01a-4d08-9ffe-446c0613ee4f
+      - id: 51e76747-a01a-4d08-9ffe-446c0613ee4f
+        name: ExponentialCurveFactor
         position: {x: 300, y: -166.66667}
         node:
           rid: 6537695503399780397
@@ -851,8 +851,8 @@ MonoBehaviour:
         - 75222d57-418b-4fb2-bac1-430f77823547
         childIds:
         - ec2c6e8d-e9ab-4728-9fed-d0f2390d3959
-      - name: Pizza factor
-        id: ec2c6e8d-e9ab-4728-9fed-d0f2390d3959
+      - id: ec2c6e8d-e9ab-4728-9fed-d0f2390d3959
+        name: Pizza factor
         position: {x: 0, y: 0}
         node:
           rid: 6537695503399780398
@@ -861,16 +861,16 @@ MonoBehaviour:
         - e066c888-223e-4d62-b93f-d9e139b6f694
         - 51e76747-a01a-4d08-9ffe-446c0613ee4f
         childIds: []
-      - name: Peperoni factor
-        id: 113256db-f0dc-430a-a371-080dbd32dcb5
+      - id: 113256db-f0dc-430a-a371-080dbd32dcb5
+        name: Peperoni factor
         position: {x: 0, y: 200}
         node:
           rid: 6537695503399780400
         parentIds:
         - e00dbb6d-4f6c-46cb-ac72-fb44e9d8d7f8
         childIds: []
-      - name: WeightedFusionFactor
-        id: e00dbb6d-4f6c-46cb-ac72-fb44e9d8d7f8
+      - id: e00dbb6d-4f6c-46cb-ac72-fb44e9d8d7f8
+        name: WeightedFusionFactor
         position: {x: 300, y: 233.33333}
         node:
           rid: 6537695503399780401
