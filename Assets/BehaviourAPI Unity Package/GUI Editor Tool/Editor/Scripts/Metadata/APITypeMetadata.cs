@@ -18,7 +18,7 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Dictionary that relates each non-abstract type of node to the Drawer that will be used to represent it in the editor.
         /// </summary>
-        public Dictionary<Type, Type> NodeDrawerTypeMap { get; private set; }
+        public Dictionary<Type, Type> NodeDrawerTypeMap { get; private set; } = new Dictionary<Type, Type>();
 
         /// <summary>
         /// 
