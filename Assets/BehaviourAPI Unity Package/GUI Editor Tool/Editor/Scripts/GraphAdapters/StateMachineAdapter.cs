@@ -9,6 +9,7 @@ namespace BehaviourAPI.Unity.Editor
     [CustomGraphAdapter(typeof(FSM))]
     public class StateMachineAdapter : GraphAdapter
     {
+        public override string IconPath => BehaviourAPISettings.instance.IconPath + "Graphs/fsm.png";
         public override void AutoLayout(GraphData graphData)
         {
             LayoutHandler layoutHandler = new CyclicLayoutHandler();

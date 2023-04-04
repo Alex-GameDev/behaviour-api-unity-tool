@@ -83,7 +83,12 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Root path of the script templates
         /// </summary>
-        public string ScriptTemplatePath => $"{RootPath}/Editor/Resources/Templates";
+        public string ScriptTemplatePath => $"{RootPath}/Editor/Resources/Templates/";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string IconPath => $"{RootPath}/Editor/Resources/Icons/";
 
         /// <summary>
         /// 

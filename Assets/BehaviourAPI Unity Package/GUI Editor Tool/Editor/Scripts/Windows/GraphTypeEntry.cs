@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -23,6 +24,13 @@ namespace BehaviourAPI.Unity.Editor
             container = this.Q("gti-main");
             this.Q<Label>("gti-name").text = graphType.Name.CamelCaseToSpaced();
             RegisterCallback<ClickEvent>(OnClick);
+
+            var adapter = GraphAdapter.GetAdapter(graphType);
+            if(adapter != null)
+            {
+                var icon = AssetDatabase.LoadAssetAtPath<Texture2D>(adapter.IconPath);
+                this.Q<VisualElement>("gti-icon").style.backgroundImage = icon;
+            }
         }
 
         public void Select()

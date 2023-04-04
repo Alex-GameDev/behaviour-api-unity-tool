@@ -19,6 +19,11 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// 
         /// </summary>
+        public virtual string IconPath => BehaviourAPISettings.instance.IconPath + "Graphs/default.png";
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="graphType"></param>
         /// <param name="nodeTypes"></param>
         public void BuildSupportedHerarchy(Type graphType, List<Type> nodeTypes)

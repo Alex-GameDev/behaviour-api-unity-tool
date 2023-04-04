@@ -1,3 +1,4 @@
+using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework;
@@ -12,6 +13,7 @@ using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Action = BehaviourAPI.Core.Actions.Action;
+using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -59,6 +61,9 @@ namespace BehaviourAPI.Unity.Editor
         private GraphDataView graphDataView;
 
         CreateGraphPanel createGraphPanel;
+        GenerateScriptPanel generateScriptPanel;
+
+        ToolPanel currentPanel;
 
         #region -------------------------------------------- Create window --------------------------------------------
 
@@ -99,15 +104,31 @@ namespace BehaviourAPI.Unity.Editor
 
             var mainContainer = rootVisualElement.Q("bw-main");
 
+            // Add graph:
             createGraphPanel = new CreateGraphPanel(CreateGraph);
             mainContainer.Add(createGraphPanel);
             createGraphPanel.Disable();
-
             var addGraphBtn = rootVisualElement.Q<Button>("bw-add-graph-btn");
             addGraphBtn.clicked += OnClickAddGraphBtn;
 
+            // Delete graph
             var deleteGraphBtn = rootVisualElement.Q<Button>("bw-remove-graph-btn");
             deleteGraphBtn.clicked += OnClickRemoveGraphBtn;
+
+            // generate script
+            generateScriptPanel = new GenerateScriptPanel();
+            mainContainer.Add(generateScriptPanel);
+            generateScriptPanel.Disable();
+            var generateScriptBtn = rootVisualElement.Q<Button>("bw-script-btn");
+            generateScriptBtn.clicked += OnClickGenerateScriptBtn;
+
+            // Set main
+            var setMainBtn = rootVisualElement.Q<Button>("bw-setmain-graph-btn");
+            setMainBtn.clicked += OnClickSetMainBtn;
+
+            // Clear graph
+            var clearBtn = rootVisualElement.Q<Button>("bw-clear-graph-btn");
+            clearBtn.clicked += OnClickClearBtn;
 
             IMGUIContainer container = rootVisualElement.Q<IMGUIContainer>("bw-inspector");
             container.onGUIHandler = OnGUIHandler;
@@ -118,6 +139,24 @@ namespace BehaviourAPI.Unity.Editor
             graphContainer.Insert(0, graphDataView);
             graphDataView.DataChanged += () => EditorUtility.SetDirty(System.ObjectReference);
             graphDataView.SelectionNodeChanged += OnSelectionNodeChanged;
+        }
+
+        private void OnClickClearBtn()
+        {
+            if (selectedGraphProperty == null) return;
+            if (System.Data.graphs[selectedGraphIndex].nodes.Count == 0) return;
+
+            var pos = Event.current.mousePosition + position.position;
+            AlertWindow.CreateAlertWindow("Clear selected graph?", pos, ClearSelectedGraph);
+        }
+
+        private void OnClickSetMainBtn()
+        {
+            if (selectedGraphProperty == null) return;
+            if (selectedGraphIndex == 0) return;
+
+            var pos = Event.current.mousePosition + position.position;
+            AlertWindow.CreateAlertWindow("Convert selected graph to the main graph?", pos, ChangeMainGraph);
         }
 
         private void OnSelectionNodeChanged(List<int> selectedNodeIndexList)
@@ -153,34 +192,62 @@ namespace BehaviourAPI.Unity.Editor
                 selectGraphDropdown.choices = System.Data.graphs.Select(g => g.name).ToList();
                 selectGraphDropdown.index = 0;
             }
-            selectGraphDropdown.RegisterValueChangedCallback(OnSelectedGraphChanges);
         }
 
         #endregion
 
         #region ----------------------------------- Toolbar events --------------------------------------
 
-        private void OnClickAddGraphBtn()
-        {
-            createGraphPanel.Enable();
-        }
+        private void OnClickAddGraphBtn() => ChangeToolPanel(createGraphPanel, true);
+
+        private void OnClickGenerateScriptBtn() => ChangeToolPanel(generateScriptPanel, true);
 
         private void OnClickRemoveGraphBtn()
         {
             if (selectedGraphProperty == null) return;
-            AlertWindow.CreateAlertWindow($"Delete current graph?\n({selectedGraphProperty.displayName})", DeleteSelectedGraph);
+            var pos = Event.current.mousePosition + position.position;
+            AlertWindow.CreateAlertWindow($"Delete current graph?\n({selectedGraphProperty.displayName})", pos, DeleteSelectedGraph);
         }
 
+        // Evento de cambiar grafo seleccionado
         private void OnSelectedGraphChanges(ChangeEvent<string> evt)
         {
             if (evt.previousValue == evt.newValue) return;
 
+            UpdateGraphSelection();
+        }
+
+        private void UpdateGraphSelection()
+        {
             selectedGraphIndex = selectGraphDropdown.index;
 
             if (selectedGraphIndex < 0) selectedGraphProperty = null;
             else selectedGraphProperty = graphsProperty.GetArrayElementAtIndex(selectedGraphIndex);
 
+            ChangeSelectedGraph();
+        }
+
+        private void UpdateSelectionMenu()
+        {
+            selectGraphDropdown.choices = System.Data.graphs.Select(g => g.name).ToList();
+        }
+
+        // Cambia el grafo seleccionado, eliminando los nodos seleccionados
+        private void ChangeSelectedGraph()
+        {
+            selectedNodeIndexList.Clear();
+            selectedGraphIndex = selectGraphDropdown.index;
+
+            if (selectedGraphIndex < 0) selectedGraphProperty = null;
+            else selectedGraphProperty = graphsProperty.GetArrayElementAtIndex(selectedGraphIndex);
             UpdateGraphView();
+        }
+
+        private void ChangeToolPanel(ToolPanel toolPanel, bool canClose)
+        {
+            currentPanel?.ClosePanel();
+            toolPanel?.Open(canClose);
+            currentPanel = toolPanel;
         }
 
         #endregion
@@ -194,9 +261,8 @@ namespace BehaviourAPI.Unity.Editor
             System.Data.graphs.Add(graphData);
             serializedObject.Update();
 
-            selectGraphDropdown.choices = System.Data.graphs.Select(g => g.name).ToList();
-            selectedNodeIndexList.Clear();
-            selectGraphDropdown.index = selectedGraphIndex;
+            UpdateSelectionMenu();
+            selectGraphDropdown.index = System.Data.graphs.Count - 1;
         }
 
         private void DeleteSelectedGraph()
@@ -204,16 +270,26 @@ namespace BehaviourAPI.Unity.Editor
             graphsProperty.DeleteArrayElementAtIndex(selectedGraphIndex);
             serializedObject.ApplyModifiedProperties();
 
-            selectedNodeIndexList.Clear();
-            if (graphsProperty.arraySize > 0) selectedGraphIndex = 0;
-            else selectedGraphIndex = -1;
+            UpdateSelectionMenu();
+            selectGraphDropdown.index = 0;
+        }
 
-            UpdateGraphView();
+        private void ChangeMainGraph()
+        {
+            if(selectedGraphIndex >= System.Data.graphs.Count) return;
+
+            var currentGraph = System.Data.graphs[selectedGraphIndex];
+            System.Data.graphs.MoveAtFirst(currentGraph);
+            serializedObject.Update();
+
+            UpdateSelectionMenu();
+            selectGraphDropdown.index = 0;
+            UpdateGraphSelection();
         }
 
         private void ClearSelectedGraph()
         {
-            graphsProperty.FindPropertyRelative("nodes").ClearArray();
+            selectedGraphProperty.FindPropertyRelative("nodes").ClearArray();
             serializedObject.ApplyModifiedProperties();
 
             selectedNodeIndexList.Clear();
@@ -227,6 +303,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private void UpdateGraphView()
         {
+            Debug.Log("Update graph view");
             if (selectedGraphIndex >= 0) graphDataView.UpdateGraph(System.Data.graphs[selectedGraphIndex], selectedGraphProperty.FindPropertyRelative("nodes"));
             else graphDataView.UpdateGraph(null);
         }

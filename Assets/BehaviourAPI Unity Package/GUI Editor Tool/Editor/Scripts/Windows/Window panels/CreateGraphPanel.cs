@@ -1,15 +1,10 @@
-using BehaviourAPI.BehaviourTrees;
-using BehaviourAPI.StateMachines;
-using BehaviourAPI.StateMachines.StackFSMs;
-using BehaviourAPI.UtilitySystems;
 using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    public class CreateGraphPanel : VisualElement
+    public class CreateGraphPanel : ToolPanel
     {
         Action<string, Type> m_OnCreategraphCallback;
 
@@ -17,17 +12,10 @@ namespace BehaviourAPI.Unity.Editor
 
         TextField graphNameField;
 
-        public CreateGraphPanel(Action<string, Type> onCreategraphCallback)
+        public CreateGraphPanel(Action<string, Type> onCreategraphCallback) : base("/creategraphpanel.uxml")
         {
-            VisualTreeAsset asset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(BehaviourAPISettings.instance.EditorLayoutsPath + "/creategraphpanel.uxml");
-            asset.CloneTree(this);
-            this.StretchToParentSize();
-
             Button createBtn = this.Q<Button>("cgp-create-btn");
             createBtn.clicked += OnCreateButton;
-
-            Button closeBtn = this.Q<Button>("cgp-close-btn");
-            closeBtn.clicked += ClosePanel;
 
             graphNameField = this.Q<TextField>("cgp-name-field");
             
@@ -55,14 +43,8 @@ namespace BehaviourAPI.Unity.Editor
             if (SelectedEntry == null) return;
 
             Type selectedType = SelectedEntry.type;
-            Debug.Log(selectedType.Name);
             m_OnCreategraphCallback?.Invoke(graphNameField.value, selectedType);
             ClosePanel();
-        }
-
-        public void ClosePanel()
-        {
-            this.Disable();
         }
     }
 }

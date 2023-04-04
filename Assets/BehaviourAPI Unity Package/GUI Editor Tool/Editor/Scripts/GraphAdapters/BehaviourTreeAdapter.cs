@@ -10,6 +10,8 @@ namespace BehaviourAPI.Unity.Editor
     [CustomGraphAdapter(typeof(BehaviourTree))]
     public class BehaviourTreeAdapter : GraphAdapter
     {
+        public override string IconPath => BehaviourAPISettings.instance.IconPath + "Graphs/bt.png";
+
         public override void AutoLayout(GraphData graphData)
         {
             LayoutHandler layoutHandler = new TreeLayoutHandler();
