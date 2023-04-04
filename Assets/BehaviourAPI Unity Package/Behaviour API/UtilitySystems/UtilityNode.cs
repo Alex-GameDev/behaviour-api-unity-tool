@@ -12,6 +12,8 @@ namespace BehaviourAPI.UtilitySystems
 
         #region ------------------------------------------ Properties -----------------------------------------
 
+        public override Type GraphType => typeof(UtilitySystem);
+
         /// <summary>
         /// The utility value of the node.
         /// </summary>

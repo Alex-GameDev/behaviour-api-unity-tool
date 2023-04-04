@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement style="width: 100%; align-items: center; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px; background-color: rgba(38, 38, 38, 0.95); height: 100%;">
+        <ui:VisualElement style="height: 100%; width: 30%; min-width: 300px;">
+            <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" horizontal-scroller-visibility="Hidden" name="cgp-graph-sv" style="max-height: 80%; min-height: 30%;" />
+            <ui:TextField picking-mode="Ignore" value="newbehaviourgraph" text="newbehaviourgraph" name="cgp-name-field" max-length="-1" style="font-size: 16px; margin-top: 10px;" />
+            <ui:Button text="Create" display-tooltip-when-elided="true" name="cgp-create-btn" style="-unity-font-definition: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Editor%20Tool/Editor/Fonts/Cascadia%20SDF.asset?fileID=11400000&amp;guid=8fc71b80ca9989c4c92b587c827b612a&amp;type=2#Cascadia SDF&apos;);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement style="position: absolute; right: 10px; top: 10px; width: 50px; height: 20px;">
+        <ui:Button text="Close" display-tooltip-when-elided="true" name="cgp-close-btn" />
+    </ui:VisualElement>
+</ui:UXML>

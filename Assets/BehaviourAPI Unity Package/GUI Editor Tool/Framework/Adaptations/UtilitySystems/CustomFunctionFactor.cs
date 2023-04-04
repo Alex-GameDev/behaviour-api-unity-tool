@@ -9,6 +9,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     /// Adaptation wrapper class for use <see cref="CustomCurveFactor"/> in editor tools. 
     /// <para>! -- Don't use this class directly in code.</para>
     /// </summary>
+    [NodeAdapter(typeof(CustomCurveFactor))]
     public class CustomFunction : CurveFactor
     {
         /// <summary>

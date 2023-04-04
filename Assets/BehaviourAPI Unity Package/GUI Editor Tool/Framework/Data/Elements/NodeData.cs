@@ -12,15 +12,16 @@ namespace BehaviourAPI.Unity.Framework
     [Serializable]
     public class NodeData : ICloneable
     {
-        /// <summary>
-        /// The unique id of this element.
-        /// </summary>
-        [HideInInspector] public string id;
 
         /// <summary>
         /// The name of the node.
         /// </summary>
         public string name;
+
+        /// <summary>
+        /// The unique id of this element.
+        /// </summary>
+        [HideInInspector] public string id;
 
         /// <summary>
         /// The position of the node in the editor.

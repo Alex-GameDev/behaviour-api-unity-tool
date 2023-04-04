@@ -11,6 +11,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     /// Adaptation wrapper class for use <see cref="StateMachines.StackFSMs.PopTransition"/> in editor tools. 
     /// <para>! -- Don't use this class directly in code.</para>
     /// </summary>
+    [NodeAdapter(typeof(StateMachines.StackFSMs.PopTransition))]
     public class PopTransition : StateMachines.StackFSMs.PopTransition, IActionAssignable, IPerceptionAssignable, IBuildable
     {
         /// <summary>

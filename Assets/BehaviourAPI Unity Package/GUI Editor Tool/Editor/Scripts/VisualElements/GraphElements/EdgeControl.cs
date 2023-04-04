@@ -36,7 +36,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             var inputDir = Vector2.zero;
             var outputDir = Vector2.zero;
-
+             
             if (edgeView.input is PortView inputPortView)
             {
                 inputDir = inputPortView.Orientation.ToVector();

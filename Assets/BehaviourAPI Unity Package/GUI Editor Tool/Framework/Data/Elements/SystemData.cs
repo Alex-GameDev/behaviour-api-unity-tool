@@ -14,12 +14,12 @@ namespace BehaviourAPI.Unity.Framework
         /// <summary>
         /// List of the graphs stored in the system. The first node is the main one.
         /// </summary>
-        [HideInInspector] public List<GraphData> graphs = new List<GraphData>();
+        public List<GraphData> graphs = new List<GraphData>();
 
         /// <summary>
         /// List of push perceptions.
         /// </summary>
-        [HideInInspector] public List<PushPerceptionData> pushPerceptions = new List<PushPerceptionData>();
+        public List<PushPerceptionData> pushPerceptions = new List<PushPerceptionData>();
 
         /// <summary>
         /// Default constructor.

@@ -62,7 +62,7 @@ namespace BehaviourAPI.Unity.Editor
     {
         protected override EditorHierarchyNode GetHierarchyNode()
         {
-            return BehaviourAPISettings.instance.ActionHierarchy;
+            return BehaviourAPISettings.instance.Metadata.ActionHierarchy;
         }
     }
 
@@ -73,7 +73,7 @@ namespace BehaviourAPI.Unity.Editor
     {
         protected override EditorHierarchyNode GetHierarchyNode()
         {
-            return BehaviourAPISettings.instance.PerceptionHierarchy;
+            return BehaviourAPISettings.instance.Metadata.PerceptionHierarchy;
         }
     }
 
@@ -82,13 +82,11 @@ namespace BehaviourAPI.Unity.Editor
     /// </summary>
     public class NodeCreationWindow : ElementCreatorWindowProvider
     {
-        private Type _adapterType;
+        //private Type _adapterType;
+        private EditorHierarchyNode nodeHierarchy;
 
-        protected override EditorHierarchyNode GetHierarchyNode()
-        {
-            return BehaviourAPISettings.instance.NodeHierarchy(_adapterType);
-        }
+        protected override EditorHierarchyNode GetHierarchyNode() => nodeHierarchy;
 
-        public void SetAdapterType(Type type) => _adapterType = type;
+        public void SetHierarchy(EditorHierarchyNode hierarchyNode) => nodeHierarchy = hierarchyNode;
     }
 }

@@ -1,0 +1,28 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Editor%20Tool/Editor/Resources/uss/gwindow.uss?fileID=7433441132597879392&amp;guid=06606009490d1534d9be0b41e0d7badb&amp;type=3#gwindow" />
+    <uie:Toolbar name="bw-toolbar" style="padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px; height: auto; justify-content: space-between;">
+        <ui:VisualElement name="bw-toolbar-left" style="flex-direction: row; align-items: center;">
+            <ui:DropdownField label="Graph" index="0" choices="-" name="bw-graph-select" style="-unity-font-definition: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Editor%20Tool/Editor/Resources/Fonts/Cascadia%20SDF.asset?fileID=11400000&amp;guid=8fc71b80ca9989c4c92b587c827b612a&amp;type=2#Cascadia SDF&apos;); height: 30px; font-size: 16px; -unity-text-align: middle-left; min-width: 300px; max-width: 500px;" />
+            <ui:VisualElement name="bw-edit-toolbar" style="flex-direction: row; border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; background-color: rgb(46, 46, 46); padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; justify-content: center; align-items: center; margin-left: 5px;">
+                <ui:Button text="+" display-tooltip-when-elided="true" name="bw-add-graph-btn" class="toolbar-btn toolbar-squared-btn" />
+                <ui:Button display-tooltip-when-elided="true" name="bw-remove-graph-btn" class="toolbar-btn toolbar-squared-btn" style="background-image: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Editor%20Tool/Editor/Resources/Icons/delete.png?fileID=2800000&amp;guid=c046d8dc01bd1094a8de02bff5a4ece7&amp;type=3#delete&apos;);" />
+                <ui:Button text="Auto name" display-tooltip-when-elided="true" name="bw-autoname-btn" class="toolbar-btn" style="font-size: 16px; -unity-font-definition: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Editor%20Tool/Editor/Resources/Fonts/Cascadia%20SDF.asset?fileID=11400000&amp;guid=8fc71b80ca9989c4c92b587c827b612a&amp;type=2#Cascadia SDF&apos;); width: auto;" />
+                <ui:Button display-tooltip-when-elided="true" name="bw-script-btn" class="toolbar-btn toolbar-squared-btn" style="background-image: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Editor%20Tool/Editor/Resources/Icons/code.png?fileID=2800000&amp;guid=dd2972ab964903a44817886b07f1fe51&amp;type=3#code&apos;); height: 30px;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="bw-common-toolbar" style="flex-direction: row;">
+                <ui:Button display-tooltip-when-elided="true" class="toolbar-btn toolbar-squared-btn" />
+                <uie:ToolbarToggle focusable="false" label="Minimap" style="align-items: center; -unity-font-definition: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Editor%20Tool/Editor/Resources/Fonts/Cascadia%20SDF.asset?fileID=11400000&amp;guid=8fc71b80ca9989c4c92b587c827b612a&amp;type=2#Cascadia SDF&apos;); -unity-text-align: upper-center;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement style="align-items: center; justify-content: center;">
+            <ui:VisualElement style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px; -unity-font-definition: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Editor%20Tool/Editor/Resources/Fonts/Cascadia%20SDF.asset?fileID=11400000&amp;guid=8fc71b80ca9989c4c92b587c827b612a&amp;type=2#Cascadia SDF&apos;); font-size: 16px; flex-direction: row;">
+                <ui:Label text="Assets/Resources/System.asset" display-tooltip-when-elided="true" name="bw-path-label" style="font-size: 16px; -unity-text-align: middle-left;" />
+                <ui:Label text="(EDITOR)" display-tooltip-when-elided="true" name="bw-mode-label" style="font-size: 16px; -unity-text-align: middle-left;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </uie:Toolbar>
+    <ui:VisualElement name="bw-main" style="flex-direction: row; height: 100%;">
+        <ui:VisualElement name="bw-graph" style="width: 100%; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex;" />
+        <ui:IMGUIContainer name="bw-inspector" style="background-color: rgba(43, 43, 43, 0.8); width: 25%; min-width: 250px; max-width: 500px; height: 100%;" />
+    </ui:VisualElement>
+</ui:UXML>

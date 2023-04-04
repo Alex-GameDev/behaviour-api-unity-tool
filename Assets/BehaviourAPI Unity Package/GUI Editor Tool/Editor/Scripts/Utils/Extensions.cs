@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using System.Text.RegularExpressions;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -66,6 +67,14 @@ namespace BehaviourAPI.Unity.Editor
         public static string ToCodeFormat(this bool b) => b.ToString().ToLower();
         public static string ToCodeFormat(this Status s) => "Status." + s.ToString();
         public static string ToCodeFormat(this StatusFlags s) => "StatusFlags." + ((int)s < 0 ? StatusFlags.Active.ToString() : s.ToString());
+
+
+        public static SerializedProperty AddElement(this SerializedProperty prop)
+        {
+            int size = prop.arraySize;
+            prop.InsertArrayElementAtIndex(size);
+            return prop.GetArrayElementAtIndex(size);
+        }
 
         #endregion
     }

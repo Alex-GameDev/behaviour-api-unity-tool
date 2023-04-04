@@ -13,6 +13,10 @@ namespace BehaviourAPI.Core
         public BehaviourGraph BehaviourGraph { get; internal set; }
 
         /// <summary>
+        /// The type of graph that this node can belong.
+        /// </summary>
+        public abstract Type GraphType { get; }
+        /// <summary>
         /// The type of nodes that this node can handle as a child(s).
         /// </summary>
         public abstract Type ChildType { get; }

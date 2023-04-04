@@ -138,9 +138,9 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (GUILayout.Button("Assign subgraph"))
                 {
-                    if(BehaviourEditorWindow.Instance != null)
+                    if(GraphSearchWindowProvider.Instance != null)
                     {
-                        BehaviourEditorWindow.Instance.OpenSearchGraphWindow((data) => SetSubgraph(subGraphProperty, data));
+                        //GraphSearchWindowProvider.Instance.Open(data => SetSubgraph(subGraphProperty, data));
                     }
                     else
                     {
@@ -150,8 +150,8 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
-                var subgraph = BehaviourEditorWindow.Instance.System.Data.graphs.Find(g => g.id == subGraphProperty.stringValue);
-                EditorGUILayout.LabelField(subgraph?.name ?? "missing subgraph");
+                //var subgraph = CustomEditorWindow.Instance.System.Data.graphs.Find(g => g.id == subGraphProperty.stringValue);
+                //EditorGUILayout.LabelField(subgraph?.name ?? "missing subgraph");
                 if (GUILayout.Button("Remove subgraph"))
                 {
                     subGraphProperty.stringValue = string.Empty;

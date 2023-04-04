@@ -1,4 +1,6 @@
-﻿namespace BehaviourAPI.StateMachines
+﻿using System;
+
+namespace BehaviourAPI.StateMachines
 {
     using Core;
 
@@ -7,5 +9,6 @@
     /// </summary>
     public abstract class FSMNode : Node
     {
+        public override Type GraphType => typeof(FSM);
     }
 }

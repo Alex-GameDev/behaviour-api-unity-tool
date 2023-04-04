@@ -10,8 +10,14 @@ namespace BehaviourAPI.StateMachines.StackFSMs
     /// </summary>
     public abstract class StackTransition : Transition
     {
+        #region ------------------------------------------ Properties ----------------------------------------
+
+        public override Type GraphType => typeof(StackFSM);
+
+        #endregion
+
         #region -------------------------------------- Private variables -------------------------------------
-        
+
         /// <summary>
         /// The stack fsm of this transition.
         /// </summary>

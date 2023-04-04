@@ -7,10 +7,14 @@ using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class PortView : Port
     {
-        public PortOrientation Orientation;
-        protected PortView(PortOrientation portOrientation, Direction portDirection, Capacity portCapacity, Type type) : base(portOrientation.ToOrientation(), portDirection, portCapacity, type)
+        public EPortOrientation Orientation;
+
+        protected PortView(EPortOrientation portOrientation, Direction portDirection, Capacity portCapacity, Type type) : base(portOrientation.ToOrientation(), portDirection, portCapacity, type)
         {
             Orientation = portOrientation;
             Decorate();
@@ -24,34 +28,34 @@ namespace BehaviourAPI.Unity.Editor
             fixer.StretchToParentSize();
             Add(fixer);
 
-            if (Orientation == PortOrientation.Top && isOutput || Orientation == PortOrientation.Bottom && !isOutput)
+            if (Orientation == EPortOrientation.Top && isOutput || Orientation == EPortOrientation.Bottom && !isOutput)
             {
                 m_ConnectorBox.style.borderTopLeftRadius = 0f;
                 m_ConnectorBox.style.borderTopRightRadius = 0f;
             }
-            else if (Orientation == PortOrientation.Left && isOutput || Orientation == PortOrientation.Right && !isOutput)
+            else if (Orientation == EPortOrientation.Left && isOutput || Orientation == EPortOrientation.Right && !isOutput)
             {
                 m_ConnectorBox.style.borderTopRightRadius = 0f;
                 m_ConnectorBox.style.borderBottomRightRadius = 0f;
             }
-            else if (Orientation == PortOrientation.Right && isOutput || Orientation == PortOrientation.Left && !isOutput)
+            else if (Orientation == EPortOrientation.Right && isOutput || Orientation == EPortOrientation.Left && !isOutput)
             {
                 m_ConnectorBox.style.borderTopLeftRadius = 0f;
                 m_ConnectorBox.style.borderBottomLeftRadius = 0f;
             }
-            else if (Orientation == PortOrientation.Bottom && isOutput || Orientation == PortOrientation.Top && !isOutput)
+            else if (Orientation == EPortOrientation.Bottom && isOutput || Orientation == EPortOrientation.Top && !isOutput)
             {
                 m_ConnectorBox.style.borderBottomLeftRadius = 0f;
                 m_ConnectorBox.style.borderBottomRightRadius = 0f;
             }
         }
 
-        public static PortView Create(PortOrientation portOrientation, Direction portDirection, Capacity portCapacity, Type type)
+        public static PortView Create(EPortOrientation portOrientation, Direction portDirection, 
+            Capacity portCapacity, Type type, IEdgeConnectorListener edgeConnector = null)
         {
-            DefaultEdgeConnectorListener listener = new DefaultEdgeConnectorListener();
             PortView port = new PortView(portOrientation, portDirection, portCapacity, type)
             {
-                m_EdgeConnector = new EdgeConnector<EdgeView>(listener)
+               m_EdgeConnector = new EdgeConnector<EdgeView>(edgeConnector)
             };
             port.AddManipulator(port.m_EdgeConnector);
             return port;
@@ -124,7 +128,7 @@ namespace BehaviourAPI.Unity.Editor
         }
     }
 
-    public enum PortOrientation
+    public enum EPortOrientation
     {
         None = 0,
         Top = 1,

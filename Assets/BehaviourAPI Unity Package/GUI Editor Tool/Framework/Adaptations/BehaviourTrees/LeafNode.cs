@@ -10,6 +10,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     /// Adaptation wrapper class for use <see cref="BehaviourTrees.LeafNode"/> in editor tools. 
     /// <para>! -- Don't use this class directly in code.</para>
     /// </summary>
+    [NodeAdapter(typeof(LeafNode))]
     public class LeafNode : BehaviourTrees.LeafNode, IActionAssignable, IBuildable
     {
         /// <summary>

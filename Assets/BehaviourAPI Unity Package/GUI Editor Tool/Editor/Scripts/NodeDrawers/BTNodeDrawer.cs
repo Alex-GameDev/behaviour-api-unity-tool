@@ -1,4 +1,8 @@
 using BehaviourAPI.BehaviourTrees;
+using BehaviourAPI.Core;
+using BehaviourAPI.Unity.Framework;
+using System;
+using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -9,10 +13,13 @@ namespace BehaviourAPI.Unity.Editor
     public class BTNodeDrawer : NodeDrawer
     {
         PortView InputPort, OutputPort;
+
+        VisualElement rootIcon;
         public override string LayoutPath => BehaviourAPISettings.instance.EditorLayoutsPath + "Nodes/Tree Node.uxml";
 
         public override void DrawNodeDetails()
         {
+            rootIcon = view.Q("node-root");
             switch(node)
             {
                 case LeafNode:
@@ -27,46 +34,57 @@ namespace BehaviourAPI.Unity.Editor
                     SetIconText(node.TypeName().CamelCaseToSpaced());
                     break;
             }
+
+            OnRepaint();
         }
 
         private void SetColor(Color color)
         {
-            nodeView.Find("node-type-color-top").ChangeBackgroundColor(color);
-            nodeView.Find("node-type-color-bottom").ChangeBackgroundColor(color);
+            view.Find("node-type-color-top").ChangeBackgroundColor(color);
+            view.Find("node-type-color-bottom").ChangeBackgroundColor(color);
         }
 
         private void SetIconText(string text)
         {
-            var iconElement = nodeView.Find("node-icon");
+            var iconElement = view.Find("node-icon");
             iconElement.Enable();
             iconElement.Add(new Label(text));
         }
 
         public override void OnRepaint()
         {
-        }
+            if (view.graphView.graphData.nodes.First() == view.data && IsValidRootNode(view.data))
+            {
+                if(view.data.parentIds.Count > 0)
+                {
 
-        public override void OnSelected()
-        {
-        }
-
-        public override void OnUnselected()
-        {
+                }
+                else
+                {
+                    view.inputContainer.Hide();
+                    rootIcon.Enable();
+                }
+            }
+            else
+            {
+                view.inputContainer.Show();
+                rootIcon.Disable();
+            }
         }
 
         public override void SetUpPorts()
         {
-            if (node != null || node.MaxInputConnections != 0)
+            if (node == null || node.MaxInputConnections != 0)
             {
-                InputPort = nodeView.InstantiatePort(Direction.Input, EPortOrientation.Bottom);
+                InputPort = view.InstantiatePort(Direction.Input, EPortOrientation.Bottom);
             }
-            else nodeView.inputContainer.Disable();
+            else view.inputContainer.Disable();
 
-            if (node != null || node.MaxOutputConnections != 0)
+            if (node == null || node.MaxOutputConnections != 0)
             {
-                OutputPort = nodeView.InstantiatePort(Direction.Output, EPortOrientation.Top);
+                OutputPort = view.InstantiatePort(Direction.Output, EPortOrientation.Top);
             }
-            else nodeView.outputContainer.Disable();
+            else view.outputContainer.Disable();
 
         }
 
@@ -74,6 +92,40 @@ namespace BehaviourAPI.Unity.Editor
         {
             if(direction == Direction.Input) return InputPort;
             else return OutputPort;
+        }
+
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+        {
+            evt.menu.AppendAction("Convert to root node",
+                _ => ConvertToRootNode(),
+                (view.GetDataIndex() != 0) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+        }
+
+        private void ConvertToRootNode()
+        {
+            view.DisconnectAllInputPorts();
+            view.ConvertToFirstNode();
+        }
+
+        public override void OnDeleted()
+        {
+            RecomputeRootNode();
+        }
+
+        private static bool IsValidRootNode(NodeData data)
+        {
+            return data.parentIds.Count == 0;
+        }
+
+        private void RecomputeRootNode()
+        {
+            var nodes = view.graphView.graphData.nodes;
+            if (nodes.Count > 0 && !IsValidRootNode(nodes.First()))
+            {
+                var newRootNode = nodes.FirstOrDefault(IsValidRootNode);
+
+                if (newRootNode != null) nodes.MoveAtFirst(newRootNode);
+            }
         }
     }
 }

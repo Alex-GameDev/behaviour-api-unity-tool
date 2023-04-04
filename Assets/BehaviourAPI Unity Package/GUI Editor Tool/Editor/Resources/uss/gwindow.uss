@@ -1,0 +1,14 @@
+VisualElement {
+}
+
+.toolbar-btn {
+    height: 30px;
+    width: auto;
+    font-size: 30px;
+    -unity-text-align: middle-center;
+    white-space: nowrap;
+}
+
+.toolbar-squared-btn {
+    width: 30px;
+}

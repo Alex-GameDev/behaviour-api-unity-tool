@@ -3,6 +3,7 @@
     /// <summary>
     /// Defines a point in a 2D space.
     /// </summary>
+    [System.Serializable]
     public struct Vector2
     {
         /// <summary>

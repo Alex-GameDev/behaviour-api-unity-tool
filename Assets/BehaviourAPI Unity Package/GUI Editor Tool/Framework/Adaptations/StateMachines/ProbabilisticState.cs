@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
+    using BehaviourAPI.UtilitySystems;
     using Core;
     using Core.Actions;
 
@@ -10,6 +11,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     /// Adaptation wrapper class for use <see cref="StateMachines.ProbabilisticState"/> in editor tools. 
     /// <para>! -- Don't use this class directly in code.</para>
     /// </summary>
+    [NodeAdapter(typeof(StateMachines.ProbabilisticState))]
     public class ProbabilisticState : StateMachines.ProbabilisticState, IActionAssignable, IBuildable
     {
         /// <summary>

@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
+    using BehaviourAPI.UtilitySystems;
     using Core;
     using Core.Actions;
 
@@ -10,7 +11,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     /// Adaptation wrapper class for use <see cref="StateMachines.State"/> in editor tools. 
     /// <para>! -- Don't use this class directly in code.</para>
     /// </summary>
-    /// 
+    [NodeAdapter(typeof(StateMachines.State))]
     public class State : StateMachines.State, IActionAssignable, IBuildable
     {
         /// <summary>

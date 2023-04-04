@@ -12,6 +12,7 @@ namespace BehaviourAPI.Unity.Editor
     using Core.Actions;
     using Framework.Adaptations;
     using UnityExtensions;
+    using Codice.Client.Common;
 
     [FilePath("ProjectSettings/BehaviourAPISettings.asset", FilePathAttribute.Location.ProjectFolder)]
     public class BehaviourAPISettings : ScriptableSingleton<BehaviourAPISettings>
@@ -72,93 +73,36 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Root path of editor layout elements
         /// </summary>
-        public string EditorLayoutsPath => $"{RootPath}/Editor/uxml/";
+        public string EditorLayoutsPath => $"{RootPath}/Editor/Resources/uxml/";
 
         /// <summary>
         /// Root path of editor style sheets
         /// </summary>
-        public string EditorStylesPath => $"{RootPath}/Editor/uss/";
+        public string EditorStylesPath => $"{RootPath}/Editor/Resources/uss/";
 
         /// <summary>
         /// Root path of the script templates
         /// </summary>
-        public string ScriptTemplatePath => $"{RootPath}/Editor/Templates";
+        public string ScriptTemplatePath => $"{RootPath}/Editor/Resources/Templates";
 
-        List<Assembly> assemblies = new List<Assembly>();
-
-        EditorHierarchyNode _actionHierarchy;
-        EditorHierarchyNode _perceptionHierarchy;
-        Dictionary<System.Type, EditorHierarchyNode> _nodeHierarchyMap;
-        Dictionary<System.Type, System.Type> _graphAdapterMap;
-
-
-        public EditorHierarchyNode ActionHierarchy => _actionHierarchy;
-        public EditorHierarchyNode PerceptionHierarchy => _perceptionHierarchy;
-
-        public EditorHierarchyNode NodeHierarchy(Type type) => _nodeHierarchyMap[type];
-        public Type GetAdapter(Type type) => _graphAdapterMap[type];
+        /// <summary>
+        /// 
+        /// </summary>
+        public APITypeMetadata Metadata;
 
         public void Save() => Save(true);
-
-        public List<Assembly> GetAssemblies() => assemblies;
-
-        public List<System.Type> GetTypes()
-        {
-            return GetAssemblies().SelectMany(a => a.GetTypes()).ToList();
-        }
 
         /// <summary>
         /// Create the type hierarchies used in the editor when Unity reloads.
         /// </summary>
         public void ReloadAssemblies()
         {
-            var customAssemblies = CustomAssemblies.Split(';').ToList();
-            var allAssemblyNames = customAssemblies.Union(k_DefaultAssemblies).ToHashSet();
-            assemblies = System.AppDomain.CurrentDomain.GetAssemblies().ToList().FindAll(assembly =>
-                allAssemblyNames.Contains(assembly.GetName().Name));
-
-            BuildHierarchies();
+            Metadata = new APITypeMetadata();
 
             if (!System.IO.Directory.Exists(RootPath))
             {
                 Debug.LogWarning("BehaviourAPISettings: Root path doesn't exist. Change the path in ProyectSetting > BehaviourAPI");
             }
-        }
-
-        private void BuildHierarchies()
-        {
-            var types = GetTypes();
-
-            var unityActionNode = EditorHierarchyNode.CreateGroupedHierarchyNode(types, typeof(UnityAction), "Unity Actions", true);
-
-            _actionHierarchy = new EditorHierarchyNode("Actions", typeof(Action));
-            _actionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(CustomAction)));
-            _actionHierarchy.Childs.Add(unityActionNode);
-            _actionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(SubgraphAction)));
-
-            var unityPerceptionNode = EditorHierarchyNode.CreateGroupedHierarchyNode(types, typeof(UnityPerception), "Unity Perceptions", true);
-            var compoundPerceptionNode = EditorHierarchyNode.CreateGroupedHierarchyNode(types, typeof(CompoundPerception), "Compound perceptions");
-
-            _perceptionHierarchy = new EditorHierarchyNode("Perceptions", typeof(Perception));
-            _perceptionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(CustomPerception)));
-            _perceptionHierarchy.Childs.Add(unityPerceptionNode);
-            _perceptionHierarchy.Childs.Add(compoundPerceptionNode);
-
-            var graphAdapters = types.FindAll(t => t.IsSubclassOf(typeof(GraphAdapter)) &&
-                !t.IsAbstract &&
-                 t.GetConstructors().Any(c => c.GetParameters().Length == 0) &&
-                 (t.GetCustomAttribute<CustomAdapterAttribute>()?.type.IsSubclassOf(typeof(BehaviourGraph)) ?? false));
-
-            _graphAdapterMap = graphAdapters.ToDictionary(g => g.GetCustomAttribute<CustomAdapterAttribute>().type, g => g);
-
-            _nodeHierarchyMap = graphAdapters.ToDictionary(adapterType => adapterType, adapterType =>
-            {
-                var graphType = adapterType.GetCustomAttribute<CustomAdapterAttribute>().type;
-                var adapter = (GraphAdapter)Activator.CreateInstance(adapterType);
-
-                return EditorHierarchyNode.CreateCustomHierarchyNode(types, graphType,
-                    $"{graphType.Name} nodes", adapter.MainTypes, adapter.ExcludedTypes);
-            });
-        }
+        }       
     }
 }

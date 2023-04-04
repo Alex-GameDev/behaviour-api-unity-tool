@@ -15,14 +15,14 @@ namespace BehaviourAPI.Unity.Framework
     public class GraphData : ICloneable
     {
         /// <summary>
-        /// The unique id of this element.
-        /// </summary>
-        [HideInInspector] public string id;
-
-        /// <summary>
         /// The name of the graph.
         /// </summary>
         public string name;
+
+        /// <summary>
+        /// The unique id of this element.
+        /// </summary>
+        [HideInInspector] public string id;
 
         /// <summary>
         /// The serializable reference of the graph.
@@ -32,7 +32,7 @@ namespace BehaviourAPI.Unity.Framework
         /// <summary>
         /// The serialized list of graph nodes.
         /// </summary>
-        [HideInInspector] public List<NodeData> nodes = new List<NodeData>();
+        public List<NodeData> nodes = new List<NodeData>();
 
         /// <summary>
         /// Create a new <see cref="GraphData"/> by its graph type.
@@ -136,6 +136,19 @@ namespace BehaviourAPI.Unity.Framework
                     }
                 }).ToList();
             }
+        }
+
+
+        public HashSet<NodeData> GetDirectChilds(NodeData data)
+        {
+            var nodeIdMap = GetNodeIdMap();
+            return data.childIds.Select(id => nodeIdMap[id]).ToHashSet();   
+        }
+
+        public HashSet<NodeData> GetDirectParents(NodeData data)
+        {
+            var nodeIdMap = GetNodeIdMap();
+            return data.parentIds.Select(id => nodeIdMap[id]).ToHashSet();
         }
 
         /// <summary>

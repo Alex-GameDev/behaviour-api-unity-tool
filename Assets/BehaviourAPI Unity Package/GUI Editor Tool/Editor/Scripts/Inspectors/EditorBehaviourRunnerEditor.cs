@@ -14,6 +14,10 @@ namespace BehaviourAPI.Unity.Editor
 
             EditorBehaviourRunner runner = (EditorBehaviourRunner)target;
 
+            if(GUILayout.Button("OPEN NEW"))
+            {
+                CustomEditorWindow.Create(runner);
+            }
             EditorGUILayout.Space(10f, true);
             GUIStyle centeredLabelstyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
 
@@ -45,12 +49,12 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     if (Application.isPlaying)
                     {
-                        EditorWindow.GetWindow<BehaviourEditorWindow>().ShowNotification(new GUIContent("Cannot bind behaviour system on runtime"));
+                        EditorWindow.GetWindow<CustomEditorWindow>().ShowNotification(new GUIContent("Cannot edit binded behaviour system on runtime"));
                         return;
                     }
 
                     //Debug.Log("OpenWindow editor");
-                    BehaviourEditorWindow.OpenSystem(runner);
+                    CustomEditorWindow.Create(runner);
                 }
             }
             else

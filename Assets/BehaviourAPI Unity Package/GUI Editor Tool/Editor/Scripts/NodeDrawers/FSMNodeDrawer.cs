@@ -1,5 +1,8 @@
+using BehaviourAPI.Core;
 using BehaviourAPI.StateMachines;
+using BehaviourAPI.Unity.Framework;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,10 +15,39 @@ namespace BehaviourAPI.Unity.Editor
         List<PortView> InputPorts, OutputPorts;
         PortView inputUniquePort, outputUniquePort;
 
+        VisualElement rootIcon;
+
         public override string LayoutPath => BehaviourAPISettings.instance.EditorLayoutsPath + "Nodes/CG Node.uxml";
 
         public override void DrawNodeDetails()
         {
+            rootIcon = view.Q("node-root");
+            switch (node)
+            {
+                case State:
+                    SetColor(BehaviourAPISettings.instance.StateColor);
+                    break;
+                case Transition:
+                    SetColor(BehaviourAPISettings.instance.TransitionColor);
+                    break;
+            }
+
+
+            RecomputeEntryNode();
+            OnRepaint();
+        }
+
+        private void SetColor(Color color)
+        {
+            view.Find("node-type-color-top").ChangeBackgroundColor(color);
+            view.Find("node-type-color-bottom").ChangeBackgroundColor(color);
+        }
+
+        private void SetIconText(string text)
+        {
+            var iconElement = view.Find("node-icon");
+            iconElement.Enable();
+            iconElement.Add(new Label(text));
         }
 
         public override PortView GetPort(MNodeView other, Direction dir)
@@ -25,18 +57,10 @@ namespace BehaviourAPI.Unity.Editor
                 if (inputUniquePort != null) return inputUniquePort;
                 else
                 {
-                    var otherPos = other.GetPosition().position;
-                    var delta = otherPos - nodeView.GetPosition().position;
-                    if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
-                    {
-                        if (delta.x > 0) return InputPorts[1];
-                        else return InputPorts[3];
-                    }
-                    else
-                    {
-                        if (delta.y > 0) return InputPorts[2];
-                        else return InputPorts[0];
-                    }
+                    var otherPos = other.data.position;
+                    var delta = otherPos - view.data.position;
+                    int idx = Mathf.Abs(delta.x) > Mathf.Abs(delta.y) ? delta.x > 0 ? 1 : 3 : delta.y > 0 ? 2 : 0;
+                    return InputPorts[idx];
                 }
             }
             else
@@ -44,33 +68,27 @@ namespace BehaviourAPI.Unity.Editor
                 if (outputUniquePort != null) return outputUniquePort;
                 else
                 {
-                    var otherPos = other.GetPosition().position;
-                    var delta = otherPos - nodeView.GetPosition().position;
-                    if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
-                    {
-                        if (delta.x > 0) return OutputPorts[1];
-                        else return OutputPorts[3];
-                    }
-                    else
-                    {
-                        if (delta.y > 0) return OutputPorts[2];
-                        else return OutputPorts[0];
-                    }
+                    var otherPos = other.data.position;
+                    var delta = otherPos - view.data.position;
+                    int idx = Mathf.Abs(delta.x) > Mathf.Abs(delta.y) ? delta.x > 0 ? 1 : 3 : delta.y > 0 ? 2 : 0;
+                    return OutputPorts[idx];
                 }
             }
         }
 
         public override void OnRepaint()
         {
+            if (view.graphView.graphData.nodes.First() == view.data && IsValidEntryNode(view.data))
+            {
+                rootIcon.Enable();
+            }
+            else
+            {
+                rootIcon.Disable();
+            }
         }
 
-        public override void OnSelected()
-        {
-        }
 
-        public override void OnUnselected()
-        {
-        }
 
         public override void SetUpPorts()
         {
@@ -78,55 +96,86 @@ namespace BehaviourAPI.Unity.Editor
             OutputPorts = new List<PortView>();
             if (node == null || node.MaxInputConnections != 0)
             {
-                var port1 = nodeView.InstantiatePort(Direction.Input, EPortOrientation.Bottom);
+                var port1 = view.InstantiatePort(Direction.Input, EPortOrientation.Bottom);
                 port1.style.position = Position.Absolute;
                 port1.style.top = 0; port1.style.left = new StyleLength(new Length(50, LengthUnit.Percent));
                 InputPorts.Add(port1);
 
-                var port2 = nodeView.InstantiatePort(Direction.Input, EPortOrientation.Right);
+                var port2 = view.InstantiatePort(Direction.Input, EPortOrientation.Right);
                 port2.style.position = Position.Absolute;
                 port2.style.right = 0; port2.style.top = new StyleLength(new Length(50, LengthUnit.Percent));
                 InputPorts.Add(port2);
 
-                var port3 = nodeView.InstantiatePort(Direction.Input, EPortOrientation.Top);
+                var port3 = view.InstantiatePort(Direction.Input, EPortOrientation.Top);
                 port3.style.position = Position.Absolute;
                 port3.style.bottom = 0; port3.style.right = new StyleLength(new Length(50, LengthUnit.Percent));
                 InputPorts.Add(port3);
 
-                var port4 = nodeView.InstantiatePort(Direction.Input, EPortOrientation.Left);
+                var port4 = view.InstantiatePort(Direction.Input, EPortOrientation.Left);
                 port4.style.position = Position.Absolute;
                 port4.style.left = 0; port4.style.bottom = new StyleLength(new Length(50, LengthUnit.Percent));
                 InputPorts.Add(port4);
             }
             else
             {
-                nodeView.inputContainer.style.display = DisplayStyle.None;
+                view.inputContainer.style.display = DisplayStyle.None;
             }
 
             if (node == null || node.MaxOutputConnections != 0)
             {
-                var port1 = nodeView.InstantiatePort(Direction.Output, EPortOrientation.Bottom);
+                var port1 = view.InstantiatePort(Direction.Output, EPortOrientation.Bottom);
                 port1.style.position = Position.Absolute;
                 port1.style.top = 0; port1.style.right = new StyleLength(new Length(50, LengthUnit.Percent));
                 OutputPorts.Add(port1);
 
-                var port2 = nodeView.InstantiatePort(Direction.Output, EPortOrientation.Right);
+                var port2 = view.InstantiatePort(Direction.Output, EPortOrientation.Right);
                 port2.style.position = Position.Absolute;
                 port2.style.right = 0; port2.style.bottom = new StyleLength(new Length(50, LengthUnit.Percent));
                 OutputPorts.Add(port2);
 
-                var port3 = nodeView.InstantiatePort(Direction.Output, EPortOrientation.Top);
+                var port3 = view.InstantiatePort(Direction.Output, EPortOrientation.Top);
                 port3.style.position = Position.Absolute;
                 port3.style.bottom = 0; port3.style.left = new StyleLength(new Length(50, LengthUnit.Percent));
                 OutputPorts.Add(port3);
 
-                var port4 = nodeView.InstantiatePort(Direction.Output, EPortOrientation.Left);
+                var port4 = view.InstantiatePort(Direction.Output, EPortOrientation.Left);
                 port4.style.position = Position.Absolute;
                 port4.style.left = 0; port4.style.top = new StyleLength(new Length(50, LengthUnit.Percent));
                 OutputPorts.Add(port4);
             }
             else
-                nodeView.outputContainer.style.display = DisplayStyle.None;
+                view.outputContainer.style.display = DisplayStyle.None;
+        }
+
+        public override void OnDeleted()
+        {
+            RecomputeEntryNode();
+        }
+
+        private static bool IsValidEntryNode(NodeData data)
+        {
+            return data.node is State;
+        }
+
+        private void RecomputeEntryNode()
+        {
+            var nodes = view.graphView.graphData.nodes;
+            if (nodes.Count > 0 && !IsValidEntryNode(nodes.First()))
+            {
+                var newRootNode = nodes.FirstOrDefault(IsValidEntryNode);
+
+                if (newRootNode != null) nodes.MoveAtFirst(newRootNode);
+            }
+        }
+
+        public override void OnUnselected()
+        {
+            base.OnUnselected();
+        }
+
+        public override void OnConnected()
+        {
+            base.OnConnected();
         }
     }
 }

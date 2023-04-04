@@ -826,7 +826,7 @@ namespace BehaviourAPI.Unity.Editor
 
         static string GenerateMethodCode(string componentName, string methodName, ScriptTemplate template, Type[] args, Type returnType = null)
         {
-            Type componentType = string.IsNullOrWhiteSpace(componentName) ? null : TypeUtilities.FindComponentType(componentName);
+            Type componentType = string.IsNullOrWhiteSpace(componentName) ? null : BehaviourAPISettings.instance.Metadata.componentMap.GetValueOrDefault(componentName);
 
             if (componentType != null)
             {

@@ -4,10 +4,12 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
 {
     using Core;
     using UnityExtensions;
+
     /// <summary>
     /// Adaptation wrapper class for use <see cref="UtilitySystems.VariableFactor"/> in editor tools. 
     /// <para>! -- Don't use this class directly in code.</para>
     /// </summary>
+    [NodeAdapter(typeof(UtilitySystems.VariableFactor))]
     public class VariableFactor : UtilitySystems.VariableFactor
     {
 

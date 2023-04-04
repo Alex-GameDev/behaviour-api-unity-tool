@@ -106,6 +106,10 @@ namespace BehaviourAPI.Core
                 throw new ArgumentException($"Error adding a node: An instance of type {node.GetType()} cannot be added, " +
                     $"this graph only handles nodes of types derived from {NodeType}");
 
+            if(!node.GraphType.IsAssignableFrom(GetType()))
+                throw new ArgumentException($"Error adding a node: An instance of type {node.GetType()} cannot be added, " +
+                    $"This node can only belongs to a graph of types derived from {node.GraphType}");
+
             Nodes.Add(node);
             _nodeSet.Add(node);
             node.BehaviourGraph = this;

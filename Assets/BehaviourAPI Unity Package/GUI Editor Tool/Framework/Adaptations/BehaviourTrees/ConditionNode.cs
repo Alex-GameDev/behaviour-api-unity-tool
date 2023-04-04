@@ -10,6 +10,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     /// Adaptation wrapper class for use <see cref="BehaviourTrees.ConditionNode"/> in editor tools. 
     /// <para>! -- Don't use this class directly in code.</para>
     /// </summary>
+    [NodeAdapter(typeof(BehaviourTrees.ConditionNode))]
     public class ConditionNode : BehaviourTrees.ConditionNode, IBuildable, IPerceptionAssignable
     {
         /// <summary>

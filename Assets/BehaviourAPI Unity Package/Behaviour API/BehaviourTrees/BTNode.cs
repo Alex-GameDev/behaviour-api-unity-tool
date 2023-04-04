@@ -14,6 +14,7 @@ namespace BehaviourAPI.BehaviourTrees
         #region ------------------------------------------ Properties -----------------------------------------
         public override int MaxInputConnections => 1;
         public override Type ChildType => typeof(BTNode);
+        public override Type GraphType => typeof(BehaviourTree);
 
         /// <summary>
         /// The execution status of the node.

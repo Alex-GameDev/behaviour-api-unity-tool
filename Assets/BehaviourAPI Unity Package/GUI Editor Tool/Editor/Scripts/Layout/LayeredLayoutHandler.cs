@@ -12,7 +12,7 @@ namespace BehaviourAPI.Unity.Editor
     {
         private static readonly Vector2 k_nodeOffset = new Vector2(300, 200);
 
-        Dictionary<NodeData, int> nodeLevelMap;
+        Dictionary<NodeData, int> nodeLevelMap = new Dictionary<NodeData, int>();
 
         /// <summary>
         /// <inheritdoc/>
