@@ -25,6 +25,6 @@
     </uie:Toolbar>
     <ui:VisualElement name="bw-main" style="flex-direction: row; height: 100%;">
         <ui:VisualElement name="bw-graph" style="width: 100%; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex;" />
-        <ui:IMGUIContainer name="bw-inspector" style="background-color: rgba(43, 43, 43, 0.8); width: 25%; min-width: 250px; max-width: 500px; height: 100%;" />
+        <ui:IMGUIContainer name="bw-inspector" style="background-color: rgba(43, 43, 43, 0.95); width: 25%; min-width: 250px; max-width: 500px; height: 100%;" />
     </ui:VisualElement>
 </ui:UXML>

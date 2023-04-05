@@ -1,6 +1,7 @@
 using BehaviourAPI.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework
@@ -96,6 +97,19 @@ namespace BehaviourAPI.Unity.Framework
             }
 
             return copy;
+        }
+
+        public Dictionary<string, NodeData> GetNodeIdMap()
+        {
+            var dict = new Dictionary<string, NodeData>();
+            foreach(GraphData graph in graphs)
+            {
+                foreach(NodeData node in graph.nodes)
+                {
+                    dict.Add(node.id, node);
+                }
+            }
+            return dict;
         }
     }
 }

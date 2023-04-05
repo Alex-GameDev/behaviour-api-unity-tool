@@ -387,6 +387,17 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
+        public void RefreshSelectedNodesProperties()
+        {
+            foreach (var elem in selection)
+            {
+                if(elem is MNodeView nodeView)
+                {
+                    nodeView.RefreshDisplay();
+                }
+            }
+        }
+
         #endregion
     }
 }

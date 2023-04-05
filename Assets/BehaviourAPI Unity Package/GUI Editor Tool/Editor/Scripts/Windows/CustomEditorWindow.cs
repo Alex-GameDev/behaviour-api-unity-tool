@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -32,9 +33,22 @@ namespace BehaviourAPI.Unity.Editor
             "Node",
         };
 
-        #region ---------------------------------- Editor data ----------------------------------
+        /// <summary>
+        /// The singleton instance of the window.
+        /// </summary>
+        public static CustomEditorWindow instance { get; private set; }
 
-        private IBehaviourSystem System;
+        /// <summary>
+        /// The reference to the system that is currently being edited
+        /// </summary>
+        public IBehaviourSystem System { get; private set; }
+
+        /// <summary>
+        /// True if the window is in runtime mode with editor tools disabled.
+        /// </summary>
+        public bool IsRuntime { get; private set; }
+
+        #region ---------------------------------- Editor data ----------------------------------
 
         private SerializedObject serializedObject;
         private SerializedProperty rootProperty;
@@ -67,6 +81,19 @@ namespace BehaviourAPI.Unity.Editor
 
         #region -------------------------------------------- Create window --------------------------------------------
 
+        private void OnEnable()
+        {
+            instance = this;
+        }
+
+        private void OnDisable()
+        {
+            instance = null;
+        }
+
+        /// <summary>
+        /// Open the window without a behaviour system assigned.
+        /// </summary>
         public static void Create()
         {
             CustomEditorWindow window = GetWindow<CustomEditorWindow>();
@@ -75,9 +102,10 @@ namespace BehaviourAPI.Unity.Editor
         }
 
         /// <summary>
-        /// 
+        /// Open the window from a behaviour system.
         /// </summary>
-        /// <param name="system"></param>
+        /// <param name="system">The system object that will be edited.</param>
+        /// <param name="runtime">True if the window is in runtime mode and the editor tools are disabled.</param>
         public static void Create(IBehaviourSystem system, bool runtime = false)
         {
             CustomEditorWindow window = GetWindow<CustomEditorWindow>();
@@ -177,8 +205,9 @@ namespace BehaviourAPI.Unity.Editor
         private void UpdateSystem(IBehaviourSystem system, bool runtime)
         {
             System = system;
+            IsRuntime = runtime;
 
-            if (system != null)
+            if (system != null && !runtime)
             {
                 serializedObject = new SerializedObject(system.ObjectReference);
 
@@ -316,18 +345,25 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (System == null || serializedObject == null) return;
 
-            selectGraphDropdown.choices = System.Data.graphs.Select(g => string.IsNullOrWhiteSpace(g.name) ? "unnamed" : g.name).ToList();
-            selectGraphDropdown.index = selectedGraphIndex;
+            using(var changeCheck = new EditorGUI.ChangeCheckScope())
+            {
+                selectGraphDropdown.choices = System.Data.graphs.Select(g => string.IsNullOrWhiteSpace(g.name) ? "unnamed" : g.name).ToList();
+                selectGraphDropdown.index = selectedGraphIndex;
 
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.BeginVertical("box");
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.BeginVertical("box");
 
-            DrawInspectorTab();
+                DrawInspectorTab();
 
-            EditorGUILayout.EndVertical();
-            EditorGUILayout.EndHorizontal();
+                EditorGUILayout.EndVertical();
+                EditorGUILayout.EndHorizontal();                
 
-            serializedObject.ApplyModifiedProperties();
+                if(changeCheck.changed)
+                {
+                    serializedObject.ApplyModifiedProperties();
+                    graphDataView.RefreshSelectedNodesProperties();
+                }
+            }           
         }
 
         private void DrawInspectorTab()
@@ -363,7 +399,6 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     EditorGUILayout.HelpBox("No property selected", MessageType.Info);
                 }
-
             }
             else
             {
@@ -444,11 +479,12 @@ namespace BehaviourAPI.Unity.Editor
 
             SerializedProperty targetNodesProperty = selectedPushPerceptionProperty.FindPropertyRelative("targetNodeIds");
 
+            Dictionary<string, NodeData> nodeIdMap = System.Data.GetNodeIdMap();
             for (int i = 0; i < targetNodesProperty.arraySize; i++)
             {
                 SerializedProperty p = targetNodesProperty.GetArrayElementAtIndex(i);
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField(p.stringValue);
+                EditorGUILayout.LabelField(nodeIdMap.GetValueOrDefault(p.stringValue)?.name);
 
                 if (GUILayout.Button("X", GUILayout.MaxWidth(50)))
                 {
@@ -460,14 +496,22 @@ namespace BehaviourAPI.Unity.Editor
 
             if (GUILayout.Button("Add target"))
             {
-                int size = targetNodesProperty.arraySize;
-                targetNodesProperty.InsertArrayElementAtIndex(size);
-                targetNodesProperty.GetArrayElementAtIndex(size).stringValue = Guid.NewGuid().ToString();
+                var provider = ElementSearchWindowProvider<NodeData>.Create<NodeSearchWindowProvider>((n) => OnSelectTargetNode(targetNodesProperty, n), n => n.node is IPushActivable);
+                provider.Data = System.Data;
+                SearchWindow.Open(new SearchWindowContext(Event.current.mousePosition + position.position), provider);
             }
 
             EditorGUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndHorizontal();
+        }
+
+        private void OnSelectTargetNode(SerializedProperty prop, NodeData nodeData)
+        {
+            int size = prop.arraySize;
+            prop.InsertArrayElementAtIndex(size);
+            prop.GetArrayElementAtIndex(size).stringValue = nodeData.id;
+            prop.serializedObject.ApplyModifiedProperties();
         }
 
         private void DrawField(string propName, bool relative)
@@ -500,41 +544,11 @@ namespace BehaviourAPI.Unity.Editor
                 if (p.propertyPath.Count(c => c == '.') == deep + 1)
                 {
                     EditorGUILayout.PropertyField(p, true);
-
-                    // Subgrafos:
-                    if (p.propertyType == SerializedPropertyType.ManagedReference)
-                    {
-                        var typeName = prop.managedReferenceFieldTypename.Split(' ').Last();
-                        if (typeName == typeof(Action).FullName && prop.managedReferenceValue is SubgraphAction subgraphAction)
-                        {
-                            DisplaySubgraphProperty(p.FindPropertyRelative("subgraphId"));
-                        }
-                    }
                 }
             }
         }
 
         private void DrawField(SerializedProperty property) => EditorGUILayout.PropertyField(property, true);
-
-        private void DisplaySubgraphProperty(SerializedProperty subgraphProperty)
-        {
-            if(!string.IsNullOrEmpty(subgraphProperty.stringValue))
-            {
-                var subgraph = System.Data.graphs.Find(g => g.id == subgraphProperty.stringValue);
-                if(subgraph != null)
-                {
-                    EditorGUILayout.LabelField(subgraph.name);
-                }
-                else
-                {
-                    EditorGUILayout.LabelField("missing subgraph");
-                }
-            }
-            else
-            {
-                EditorGUILayout.LabelField("Unnasigned");
-            }
-        }
 
         #endregion
     }

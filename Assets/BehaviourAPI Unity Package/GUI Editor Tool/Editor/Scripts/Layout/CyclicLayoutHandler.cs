@@ -11,7 +11,7 @@ namespace BehaviourAPI.Unity.Editor
     /// </summary>
     public class CyclicLayoutHandler : LayoutHandler
     {
-        private static readonly Vector2 k_nodeOffset = new Vector2(300, 200);
+        private static readonly Vector2 k_nodeOffset = new Vector2(500, 200);
 
         Dictionary<NodeData, HashSet<NodeData>> nearNodeMap;
 

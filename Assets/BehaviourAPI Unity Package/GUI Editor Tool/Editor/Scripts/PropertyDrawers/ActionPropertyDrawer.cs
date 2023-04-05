@@ -133,25 +133,27 @@ namespace BehaviourAPI.Unity.Editor
 
             if (property.managedReferenceValue == null) return;
 
+            if (CustomEditorWindow.instance == null)
+            {
+                EditorGUILayout.HelpBox("Cannot assign subgraph outside the editor window", MessageType.Warning);
+            }
+
+            EditorGUILayout.LabelField("Subgraph", EditorStyles.centeredGreyMiniLabel);
+
             var subGraphProperty = property.FindPropertyRelative("subgraphId");
             if(string.IsNullOrEmpty(subGraphProperty.stringValue))
             {
                 if (GUILayout.Button("Assign subgraph"))
                 {
-                    if(GraphSearchWindowProvider.Instance != null)
-                    {
-                        //GraphSearchWindowProvider.Instance.Open(data => SetSubgraph(subGraphProperty, data));
-                    }
-                    else
-                    {
-                        Debug.LogWarning("Can't assign subgraph outside editor window");
-                    }
+                    var provider = ElementSearchWindowProvider<GraphData>.Create<GraphSearchWindowProvider>((g) => SetSubgraph(subGraphProperty, g));
+                    provider.Data = CustomEditorWindow.instance.System.Data;
+                    SearchWindow.Open(new SearchWindowContext(Event.current.mousePosition + CustomEditorWindow.instance.position.position), provider);
                 }
             }
             else
             {
-                //var subgraph = CustomEditorWindow.Instance.System.Data.graphs.Find(g => g.id == subGraphProperty.stringValue);
-                //EditorGUILayout.LabelField(subgraph?.name ?? "missing subgraph");
+                var subgraph = CustomEditorWindow.instance.System.Data.graphs.Find(g => g.id == subGraphProperty.stringValue);
+                EditorGUILayout.LabelField(subgraph?.name ?? "missing subgraph");
                 if (GUILayout.Button("Remove subgraph"))
                 {
                     subGraphProperty.stringValue = string.Empty;

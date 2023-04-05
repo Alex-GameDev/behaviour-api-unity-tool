@@ -1,4 +1,3 @@
-using BehaviourAPI.Unity.Framework;
 using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -7,9 +6,17 @@ using UnityEditor;
 using System.Text;
 using System.Collections.Generic;
 using UnityEditor.UIElements;
+using System.Linq;
 
 namespace BehaviourAPI.Unity.Editor
 {
+    using Core;
+    using Core.Actions;
+    using Core.Perceptions;
+    using UnityExtensions;
+    using Framework;
+    using Framework.Adaptations;
+
     /// <summary>
     /// 
     /// </summary>
@@ -25,6 +32,12 @@ namespace BehaviourAPI.Unity.Editor
 
 
         public VisualElement BorderElement { get; private set; }
+        public VisualElement ActionContainer { get; private set; }
+        public VisualElement PerceptionContainer { get; private set; }
+        public VisualElement CustomContainer { get; private set; }
+        public Label ActionLabel { get; private set; }
+        public Label PerceptionLabel { get; private set; }
+        public Label CustomLabel { get; private set; }
 
         TextField m_TitleInputField;
 
@@ -49,15 +62,24 @@ namespace BehaviourAPI.Unity.Editor
 
             drawer.SetView(this, data.node);
             this.m_graphView = graphView;
-            SetPosition(new Rect(data.position, Vector2.zero));
+            SetPosition(new Rect(data.position, UnityEngine.Vector2.zero));
             this.edgeConnector = edgeConnector;
 
             BorderElement = this.Q("node-border");
 
+            ActionContainer = this.Q("node-action-container");
+            PerceptionContainer = this.Q("node-perception-container");
+            CustomContainer = this.Q("node-custonm-container");
+
+            ActionLabel = this.Q<Label>("node-action-label");
+            PerceptionLabel = this.Q<Label>("node-perception-label");
+            CustomLabel = this.Q<Label>("node-custonm-label");
 
             UpdateSerializedProperty(property);
             drawer.SetUpPorts();
             drawer.DrawNodeDetails();
+
+            RefreshDisplay();
         }
 
         public void UpdateSerializedProperty(SerializedProperty prop)
@@ -81,6 +103,21 @@ namespace BehaviourAPI.Unity.Editor
                 m_TitleInputField.isReadOnly = false;
             }
         }
+
+        public void RefreshDisplay()
+        {
+            if(data.node is IActionAssignable actionAssignable) 
+            {
+                ActionLabel.text = actionAssignable.ActionReference.GetActionInfo();
+                ActionContainer.Enable();
+            }
+            if (data.node is IPerceptionAssignable perceptionAssignable)
+            {
+                PerceptionLabel.text = perceptionAssignable.PerceptionReference.GetPerceptionInfo();
+                PerceptionContainer.Enable();
+            }
+        }
+
 
         #region ------------------------------- Events -------------------------------
 
@@ -265,7 +302,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public void RefreshView()
         {
-            SetPosition(new Rect(data.position, Vector2.zero));
+            SetPosition(new Rect(data.position, UnityEngine.Vector2.zero));
             drawer.OnRepaint();
         }
 
