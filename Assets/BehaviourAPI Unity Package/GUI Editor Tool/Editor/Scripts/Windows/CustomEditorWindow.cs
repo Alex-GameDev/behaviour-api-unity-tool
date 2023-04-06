@@ -414,24 +414,32 @@ namespace BehaviourAPI.Unity.Editor
 
         private void DisplayCurrentNodeProperty()
         {
-            if (selectedNodeIndexList.Count == 0)
+            using(var nodeChangeCheck = new EditorGUI.ChangeCheckScope())
             {
-                EditorGUILayout.HelpBox("No property selected", MessageType.Info);
-            }
-            else if (selectedNodeIndexList.Count == 1)
-            {
-                var nodeIndex = selectedNodeIndexList[0];
-                var selectedGraphProperty = graphsProperty.GetArrayElementAtIndex(selectedGraphIndex);
-                var selectedNodeProperty = selectedGraphProperty.FindPropertyRelative("nodes").GetArrayElementAtIndex(nodeIndex);
-                var nodeProperty = selectedNodeProperty.FindPropertyRelative("node");
-                var nodeType = nodeProperty.managedReferenceValue.TypeName();
-                EditorGUILayout.LabelField("Type", nodeType, EditorStyles.wordWrappedLabel);
-                DrawPropertyField(selectedNodeProperty, "name");
-                DrawAllFieldsWithoutFoldout(nodeProperty);
-            }
-            else
-            {
-                EditorGUILayout.HelpBox("Multiedit is not enabled", MessageType.Info);
+                if (selectedNodeIndexList.Count == 0)
+                {
+                    EditorGUILayout.HelpBox("No property selected", MessageType.Info);
+                }
+                else if (selectedNodeIndexList.Count == 1)
+                {
+                    var nodeIndex = selectedNodeIndexList[0];
+                    var selectedGraphProperty = graphsProperty.GetArrayElementAtIndex(selectedGraphIndex);
+                    var selectedNodeProperty = selectedGraphProperty.FindPropertyRelative("nodes").GetArrayElementAtIndex(nodeIndex);
+                    var nodeProperty = selectedNodeProperty.FindPropertyRelative("node");
+                    var nodeType = nodeProperty.managedReferenceValue.TypeName();
+                    EditorGUILayout.LabelField("Type", nodeType, EditorStyles.wordWrappedLabel);
+                    DrawPropertyField(selectedNodeProperty, "name");
+                    DrawAllFieldsWithoutFoldout(nodeProperty);
+                }
+                else
+                {
+                    EditorGUILayout.HelpBox("Multiedit is not enabled", MessageType.Info);
+                }
+
+                if(nodeChangeCheck.changed)
+                {
+                    graphDataView.RefreshSelectedNodesProperties();
+                }
             }
         }
 

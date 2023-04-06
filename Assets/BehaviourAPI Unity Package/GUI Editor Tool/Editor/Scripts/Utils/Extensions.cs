@@ -1,6 +1,7 @@
 ﻿using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
+using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Framework.Adaptations;
 using BehaviourAPI.UnityExtensions;
 using System.Collections.Generic;
@@ -73,19 +74,22 @@ namespace BehaviourAPI.Unity.Editor
             {
                 case CustomAction customAction:
 
-                    StringBuilder sb = new StringBuilder();
+                    var actionMethodLines = new List<string>();
+
                     if (!string.IsNullOrWhiteSpace(customAction.start.methodName))
-                        sb.Append((string.IsNullOrWhiteSpace(customAction.start.componentName) ? "$runner" : customAction.start.componentName) + "." + customAction.start.methodName + "\n");
+                        actionMethodLines.Add(GetSerializedMethodText(customAction.start));
 
                     if (!string.IsNullOrWhiteSpace(customAction.update.methodName))
-                        sb.Append((string.IsNullOrWhiteSpace(customAction.update.componentName) ? "$runner" : customAction.update.componentName) + "." + customAction.update.methodName + "\n");
-                    else sb.Append("- Running\n");
+                        actionMethodLines.Add(GetSerializedMethodText(customAction.update));
+                    else
+                        actionMethodLines.Add("() => Running;");
 
                     if (!string.IsNullOrWhiteSpace(customAction.stop.methodName))
-                        sb.Append((string.IsNullOrWhiteSpace(customAction.stop.componentName) ? "$runner" : customAction.stop.componentName) + "." + customAction.stop.methodName);
-                    return sb.ToString();
+                        actionMethodLines.Add(GetSerializedMethodText(customAction.stop));
 
-                case UnityExtensions.UnityAction unityAction:
+                    return actionMethodLines.Join("\n");
+
+                case UnityAction unityAction:
                     return unityAction.DisplayInfo;
 
                 case SubgraphAction subgraphAction:
@@ -102,6 +106,7 @@ namespace BehaviourAPI.Unity.Editor
 
                 default:
                     return null;
+
             }
         }
 
@@ -110,17 +115,38 @@ namespace BehaviourAPI.Unity.Editor
             switch (perception)
             {
                 case CustomPerception customPerception:
-                    return "Custom Perception";
+                    var perceptionMethodLines = new List<string>();
+
+                    if (!string.IsNullOrWhiteSpace(customPerception.init.methodName))
+                        perceptionMethodLines.Add(GetSerializedMethodText(customPerception.init));
+
+                    if (!string.IsNullOrWhiteSpace(customPerception.check.methodName))
+                        perceptionMethodLines.Add(GetSerializedMethodText(customPerception.check));
+                    else
+                        perceptionMethodLines.Add("() => false;");
+
+                    if (!string.IsNullOrWhiteSpace(customPerception.reset.methodName))
+                        perceptionMethodLines.Add(GetSerializedMethodText(customPerception.reset));
+
+                    return perceptionMethodLines.Join("\n");
+
+
                 case UnityPerception unityPerception:
                     return unityPerception.DisplayInfo;
+
                 case CompoundPerceptionWrapper compoundPerception:
                     var compoundType = compoundPerception.compoundPerception.GetType();
                     var logicCharacter = compoundType == typeof(AndPerception) ? " && " :
                         compoundType == typeof(OrPerception) ? " || " : " - ";
                     return "(" + compoundPerception.subPerceptions.Select(sub => GetPerceptionInfo(sub.perception)).Join(logicCharacter) + ")";
                 default:
-                    return "(No perception)";
+                    return null;
             }
+        }
+
+        private static string GetSerializedMethodText(SerializedContextMethod contextMethod)
+        {
+            return $"{(string.IsNullOrEmpty(contextMethod.componentName) ? "$runner" : contextMethod.componentName)}.{contextMethod.methodName};";
         }
 
 
