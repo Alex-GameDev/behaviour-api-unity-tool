@@ -2,7 +2,7 @@
     <Style src="project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Editor%20Tool/Editor/Resources/uss/gwindow.uss?fileID=7433441132597879392&amp;guid=06606009490d1534d9be0b41e0d7badb&amp;type=3#gwindow" />
     <uie:Toolbar name="bw-toolbar" style="padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px; height: auto; justify-content: space-between;">
         <ui:VisualElement name="bw-toolbar-left" style="flex-direction: row; align-items: center;">
-            <ui:DropdownField label="Graph" index="0" choices="-" name="bw-graph-select" style="-unity-font-definition: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Editor%20Tool/Editor/Resources/Fonts/Cascadia%20SDF.asset?fileID=11400000&amp;guid=8fc71b80ca9989c4c92b587c827b612a&amp;type=2#Cascadia SDF&apos;); height: 30px; font-size: 16px; -unity-text-align: middle-left; min-width: 300px; max-width: 500px;" />
+            <ui:DropdownField label="Graph" index="-1" name="bw-graph-select" choices="-" style="-unity-font-definition: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Editor%20Tool/Editor/Resources/Fonts/Cascadia%20SDF.asset?fileID=11400000&amp;guid=8fc71b80ca9989c4c92b587c827b612a&amp;type=2#Cascadia SDF&apos;); height: 30px; font-size: 16px; -unity-text-align: middle-left; min-width: 300px; max-width: 500px;" />
             <ui:VisualElement name="bw-edit-toolbar" style="flex-direction: row; border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; background-color: rgb(46, 46, 46); padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; justify-content: center; align-items: center; margin-left: 5px;">
                 <ui:Button text="M" display-tooltip-when-elided="true" name="bw-setmain-graph-btn" class="toolbar-btn toolbar-squared-btn" style="-unity-font-style: bold; font-size: 20px;" />
                 <ui:Button text="+" display-tooltip-when-elided="true" name="bw-add-graph-btn" class="toolbar-btn toolbar-squared-btn" style="-unity-font-style: bold;" />
@@ -25,6 +25,6 @@
     </uie:Toolbar>
     <ui:VisualElement name="bw-main" style="flex-direction: row; height: 100%;">
         <ui:VisualElement name="bw-graph" style="width: 100%; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex;" />
-        <ui:IMGUIContainer name="bw-inspector" style="background-color: rgba(43, 43, 43, 0.95); width: 25%; min-width: 250px; max-width: 500px; height: 100%;" />
+        <ui:IMGUIContainer name="bw-inspector" style="background-color: rgba(43, 43, 43, 0.95); width: 25%; min-width: 250px; max-width: 500px; height: 100%; display: flex;" />
     </ui:VisualElement>
 </ui:UXML>
