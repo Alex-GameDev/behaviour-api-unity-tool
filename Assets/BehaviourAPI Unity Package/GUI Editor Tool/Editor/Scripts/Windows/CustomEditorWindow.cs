@@ -1,19 +1,14 @@
 using BehaviourAPI.Core;
-using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework;
-using BehaviourAPI.Unity.Framework.Adaptations;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.PackageManager.UI;
+using UnityEditor.Graphs;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Action = BehaviourAPI.Core.Actions.Action;
 using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Editor
@@ -50,16 +45,14 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ---------------------------------- Editor data ----------------------------------
 
+        SerializedSystemData SerializedSystemData;
+
         private SerializedObject serializedObject;
         private SerializedProperty rootProperty;
         private SerializedProperty graphsProperty;
         private SerializedProperty pushPerceptionsProperty;
 
-        private SerializedProperty selectedGraphProperty;
-        private SerializedProperty selectedNodeProperty;
         private SerializedProperty selectedPushPerceptionProperty;
-
-        private SerializedProperty currentProperty;
 
         private Vector2 pushPerceptionScrollPos, pushPerceptionTargetScrollPos;
 
@@ -78,6 +71,9 @@ namespace BehaviourAPI.Unity.Editor
         GenerateScriptPanel generateScriptPanel;
 
         ToolPanel currentPanel;
+
+        IMGUIContainer m_InspectorContainer;
+        EditorInspector m_EditorInspector;
 
         #region -------------------------------------------- Create window --------------------------------------------
 
@@ -158,8 +154,11 @@ namespace BehaviourAPI.Unity.Editor
             var clearBtn = rootVisualElement.Q<Button>("bw-clear-graph-btn");
             clearBtn.clicked += OnClickClearBtn;
 
-            IMGUIContainer container = rootVisualElement.Q<IMGUIContainer>("bw-inspector");
-            container.onGUIHandler = OnGUIHandler;
+            m_InspectorContainer = rootVisualElement.Q<IMGUIContainer>("bw-inspector");
+            //m_EditorInspector = new EditorInspector();
+            //m_InspectorContainer.Add(m_EditorInspector);
+
+            m_InspectorContainer.onGUIHandler = OnGUIHandler;
 
             graphDataView = new GraphDataView();
             graphDataView.StretchToParentSize();
@@ -171,8 +170,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private void OnClickClearBtn()
         {
-            if (selectedGraphProperty == null) return;
-            if (System.Data.graphs[selectedGraphIndex].nodes.Count == 0) return;
+            if (selectedGraphIndex < 0) return;
 
             var pos = Event.current.mousePosition + position.position;
             AlertWindow.CreateAlertWindow("Clear selected graph?", pos, ClearSelectedGraph);
@@ -180,8 +178,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private void OnClickSetMainBtn()
         {
-            if (selectedGraphProperty == null) return;
-            if (selectedGraphIndex == 0) return;
+            if (selectedGraphIndex <= 0) return;
 
             var pos = Event.current.mousePosition + position.position;
             AlertWindow.CreateAlertWindow("Convert selected graph to the main graph?", pos, ChangeMainGraph);
@@ -191,15 +188,6 @@ namespace BehaviourAPI.Unity.Editor
         {
             this.selectedNodeIndexList = selectedNodeIndexList;
             inspectorMode = selectedNodeIndexList.Count > 0 ? 1 : 0;
-
-            if(selectedNodeIndexList.Count == 1)
-            {
-                selectedNodeProperty = selectedGraphProperty.FindPropertyRelative("nodes").GetArrayElementAtIndex(selectedNodeIndexList[0]);
-            }
-            else
-            {
-                selectedNodeProperty = null;
-            }
         }
 
         private void UpdateSystem(IBehaviourSystem system, bool runtime)
@@ -214,13 +202,16 @@ namespace BehaviourAPI.Unity.Editor
                 rootProperty = serializedObject.FindProperty("data");
                 graphsProperty = rootProperty.FindPropertyRelative("graphs");
                 pushPerceptionsProperty = rootProperty.FindPropertyRelative("pushPerceptions");
+                SerializedSystemData = new SerializedSystemData(system);
+                m_InspectorContainer.Enable();
+            }
+            else
+            {
+                m_InspectorContainer.Disable();
             }
 
-            if (System.Data.graphs.Count > 0)
-            {
-                selectGraphDropdown.choices = System.Data.graphs.Select(g => g.name).ToList();
-                selectGraphDropdown.index = 0;
-            }
+            UpdateSelectionMenu();
+            ChangeSelectedGraph(System.Data.graphs.Count > 0 ? 0 : -1);
         }
 
         #endregion
@@ -233,47 +224,63 @@ namespace BehaviourAPI.Unity.Editor
 
         private void OnClickRemoveGraphBtn()
         {
-            if (selectedGraphProperty == null) return;
+            if (System == null || selectedGraphIndex < 0) return;
+
             var pos = Event.current.mousePosition + position.position;
-            AlertWindow.CreateAlertWindow($"Delete current graph?\n({selectedGraphProperty.displayName})", pos, DeleteSelectedGraph);
-        }
-
-        // Evento de cambiar grafo seleccionado
-        private void OnSelectedGraphChanges(ChangeEvent<string> evt)
-        {
-            if (evt.previousValue == evt.newValue) return;
-
-            UpdateGraphSelection();
-        }
-
-        private void UpdateGraphSelection()
-        {
-            selectedGraphIndex = selectGraphDropdown.index;
-
-            if (selectedGraphIndex < 0) selectedGraphProperty = null;
-            else selectedGraphProperty = graphsProperty.GetArrayElementAtIndex(selectedGraphIndex);
-
-            ChangeSelectedGraph();
+            var currentGraph = System.Data.graphs[selectedGraphIndex];
+            AlertWindow.CreateAlertWindow($"Delete current graph?\n({currentGraph.name})", pos, DeleteSelectedGraph);
         }
 
         private void UpdateSelectionMenu()
         {
-            selectGraphDropdown.choices = System.Data.graphs.Select(g => g.name).ToList();
+            selectGraphDropdown.choices.Clear();
+            if (System.Data.graphs.Count == 0)
+            {
+                selectGraphDropdown.value = "-";
+            }
+            else
+            {
+                for (int i = 0; i < System.Data.graphs.Count; i++)
+                {
+                    var graph = System.Data.graphs[i];
+                    var graphName = string.IsNullOrWhiteSpace(graph.name) ? "unnamed" : graph.name;
+                    selectGraphDropdown.choices.Add((i + 1) + " - " + graphName);          
+                }
+
+                if(selectedGraphIndex >= 0 && selectedGraphIndex < System.Data.graphs.Count)
+                {
+                    selectGraphDropdown.value = selectGraphDropdown.choices[selectedGraphIndex];
+                }
+            }
         }
 
-        // Cambia el grafo seleccionado, eliminando los nodos seleccionados
-        private void ChangeSelectedGraph()
-        {
-            selectedNodeIndexList.Clear();
-            selectedGraphIndex = selectGraphDropdown.index;
 
-            if (selectedGraphIndex < 0) selectedGraphProperty = null;
-            else selectedGraphProperty = graphsProperty.GetArrayElementAtIndex(selectedGraphIndex);
+        private void OnSelectedGraphChanges(ChangeEvent<string> evt)
+        {           
+            if (evt.previousValue == evt.newValue) return;
+            if (selectGraphDropdown.index == selectedGraphIndex) return;
+
+            ChangeSelectedGraph(selectGraphDropdown.index);
+        }
+
+        private void ChangeSelectedGraph(int graphIndex)
+        {
+            Debug.Log("Selected graph index: " +graphIndex);
+            if (graphIndex == -1)
+            {
+                createGraphPanel.Open(false);
+            }
+            selectedGraphIndex = graphIndex;
+            selectGraphDropdown.index = selectedGraphIndex;
+
+            selectedNodeIndexList.Clear();
             UpdateGraphView();
         }
 
         private void ChangeToolPanel(ToolPanel toolPanel, bool canClose)
         {
+            if (selectedGraphIndex < 0) return;
+
             currentPanel?.ClosePanel();
             toolPanel?.Open(canClose);
             currentPanel = toolPanel;
@@ -285,44 +292,59 @@ namespace BehaviourAPI.Unity.Editor
 
         private void CreateGraph(string graphName, Type graphType)
         {
+            if (IsRuntime) return;
+
             var graphData = new GraphData(graphType);
             graphData.name = graphName;
             System.Data.graphs.Add(graphData);
             serializedObject.Update();
 
             UpdateSelectionMenu();
-            selectGraphDropdown.index = System.Data.graphs.Count - 1;
+            ChangeSelectedGraph(System.Data.graphs.Count - 1);
+
+            ShowNotification(new GUIContent("Graph created"));
+            EditorUtility.SetDirty(System.ObjectReference);
         }
 
         private void DeleteSelectedGraph()
         {
-            graphsProperty.DeleteArrayElementAtIndex(selectedGraphIndex);
-            serializedObject.ApplyModifiedProperties();
+            if (IsRuntime) return;
+
+            System.Data.graphs.RemoveAt(selectedGraphIndex);
+            serializedObject.Update();
 
             UpdateSelectionMenu();
-            selectGraphDropdown.index = 0;
+            ChangeSelectedGraph(System.Data.graphs.Count - 1);
+
+            ShowNotification(new GUIContent("Graph deleted"));
+            EditorUtility.SetDirty(System.ObjectReference);
         }
 
         private void ChangeMainGraph()
         {
-            if(selectedGraphIndex >= System.Data.graphs.Count) return;
+            if (IsRuntime) return;
+
+            if (System.Data.graphs.Count == 0 || selectedGraphIndex == 0) return;
 
             var currentGraph = System.Data.graphs[selectedGraphIndex];
             System.Data.graphs.MoveAtFirst(currentGraph);
             serializedObject.Update();
 
             UpdateSelectionMenu();
-            selectGraphDropdown.index = 0;
-            UpdateGraphSelection();
+            ChangeSelectedGraph(0);
+
+            ShowNotification(new GUIContent("Graph converted to main"));
+            EditorUtility.SetDirty(System.ObjectReference);
         }
 
         private void ClearSelectedGraph()
         {
-            selectedGraphProperty.FindPropertyRelative("nodes").ClearArray();
-            serializedObject.ApplyModifiedProperties();
+            System.Data.graphs[selectedGraphIndex].nodes.Clear();
+            serializedObject.Update();
 
-            selectedNodeIndexList.Clear();
+            ShowNotification(new GUIContent("Graph clean"));
 
+            ChangeSelectedGraph(selectedGraphIndex);
             UpdateGraphView();
         }
 
@@ -333,7 +355,18 @@ namespace BehaviourAPI.Unity.Editor
         private void UpdateGraphView()
         {
             Debug.Log("Update graph view");
-            if (selectedGraphIndex >= 0) graphDataView.UpdateGraph(System.Data.graphs[selectedGraphIndex], selectedGraphProperty.FindPropertyRelative("nodes"));
+            if (selectedGraphIndex >= 0)
+            {
+                if(!IsRuntime)
+                {
+                    var nodesProperty = graphsProperty.GetArrayElementAtIndex(selectedGraphIndex).FindPropertyRelative("nodes");
+                    graphDataView.UpdateGraph(System.Data.graphs[selectedGraphIndex], nodesProperty);
+                }
+                else
+                {
+                    graphDataView.UpdateGraph(System.Data.graphs[selectedGraphIndex]);
+                }
+            }
             else graphDataView.UpdateGraph(null);
         }
 
@@ -345,10 +378,9 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (System == null || serializedObject == null) return;
 
+
             using(var changeCheck = new EditorGUI.ChangeCheckScope())
             {
-                selectGraphDropdown.choices = System.Data.graphs.Select(g => string.IsNullOrWhiteSpace(g.name) ? "unnamed" : g.name).ToList();
-                selectGraphDropdown.index = selectedGraphIndex;
 
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.BeginVertical("box");
@@ -362,6 +394,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     serializedObject.ApplyModifiedProperties();
                     graphDataView.RefreshSelectedNodesProperties();
+                    UpdateSelectionMenu();
                 }
             }           
         }
@@ -384,21 +417,20 @@ namespace BehaviourAPI.Unity.Editor
 
         private void DisplayCurrentNodeProperty()
         {
-            if (selectedNodeIndexList.Count == 0) return;
-
-            else if(selectedNodeIndexList.Count == 1)
+            if (selectedNodeIndexList.Count == 0)
             {
-                if(selectedNodeProperty != null)
-                {
-                    currentProperty = selectedNodeProperty;
-                    EditorGUILayout.LabelField("Type", selectedNodeProperty.FindPropertyRelative("node").managedReferenceValue.TypeName(), EditorStyles.wordWrappedLabel);
-                    DrawField("name", true);
-                    DrawFieldsWithoutFold("node", true);
-                }
-                else
-                {
-                    EditorGUILayout.HelpBox("No property selected", MessageType.Info);
-                }
+                EditorGUILayout.HelpBox("No property selected", MessageType.Info);
+            }
+            else if (selectedNodeIndexList.Count == 1)
+            {
+                var nodeIndex = selectedNodeIndexList[0];
+                var selectedGraphProperty = graphsProperty.GetArrayElementAtIndex(selectedGraphIndex);
+                var selectedNodeProperty = selectedGraphProperty.FindPropertyRelative("nodes").GetArrayElementAtIndex(nodeIndex);
+                var nodeProperty = selectedNodeProperty.FindPropertyRelative("node");
+                var nodeType = nodeProperty.managedReferenceValue.TypeName();
+                EditorGUILayout.LabelField("Type", nodeType, EditorStyles.wordWrappedLabel);
+                DrawPropertyField(selectedNodeProperty, "name");
+                DrawAllFieldsWithoutFoldout(nodeProperty);
             }
             else
             {
@@ -408,17 +440,18 @@ namespace BehaviourAPI.Unity.Editor
 
         private void DisplayCurrentGraphProperty()
         {
-            if(selectedGraphProperty != null)
+
+            if(selectedGraphIndex >= 0)
             {
+                var selectedGraphProperty = graphsProperty.GetArrayElementAtIndex(selectedGraphIndex);
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.BeginVertical("box");
 
                 EditorGUILayout.LabelField("Graph", EditorStyles.centeredGreyMiniLabel);
-                currentProperty = selectedGraphProperty;
 
                 EditorGUILayout.LabelField("Type", selectedGraphProperty.FindPropertyRelative("graph").managedReferenceValue.TypeName(), EditorStyles.wordWrappedLabel);
-                DrawField("name", true);
-                DrawFieldsWithoutFold("graph", true);
+                DrawPropertyField(selectedGraphProperty, "name");
+                DrawAllFieldsWithoutFoldout(selectedGraphProperty.FindPropertyRelative("graph"));
 
                 EditorGUILayout.Space(20);
 
@@ -473,7 +506,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (selectedPushPerceptionProperty == null) return;
 
-            DrawField(selectedPushPerceptionProperty.FindPropertyRelative("name"));
+            DrawPropertyField(selectedPushPerceptionProperty, "name");
 
             pushPerceptionTargetScrollPos = EditorGUILayout.BeginScrollView(pushPerceptionTargetScrollPos, "window", GUILayout.MinHeight(100));
 
@@ -484,7 +517,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 SerializedProperty p = targetNodesProperty.GetArrayElementAtIndex(i);
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField(nodeIdMap.GetValueOrDefault(p.stringValue)?.name);
+                EditorGUILayout.LabelField(nodeIdMap.GetValueOrDefault(p.stringValue)?.name ?? "missing node");
 
                 if (GUILayout.Button("X", GUILayout.MaxWidth(50)))
                 {
@@ -514,32 +547,18 @@ namespace BehaviourAPI.Unity.Editor
             prop.serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawField(string propName, bool relative)
+        private void DrawPropertyField(SerializedProperty property, string propName)
         {
-            if (relative && currentProperty != null)
+            if (property != null)
             {
-                EditorGUILayout.PropertyField(currentProperty.FindPropertyRelative(propName), true);
-            }
-            else if (serializedObject != null)
-            {
-                EditorGUILayout.PropertyField(serializedObject.FindProperty(propName), true);
+                EditorGUILayout.PropertyField(property.FindPropertyRelative(propName), true);
             }
         }
 
-        private void DrawFieldsWithoutFold(string propName, bool relative)
+        private void DrawAllFieldsWithoutFoldout(SerializedProperty property)
         {
-            SerializedProperty prop = null;
-            if (relative && currentProperty != null)
-            {
-                prop = currentProperty.FindPropertyRelative(propName);
-            }
-            else if (serializedObject != null)
-            {
-                prop = serializedObject.FindProperty(propName);                
-            }
-
-            int deep = prop.propertyPath.Count(c => c == '.');
-            foreach (SerializedProperty p in prop)
+            int deep = property.propertyPath.Count(c => c == '.');
+            foreach (SerializedProperty p in property)
             {
                 if (p.propertyPath.Count(c => c == '.') == deep + 1)
                 {
@@ -547,8 +566,6 @@ namespace BehaviourAPI.Unity.Editor
                 }
             }
         }
-
-        private void DrawField(SerializedProperty property) => EditorGUILayout.PropertyField(property, true);
 
         #endregion
     }
