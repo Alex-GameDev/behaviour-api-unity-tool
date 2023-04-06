@@ -67,6 +67,13 @@ namespace BehaviourAPI.UtilitySystems
         /// <returns>The child utility modified.</returns>
         protected abstract float Evaluate(float childUtility);
 
+
+        /// <summary>
+        /// Test the evaluation function.
+        /// </summary>
+        /// <param name="x">The entry value of the function.</param>
+        /// <returns>The result of the function.</returns>
+        public float TestEvaluate(float x) => Evaluate(x);
         #endregion
     }
 }

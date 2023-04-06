@@ -47,6 +47,8 @@ namespace BehaviourAPI.UtilitySystems
         /// <returns>The result of apply the function to <paramref name="x"/>.</returns>
         protected override float Evaluate(float x)
         {
+            if(Points.Count == 0) return 0;
+
             int id = FindClosestLowerId(x);
 
             if (id == -1)

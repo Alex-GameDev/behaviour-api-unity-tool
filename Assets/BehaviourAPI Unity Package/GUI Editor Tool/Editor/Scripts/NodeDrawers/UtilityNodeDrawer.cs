@@ -4,12 +4,16 @@ using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
+    using System;
+    using System.Collections.Generic;
+    using UnityEditor;
     using UtilitySystems;
     [CustomNodeDrawer(typeof(UtilityNode))]
     public class UtilityNodeDrawer : NodeDrawer
     {
         PortView InputPort, OutputPort;
 
+        private FunctionDisplay m_FunctionDisplay;
         public override string LayoutPath => BehaviourAPISettings.instance.EditorLayoutsPath + "Nodes/DAG Node.uxml";
 
         public override void DrawNodeDetails()
@@ -103,6 +107,74 @@ namespace BehaviourAPI.Unity.Editor
                         view.CustomContainer.Disable();
                     }
                     break;
+                case CurveFactor curveFactor:
+                    if(m_FunctionDisplay == null)
+                    {
+                        view.CustomContainer.Enable();
+                        view.CustomLabel.Disable();
+                        m_FunctionDisplay = new FunctionDisplay(curveFactor.TestEvaluate);
+                        view.CustomContainer.Add(m_FunctionDisplay);
+                    }
+
+                    m_FunctionDisplay.Update();
+
+                    break;
+            }
+        }
+
+       
+        private class FunctionDisplay : VisualElement
+        {
+            private static readonly int k_FunctionIntervals = 20;
+            private static readonly int k_FunctionThickness = 2;
+            private static readonly Color k_FunctionColor = Color.red;
+
+            private VisualElement k_Display;
+
+            public FunctionDisplay(Func<float,float> evaluationMethod)
+            {
+                var asset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(BehaviourAPISettings.instance.EditorLayoutsPath + "Elements/functiondisplay.uxml");
+                asset.CloneTree(this);
+
+                k_Display = this.Q("fd-main");
+                k_Display.generateVisualContent += (mgc) => OnGenerateVisualContent(evaluationMethod, mgc);
+            }
+
+            public void Update() => k_Display.MarkDirtyRepaint();
+
+            private void OnGenerateVisualContent(Func<float, float> evaluationMethod, MeshGenerationContext mgc)
+            {
+                var width = k_Display.resolvedStyle.width;
+                var height = k_Display.resolvedStyle.height - k_FunctionThickness;
+
+                float delta = 1f / k_FunctionIntervals;
+
+                var mesh = mgc.Allocate(k_FunctionIntervals * 2 + 2, k_FunctionIntervals * 6);
+                for (int i = 0; i <= k_FunctionIntervals; i++)
+                {
+                    var x = delta * i;
+                    var value = evaluationMethod(x);
+                    value = Mathf.Clamp01(value);
+
+                    mesh.SetNextVertex(new Vertex() { position = new Vector3(x * width, (1 - value) * height, Vertex.nearZ), tint = k_FunctionColor });
+                    mesh.SetNextVertex(new Vertex() { position = new Vector3(x * width, (1 - value) * height + k_FunctionThickness, Vertex.nearZ), tint = k_FunctionColor });
+                }
+
+                for (ushort i = 0; i < k_FunctionIntervals * 2; i++)
+                {
+                    if (i % 2 == 0)
+                    {
+                        mesh.SetNextIndex(i);
+                        mesh.SetNextIndex((ushort)(i + 2));
+                        mesh.SetNextIndex((ushort)(i + 1));
+                    }
+                    else
+                    {
+                        mesh.SetNextIndex(i);
+                        mesh.SetNextIndex((ushort)(i + 1));
+                        mesh.SetNextIndex((ushort)(i + 2));
+                    }
+                }
             }
         }
     }
