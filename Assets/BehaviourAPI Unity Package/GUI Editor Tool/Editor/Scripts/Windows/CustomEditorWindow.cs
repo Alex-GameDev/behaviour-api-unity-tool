@@ -45,8 +45,6 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ---------------------------------- Editor data ----------------------------------
 
-        SerializedSystemData SerializedSystemData;
-
         private SerializedObject serializedObject;
         private SerializedProperty rootProperty;
         private SerializedProperty graphsProperty;
@@ -140,7 +138,7 @@ namespace BehaviourAPI.Unity.Editor
             deleteGraphBtn.clicked += OnClickRemoveGraphBtn;
 
             // generate script
-            generateScriptPanel = new GenerateScriptPanel();
+            generateScriptPanel = new GenerateScriptPanel(this);
             mainContainer.Add(generateScriptPanel);
             generateScriptPanel.Disable();
             var generateScriptBtn = rootVisualElement.Q<Button>("bw-script-btn");
@@ -202,7 +200,6 @@ namespace BehaviourAPI.Unity.Editor
                 rootProperty = serializedObject.FindProperty("data");
                 graphsProperty = rootProperty.FindPropertyRelative("graphs");
                 pushPerceptionsProperty = rootProperty.FindPropertyRelative("pushPerceptions");
-                SerializedSystemData = new SerializedSystemData(system);
                 m_InspectorContainer.Enable();
             }
             else

@@ -44,7 +44,7 @@ namespace BehaviourAPI.Unity.Editor
 
             Type selectedType = SelectedEntry.type;
             m_OnCreategraphCallback?.Invoke(graphNameField.value, selectedType);
-            ForceClose();
+            this.Disable();
         }
     }
 }

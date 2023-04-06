@@ -85,6 +85,7 @@ namespace BehaviourAPI.Unity.Editor
                 Object obj = CreateScript(scriptPath, asset, useFullNameVar, includeNodeNames);
                 AssetDatabase.Refresh();
                 ProjectWindowUtil.ShowCreatedAsset(obj);
+                Debug.Log("Create");
             }
         }
 
@@ -107,7 +108,7 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Returns all the code to create the <paramref name="asset"/> in runtime.
         /// </summary>
-        static string GenerateSystemCode(IBehaviourSystem asset, string scriptName, bool useFullNameVar, bool includeNames)
+        public static string GenerateSystemCode(IBehaviourSystem asset, string scriptName, bool useFullNameVar, bool includeNames)
         {
             ScriptTemplate scriptTemplate = new ScriptTemplate(scriptName, useFullNameVar, nameof(CodeBehaviourRunner));
 
