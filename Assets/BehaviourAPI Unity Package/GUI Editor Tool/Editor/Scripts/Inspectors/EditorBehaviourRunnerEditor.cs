@@ -14,10 +14,6 @@ namespace BehaviourAPI.Unity.Editor
 
             EditorBehaviourRunner runner = (EditorBehaviourRunner)target;
 
-            if(GUILayout.Button("OPEN NEW"))
-            {
-                CustomEditorWindow.Create(runner);
-            }
             EditorGUILayout.Space(10f, true);
             GUIStyle centeredLabelstyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
 
