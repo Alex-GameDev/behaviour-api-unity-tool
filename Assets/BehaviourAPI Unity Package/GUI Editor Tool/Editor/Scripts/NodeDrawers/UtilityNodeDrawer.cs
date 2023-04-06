@@ -1,13 +1,10 @@
-using BehaviourAPI.BehaviourTrees;
-using BehaviourAPI.UtilitySystems;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
+    using UtilitySystems;
     [CustomNodeDrawer(typeof(UtilityNode))]
     public class UtilityNodeDrawer : NodeDrawer
     {
@@ -19,7 +16,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             switch (node)
             {
-                case VariableFactor:
+                case Framework.Adaptations.VariableFactor:
                 case ConstantFactor:
                     SetColor(BehaviourAPISettings.instance.LeafFactorColor);
                     break;
@@ -52,23 +49,10 @@ namespace BehaviourAPI.Unity.Editor
             iconElement.Add(new Label(text));
         }
 
-
         public override PortView GetPort(MNodeView nodeView, Direction direction)
         {
             if (direction == Direction.Input) return InputPort;
             else return OutputPort;
-        }
-
-        public override void OnRepaint()
-        {
-        }
-
-        public override void OnSelected()
-        {
-        }
-
-        public override void OnUnselected()
-        {
         }
 
         public override void SetUpPorts()
@@ -84,6 +68,42 @@ namespace BehaviourAPI.Unity.Editor
                 OutputPort = view.InstantiatePort(Direction.Output, EPortOrientation.Left);
             }
             else view.outputContainer.Disable();
+        }
+
+        public override void OnRefreshDisplay()
+        {
+            switch (node)
+            { 
+                case Framework.Adaptations.VariableFactor variableFactor:
+                    var methodDisplay = variableFactor.variableFunction.GetSerializedMethodText();
+                    if(methodDisplay != null)
+                    {
+                        view.CustomContainer.Enable();
+                        view.CustomLabel.text = $"{methodDisplay}\n[{variableFactor.min} - {variableFactor.max}]";
+                    }
+                    else
+                    {
+                        view.CustomContainer.Disable();
+                    }
+                    break;
+
+                case ConstantFactor constant:
+                    view.CustomContainer.Enable();
+                    view.CustomLabel.text = constant.value.ToString();
+                    break;
+                case Framework.Adaptations.CustomCurveFactor customCurve:
+                    methodDisplay = customCurve.function.GetSerializedMethodText();
+                    if (methodDisplay != null)
+                    {
+                        view.CustomContainer.Enable();
+                        view.CustomLabel.text = methodDisplay;
+                    }
+                    else
+                    {
+                        view.CustomContainer.Disable();
+                    }
+                    break;
+            }
         }
     }
 }

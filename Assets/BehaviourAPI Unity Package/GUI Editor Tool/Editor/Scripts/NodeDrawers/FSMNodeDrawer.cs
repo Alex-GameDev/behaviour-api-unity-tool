@@ -1,6 +1,7 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.StateMachines;
 using BehaviourAPI.Unity.Framework;
+using BehaviourAPI.UtilitySystems;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
@@ -88,8 +89,6 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-
-
         public override void SetUpPorts()
         {
             InputPorts = new List<PortView>();
@@ -168,14 +167,62 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        public override void OnUnselected()
+        public override void OnMoved()
         {
-            base.OnUnselected();
+            foreach(var edgeView in view.OutputConnectionViews)
+            {
+                var other = edgeView.input.node as MNodeView;
+
+                var newOutputPort = view.GetBestPort(other, Direction.Output);
+                if(newOutputPort != edgeView.output)
+                {
+                    edgeView.output.Disconnect(edgeView);
+                    newOutputPort.Connect(edgeView);
+                    edgeView.output = newOutputPort;
+                }
+
+                var newInputPort = other.GetBestPort(view, Direction.Input);
+                if(newInputPort != edgeView.input)
+                {
+                    edgeView.input.Disconnect(edgeView);
+                    newInputPort.Connect(edgeView);
+                    edgeView.input = newInputPort;
+                }
+            }
+
+            foreach (var edgeView in view.InputConnectionViews)
+            {
+                var other = edgeView.output.node as MNodeView;
+
+                var newOutputPort = other.GetBestPort(view, Direction.Output);
+                if (newOutputPort != edgeView.output)
+                {
+                    edgeView.output.Disconnect(edgeView);
+                    newOutputPort.Connect(edgeView);
+                    edgeView.output = newOutputPort;
+                }
+
+                var newInputPort = view.GetBestPort(other, Direction.Input);
+                if (newInputPort != edgeView.input)
+                {
+                    edgeView.input.Disconnect(edgeView);
+                    newInputPort.Connect(edgeView);
+                    edgeView.input = newInputPort;
+                }
+            }
+
         }
 
-        public override void OnConnected()
+        public override void OnRefreshDisplay()
         {
-            base.OnConnected();
+            switch (node)
+            {
+                case Transition t:
+                    var flagsDisplay = t.StatusFlags.DisplayInfo();
+                    view.CustomContainer.Enable();
+                    view.CustomLabel.text = "Check when " + flagsDisplay;
+                    break;
+            }
         }
     }
 }

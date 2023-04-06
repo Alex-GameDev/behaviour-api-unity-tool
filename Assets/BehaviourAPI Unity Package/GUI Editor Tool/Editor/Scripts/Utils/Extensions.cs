@@ -68,6 +68,20 @@ namespace BehaviourAPI.Unity.Editor
         public static string ToCodeFormat(this Status s) => "Status." + s.ToString();
         public static string ToCodeFormat(this StatusFlags s) => "StatusFlags." + ((int)s < 0 ? StatusFlags.Active.ToString() : s.ToString());
 
+        public static string DisplayInfo(this StatusFlags statusFlags)
+        {
+            switch(statusFlags)
+            {
+                 case StatusFlags.Active: return "always";
+                case StatusFlags.Success: return "finish with success";
+                case StatusFlags.Failure: return "finish with failure";
+                case StatusFlags.Finished: return "finish";
+                case StatusFlags.NotSuccess: return "Not finish with success";
+                case StatusFlags.NotFailure: return "Not finish with failure";
+                default: return "never";
+            }
+        }
+
         public static string GetActionInfo(this Action action)
         {
             switch (action)
@@ -76,16 +90,15 @@ namespace BehaviourAPI.Unity.Editor
 
                     var actionMethodLines = new List<string>();
 
-                    if (!string.IsNullOrWhiteSpace(customAction.start.methodName))
-                        actionMethodLines.Add(GetSerializedMethodText(customAction.start));
+                    var code = customAction.start.GetSerializedMethodText();
+                    if(code != null) actionMethodLines.Add(code);
 
-                    if (!string.IsNullOrWhiteSpace(customAction.update.methodName))
-                        actionMethodLines.Add(GetSerializedMethodText(customAction.update));
-                    else
-                        actionMethodLines.Add("() => Running;");
+                    code = customAction.update.GetSerializedMethodText();
+                    if (code != null) actionMethodLines.Add(code);
+                    else actionMethodLines.Add("() => Running;");
 
-                    if (!string.IsNullOrWhiteSpace(customAction.stop.methodName))
-                        actionMethodLines.Add(GetSerializedMethodText(customAction.stop));
+                    code = customAction.stop.GetSerializedMethodText();
+                    if (code != null) actionMethodLines.Add(code);
 
                     return actionMethodLines.Join("\n");
 
@@ -117,16 +130,15 @@ namespace BehaviourAPI.Unity.Editor
                 case CustomPerception customPerception:
                     var perceptionMethodLines = new List<string>();
 
-                    if (!string.IsNullOrWhiteSpace(customPerception.init.methodName))
-                        perceptionMethodLines.Add(GetSerializedMethodText(customPerception.init));
+                    var code = customPerception.init.GetSerializedMethodText();
+                    if (code != null) perceptionMethodLines.Add(code);
 
-                    if (!string.IsNullOrWhiteSpace(customPerception.check.methodName))
-                        perceptionMethodLines.Add(GetSerializedMethodText(customPerception.check));
-                    else
-                        perceptionMethodLines.Add("() => false;");
+                    code = customPerception.check.GetSerializedMethodText();
+                    if (code != null) perceptionMethodLines.Add(code);
+                    else perceptionMethodLines.Add("() => false;");
 
-                    if (!string.IsNullOrWhiteSpace(customPerception.reset.methodName))
-                        perceptionMethodLines.Add(GetSerializedMethodText(customPerception.reset));
+                    code = customPerception.reset.GetSerializedMethodText();
+                    if (code != null) perceptionMethodLines.Add(code);
 
                     return perceptionMethodLines.Join("\n");
 
@@ -144,8 +156,9 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        private static string GetSerializedMethodText(SerializedContextMethod contextMethod)
+        public static string GetSerializedMethodText(this SerializedContextMethod contextMethod)
         {
+            if (string.IsNullOrWhiteSpace(contextMethod.methodName)) return null;
             return $"{(string.IsNullOrEmpty(contextMethod.componentName) ? "$runner" : contextMethod.componentName)}.{contextMethod.methodName};";
         }
 

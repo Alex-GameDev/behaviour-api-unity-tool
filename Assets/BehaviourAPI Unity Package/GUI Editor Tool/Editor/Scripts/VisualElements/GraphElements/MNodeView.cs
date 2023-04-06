@@ -27,8 +27,8 @@ namespace BehaviourAPI.Unity.Editor
 
         SerializedProperty nodeProperty;
 
-        private List<EdgeView> InputConnectionViews = new List<EdgeView>();
-        private List<EdgeView> OutputConnectionViews = new List<EdgeView>();
+        public List<EdgeView> InputConnectionViews { get; private set; } = new List<EdgeView>();
+        public List<EdgeView> OutputConnectionViews { get; private set; } = new List<EdgeView>();
 
 
         public VisualElement BorderElement { get; private set; }
@@ -69,11 +69,11 @@ namespace BehaviourAPI.Unity.Editor
 
             ActionContainer = this.Q("node-action-container");
             PerceptionContainer = this.Q("node-perception-container");
-            CustomContainer = this.Q("node-custonm-container");
+            CustomContainer = this.Q("node-custom-container");
 
             ActionLabel = this.Q<Label>("node-action-label");
             PerceptionLabel = this.Q<Label>("node-perception-label");
-            CustomLabel = this.Q<Label>("node-custonm-label");
+            CustomLabel = this.Q<Label>("node-custom-label");
 
             UpdateSerializedProperty(property);
             drawer.SetUpPorts();
@@ -116,6 +116,7 @@ namespace BehaviourAPI.Unity.Editor
                 PerceptionLabel.text = perceptionAssignable.PerceptionReference.GetPerceptionInfo();
                 PerceptionContainer.Enable();
             }
+            drawer.OnRefreshDisplay();
         }
 
 
@@ -141,6 +142,7 @@ namespace BehaviourAPI.Unity.Editor
         public void OnMoved()
         {
             data.position = GetPosition().position;
+            drawer.OnMoved();
         }
 
         public void OnConnected(EdgeView edgeView, bool updateData = true)

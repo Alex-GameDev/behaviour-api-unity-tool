@@ -6,14 +6,14 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     using UnityExtensions;
 
     /// <summary>
-    /// Adaptation wrapper class for use <see cref="CustomCurveFactor"/> in editor tools. 
+    /// Adaptation wrapper class for use <see cref="UtilitySystems.CustomCurveFactor"/> in editor tools. 
     /// <para>! -- Don't use this class directly in code.</para>
     /// </summary>
-    [NodeAdapter(typeof(CustomCurveFactor))]
-    public class CustomFunction : CurveFactor
+    [NodeAdapter(typeof(UtilitySystems.CustomCurveFactor))]
+    public class CustomCurveFactor : CurveFactor
     {
         /// <summary>
-        /// Method reference for <see cref="CustomCurveFactor.Function"/>.
+        /// Method reference for <see cref="UtilitySystems.CustomCurveFactor.Function"/>.
         /// </summary>
         public ContextualSerializedFloatFloatFunction function;
 

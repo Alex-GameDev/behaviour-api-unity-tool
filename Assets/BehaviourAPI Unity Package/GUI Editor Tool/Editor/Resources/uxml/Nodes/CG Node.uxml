@@ -31,14 +31,19 @@
                                 <ui:VisualElement name="node-icon" />
                             </ui:VisualElement>
                             <ui:VisualElement name="extension" style="display: flex;">
-                                <ui:VisualElement name="node-action-container" style="margin-left: 6px; margin-right: 6px; margin-top: 3px; margin-bottom: 3px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; background-color: rgb(67, 67, 67); display: none;">
-                                    <ui:Label display-tooltip-when-elided="true" name="node-action-label" style="-unity-text-align: upper-center; margin-left: 5px; margin-right: 5px; -unity-font-definition: resource(&apos;Fonts/Cascadia SDF&apos;); font-size: 8px;" />
-                                </ui:VisualElement>
-                                <ui:VisualElement name="node-perception-container" style="margin-left: 6px; margin-right: 6px; margin-top: 3px; margin-bottom: 3px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; background-color: rgb(67, 67, 67); display: none;">
-                                    <ui:Label display-tooltip-when-elided="true" name="node-perception-label" style="-unity-text-align: upper-center; margin-left: 5px; margin-right: 5px; -unity-font-definition: resource(&apos;Fonts/Cascadia SDF&apos;); font-size: 8px;" />
-                                </ui:VisualElement>
-                                <ui:VisualElement name="node-custom-container" style="margin-left: 6px; margin-right: 6px; margin-top: 3px; margin-bottom: 3px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; background-color: rgb(67, 67, 67); display: none;">
-                                    <ui:Label display-tooltip-when-elided="true" name="node-custom-label" style="-unity-text-align: upper-center; margin-left: 5px; margin-right: 5px; -unity-font-definition: resource(&apos;Fonts/Cascadia SDF&apos;); font-size: 8px;" />
+                                <ui:VisualElement name="node-extension-content" style="display: flex; margin-right: 5px; margin-left: 5px;">
+                                    <ui:VisualElement name="node-action-container" style="border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; display: none; border-left-color: rgb(70, 70, 70); border-right-color: rgb(70, 70, 70); border-top-color: rgb(70, 70, 70); border-bottom-color: rgb(70, 70, 70); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
+                                        <ui:Label display-tooltip-when-elided="true" name="node-action-label" style="-unity-text-align: upper-center; font-size: 8px; background-color: rgb(46, 46, 46); border-top-left-radius: 2px; border-bottom-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px;" />
+                                    </ui:VisualElement>
+                                    <ui:VisualElement name="node-perception-container" style="border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; background-color: rgb(58, 58, 58); margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; display: none;">
+                                        <ui:Label display-tooltip-when-elided="true" name="node-perception-label" style="-unity-text-align: upper-center; font-size: 8px;" />
+                                    </ui:VisualElement>
+                                    <ui:VisualElement name="node-custom-container" style="border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; background-color: rgb(58, 58, 58); margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; display: none;">
+                                        <ui:Label display-tooltip-when-elided="true" name="node-custom-label" style="-unity-text-align: upper-center; font-size: 8px;" />
+                                    </ui:VisualElement>
+                                    <ui:VisualElement name="node-custom-container" style="border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; display: none; border-left-color: rgb(70, 70, 70); border-right-color: rgb(70, 70, 70); border-top-color: rgb(70, 70, 70); border-bottom-color: rgb(70, 70, 70); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
+                                        <ui:Label display-tooltip-when-elided="true" name="node-custom-label" style="-unity-text-align: upper-center; font-size: 8px; background-color: rgb(46, 46, 46); border-top-left-radius: 2px; border-bottom-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px;" />
+                                    </ui:VisualElement>
                                 </ui:VisualElement>
                             </ui:VisualElement>
                         </ui:VisualElement>

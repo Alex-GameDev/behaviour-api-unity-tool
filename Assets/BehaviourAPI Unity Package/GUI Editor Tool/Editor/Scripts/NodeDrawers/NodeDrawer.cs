@@ -37,6 +37,11 @@ namespace BehaviourAPI.Unity.Editor
         public virtual void OnRepaint() { }
 
         /// <summary>
+        /// Method called when the node position changes
+        /// </summary>
+        public virtual void OnMoved() { }
+
+        /// <summary>
         /// Method called when the node is selected.
         /// </summary>
         public virtual void OnSelected() { }
@@ -61,6 +66,12 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public virtual void OnDeleted() { }
 
+        /// <summary>
+        /// Method called when the node properties changed and must be reflected in the view
+        /// </summary>
+        public virtual void OnRefreshDisplay()
+        {
+        }
         #endregion
 
         public static NodeDrawer Create(Node node)
@@ -75,7 +86,5 @@ namespace BehaviourAPI.Unity.Editor
             }
           
         }
-
-
     }
 }
