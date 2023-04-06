@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    [CustomPropertyDrawer(typeof(Core.Vector2))]
+    using UtilitySystems;
+    [CustomPropertyDrawer(typeof(CurvePoint))]
     public class FunctionPointPropertyDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

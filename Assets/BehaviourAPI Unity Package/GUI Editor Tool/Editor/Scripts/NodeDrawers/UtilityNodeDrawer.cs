@@ -125,7 +125,7 @@ namespace BehaviourAPI.Unity.Editor
        
         private class FunctionDisplay : VisualElement
         {
-            private static readonly int k_FunctionIntervals = 20;
+            private static readonly int k_FunctionIntervals = 50;
             private static readonly int k_FunctionThickness = 2;
             private static readonly Color k_FunctionColor = Color.red;
 
@@ -144,6 +144,7 @@ namespace BehaviourAPI.Unity.Editor
 
             private void OnGenerateVisualContent(Func<float, float> evaluationMethod, MeshGenerationContext mgc)
             {
+                var t = DateTime.Now;
                 var width = k_Display.resolvedStyle.width;
                 var height = k_Display.resolvedStyle.height - k_FunctionThickness;
 
@@ -175,6 +176,7 @@ namespace BehaviourAPI.Unity.Editor
                         mesh.SetNextIndex((ushort)(i + 2));
                     }
                 }
+                Debug.Log((DateTime.Now - t).TotalMilliseconds);
             }
         }
     }
