@@ -51,12 +51,14 @@ namespace BehaviourAPI.Unity.Editor
 
         SerializedProperty m_CurrentGraphNodesProperty;
 
+        private EditorWindow m_EditorWindow;
+
         #endregion
 
         /// <summary>
         /// Create the default graphView
         /// </summary>
-        public GraphDataView()
+        public GraphDataView(EditorWindow editorWindow)
         {
             styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>(stylePath));
 
@@ -65,7 +67,8 @@ namespace BehaviourAPI.Unity.Editor
 
             m_Minimap = new MiniMap() { anchored = true };
             m_Minimap.SetPosition(new Rect(k_miniMapOffset, k_miniMapSize));
-            RegisterCallback((GeometryChangedEvent evt) => {
+            RegisterCallback((GeometryChangedEvent evt) =>
+            {
                 m_Minimap.SetPosition(new Rect(evt.newRect.max - (k_miniMapOffset + k_miniMapSize), k_miniMapSize));
             });
 
@@ -79,6 +82,7 @@ namespace BehaviourAPI.Unity.Editor
             m_EdgeConnectorListener = new CustomEdgeConnector<EdgeView>(OnEdgeCreated, OnEdgeCreatedOutsidePort);
             nodeCreationRequest = HandleNodeCreationCall;
             graphViewChanged = HandleGraphViewChanged;
+            m_EditorWindow = editorWindow;
         }
 
         /// <summary>
@@ -194,8 +198,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (m_CurrentGraphNodesProperty == null) return;
 
-            pos = GUIUtility.GUIToScreenPoint(Event.current.mousePosition);
-            NodeData data = new NodeData(type, pos);
+            var localPos = contentViewContainer.WorldToLocal(pos - m_EditorWindow.position.position);
+            NodeData data = new NodeData(type, localPos);
             if(data != null)
             {
                 graphData.nodes.Add(data);

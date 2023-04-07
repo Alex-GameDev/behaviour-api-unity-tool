@@ -158,7 +158,7 @@ namespace BehaviourAPI.Unity.Editor
 
             m_InspectorContainer.onGUIHandler = OnGUIHandler;
 
-            graphDataView = new GraphDataView();
+            graphDataView = new GraphDataView(this);
             graphDataView.StretchToParentSize();
             var graphContainer = rootVisualElement.Q("bw-graph");
             graphContainer.Insert(0, graphDataView);
