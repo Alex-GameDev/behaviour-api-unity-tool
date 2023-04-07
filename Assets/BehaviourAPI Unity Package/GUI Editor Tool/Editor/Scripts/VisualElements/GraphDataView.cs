@@ -349,7 +349,11 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
-            base.BuildContextualMenu(evt);
+            evt.menu.AppendAction("Create Node", dma =>
+            {
+                nodeCreationRequest(new NodeCreationContext() { screenMousePosition = dma.eventInfo.mousePosition + m_EditorWindow.position.position, target = null, index = -1 });
+            }, (m_CurrentGraphNodesProperty != null) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled
+            );
             evt.menu.AppendAction("Auto layout", _ => AutoLayoutGraph());
         }
 

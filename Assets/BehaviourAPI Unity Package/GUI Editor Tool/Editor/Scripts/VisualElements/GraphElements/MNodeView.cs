@@ -303,8 +303,7 @@ namespace BehaviourAPI.Unity.Editor
                 sb.AppendLine("\t- " + data.childIds[i]);
             }
 
-            sb.AppendLine(graphView.graphData.nodes.IndexOf(data).ToString());
-            sb.AppendLine(nodeProperty.propertyPath);
+            sb.AppendLine("Index: " + graphView.graphData.nodes.IndexOf(data).ToString());
             Debug.Log(sb.ToString());
         }
 
