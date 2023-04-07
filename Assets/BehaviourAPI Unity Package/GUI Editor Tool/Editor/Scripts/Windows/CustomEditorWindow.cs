@@ -69,7 +69,9 @@ namespace BehaviourAPI.Unity.Editor
         ToolPanel currentPanel;
 
         IMGUIContainer m_InspectorContainer;
-        EditorInspector m_EditorInspector;
+
+        Label m_PathLabel;
+        Label m_ModeLabel;
 
         #region -------------------------------------------- Create window --------------------------------------------
 
@@ -168,6 +170,9 @@ namespace BehaviourAPI.Unity.Editor
             graphContainer.Insert(0, graphDataView);
             graphDataView.DataChanged += () => EditorUtility.SetDirty(System.ObjectReference);
             graphDataView.SelectionNodeChanged += OnSelectionNodeChanged;
+
+            m_PathLabel = rootVisualElement.Q<Label>("bw-path-label");
+            m_ModeLabel = rootVisualElement.Q<Label>("bw-mode-label");
         }
 
         private void OnClickClearBtn()
@@ -199,6 +204,23 @@ namespace BehaviourAPI.Unity.Editor
 
             if (system != null && !runtime)
             {
+                m_ModeLabel.text = runtime ? "Runtime" : "Editor";
+
+                if(system.ObjectReference != null)
+                {
+                    if(AssetDatabase.Contains(system.ObjectReference))
+                    {
+                        m_PathLabel.text = AssetDatabase.GetAssetPath(system.ObjectReference);
+                    }
+                    else
+                    {
+                        m_PathLabel.text = system.ObjectReference.TypeName();
+                    }
+                }
+                else
+                {
+                    m_PathLabel.text = "-";
+                }
                 serializedObject = new SerializedObject(system.ObjectReference);
 
                 rootProperty = serializedObject.FindProperty("data");
@@ -351,10 +373,8 @@ namespace BehaviourAPI.Unity.Editor
             System.Data.graphs[selectedGraphIndex].nodes.Clear();
             serializedObject.Update();
 
+            selectedNodeIndexList.Clear();
             ShowNotification(new GUIContent("Graph clean"));
-
-            ChangeSelectedGraph(selectedGraphIndex);
-            EditorUtility.SetDirty(System.ObjectReference);
             UpdateGraphView();
         }
 
@@ -364,7 +384,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private void UpdateGraphView()
         {
-            Debug.Log("Update graph view: " + selectedGraphIndex);
+            //Debug.Log("Update graph view: " + selectedGraphIndex);
             if (selectedGraphIndex >= 0)
             {
                 if(!IsRuntime)
