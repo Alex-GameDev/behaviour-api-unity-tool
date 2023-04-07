@@ -194,6 +194,15 @@ namespace BehaviourAPI.Unity.Editor
             return change;           
         }
 
+        public void UpdateProperties()
+        {
+            if(m_CurrentGraphNodesProperty != null)
+                m_CurrentGraphNodesProperty.serializedObject.Update();
+
+            DataChanged?.Invoke();
+            Debug.Log("Updated");
+        }
+
         private void CreateNode(Type type, Vector2 pos)
         {
             if (m_CurrentGraphNodesProperty == null) return;
@@ -217,6 +226,7 @@ namespace BehaviourAPI.Unity.Editor
             target.OnConnected(edgeView);
 
             AddElement(edgeView);
+            UpdateProperties();
         }
 
 

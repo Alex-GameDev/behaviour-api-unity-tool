@@ -146,6 +146,24 @@ namespace BehaviourAPI.Unity.Editor
                 view.outputContainer.style.display = DisplayStyle.None;
         }
 
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+        {
+            evt.menu.AppendAction("Convert to entry state",
+               _ => ConvertToEntryState(),
+               (view.GetDataIndex() != 0 && node is State) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+
+            evt.menu.AppendSeparator();
+            evt.menu.AppendAction("Order childs/by x position", _ => view.OrderChildNodes(n => n.position.x),
+                view.data.childIds.Count > 1 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+            evt.menu.AppendAction("Order childs/by y position", _ => view.OrderChildNodes(n => n.position.y),
+                view.data.childIds.Count > 1 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+        }
+
+        private void ConvertToEntryState()
+        {
+            view.ConvertToFirstNode();
+        }
+
         public override void OnDeleted()
         {
             RecomputeEntryNode();

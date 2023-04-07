@@ -99,6 +99,9 @@ namespace BehaviourAPI.Unity.Editor
             evt.menu.AppendAction("Convert to root node",
                 _ => ConvertToRootNode(),
                 (view.GetDataIndex() != 0) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+            evt.menu.AppendSeparator();
+            evt.menu.AppendAction("Order childs by x position", _ => view.OrderChildNodes(n => n.position.x),
+                view.data.childIds.Count > 1 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
         }
 
         private void ConvertToRootNode()

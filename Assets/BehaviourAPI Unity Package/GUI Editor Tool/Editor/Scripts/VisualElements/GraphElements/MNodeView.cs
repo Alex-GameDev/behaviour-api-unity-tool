@@ -257,13 +257,18 @@ namespace BehaviourAPI.Unity.Editor
                 (OutputConnectionViews.Count > 0) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
             evt.menu.AppendSeparator();
 
-
             evt.menu.AppendAction("Debug", _ => DebugNode());
 
             drawer.BuildContextualMenu(evt);
             evt.StopPropagation();
         }
 
+        public void OrderChildNodes(Func<NodeData, float> orderFunction)
+        {
+            graphView.graphData.OrderChildNodes(data, (n) => n.position.x);
+            UpdateChildConnectionViews();
+            graphView.UpdateProperties();
+        }
 
         private void DisconnectAll()
         {
