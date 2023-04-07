@@ -245,10 +245,42 @@ namespace BehaviourAPI.Unity.Editor
             return port;
         }
 
+        #region ------------------------------- Contextual menu -------------------------------
+
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
+            evt.menu.AppendAction("Disconnect all.", _ => DisconnectAll(),
+                (InputConnectionViews.Count > 0 || OutputConnectionViews.Count > 0) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+            evt.menu.AppendAction("Disconnect all input edges.", _ => DisconnectAllInput(),
+                (InputConnectionViews.Count > 0) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+            evt.menu.AppendAction("Disconnect all output edges.", _ => DisconnectAllOutput(),
+                (OutputConnectionViews.Count > 0) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+            evt.menu.AppendSeparator();
+
+
             evt.menu.AppendAction("Debug", _ => DebugNode());
+
             drawer.BuildContextualMenu(evt);
+            evt.StopPropagation();
+        }
+
+
+        private void DisconnectAll()
+        {
+            DisconnectAllInput();
+            DisconnectAllOutput();
+        }
+
+        private void DisconnectAllInput()
+        {
+            graphView.DeleteElements(InputConnectionViews);
+            InputConnectionViews.Clear();
+        }
+
+        private void DisconnectAllOutput()
+        {
+            graphView.DeleteElements(OutputConnectionViews);
+            OutputConnectionViews.Clear();
         }
 
         private void DebugNode()
@@ -276,9 +308,9 @@ namespace BehaviourAPI.Unity.Editor
             Debug.Log(sb.ToString());
         }
 
-        public Port GetBestPort(MNodeView targetNodeView, Direction direction) => drawer.GetPort(targetNodeView, direction);
+        #endregion
 
-        public T Find<T>(string name) where T : VisualElement => this.Q<T>(name);
+        public Port GetBestPort(MNodeView targetNodeView, Direction direction) => drawer.GetPort(targetNodeView, direction);
 
         public VisualElement Find(string name) => this.Q(name);
 
