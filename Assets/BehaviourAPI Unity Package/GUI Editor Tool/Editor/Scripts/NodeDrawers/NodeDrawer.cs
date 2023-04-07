@@ -13,13 +13,25 @@ namespace BehaviourAPI.Unity.Editor
 
         public abstract string LayoutPath { get; }
 
-        public void SetView(MNodeView nodeView, Node node)
+        /// <summary>
+        /// Set the references of the drawer
+        /// </summary>
+        /// <param name="view">The view that the drawer uses.</param>
+        /// <param name="node">The node that the drawer represents.</param>
+        public void SetView(MNodeView view, Node node)
         {
-            this.view = nodeView;
+            this.view = view;
             this.node = node;
         }
 
+        /// <summary>
+        /// Set up the node ports
+        /// </summary>
         public abstract void SetUpPorts();
+
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract void DrawNodeDetails();
 
         public abstract PortView GetPort(MNodeView nodeView, Direction direction);
@@ -67,13 +79,22 @@ namespace BehaviourAPI.Unity.Editor
         public virtual void OnDeleted() { }
 
         /// <summary>
-        /// Method called when the node properties changed and must be reflected in the view
+        /// Method called when the node properties changed and must be reflected in the view        
         /// </summary>
-        public virtual void OnRefreshDisplay()
-        {
-        }
+        public virtual void OnRefreshDisplay() { }
+
+        /// <summary>
+        /// Method called when the node is destroyed in runtime mode, when the selected graph changes.
+        /// </summary>
+        public virtual void OnDestroy() { }
+
         #endregion
 
+        /// <summary>
+        /// Create a node drawer according to the node type.
+        /// </summary>
+        /// <param name="node">The node that the created drawer will render.</param>
+        /// <returns>The drawer created.</returns>
         public static NodeDrawer Create(Node node)
         {
             if (BehaviourAPISettings.instance.Metadata.NodeDrawerTypeMap.TryGetValue(node.GetType(), out Type drawerType))

@@ -9,8 +9,11 @@ using UnityEditor.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
+    using BehaviourAPI.Core;
+    using BehaviourAPI.UnityExtensions;
     using Framework;
     using Framework.Adaptations;
+    using GluonGui.WorkspaceWindow.Views.WorkspaceExplorer.Explorer;
 
     /// <summary>
     /// 
@@ -18,6 +21,7 @@ namespace BehaviourAPI.Unity.Editor
     public class MNodeView : UnityEditor.Experimental.GraphView.Node
     {
         public NodeData data;
+        
         NodeDrawer drawer;
 
         SerializedProperty nodeProperty;
@@ -30,6 +34,7 @@ namespace BehaviourAPI.Unity.Editor
         public TaskView PerceptionView { get; private set; }
         public TaskView CustomView { get; private set; }
 
+        VisualElement m_StatusBorder;
 
         TextField m_TitleInputField;
 
@@ -45,8 +50,7 @@ namespace BehaviourAPI.Unity.Editor
         private GraphDataView m_graphView;
         IEdgeConnectorListener edgeConnector;
 
-
-
+        
         public MNodeView(NodeData data, NodeDrawer drawer, GraphDataView graphView, IEdgeConnectorListener edgeConnector, SerializedProperty property = null) : base(drawer.LayoutPath)
         {
             this.data = data;
@@ -73,7 +77,31 @@ namespace BehaviourAPI.Unity.Editor
             drawer.SetUpPorts();
             drawer.DrawNodeDetails();
 
+            m_StatusBorder = this.Q("node-status");
+            if (graphView.IsRuntime)
+            {
+                this.Q("node-port-cover").Enable();
+                if(data.node is IStatusHandler statusHandler)
+                {
+                    statusHandler.StatusChanged += OnStatusChanged;
+                    OnStatusChanged(statusHandler.Status);
+                }
+            }
             RefreshDisplay();
+        }
+
+        public void OnDestroy()
+        {
+            if (graphView.IsRuntime && data.node is IStatusHandler statusHandler)
+            {
+                statusHandler.StatusChanged -= OnStatusChanged;
+            }
+            drawer.OnDestroy();
+        }
+
+        private void OnStatusChanged(Status status)
+        {
+            m_StatusBorder.ChangeBorderColor(status.ToColor());
         }
 
         public void UpdateSerializedProperty(SerializedProperty prop)
@@ -229,6 +257,11 @@ namespace BehaviourAPI.Unity.Editor
             var port = PortView.Create(orientation, direction, portCapacity, portType, edgeConnector);
             (isInput ? inputContainer : outputContainer).Add(port);
 
+            if (graphView.IsRuntime)
+            {
+                port.capabilities -= Capabilities.Selectable;
+            }
+
             port.portName = "";
             port.style.flexDirection = orientation.ToFlexDirection();
 
@@ -244,13 +277,16 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
-            evt.menu.AppendAction("Disconnect all.", _ => DisconnectAll(),
+            if(!graphView.IsRuntime)
+            {
+                evt.menu.AppendAction("Disconnect all.", _ => DisconnectAll(),
                 (InputConnectionViews.Count > 0 || OutputConnectionViews.Count > 0) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
-            evt.menu.AppendAction("Disconnect all input edges.", _ => DisconnectAllInput(),
-                (InputConnectionViews.Count > 0) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
-            evt.menu.AppendAction("Disconnect all output edges.", _ => DisconnectAllOutput(),
-                (OutputConnectionViews.Count > 0) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
-            evt.menu.AppendSeparator();
+                evt.menu.AppendAction("Disconnect all input edges.", _ => DisconnectAllInput(),
+                    (InputConnectionViews.Count > 0) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+                evt.menu.AppendAction("Disconnect all output edges.", _ => DisconnectAllOutput(),
+                    (OutputConnectionViews.Count > 0) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+                evt.menu.AppendSeparator();
+            }
 
             evt.menu.AppendAction("Debug", _ => DebugNode());
 
@@ -348,7 +384,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public void RefreshView()
         {
-            SetPosition(new Rect(data.position, UnityEngine.Vector2.zero));
+            SetPosition(new Rect(data.position, Vector2.zero));
             drawer.OnRepaint();
         }
 

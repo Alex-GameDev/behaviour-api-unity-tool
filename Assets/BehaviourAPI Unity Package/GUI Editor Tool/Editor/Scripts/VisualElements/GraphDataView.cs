@@ -10,6 +10,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using static UnityEditor.Experimental.GraphView.GraphView;
 using static UnityEditor.Progress;
 using Vector2 = UnityEngine.Vector2;
 
@@ -33,6 +34,8 @@ namespace BehaviourAPI.Unity.Editor
 
         #region ---------------------------------------- Properties ---------------------------------------
         public GraphData graphData { get; private set; }
+
+        public bool IsRuntime => m_EditorWindow.IsRuntime;
 
         public Action DataChanged { get; set; }
         public Action<List<int>> SelectionNodeChanged { get; set; }
@@ -157,6 +160,11 @@ namespace BehaviourAPI.Unity.Editor
 
         private GraphViewChange HandleGraphViewChanged(GraphViewChange change)
         {
+            if (m_EditorWindow.IsRuntime)
+            {
+                change.elementsToRemove = null;
+            }
+
             List<MNodeView> nodeViewsRemoved = new List<MNodeView>();
             if (change.elementsToRemove != null)
             {
@@ -179,9 +187,11 @@ namespace BehaviourAPI.Unity.Editor
                 }
                 SelectionNodeChanged?.Invoke(new List<int>());
             }
-            if (change.movedElements != null)
+            else if (change.movedElements != null)
             {
-                m_EditorWindow.RegisterOperation("Moved elements");
+                if(!m_EditorWindow.IsRuntime)
+                    m_EditorWindow.RegisterOperation("Moved elements");
+
                 foreach(var element in change.movedElements)
                 {
                     if(element is MNodeView nodeView)
@@ -193,8 +203,8 @@ namespace BehaviourAPI.Unity.Editor
 
             foreach (var nodeRemoved in nodeViewsRemoved) nodeRemoved.OnDeleted();
 
-
-            m_CurrentGraphNodesProperty.serializedObject.Update();
+            if (!m_EditorWindow.IsRuntime)
+                m_CurrentGraphNodesProperty.serializedObject.Update();
 
             if (nodeViewsRemoved.Count > 0)
             {
@@ -202,7 +212,8 @@ namespace BehaviourAPI.Unity.Editor
                 RefreshViews();
             }
 
-            DataChanged?.Invoke();
+            if (!m_EditorWindow.IsRuntime)
+                DataChanged?.Invoke();
 
             return change;           
         }
@@ -247,6 +258,11 @@ namespace BehaviourAPI.Unity.Editor
 
         private void ClearView()
         {
+            foreach(var nodeView in m_NodeViewMap.Values)
+            {
+                nodeView.OnDestroy();
+            }
+
             m_NodeViewMap.Clear();
             graphElements.ForEach(RemoveElement);
         }
@@ -310,7 +326,13 @@ namespace BehaviourAPI.Unity.Editor
         {
             NodeDrawer drawer = NodeDrawer.Create(nodeData.node);
             var index = graphData.nodes.IndexOf(nodeData);
-            MNodeView mNodeView = new MNodeView(nodeData, drawer, this, m_EdgeConnectorListener, m_CurrentGraphNodesProperty.GetArrayElementAtIndex(index));
+            MNodeView mNodeView = new MNodeView(nodeData, drawer, this, m_EdgeConnectorListener, m_CurrentGraphNodesProperty?.GetArrayElementAtIndex(index));
+            
+            if(m_EditorWindow.IsRuntime)
+            {
+                mNodeView.capabilities -= Capabilities.Deletable;
+            }
+
             m_NodeViewMap.TryAdd(nodeData.id, mNodeView);
             AddElement(mNodeView);
         }
@@ -328,6 +350,13 @@ namespace BehaviourAPI.Unity.Editor
                 Port sourcePort = sourceNodeView.GetBestPort(targetNodeView, Direction.Output);
                 Port targetPort = targetNodeView.GetBestPort(sourceNodeView, Direction.Input);
                 EdgeView edge = sourcePort.ConnectTo<EdgeView>(targetPort);
+
+                if (m_EditorWindow.IsRuntime)
+                {
+                    edge.capabilities -= Capabilities.Deletable;
+                    edge.capabilities -= Capabilities.Selectable;
+                }
+
                 AddElement(edge);
 
                 sourceNodeView.OnConnected(edge, false);
@@ -376,7 +405,8 @@ namespace BehaviourAPI.Unity.Editor
             evt.menu.AppendAction("Create Node", dma =>
             {
                 nodeCreationRequest(new NodeCreationContext() { screenMousePosition = dma.eventInfo.mousePosition + m_EditorWindow.position.position, target = null, index = -1 });
-            }, (m_CurrentGraphNodesProperty != null) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled
+            }, m_EditorWindow.IsRuntime ? DropdownMenuAction.Status.Hidden : 
+                (m_CurrentGraphNodesProperty != null) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled
             );
             evt.menu.AppendAction("Auto layout", _ => AutoLayoutGraph());
         }
@@ -385,7 +415,10 @@ namespace BehaviourAPI.Unity.Editor
         {
             m_EditorWindow.RegisterOperation("Auto layout graph");
             m_Adapter.AutoLayout(graphData);
-            m_CurrentGraphNodesProperty.serializedObject.Update();
+
+            if(!m_EditorWindow.IsRuntime)
+                m_CurrentGraphNodesProperty.serializedObject.Update();
+
             RefreshViews();
         }
 

@@ -17,6 +17,8 @@ namespace BehaviourAPI.Unity.Editor
         private FunctionDisplay m_FunctionDisplay;
         public override string LayoutPath => BehaviourAPISettings.instance.EditorLayoutsPath + "Nodes/DAG Node.uxml";
 
+        ProgressBar m_UtilityProgressBar; 
+
         public override void DrawNodeDetails()
         {
             switch (node)
@@ -40,7 +42,41 @@ namespace BehaviourAPI.Unity.Editor
                     SetColor(BehaviourAPISettings.instance.SelectableNodeColor);
                     break;
             }
+
+            if(view.graphView.IsRuntime && node is UtilityNode utilityHandler)
+            {
+                m_UtilityProgressBar = new ProgressBar()
+                {
+                    title = " ",
+                    lowValue = 0,
+                    highValue = 1,
+                };
+
+                m_UtilityProgressBar.value = utilityHandler.Utility;
+                m_UtilityProgressBar.title = utilityHandler.Utility.ToString("0.000");
+
+                utilityHandler.UtilityChanged += OnUtilityChanged;
+                view.extensionContainer.Add(m_UtilityProgressBar);
+
+                OnUtilityChanged(utilityHandler.Utility);
+            }
+
         }
+
+        private void OnUtilityChanged(float utility)
+        {
+            m_UtilityProgressBar.value = utility;
+            m_UtilityProgressBar.title = utility.ToString("0.000");
+        }
+
+        public override void OnDestroy()
+        {
+            if (view.graphView.IsRuntime && node is UtilityNode utilityHandler)
+            {
+                utilityHandler.UtilityChanged -= OnUtilityChanged;
+            }
+        }
+
         private void SetColor(Color color)
         {
             view.Find("node-type-color-top").ChangeBackgroundColor(color);
@@ -73,6 +109,16 @@ namespace BehaviourAPI.Unity.Editor
                 OutputPort = view.InstantiatePort(Direction.Output, EPortOrientation.Left);
             }
             else view.outputContainer.Disable();
+        }
+
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+        {
+            base.BuildContextualMenu(evt);
+
+            if (view.graphView.IsRuntime) return;
+           
+            evt.menu.AppendAction("Order childs by y position", _ => view.OrderChildNodes(n => n.position.y),
+                view.data.childIds.Count > 1 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
         }
 
         public override void OnRefreshDisplay()
@@ -120,6 +166,8 @@ namespace BehaviourAPI.Unity.Editor
                     break;
             }
         }
+
+
 
        
         private class FunctionDisplay : VisualElement

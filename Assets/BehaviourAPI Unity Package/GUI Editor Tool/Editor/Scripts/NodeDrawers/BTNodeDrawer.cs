@@ -1,7 +1,6 @@
 using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
 using BehaviourAPI.Unity.Framework;
-using System;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -96,6 +95,8 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
+            if (view.graphView.IsRuntime) return;
+
             evt.menu.AppendAction("Convert to root node",
                 _ => ConvertToRootNode(),
                 (view.GetDataIndex() != 0) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);

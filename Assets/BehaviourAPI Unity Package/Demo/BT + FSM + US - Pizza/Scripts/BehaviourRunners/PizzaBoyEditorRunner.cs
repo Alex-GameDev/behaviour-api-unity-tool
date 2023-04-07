@@ -1,8 +1,11 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Runtime;
+using BehaviourAPI.UtilitySystems;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,6 +19,8 @@ public class PizzaBoyEditorRunner : EditorBehaviourRunner
 
     [SerializeField] Pizza _pizza;
     [SerializeField] RecipePaper _recipePaper;
+
+    List<UtilityNode> m_ChooseRecipeActions = new List<UtilityNode>();
 
     NavMeshAgent _agent;
 
@@ -31,6 +36,14 @@ public class PizzaBoyEditorRunner : EditorBehaviourRunner
     {
         _agent = GetComponent<NavMeshAgent>();
         base.OnAwake();
+    }
+
+    protected override void ModifyGraphs()
+    {
+        var graph = FindGraph("Recipe US");
+        m_ChooseRecipeActions.Add(graph.FindNode<UtilityNode>("ham and cheese"));
+        m_ChooseRecipeActions.Add(graph.FindNode<UtilityNode>("vegetarian"));
+        m_ChooseRecipeActions.Add(graph.FindNode<UtilityNode>("hawaiian"));
     }
 
     // Escribe la receta
@@ -49,6 +62,16 @@ public class PizzaBoyEditorRunner : EditorBehaviourRunner
         _currentIngredient = 0;
         _recipePaper.SetRecipe(_currentRecipe);
         _recipePaper.Show();
+
+        UpdateUtilities();
+    }
+
+    private void UpdateUtilities()
+    {
+        foreach(var utilityNode in m_ChooseRecipeActions)
+        {
+            utilityNode.UpdateUtility(true);
+        }
     }
 
     // Espera a que el personaje se haya colocado en la mesa

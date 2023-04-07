@@ -67,6 +67,7 @@ namespace BehaviourAPI.Unity.Editor
         GenerateScriptPanel generateScriptPanel;
 
         ToolPanel currentPanel;
+        VisualElement m_EditorToolbarDiv;
 
         IMGUIContainer m_InspectorContainer;
 
@@ -131,6 +132,8 @@ namespace BehaviourAPI.Unity.Editor
             selectGraphDropdown.RegisterValueChangedCallback(OnSelectedGraphChanges);
 
             var mainContainer = rootVisualElement.Q("bw-main");
+
+            m_EditorToolbarDiv = rootVisualElement.Q("bw-edit-toolbar");
 
             // Add graph:
             createGraphPanel = new CreateGraphPanel(CreateGraph);
@@ -226,10 +229,12 @@ namespace BehaviourAPI.Unity.Editor
                 rootProperty = serializedObject.FindProperty("data");
                 graphsProperty = rootProperty.FindPropertyRelative("graphs");
                 pushPerceptionsProperty = rootProperty.FindPropertyRelative("pushPerceptions");
+                m_EditorToolbarDiv.Enable();
                 m_InspectorContainer.Enable();
             }
             else
             {
+                m_EditorToolbarDiv.Disable();
                 m_InspectorContainer.Disable();
             }
 
@@ -605,9 +610,13 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        internal void RegisterOperation(string v)
+        public void RegisterOperation(string v)
         {
-            Undo.RegisterCompleteObjectUndo(System.ObjectReference, v);
+            if(System.ObjectReference != null)
+            {
+                Undo.RegisterCompleteObjectUndo(System.ObjectReference, v);
+            }
+            
         }
 
         #endregion

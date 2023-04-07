@@ -23,6 +23,7 @@
                             <ui:VisualElement name="node-details">
                                 <ui:VisualElement name="node-icon" />
                             </ui:VisualElement>
+                            <ui:VisualElement name="extension" />
                             <ui:Foldout name="node-extension-foldout">
                                 <ui:VisualElement name="node-extension-content" style="display: flex; margin-right: 5px; margin-left: -10px;" />
                             </ui:Foldout>

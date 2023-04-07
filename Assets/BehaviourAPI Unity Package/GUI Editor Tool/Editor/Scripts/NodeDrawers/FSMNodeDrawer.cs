@@ -148,6 +148,8 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
+            if (view.graphView.IsRuntime) return;
+
             evt.menu.AppendAction("Convert to entry state",
                _ => ConvertToEntryState(),
                (view.GetDataIndex() != 0 && node is State) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);

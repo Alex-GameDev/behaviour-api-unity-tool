@@ -27,7 +27,10 @@ public class RecipePaper : MonoBehaviour
 
     public void Clear()
     {
-        _recipeNameText.text = "";
-        _ingredientText.text = "";
+        if(_recipeNameText != null && _ingredientText != null)
+        {
+            _recipeNameText.text = "";
+            _ingredientText.text = "";
+        }
     }
 }
