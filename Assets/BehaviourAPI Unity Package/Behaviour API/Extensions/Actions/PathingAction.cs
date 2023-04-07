@@ -22,7 +22,7 @@ namespace BehaviourAPI.UnityExtensions
             this.distanceThreshold = distanceThreshold;
         }
 
-        public override string DisplayInfo => "Move between $positions at $speed";
+        public override string DisplayInfo => "Move between positions.";
 
         public override void Start()
         {

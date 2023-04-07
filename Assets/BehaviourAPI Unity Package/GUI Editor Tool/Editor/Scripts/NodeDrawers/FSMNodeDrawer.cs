@@ -219,8 +219,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 case Transition t:
                     var flagsDisplay = t.StatusFlags.DisplayInfo();
-                    view.CustomContainer.Enable();
-                    view.CustomLabel.text = "Check when " + flagsDisplay;
+                    view.CustomView.Update("Check when " + flagsDisplay);
                     break;
             }
         }

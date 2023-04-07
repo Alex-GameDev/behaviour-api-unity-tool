@@ -49,7 +49,7 @@ namespace BehaviourAPI.UnityExtensions
 
         }
 
-        public override string DisplayInfo => "Move $agent to mousePosition";
+        public override string DisplayInfo => "Move to mousePosition";
     }
 }
 

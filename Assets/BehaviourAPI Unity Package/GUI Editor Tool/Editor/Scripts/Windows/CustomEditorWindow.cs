@@ -262,7 +262,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private void ChangeSelectedGraph(int graphIndex)
         {
-            Debug.Log("Selected graph index: " +graphIndex);
+            //Debug.Log("Selected graph index: " +graphIndex);
             if (graphIndex == -1)
             {
                 createGraphPanel.Open(false);
@@ -351,7 +351,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private void UpdateGraphView()
         {
-            Debug.Log("Update graph view");
+            //Debug.Log("Update graph view");
             if (selectedGraphIndex >= 0)
             {
                 if(!IsRuntime)

@@ -211,7 +211,7 @@ namespace BehaviourAPI.Unity.Editor
                     groupNode.Childs.Add(actionTypeNode);
                 }
 
-                if(groups.Count == 0)
+                if(groupAttributes.Count() == 0)
                 {
                     ungroupedActionNodes.Add(actionTypeNode);
                 }

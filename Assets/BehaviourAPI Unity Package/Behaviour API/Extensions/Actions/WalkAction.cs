@@ -40,7 +40,7 @@ namespace BehaviourAPI.UnityExtensions
                 return Status.Running;
         }
 
-        public override string DisplayInfo => "Walk to $target";
+        public override string DisplayInfo => "Walk to $Target";
     }
 }
 

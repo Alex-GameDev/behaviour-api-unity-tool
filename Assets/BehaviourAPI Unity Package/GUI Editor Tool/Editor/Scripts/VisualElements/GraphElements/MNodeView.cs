@@ -30,14 +30,11 @@ namespace BehaviourAPI.Unity.Editor
         public List<EdgeView> InputConnectionViews { get; private set; } = new List<EdgeView>();
         public List<EdgeView> OutputConnectionViews { get; private set; } = new List<EdgeView>();
 
-
         public VisualElement BorderElement { get; private set; }
-        public VisualElement ActionContainer { get; private set; }
-        public VisualElement PerceptionContainer { get; private set; }
-        public VisualElement CustomContainer { get; private set; }
-        public Label ActionLabel { get; private set; }
-        public Label PerceptionLabel { get; private set; }
-        public Label CustomLabel { get; private set; }
+        public TaskView ActionView { get; private set; }
+        public TaskView PerceptionView { get; private set; }
+        public TaskView CustomView { get; private set; }
+
 
         TextField m_TitleInputField;
 
@@ -53,6 +50,8 @@ namespace BehaviourAPI.Unity.Editor
         private GraphDataView m_graphView;
         IEdgeConnectorListener edgeConnector;
 
+
+
         public MNodeView(NodeData data, NodeDrawer drawer, GraphDataView graphView, IEdgeConnectorListener edgeConnector, SerializedProperty property = null) : base(drawer.LayoutPath)
         {
             this.data = data;
@@ -67,13 +66,13 @@ namespace BehaviourAPI.Unity.Editor
 
             BorderElement = this.Q("node-border");
 
-            ActionContainer = this.Q("node-action-container");
-            PerceptionContainer = this.Q("node-perception-container");
-            CustomContainer = this.Q("node-custom-container");
-
-            ActionLabel = this.Q<Label>("node-action-label");
-            PerceptionLabel = this.Q<Label>("node-perception-label");
-            CustomLabel = this.Q<Label>("node-custom-label");
+            var extensionContainer = this.Q("node-extension-content");
+            ActionView = new TaskView();
+            extensionContainer.Add(ActionView);
+            PerceptionView = new TaskView();
+            extensionContainer.Add(PerceptionView);
+            CustomView = new TaskView();
+            extensionContainer.Add(CustomView);
 
             UpdateSerializedProperty(property);
             drawer.SetUpPorts();
@@ -106,17 +105,30 @@ namespace BehaviourAPI.Unity.Editor
 
         public void RefreshDisplay()
         {
-            if(data.node is IActionAssignable actionAssignable) 
+            //var t = DateTime.Now;
+            if (data.node is IActionAssignable actionAssignable) 
             {
-                ActionLabel.text = actionAssignable.ActionReference.GetActionInfo();
-                ActionContainer.Enable();
+                ActionView.Update(actionAssignable.ActionReference.GetActionInfo());
             }
             if (data.node is IPerceptionAssignable perceptionAssignable)
-            {
-                PerceptionLabel.text = perceptionAssignable.PerceptionReference.GetPerceptionInfo();
-                PerceptionContainer.Enable();
+            {                
+                PerceptionView.Update(perceptionAssignable.PerceptionReference.GetPerceptionInfo());
             }
             drawer.OnRefreshDisplay();
+
+            if(ActionView.Container.style.display == DisplayStyle.None &&
+                PerceptionView.Container.style.display == DisplayStyle.None &&
+                CustomView.Container.style.display == DisplayStyle.None)
+            {
+                var toggle = this.Q<Foldout>("node-extension-foldout");
+                toggle.Disable();
+            }
+            else
+            {
+                var toggle = this.Q<Foldout>("node-extension-foldout");
+                toggle.Enable();
+            }
+            //Debug.Log((DateTime.Now - t).TotalMilliseconds);
         }
 
 
@@ -337,6 +349,40 @@ namespace BehaviourAPI.Unity.Editor
         private void UpdateParentConnectionViews()
         {
 
+        }
+    }
+
+    public class TaskView : VisualElement
+    {
+        public Label Label { get; private set; }
+        public VisualElement Container { get; private set; }
+
+        public TaskView()
+        {
+            var asset = BehaviourAPISettings.instance.GetLayoutAsset("Elements/taskview.uxml");
+            asset.CloneTree(this);
+
+            Label = this.Q<Label>("tv-label");
+            Container = this.Q("tv-container");
+            Container.Disable();
+        }
+
+        public void Update(string text)
+        {            
+            if(string.IsNullOrEmpty(text))
+            {
+                Container.Disable();
+            }
+            else
+            {
+                Container.Enable();
+            }
+            Label.text = text;
+        }
+
+        public void AddElement(VisualElement visualElement)
+        {
+            Container.Add(visualElement);
         }
     }
 }

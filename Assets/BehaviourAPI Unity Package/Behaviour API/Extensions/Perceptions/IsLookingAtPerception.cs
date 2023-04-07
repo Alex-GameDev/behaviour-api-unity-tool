@@ -20,6 +20,6 @@ namespace BehaviourAPI.UnityExtensions
             return Vector3.Angle(lookAt, delta) < maxAngle;
         }
 
-        public override string DisplayInfo => "if is looking at $Other";
+        public override string DisplayInfo => "is looking at $OtherTransform";
     }
 }

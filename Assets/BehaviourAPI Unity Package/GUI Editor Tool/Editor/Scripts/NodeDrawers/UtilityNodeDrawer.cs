@@ -4,6 +4,7 @@ using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
+    using BehaviourAPI.Unity.Framework.Adaptations;
     using System;
     using System.Collections.Generic;
     using UnityEditor;
@@ -82,40 +83,38 @@ namespace BehaviourAPI.Unity.Editor
                     var methodDisplay = variableFactor.variableFunction.GetSerializedMethodText();
                     if(methodDisplay != null)
                     {
-                        view.CustomContainer.Enable();
-                        view.CustomLabel.text = $"{methodDisplay}\n[{variableFactor.min} - {variableFactor.max}]";
+                        view.CustomView.Update($"{methodDisplay}\n[{variableFactor.min} - {variableFactor.max}]");
                     }
                     else
                     {
-                        view.CustomContainer.Disable();
+                        view.CustomView.Disable();
                     }
                     break;
 
                 case ConstantFactor constant:
-                    view.CustomContainer.Enable();
-                    view.CustomLabel.text = constant.value.ToString();
+                    view.CustomView.Update(constant.value.ToString());
                     break;
+
                 case Framework.Adaptations.CustomCurveFactor customCurve:
                     methodDisplay = customCurve.function.GetSerializedMethodText();
                     if (methodDisplay != null)
                     {
-                        view.CustomContainer.Enable();
-                        view.CustomLabel.text = methodDisplay;
+                        view.CustomView.Update(methodDisplay);
                     }
                     else
                     {
-                        view.CustomContainer.Disable();
+                        view.CustomView.Disable();
                     }
                     break;
+
                 case CurveFactor curveFactor:
                     if(m_FunctionDisplay == null)
                     {
-                        view.CustomContainer.Enable();
-                        view.CustomLabel.Disable();
+                        view.CustomView.Container.Enable();
+                        view.CustomView.Label.Disable();
                         m_FunctionDisplay = new FunctionDisplay(curveFactor.TestEvaluate);
-                        view.CustomContainer.Add(m_FunctionDisplay);
+                        view.CustomView.AddElement(m_FunctionDisplay);
                     }
-
                     m_FunctionDisplay.Update();
 
                     break;

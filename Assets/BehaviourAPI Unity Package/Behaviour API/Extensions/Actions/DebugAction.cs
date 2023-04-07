@@ -7,7 +7,7 @@ namespace BehaviourAPI.UnityExtensions
     {
         public string message;
 
-        public override string DisplayInfo => "Debug Log $message";
+        public override string DisplayInfo => "Debug Log \"$message\"";
 
         public DebugAction()
         {

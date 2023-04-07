@@ -18,7 +18,7 @@ namespace BehaviourAPI.UnityExtensions
             this.delayTime = delayTime;
         }
 
-        public override string DisplayInfo => "Wait $DelayTime seconds";
+        public override string DisplayInfo => "Wait $delayTime seconds";
 
         public override void Start()
         {

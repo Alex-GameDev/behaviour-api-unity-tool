@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEditor;
-
+using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -103,7 +103,17 @@ namespace BehaviourAPI.Unity.Editor
                     return actionMethodLines.Join("\n");
 
                 case UnityAction unityAction:
-                    return unityAction.DisplayInfo;
+                    string info = unityAction.DisplayInfo;
+
+                    var type = unityAction.GetType();
+                    var properties = type.GetFields();
+
+                    for (int i = 0; i < properties.Length; i++)
+                    {
+                        Debug.Log(properties[i].Name);
+                        info = info.Replace($"${properties[i].Name}", properties[i].GetValue(unityAction).ToString());
+                    }
+                    return info;
 
                 case SubgraphAction subgraphAction:
                     if (string.IsNullOrEmpty(subgraphAction.subgraphId))
@@ -144,7 +154,17 @@ namespace BehaviourAPI.Unity.Editor
 
 
                 case UnityPerception unityPerception:
-                    return unityPerception.DisplayInfo;
+
+                    string info = unityPerception.DisplayInfo;
+
+                    var type = unityPerception.GetType();
+                    var properties = type.GetFields();
+
+                    for(int i = 0; i < properties.Length; i++)
+                    {
+                        info = info.Replace($"${properties[i].Name}", properties[i].GetValue(unityPerception).ToString());
+                    }
+                    return info;
 
                 case CompoundPerceptionWrapper compoundPerception:
                     var compoundType = compoundPerception.compoundPerception.GetType();

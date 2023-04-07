@@ -1,18 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    using Core;
-    using Core.Perceptions;
-    using Core.Actions;
-    using Framework.Adaptations;
-    using UnityExtensions;
-    using Codice.Client.Common;
+
 
     [FilePath("ProjectSettings/BehaviourAPISettings.asset", FilePathAttribute.Location.ProjectFolder)]
     public class BehaviourAPISettings : ScriptableSingleton<BehaviourAPISettings>
@@ -108,6 +100,26 @@ namespace BehaviourAPI.Unity.Editor
             {
                 Debug.LogWarning("BehaviourAPISettings: Root path doesn't exist. Change the path in ProyectSetting > BehaviourAPI");
             }
-        }       
+        }  
+        
+        /// <summary>
+        /// return a uxml file from the layouts folder
+        /// </summary>
+        /// <param name="subpath">The relative path to the <see cref="EditorLayoutsPath"/> folder.</param>
+        /// <returns>The asset in the specified path.</returns>
+        public VisualTreeAsset GetLayoutAsset(string subpath)
+        {
+            return AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(EditorLayoutsPath + subpath);
+        }
+
+        /// <summary>
+        /// return a uss file from the styles folder
+        /// </summary>
+        /// <param name="subpath">The relative path to the <see cref="EditorStylesPath"/> folder.</param>
+        /// <returns>The asset in the specified path.</returns>
+        public StyleSheet GetStyleSheet(string subpath)
+        {
+            return AssetDatabase.LoadAssetAtPath<StyleSheet>(EditorStylesPath + subpath);
+        }
     }
 }

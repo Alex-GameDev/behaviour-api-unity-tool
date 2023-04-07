@@ -9,6 +9,6 @@ namespace BehaviourAPI.UnityExtensions
             return context.CharacterController.isGrounded;
         }
 
-        public override string DisplayInfo => "if is grounded";
+        public override string DisplayInfo => "is grounded";
     }
 }
