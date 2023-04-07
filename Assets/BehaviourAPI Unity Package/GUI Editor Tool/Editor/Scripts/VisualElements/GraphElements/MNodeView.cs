@@ -6,14 +6,9 @@ using UnityEditor;
 using System.Text;
 using System.Collections.Generic;
 using UnityEditor.UIElements;
-using System.Linq;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    using Core;
-    using Core.Actions;
-    using Core.Perceptions;
-    using UnityExtensions;
     using Framework;
     using Framework.Adaptations;
 
@@ -265,6 +260,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public void OrderChildNodes(Func<NodeData, float> orderFunction)
         {
+            m_graphView.RegisterUndo("Order child nodes");
             graphView.graphData.OrderChildNodes(data, (n) => n.position.x);
             UpdateChildConnectionViews();
             graphView.UpdateProperties();
@@ -326,7 +322,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public void ConvertToFirstNode()
         {
-            graphView.ReorderNode(this);
+            graphView.SetNodeAsFirst(this);
         }
 
         public void DisconnectAllInputPorts()

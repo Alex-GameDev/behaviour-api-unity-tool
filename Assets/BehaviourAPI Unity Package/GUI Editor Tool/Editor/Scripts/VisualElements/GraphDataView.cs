@@ -51,14 +51,14 @@ namespace BehaviourAPI.Unity.Editor
 
         SerializedProperty m_CurrentGraphNodesProperty;
 
-        private EditorWindow m_EditorWindow;
+        private CustomEditorWindow m_EditorWindow;
 
         #endregion
 
         /// <summary>
         /// Create the default graphView
         /// </summary>
-        public GraphDataView(EditorWindow editorWindow)
+        public GraphDataView(CustomEditorWindow editorWindow)
         {
             styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>(stylePath));
 
@@ -83,6 +83,17 @@ namespace BehaviourAPI.Unity.Editor
             nodeCreationRequest = HandleNodeCreationCall;
             graphViewChanged = HandleGraphViewChanged;
             m_EditorWindow = editorWindow;
+
+            Undo.undoRedoPerformed += ReloadView;
+        }
+
+        private void ReloadView()
+        {
+            if (m_CurrentGraphNodesProperty != null)
+            {
+                m_CurrentGraphNodesProperty.serializedObject.Update();
+                UpdateGraph(graphData, m_CurrentGraphNodesProperty);
+            }
         }
 
         /// <summary>
@@ -149,6 +160,7 @@ namespace BehaviourAPI.Unity.Editor
             List<MNodeView> nodeViewsRemoved = new List<MNodeView>();
             if (change.elementsToRemove != null)
             {
+                m_EditorWindow.RegisterOperation("Deleted elements");
                 foreach (var element in change.elementsToRemove)
                 {
                     if (element is MNodeView nodeView)
@@ -169,6 +181,7 @@ namespace BehaviourAPI.Unity.Editor
             }
             if (change.movedElements != null)
             {
+                m_EditorWindow.RegisterOperation("Moved elements");
                 foreach(var element in change.movedElements)
                 {
                     if(element is MNodeView nodeView)
@@ -211,6 +224,7 @@ namespace BehaviourAPI.Unity.Editor
             NodeData data = new NodeData(type, localPos);
             if(data != null)
             {
+                m_EditorWindow.RegisterOperation("Created node");
                 graphData.nodes.Add(data);
                 m_CurrentGraphNodesProperty.serializedObject.Update();
                 DrawNode(data);
@@ -225,11 +239,11 @@ namespace BehaviourAPI.Unity.Editor
             source.OnConnected(edgeView);
             target.OnConnected(edgeView);
 
+            m_EditorWindow.RegisterOperation("Created connection");
+
             AddElement(edgeView);
             UpdateProperties();
         }
-
-
 
         private void ClearView()
         {
@@ -369,6 +383,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private void AutoLayoutGraph()
         {
+            m_EditorWindow.RegisterOperation("Auto layout graph");
             m_Adapter.AutoLayout(graphData);
             m_CurrentGraphNodesProperty.serializedObject.Update();
             RefreshViews();
@@ -377,8 +392,9 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Change the index of a node.
         /// </summary>
-        public void ReorderNode(MNodeView nodeView)
+        public void SetNodeAsFirst(MNodeView nodeView)
         {
+            m_EditorWindow.RegisterOperation("Change first node");
             graphData.nodes.MoveAtFirst(nodeView.data);
             m_CurrentGraphNodesProperty.serializedObject.Update();
 
@@ -414,6 +430,11 @@ namespace BehaviourAPI.Unity.Editor
                     nodeView.RefreshDisplay();
                 }
             }
+        }
+
+        public void RegisterUndo(string operationName)
+        {
+            m_EditorWindow.RegisterOperation(operationName);
         }
 
         #endregion

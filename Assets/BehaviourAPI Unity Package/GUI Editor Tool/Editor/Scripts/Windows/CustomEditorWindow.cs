@@ -6,10 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.Graphs;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Vector2 = UnityEngine.Vector2;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -77,12 +75,18 @@ namespace BehaviourAPI.Unity.Editor
 
         private void OnEnable()
         {
+            Undo.undoRedoPerformed += OnUndoOperationPreformed;
             instance = this;
         }
 
         private void OnDisable()
         {
+            Undo.undoRedoPerformed -= OnUndoOperationPreformed;
             instance = null;
+        }
+        private void OnUndoOperationPreformed()
+        {
+            UpdateSelectionMenu();
         }
 
         /// <summary>
@@ -225,7 +229,7 @@ namespace BehaviourAPI.Unity.Editor
 
             var pos = Event.current.mousePosition + position.position;
             var currentGraph = System.Data.graphs[selectedGraphIndex];
-            AlertWindow.CreateAlertWindow($"Delete current graph?\n({currentGraph.name})", pos, DeleteSelectedGraph);
+            AlertWindow.CreateAlertWindow($"Delete current graph?\n({currentGraph.name}) \n(This action can't be undo.)", pos, DeleteSelectedGraph);
         }
 
         private void UpdateSelectionMenu()
@@ -233,6 +237,7 @@ namespace BehaviourAPI.Unity.Editor
             selectGraphDropdown.choices.Clear();
             if (System.Data.graphs.Count == 0)
             {
+                selectedGraphIndex = -1;
                 selectGraphDropdown.value = "-";
             }
             else
@@ -241,13 +246,15 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     var graph = System.Data.graphs[i];
                     var graphName = string.IsNullOrWhiteSpace(graph.name) ? "unnamed" : graph.name;
-                    selectGraphDropdown.choices.Add((i + 1) + " - " + graphName);          
+                    selectGraphDropdown.choices.Add((i + 1) + "\\" + System.Data.graphs.Count + " - " + graphName);          
                 }
 
-                if(selectedGraphIndex >= 0 && selectedGraphIndex < System.Data.graphs.Count)
+                if(selectedGraphIndex < 0 || selectedGraphIndex >= System.Data.graphs.Count)
                 {
-                    selectGraphDropdown.value = selectGraphDropdown.choices[selectedGraphIndex];
+                    selectedGraphIndex = 0;
                 }
+
+                selectGraphDropdown.value = selectGraphDropdown.choices[selectedGraphIndex];
             }
         }
 
@@ -270,6 +277,7 @@ namespace BehaviourAPI.Unity.Editor
             selectedGraphIndex = graphIndex;
             selectGraphDropdown.index = selectedGraphIndex;
 
+            Undo.ClearUndo(System.ObjectReference);
             selectedNodeIndexList.Clear();
             UpdateGraphView();
         }
@@ -291,6 +299,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (IsRuntime) return;
 
+            //RegisterOperation("Create graph");
             var graphData = new GraphData(graphType);
             graphData.name = graphName;
             System.Data.graphs.Add(graphData);
@@ -307,6 +316,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (IsRuntime) return;
 
+            //RegisterOperation("Delete graph");
             System.Data.graphs.RemoveAt(selectedGraphIndex);
             serializedObject.Update();
 
@@ -323,6 +333,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (System.Data.graphs.Count == 0 || selectedGraphIndex == 0) return;
 
+            //RegisterOperation("Change main graph");
             var currentGraph = System.Data.graphs[selectedGraphIndex];
             System.Data.graphs.MoveAtFirst(currentGraph);
             serializedObject.Update();
@@ -336,12 +347,14 @@ namespace BehaviourAPI.Unity.Editor
 
         private void ClearSelectedGraph()
         {
+            RegisterOperation("Clear graph");
             System.Data.graphs[selectedGraphIndex].nodes.Clear();
             serializedObject.Update();
 
             ShowNotification(new GUIContent("Graph clean"));
 
             ChangeSelectedGraph(selectedGraphIndex);
+            EditorUtility.SetDirty(System.ObjectReference);
             UpdateGraphView();
         }
 
@@ -351,7 +364,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private void UpdateGraphView()
         {
-            //Debug.Log("Update graph view");
+            Debug.Log("Update graph view: " + selectedGraphIndex);
             if (selectedGraphIndex >= 0)
             {
                 if(!IsRuntime)
@@ -572,6 +585,14 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
+        internal void RegisterOperation(string v)
+        {
+            Undo.RegisterCompleteObjectUndo(System.ObjectReference, v);
+        }
+
         #endregion
     }
+
+    // TODO: Use undo in add/delete graph operations can throw errors.
+    // Undo is disabled for that operations.
 }

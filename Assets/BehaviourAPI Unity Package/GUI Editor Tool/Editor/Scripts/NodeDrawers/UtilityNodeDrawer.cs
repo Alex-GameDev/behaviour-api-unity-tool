@@ -143,7 +143,7 @@ namespace BehaviourAPI.Unity.Editor
 
             private void OnGenerateVisualContent(Func<float, float> evaluationMethod, MeshGenerationContext mgc)
             {
-                var t = DateTime.Now;
+                //var t = DateTime.Now;
                 var width = k_Display.resolvedStyle.width;
                 var height = k_Display.resolvedStyle.height - k_FunctionThickness;
 
@@ -175,7 +175,7 @@ namespace BehaviourAPI.Unity.Editor
                         mesh.SetNextIndex((ushort)(i + 2));
                     }
                 }
-                Debug.Log((DateTime.Now - t).TotalMilliseconds);
+                //Debug.Log((DateTime.Now - t).TotalMilliseconds);
             }
         }
     }
