@@ -202,6 +202,7 @@ namespace BehaviourAPI.Unity.Editor
                 InputConnectionViews.Add(edgeView);
                 UpdateParentConnectionViews();
             }
+            drawer.OnConnected(edgeView);
         }
 
         /// <summary>
@@ -229,7 +230,8 @@ namespace BehaviourAPI.Unity.Editor
                 }
                 InputConnectionViews.Remove(edgeView);
                 UpdateParentConnectionViews();
-            }          
+            }
+            drawer.OnDisconnected(edgeView);
         }
 
         #endregion

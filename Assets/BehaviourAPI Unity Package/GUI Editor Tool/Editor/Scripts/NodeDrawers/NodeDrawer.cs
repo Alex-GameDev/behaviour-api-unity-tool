@@ -66,12 +66,12 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Method called when a new connection is created in the node.
         /// </summary>
-        public virtual void OnConnected() { }
+        public virtual void OnConnected(EdgeView edgeView) { }
 
         /// <summary>
         /// Method called when a new connection is deleted in the node.
         /// </summary>
-        public virtual void OnDisconnected() { }
+        public virtual void OnDisconnected(EdgeView edgeView) { }
 
         /// <summary>
         /// Method called when the node is being removed from the graph.

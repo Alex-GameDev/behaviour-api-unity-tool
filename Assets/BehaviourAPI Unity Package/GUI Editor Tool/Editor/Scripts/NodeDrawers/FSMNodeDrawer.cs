@@ -1,3 +1,4 @@
+using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
 using BehaviourAPI.StateMachines;
 using BehaviourAPI.Unity.Framework;
@@ -36,6 +37,30 @@ namespace BehaviourAPI.Unity.Editor
 
             RecomputeEntryNode();
             OnRepaint();
+        }
+
+        public override void OnConnected(EdgeView edgeView)
+        {
+            if (edgeView.input.node != view || !view.graphView.IsRuntime) return;
+
+            if (view.InputConnectionViews.Count == 1 && node is Transition transition)
+            {
+                transition.SourceStateLastStatusChanged += OnSourceStateLastStatusChanged;
+                OnSourceStateLastStatusChanged(transition.SourceStateLastStatus);
+            }
+        }
+        private void OnSourceStateLastStatusChanged(Status status)
+        {
+            var edgeView = view.InputConnectionViews[0];
+            edgeView.control.UpdateStatus(status);
+        }
+
+        public override void OnDestroy()
+        {
+            if (view.graphView.IsRuntime && node is Transition transition && view.InputConnectionViews.Count == 1)
+            {
+                transition.SourceStateLastStatusChanged -= OnSourceStateLastStatusChanged;
+            }
         }
 
         private void SetColor(Color color)

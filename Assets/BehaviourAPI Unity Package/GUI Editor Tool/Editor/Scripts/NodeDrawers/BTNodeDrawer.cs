@@ -21,6 +21,7 @@ namespace BehaviourAPI.Unity.Editor
             rootIcon = view.Q("node-root");
             switch(node)
             {
+
                 case LeafNode:
                     SetColor(BehaviourAPISettings.instance.LeafNodeColor);
                     break;
@@ -32,9 +33,34 @@ namespace BehaviourAPI.Unity.Editor
                     SetColor(BehaviourAPISettings.instance.DecoratorColor);
                     SetIconText(node.TypeName().CamelCaseToSpaced());
                     break;
-            }
+            }            
 
             OnRepaint();
+        }
+
+        public override void OnConnected(EdgeView edgeView)
+        {
+            if (edgeView.input.node != view || !view.graphView.IsRuntime) return;
+
+            if (view.InputConnectionViews.Count == 1 && node is BTNode btNode)
+            {
+                btNode.LastExecutionStatusChanged +=  OnLastExecutionStatusChanged;
+                OnLastExecutionStatusChanged(btNode.LastExecutionStatus);
+            }
+        }
+
+        public override void OnDestroy()
+        {
+            if (view.graphView.IsRuntime && node is BTNode btNode && view.InputConnectionViews.Count == 1)
+            {
+                btNode.LastExecutionStatusChanged -= OnLastExecutionStatusChanged;
+            }
+        }
+
+        private void OnLastExecutionStatusChanged(Status status)
+        {
+            var edgeView = view.InputConnectionViews[0];
+            edgeView.control.UpdateStatus(status);
         }
 
         private void SetColor(Color color)
