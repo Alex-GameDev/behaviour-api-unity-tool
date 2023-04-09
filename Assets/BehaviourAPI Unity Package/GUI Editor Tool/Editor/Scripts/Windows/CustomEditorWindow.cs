@@ -7,6 +7,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Rendering.VirtualTexturing;
 using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
@@ -58,6 +59,8 @@ namespace BehaviourAPI.Unity.Editor
         private List<int> selectedNodeIndexList = new List<int>();
 
         #endregion
+
+        VisualElement m_EmptyPanel;
 
         private DropdownField selectGraphDropdown;
 
@@ -135,6 +138,8 @@ namespace BehaviourAPI.Unity.Editor
 
             m_EditorToolbarDiv = rootVisualElement.Q("bw-edit-toolbar");
 
+            m_EmptyPanel = rootVisualElement.Q("bw-empty");
+            m_EmptyPanel.Enable();
             // Add graph:
             createGraphPanel = new CreateGraphPanel(CreateGraph);
             mainContainer.Add(createGraphPanel);
@@ -240,6 +245,23 @@ namespace BehaviourAPI.Unity.Editor
 
             UpdateSelectionMenu();
             ChangeSelectedGraph(System.Data.graphs.Count > 0 ? 0 : -1);
+            m_EmptyPanel.Disable();
+        }
+
+        private void ClearSystem()
+        {
+            System = null;
+            IsRuntime = false;
+            m_ModeLabel.text = "";
+            m_PathLabel.text = "-";
+            m_EditorToolbarDiv.Disable();
+            m_InspectorContainer.Disable();
+            selectedGraphIndex = -1;
+            UpdateGraphView();
+            UpdateSelectionMenu();
+
+            m_EmptyPanel.Enable();
+
         }
 
         #endregion
@@ -262,6 +284,9 @@ namespace BehaviourAPI.Unity.Editor
         private void UpdateSelectionMenu()
         {
             selectGraphDropdown.choices.Clear();
+
+            if (System == null) return;
+
             if (System.Data.graphs.Count == 0)
             {
                 selectedGraphIndex = -1;
@@ -617,6 +642,16 @@ namespace BehaviourAPI.Unity.Editor
                 Undo.RegisterCompleteObjectUndo(System.ObjectReference, v);
             }
             
+        }
+
+        public void OnChangePlayModeState(PlayModeStateChange playModeStateChange)
+        {
+            if (playModeStateChange == PlayModeStateChange.ExitingPlayMode)
+            {
+                System = null;
+                IsRuntime = false;
+                ClearSystem();
+            }
         }
 
         #endregion

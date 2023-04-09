@@ -10,15 +10,14 @@ namespace BehaviourAPI.Unity.Editor
     {
         static EditorSettings()
         {
-            //EditorApplication.playModeStateChanged += RefreshBehaviourEditorWindow;
+            EditorApplication.playModeStateChanged += RefreshBehaviourEditorWindow;
             BehaviourAPISettings.instance.ReloadAssemblies();
         }
 
-        //static void RefreshBehaviourEditorWindow(PlayModeStateChange playModeStateChange)
-        //{
-        //    if (BehaviourEditorWindow.Instance != null)
-        //        BehaviourEditorWindow.Instance.OnChangePlayModeState(playModeStateChange);
-
-        //}
+        static void RefreshBehaviourEditorWindow(PlayModeStateChange playModeStateChange)
+        {
+            if (CustomEditorWindow.instance != null)
+                CustomEditorWindow.instance.OnChangePlayModeState(playModeStateChange);
+        }
     }
 }
