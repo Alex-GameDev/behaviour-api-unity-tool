@@ -15,7 +15,7 @@ namespace BehaviourAPI.Unity.Editor
         PortView InputPort, OutputPort;
 
         private FunctionDisplay m_FunctionDisplay;
-        public override string LayoutPath => BehaviourAPISettings.instance.EditorLayoutsPath + "Nodes/DAG Node.uxml";
+        public override string LayoutPath => BehaviourAPISettings.instance.EditorLayoutsPath + "Nodes/acyclicgraphnode.uxml";
 
         ProgressBar m_UtilityProgressBar; 
 
@@ -90,7 +90,7 @@ namespace BehaviourAPI.Unity.Editor
             iconElement.Add(new Label(text));
         }
 
-        public override PortView GetPort(MNodeView nodeView, Direction direction)
+        public override PortView GetPort(NodeView nodeView, Direction direction)
         {
             if (direction == Direction.Input) return InputPort;
             else return OutputPort;
@@ -180,7 +180,7 @@ namespace BehaviourAPI.Unity.Editor
 
             public FunctionDisplay(Func<float,float> evaluationMethod)
             {
-                var asset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(BehaviourAPISettings.instance.EditorLayoutsPath + "Elements/functiondisplay.uxml");
+                var asset = BehaviourAPISettings.instance.GetLayoutAsset("Elements/functiondisplay.uxml");
                 asset.CloneTree(this);
 
                 k_Display = this.Q("fd-main");

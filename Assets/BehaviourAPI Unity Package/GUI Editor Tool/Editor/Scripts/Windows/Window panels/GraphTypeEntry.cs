@@ -18,7 +18,7 @@ namespace BehaviourAPI.Unity.Editor
         public GraphTypeEntry(Type graphType)
         {
             type = graphType;
-            var asset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(BehaviourAPISettings.instance.EditorLayoutsPath + "/graphtypeitem.uxml");
+            var asset = BehaviourAPISettings.instance.GetLayoutAsset("Panels/graphtypeitem.uxml");
             asset.CloneTree(this);
 
             container = this.Q("gti-main");

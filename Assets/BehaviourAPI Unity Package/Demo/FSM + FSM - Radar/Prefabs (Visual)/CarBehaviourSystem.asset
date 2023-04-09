@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data:
     graphs:
-    - id: f14f1507-901c-4a82-bc14-73a6976f6d00
-      name: main
+    - name: main
+      id: f14f1507-901c-4a82-bc14-73a6976f6d00
       graph:
         rid: 6537695503399780424
       nodes:
@@ -30,7 +30,7 @@ MonoBehaviour:
         - 27818b20-f611-47a5-a59c-7592b4459e9b
       - name: speed down
         id: 1be7f69b-1e11-4014-bf40-6e2f8ebdf13b
-        position: {x: 496, y: 361}
+        position: {x: 512, y: 378}
         node:
           rid: 6537695503399780425
         parentIds:
@@ -39,7 +39,7 @@ MonoBehaviour:
         - 3cd3d795-02c1-4f25-a1f2-29f982fbae56
       - name: State 2
         id: 4e4c9770-fc62-4f4a-a265-08be4f1e8fc6
-        position: {x: 849, y: 232}
+        position: {x: 856, y: 288}
         node:
           rid: 6537695503399780427
         parentIds:

@@ -16,6 +16,8 @@ public class LightAction : UnityAction
 
     float _currentTime;
 
+    public override string DisplayInfo => "Change light color to $Color";
+
     public LightAction()
     {
     }

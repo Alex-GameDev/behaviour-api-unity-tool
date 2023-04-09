@@ -18,7 +18,8 @@ namespace BehaviourAPI.Unity.Editor
 
         public EdgeControl()
         {
-            var edgeTag = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(BehaviourAPISettings.instance.EditorLayoutsPath + "edgetag.uxml").Instantiate();
+            var edgeTagAsset = BehaviourAPISettings.instance.GetLayoutAsset("Elements/edgetag.uxml");
+            var edgeTag = edgeTagAsset.CloneTree();
             edgeTag.style.position = Position.Absolute;
             edgeTag.style.left = new StyleLength(new Length(50, LengthUnit.Percent));
             edgeTag.style.top = new StyleLength(new Length(50, LengthUnit.Percent));

@@ -19,7 +19,7 @@ namespace BehaviourAPI.Unity.Editor
     /// <summary>
     /// 
     /// </summary>
-    public class GraphDataView : GraphView
+    public class BehaviourGraphView : GraphView
     {
         #region -------------------------------------- Static fields --------------------------------------
 
@@ -28,7 +28,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private static readonly float k_MinZoomScale = 1.5f;
         private static readonly float k_MaxZoomScale = 3f;
-        private static string stylePath => BehaviourAPISettings.instance.EditorStylesPath + "graph.uss";
+        private static string stylePath => "graph.uss";
 
         #endregion
 
@@ -48,7 +48,7 @@ namespace BehaviourAPI.Unity.Editor
 
         MiniMap m_Minimap;
 
-        Dictionary<string, MNodeView> m_NodeViewMap = new Dictionary<string, MNodeView>();
+        Dictionary<string, NodeView> m_NodeViewMap = new Dictionary<string, NodeView>();
 
         IEdgeConnectorListener m_EdgeConnectorListener;
 
@@ -61,9 +61,9 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Create the default graphView
         /// </summary>
-        public GraphDataView(CustomEditorWindow editorWindow)
+        public BehaviourGraphView(CustomEditorWindow editorWindow)
         {
-            styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>(stylePath));
+            styleSheets.Add(BehaviourAPISettings.instance.GetStyleSheet(stylePath));
 
             GridBackground gridBackground = new GridBackground();
             Insert(0, gridBackground);
@@ -165,13 +165,13 @@ namespace BehaviourAPI.Unity.Editor
                 change.elementsToRemove = null;
             }
 
-            List<MNodeView> nodeViewsRemoved = new List<MNodeView>();
+            List<NodeView> nodeViewsRemoved = new List<NodeView>();
             if (change.elementsToRemove != null)
             {
                 m_EditorWindow.RegisterOperation("Deleted elements");
                 foreach (var element in change.elementsToRemove)
                 {
-                    if (element is MNodeView nodeView)
+                    if (element is NodeView nodeView)
                     {
                         graphData.nodes.Remove(nodeView.data);
                         m_NodeViewMap.Remove(nodeView.data.id);
@@ -179,8 +179,8 @@ namespace BehaviourAPI.Unity.Editor
                     }
                     else if (element is EdgeView edge)
                     {
-                        var source = (MNodeView)edge.output.node;
-                        var target = (MNodeView)edge.input.node;
+                        var source = (NodeView)edge.output.node;
+                        var target = (NodeView)edge.input.node;
                         source.OnDisconnected(edge);
                         target.OnDisconnected(edge);
                     }
@@ -194,7 +194,7 @@ namespace BehaviourAPI.Unity.Editor
 
                 foreach(var element in change.movedElements)
                 {
-                    if(element is MNodeView nodeView)
+                    if(element is NodeView nodeView)
                     {
                         nodeView.OnMoved();
                     }
@@ -243,8 +243,8 @@ namespace BehaviourAPI.Unity.Editor
 
         private void CreateConnection(EdgeView edgeView)
         {
-            var source = edgeView.output.node as MNodeView;
-            var target = edgeView.input.node as MNodeView;
+            var source = edgeView.output.node as NodeView;
+            var target = edgeView.input.node as NodeView;
 
             source.OnConnected(edgeView);
             target.OnConnected(edgeView);
@@ -269,7 +269,7 @@ namespace BehaviourAPI.Unity.Editor
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
             List<Port> validPorts = new List<Port>();
-            MNodeView startNodeView = startPort.node as MNodeView;
+            NodeView startNodeView = startPort.node as NodeView;
 
             if (startNodeView == null) return validPorts;
 
@@ -291,7 +291,7 @@ namespace BehaviourAPI.Unity.Editor
                 if (startPort.direction == port.direction) continue;
                 if (startPort.node == port.node) continue;
 
-                MNodeView otherNodeView = port.node as MNodeView;
+                NodeView otherNodeView = port.node as NodeView;
 
                 if (bannedNodes.Contains(otherNodeView.data)) continue;
                 if (startPort.direction == Direction.Input && !port.portType.IsAssignableFrom(startPort.portType)) continue;
@@ -325,7 +325,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             NodeDrawer drawer = NodeDrawer.Create(nodeData.node);
             var index = graphData.nodes.IndexOf(nodeData);
-            MNodeView mNodeView = new MNodeView(nodeData, drawer, this, m_EdgeConnectorListener, m_CurrentGraphNodesProperty?.GetArrayElementAtIndex(index));
+            NodeView mNodeView = new NodeView(nodeData, drawer, this, m_EdgeConnectorListener, m_CurrentGraphNodesProperty?.GetArrayElementAtIndex(index));
             
             if(m_EditorWindow.IsRuntime)
             {
@@ -340,11 +340,11 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (nodeData.node != null && nodeData.node.MaxInputConnections == 0) return;
 
-            if (!m_NodeViewMap.TryGetValue(nodeData.id, out MNodeView sourceNodeView)) return;
+            if (!m_NodeViewMap.TryGetValue(nodeData.id, out NodeView sourceNodeView)) return;
 
             for (int i = 0; i < nodeData.childIds.Count; i++)
             {
-                if (!m_NodeViewMap.TryGetValue(nodeData.childIds[i], out  MNodeView targetNodeView)) return;
+                if (!m_NodeViewMap.TryGetValue(nodeData.childIds[i], out  NodeView targetNodeView)) return;
 
                 Port sourcePort = sourceNodeView.GetBestPort(targetNodeView, Direction.Output);
                 Port targetPort = targetNodeView.GetBestPort(sourceNodeView, Direction.Input);
@@ -388,7 +388,7 @@ namespace BehaviourAPI.Unity.Editor
             List<int> selectedNodeIndex = new List<int>();
             for(int i = 0; i < selection.Count; i++)
             {
-                if (selection[i] is MNodeView nodeView)
+                if (selection[i] is NodeView nodeView)
                 {
                     int id = graphData.nodes.IndexOf(nodeView.data);
                     selectedNodeIndex.Add(id);
@@ -424,7 +424,7 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Change the index of a node.
         /// </summary>
-        public void SetNodeAsFirst(MNodeView nodeView)
+        public void SetNodeAsFirst(NodeView nodeView)
         {
             m_EditorWindow.RegisterOperation("Change first node");
             graphData.nodes.MoveAtFirst(nodeView.data);
@@ -457,7 +457,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             foreach (var elem in selection)
             {
-                if(elem is MNodeView nodeView)
+                if(elem is NodeView nodeView)
                 {
                     nodeView.RefreshDisplay();
                 }

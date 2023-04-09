@@ -8,7 +8,7 @@ namespace BehaviourAPI.Unity.Editor
 
     public abstract class NodeDrawer
     {
-        protected MNodeView view;
+        protected NodeView view;
         protected Node node;
 
         public abstract string LayoutPath { get; }
@@ -18,7 +18,7 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         /// <param name="view">The view that the drawer uses.</param>
         /// <param name="node">The node that the drawer represents.</param>
-        public void SetView(MNodeView view, Node node)
+        public void SetView(NodeView view, Node node)
         {
             this.view = view;
             this.node = node;
@@ -34,7 +34,7 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public abstract void DrawNodeDetails();
 
-        public abstract PortView GetPort(MNodeView nodeView, Direction direction);
+        public abstract PortView GetPort(NodeView nodeView, Direction direction);
 
         #region --------------------------------------------- Events ---------------------------------------------
 

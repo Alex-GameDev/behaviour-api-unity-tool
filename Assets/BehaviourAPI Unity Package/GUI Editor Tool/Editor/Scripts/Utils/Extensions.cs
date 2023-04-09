@@ -74,13 +74,13 @@ namespace BehaviourAPI.Unity.Editor
         {
             switch(statusFlags)
             {
-                 case StatusFlags.Active: return "always";
-                case StatusFlags.Success: return "finish with success";
-                case StatusFlags.Failure: return "finish with failure";
-                case StatusFlags.Finished: return "finish";
-                case StatusFlags.NotSuccess: return "Not finish with success";
-                case StatusFlags.NotFailure: return "Not finish with failure";
-                default: return "never";
+                case StatusFlags.None: return "never";
+                case StatusFlags.Success: return "when finish with success";
+                case StatusFlags.Failure: return "when finish with failure";
+                case StatusFlags.Finished: return "when finish";
+                case StatusFlags.NotSuccess: return "when not finished with success";
+                case StatusFlags.NotFailure: return "when not finished with failure";
+                default: return "always";
             }
         }
 

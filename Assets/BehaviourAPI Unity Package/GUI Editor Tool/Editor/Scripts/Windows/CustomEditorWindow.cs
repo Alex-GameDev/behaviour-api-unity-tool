@@ -19,7 +19,7 @@ namespace BehaviourAPI.Unity.Editor
     {
         private static readonly Vector2 k_MinWindowSize = new Vector2(500, 300);
         private static readonly string k_WindowTitle = "Behaviour System Editor";
-        private static readonly string k_WindowPath = "gwindow.uxml";
+        private static readonly string k_WindowPath = "Windows/behavioursystemeditorwindow.uxml";
 
         static readonly string[] k_inspectorOptions = new string[]
         {
@@ -64,7 +64,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private DropdownField selectGraphDropdown;
 
-        private GraphDataView graphDataView;
+        private BehaviourGraphView graphDataView;
 
         CreateGraphPanel createGraphPanel;
         GenerateScriptPanel generateScriptPanel;
@@ -120,12 +120,11 @@ namespace BehaviourAPI.Unity.Editor
 
         private void CreateGUI()
         {
-            string windowAssetFullPath = BehaviourAPISettings.instance.EditorLayoutsPath + k_WindowPath;
-            var windowAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(windowAssetFullPath);
+            var windowAsset = BehaviourAPISettings.instance.GetLayoutAsset(k_WindowPath);
 
             if (!windowAsset)
             {
-                Debug.LogWarning($"Window layout path was not found ({windowAssetFullPath}). Check the path in BehaviourAPISettings script");
+                Debug.LogWarning($"Window layout path was not found. Check the path in BehaviourAPISettings script");
                 return;
             }
 
@@ -172,7 +171,7 @@ namespace BehaviourAPI.Unity.Editor
 
             m_InspectorContainer.onGUIHandler = OnGUIHandler;
 
-            graphDataView = new GraphDataView(this);
+            graphDataView = new BehaviourGraphView(this);
             graphDataView.StretchToParentSize();
             var graphContainer = rootVisualElement.Q("bw-graph");
             graphContainer.Insert(0, graphDataView);

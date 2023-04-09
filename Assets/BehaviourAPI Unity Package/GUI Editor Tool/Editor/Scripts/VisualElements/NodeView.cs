@@ -18,7 +18,7 @@ namespace BehaviourAPI.Unity.Editor
     /// <summary>
     /// 
     /// </summary>
-    public class MNodeView : UnityEditor.Experimental.GraphView.Node
+    public class NodeView : UnityEditor.Experimental.GraphView.Node
     {
         public NodeData data;
         
@@ -38,20 +38,20 @@ namespace BehaviourAPI.Unity.Editor
 
         TextField m_TitleInputField;
 
-        public GraphDataView graphView
+        public BehaviourGraphView graphView
         {
             get
             {
-                if (m_graphView == null) m_graphView = GetFirstAncestorOfType<GraphDataView>();
+                if (m_graphView == null) m_graphView = GetFirstAncestorOfType<BehaviourGraphView>();
                 return m_graphView;
             }
         }
 
-        private GraphDataView m_graphView;
+        private BehaviourGraphView m_graphView;
         IEdgeConnectorListener edgeConnector;
 
         
-        public MNodeView(NodeData data, NodeDrawer drawer, GraphDataView graphView, IEdgeConnectorListener edgeConnector, SerializedProperty property = null) : base(drawer.LayoutPath)
+        public NodeView(NodeData data, NodeDrawer drawer, BehaviourGraphView graphView, IEdgeConnectorListener edgeConnector, SerializedProperty property = null) : base(drawer.LayoutPath)
         {
             this.data = data;
             this.drawer = drawer;
@@ -134,8 +134,10 @@ namespace BehaviourAPI.Unity.Editor
                 ActionView.Update(actionAssignable.ActionReference.GetActionInfo());
             }
             if (data.node is IPerceptionAssignable perceptionAssignable)
-            {                
-                PerceptionView.Update(perceptionAssignable.PerceptionReference.GetPerceptionInfo());
+            {
+                var perceptionInfo = perceptionAssignable.PerceptionReference.GetPerceptionInfo();
+                if (string.IsNullOrWhiteSpace(perceptionInfo)) perceptionInfo = "true";
+                PerceptionView.Update("if " + perceptionInfo);
             }
             drawer.OnRefreshDisplay();
 
@@ -186,7 +188,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (updateData)
                 {
-                    var other = edgeView.input.node as MNodeView;
+                    var other = edgeView.input.node as NodeView;
                     data.childIds.Add(other.data.id);
                 }
                 OutputConnectionViews.Add(edgeView);
@@ -196,7 +198,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (updateData)
                 {
-                    var other = edgeView.output.node as MNodeView;
+                    var other = edgeView.output.node as NodeView;
                     data.parentIds.Add(other.data.id);
                 }
                 InputConnectionViews.Add(edgeView);
@@ -215,7 +217,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (updateData)
                 {
-                    var other = edgeView.input.node as MNodeView;
+                    var other = edgeView.input.node as NodeView;
                     data.childIds.Remove(other.data.id);
                 }
                 OutputConnectionViews.Remove(edgeView);
@@ -225,7 +227,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (updateData)
                 {
-                    var other = edgeView.output.node as MNodeView;
+                    var other = edgeView.output.node as NodeView;
                     data.parentIds.Remove(other.data.id);
                 }
                 InputConnectionViews.Remove(edgeView);
@@ -253,7 +255,7 @@ namespace BehaviourAPI.Unity.Editor
             else
             {
                 portCapacity = Port.Capacity.Multi;
-                portType = typeof(MNodeView); // Any invalid type
+                portType = typeof(NodeView); // Any invalid type
             }
 
             var port = PortView.Create(orientation, direction, portCapacity, portType, edgeConnector);
@@ -348,7 +350,7 @@ namespace BehaviourAPI.Unity.Editor
 
         #endregion
 
-        public Port GetBestPort(MNodeView targetNodeView, Direction direction) => drawer.GetPort(targetNodeView, direction);
+        public Port GetBestPort(NodeView targetNodeView, Direction direction) => drawer.GetPort(targetNodeView, direction);
 
         public VisualElement Find(string name) => this.Q(name);
 
@@ -409,7 +411,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 foreach (var edgeView in OutputConnectionViews)
                 {
-                    var target = (edgeView.input.node as MNodeView).data;
+                    var target = (edgeView.input.node as NodeView).data;
                     int idx = childs.IndexOf(target.id);
                     edgeView.control.UpdateIndex(idx + 1);
                 }

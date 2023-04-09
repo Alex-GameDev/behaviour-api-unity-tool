@@ -9,7 +9,7 @@ namespace BehaviourAPI.Unity.Editor
 {
     public class AlertWindow : EditorWindow
     {
-        private static string path => BehaviourAPISettings.instance.EditorLayoutsPath + "/windows/alertwindow.uxml";
+        private static string path => "windows/alertwindow.uxml";
 
         private static readonly Vector2 k_Offset = new Vector2(50,50);
 
@@ -36,7 +36,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public void CreateGUI()
         {
-            var windownFromUXML = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(path);
+            var windownFromUXML = BehaviourAPISettings.instance.GetLayoutAsset(path);
             windownFromUXML.CloneTree(rootVisualElement);
 
             var label = rootVisualElement.Q<Label>("aw-question-label");

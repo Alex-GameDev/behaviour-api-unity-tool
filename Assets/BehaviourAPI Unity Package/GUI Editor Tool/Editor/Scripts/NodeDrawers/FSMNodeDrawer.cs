@@ -19,7 +19,7 @@ namespace BehaviourAPI.Unity.Editor
 
         VisualElement rootIcon;
 
-        public override string LayoutPath => BehaviourAPISettings.instance.EditorLayoutsPath + "Nodes/CG Node.uxml";
+        public override string LayoutPath => BehaviourAPISettings.instance.EditorLayoutsPath + "Nodes/cyclicgraphnode.uxml";
 
         public override void DrawNodeDetails()
         {
@@ -106,7 +106,7 @@ namespace BehaviourAPI.Unity.Editor
             iconElement.Add(new Label(text));
         }
 
-        public override PortView GetPort(MNodeView other, Direction dir)
+        public override PortView GetPort(NodeView other, Direction dir)
         {
             if(dir == Direction.Input)
             {
@@ -252,7 +252,7 @@ namespace BehaviourAPI.Unity.Editor
 
             foreach (var edgeView in view.OutputConnectionViews)
             {
-                var other = edgeView.input.node as MNodeView;
+                var other = edgeView.input.node as NodeView;
 
                 var newOutputPort = view.GetBestPort(other, Direction.Output);
                 if(newOutputPort != edgeView.output)
@@ -273,7 +273,7 @@ namespace BehaviourAPI.Unity.Editor
 
             foreach (var edgeView in view.InputConnectionViews)
             {
-                var other = edgeView.output.node as MNodeView;
+                var other = edgeView.output.node as NodeView;
 
                 var newOutputPort = other.GetBestPort(view, Direction.Output);
                 if (newOutputPort != edgeView.output)
@@ -300,7 +300,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 case Transition t:
                     var flagsDisplay = t.StatusFlags.DisplayInfo();
-                    view.CustomView.Update("Check when " + flagsDisplay);
+                    view.CustomView.Update("Check " + flagsDisplay);
                     break;
             }
         }

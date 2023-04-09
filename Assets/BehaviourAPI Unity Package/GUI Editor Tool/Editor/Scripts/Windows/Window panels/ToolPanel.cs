@@ -10,7 +10,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public ToolPanel(string relativePath)
         {
-            VisualTreeAsset asset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(BehaviourAPISettings.instance.EditorLayoutsPath + relativePath);
+            VisualTreeAsset asset = BehaviourAPISettings.instance.GetLayoutAsset("Panels/" + relativePath);
             asset.CloneTree(this);
             this.StretchToParentSize();
 

@@ -785,7 +785,7 @@ MonoBehaviour:
         - ec2c6e8d-e9ab-4728-9fed-d0f2390d3959
       - name: Pizza factor
         id: ec2c6e8d-e9ab-4728-9fed-d0f2390d3959
-        position: {x: 3, y: 49}
+        position: {x: 0, y: 0}
         node:
           rid: 6537695503399780398
         parentIds:

@@ -12,7 +12,7 @@ namespace BehaviourAPI.Unity.Editor
 
         TextField graphNameField;
 
-        public CreateGraphPanel(Action<string, Type> onCreategraphCallback) : base("/creategraphpanel.uxml")
+        public CreateGraphPanel(Action<string, Type> onCreategraphCallback) : base("creategraphpanel.uxml")
         {
             Button createBtn = this.Q<Button>("cgp-create-btn");
             createBtn.clicked += OnCreateButton;
