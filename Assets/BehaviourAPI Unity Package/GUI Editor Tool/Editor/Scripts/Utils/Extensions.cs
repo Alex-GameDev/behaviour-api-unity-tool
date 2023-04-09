@@ -10,6 +10,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityAction = BehaviourAPI.UnityExtensions.UnityAction;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -110,8 +112,8 @@ namespace BehaviourAPI.Unity.Editor
 
                     for (int i = 0; i < properties.Length; i++)
                     {
-                        Debug.Log(properties[i].Name);
-                        info = info.Replace($"${properties[i].Name}", properties[i].GetValue(unityAction).ToString());
+                        string value = GetPropertyDisplay(properties[i].GetValue(unityAction));
+                        info = info.Replace($"${properties[i].Name}", value);
                     }
                     return info;
 
@@ -162,7 +164,8 @@ namespace BehaviourAPI.Unity.Editor
 
                     for(int i = 0; i < properties.Length; i++)
                     {
-                        info = info.Replace($"${properties[i].Name}", properties[i].GetValue(unityPerception).ToString());
+                        string value = GetPropertyDisplay(properties[i].GetValue(unityPerception));
+                        info = info.Replace($"${properties[i].Name}", value);
                     }
                     return info;
 
@@ -180,6 +183,19 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (string.IsNullOrWhiteSpace(contextMethod.methodName)) return null;
             return $"{(string.IsNullOrEmpty(contextMethod.componentName) ? "$runner" : contextMethod.componentName)}.{contextMethod.methodName};";
+        }
+
+
+        private static string GetPropertyDisplay(object property)
+        {
+            switch (property)
+            {
+                case Color color:
+                    var colorTag = $"#{ColorUtility.ToHtmlStringRGB(color)}";
+                    return $"<color={colorTag}>color</color>";
+                default:
+                    return property.ToString();
+            }
         }
 
 
