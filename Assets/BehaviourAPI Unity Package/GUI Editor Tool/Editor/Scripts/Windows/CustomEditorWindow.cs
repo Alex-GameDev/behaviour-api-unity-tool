@@ -98,6 +98,8 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Open the window without a behaviour system assigned.
         /// </summary>
+
+        [MenuItem("BehaviourAPI/Open editor window")]
         public static void Create()
         {
             CustomEditorWindow window = GetWindow<CustomEditorWindow>();

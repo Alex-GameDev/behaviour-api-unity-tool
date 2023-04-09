@@ -431,6 +431,7 @@ namespace BehaviourAPI.Unity.Editor
             m_CurrentGraphNodesProperty.serializedObject.Update();
 
             RefreshViews();
+            RefreshProperties();
         }
 
         private void RefreshViews()
