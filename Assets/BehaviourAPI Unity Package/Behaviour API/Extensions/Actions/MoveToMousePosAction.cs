@@ -10,12 +10,22 @@ namespace BehaviourAPI.UnityExtensions
     [SelectionGroup("MOVEMENT")]
     public class MoveToMousePosAction : UnityAction
     {
+        /// <summary>
+        /// The movement speed of the agent when moving
+        /// </summary>
         public float speed;
 
+        /// <summary>
+        /// Create a new MoveToMousePosAction
+        /// </summary>
         public MoveToMousePosAction()
         {
         }
 
+        /// <summary>
+        /// Create a new MoveToMousePosAction
+        /// </summary>
+        /// <param name="speed">The movement speed of the agent when moving.</param>
         public MoveToMousePosAction(float speed)
         {
             this.speed = speed;

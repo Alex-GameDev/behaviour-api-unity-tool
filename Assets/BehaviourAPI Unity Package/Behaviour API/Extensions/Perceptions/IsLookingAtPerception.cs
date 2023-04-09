@@ -2,11 +2,29 @@ using UnityEngine;
 
 namespace BehaviourAPI.UnityExtensions
 {
+    /// <summary>
+    /// Check if the agent is looking an object
+    /// </summary>
     public class IsLookingAtPerception : UnityPerception
     {
+        /// <summary>
+        /// The transform that the agent is looking at.
+        /// </summary>
         public Transform OtherTransform;
 
-        public float minDist, maxDist;
+        /// <summary>
+        /// The minimum distance the object is visible.
+        /// </summary>
+        public float minDist;
+
+        /// <summary>
+        /// The maximum distance the object is visible.
+        /// </summary>            
+        public float maxDist;
+
+        /// <summary>
+        /// The angle field of view.
+        /// </summary>
         public float maxAngle;
 
         public override bool Check()

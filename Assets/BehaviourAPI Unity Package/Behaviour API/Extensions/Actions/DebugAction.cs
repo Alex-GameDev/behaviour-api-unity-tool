@@ -3,23 +3,27 @@ using UnityEngine;
 namespace BehaviourAPI.UnityExtensions
 {
     using Core;
+
+    /// <summary>
+    /// Action to print a message in the debug console.
+    /// </summary>
     public class DebugAction : UnityAction
     {
+        /// <summary>
+        /// The message printed
+        /// </summary>
         public string message;
 
         public override string DisplayInfo => "Debug Log \"$message\"";
 
-        public DebugAction()
-        {
-        }
 
+        /// <summary>
+        /// Create a DebugAction
+        /// </summary>
+        /// <param name="message">The message printed</param>
         public DebugAction(string message)
         {
             this.message = message;
-        }
-
-        public override void Start()
-        {
         }
 
         public override Status Update()
@@ -27,11 +31,5 @@ namespace BehaviourAPI.UnityExtensions
             Debug.Log(message, context.GameObject);
             return Status.Success;
         }
-
-        public override void Stop()
-        {
-        }
-
-
     }
 }

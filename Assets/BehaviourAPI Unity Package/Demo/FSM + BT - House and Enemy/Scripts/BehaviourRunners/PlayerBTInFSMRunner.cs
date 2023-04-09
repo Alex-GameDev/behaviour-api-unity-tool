@@ -41,7 +41,7 @@ namespace BehaviourAPI.Unity.Demo
             var doorState = fsm.CreateState("Go to home", new WalkAction(_doorPos, 5f)); // Caminar hacia la casa
             var keyState = fsm.CreateState("Search key", new SubsystemAction(bt));      // Subarbol de buscar la llave
             var houseState = fsm.CreateState("Enter the house", new FunctionalAction(EnterTheHouse));                        // Destroy
-            var runState = fsm.CreateState("Runaway", new FleeAction(8f, 10f, 3f));
+            var runState = fsm.CreateState("Runaway", new FleeAction(_enemyTransform, 8f, 10f, 3f));
 
             // Cuando llega a la puerta comprueba si tiene la llave
             fsm.CreateTransition("Success to enter", doorState, keyState, statusFlags: StatusFlags.Finished);

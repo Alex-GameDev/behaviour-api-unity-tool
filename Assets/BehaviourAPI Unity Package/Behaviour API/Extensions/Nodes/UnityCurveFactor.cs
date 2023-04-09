@@ -9,6 +9,9 @@ namespace BehaviourAPI.UnityExtensions
     /// </summary>
     public class UnityCurveFactor : CurveFactor
     {
+        /// <summary>
+        /// The curve that represents the function.
+        /// </summary>
         public AnimationCurve curve;
 
         protected override float Evaluate(float childUtility)

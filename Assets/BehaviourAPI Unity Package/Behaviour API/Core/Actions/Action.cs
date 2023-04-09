@@ -10,7 +10,7 @@ namespace BehaviourAPI.Core.Actions
         /// <summary>
         /// Initialize the action. 
         /// </summary>
-        public abstract void Start();
+        public virtual void Start() { }
 
         /// <summary>
         /// Executes the action. 
@@ -20,7 +20,7 @@ namespace BehaviourAPI.Core.Actions
         /// <summary>
         /// Reset the action. 
         /// </summary>
-        public abstract void Stop();
+        public virtual void Stop() { }
 
         /// <summary>
         /// Specifies the action execution context
