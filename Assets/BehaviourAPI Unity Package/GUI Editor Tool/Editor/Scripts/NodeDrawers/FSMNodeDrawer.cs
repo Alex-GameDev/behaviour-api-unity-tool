@@ -41,6 +41,19 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void OnConnected(EdgeView edgeView)
         {
+            Direction dir = edgeView.input.node == view ? Direction.Input : Direction.Output;
+
+            if(dir == Direction.Input && node.MaxInputConnections == 1)
+            {
+                inputUniquePort = edgeView.input as PortView;
+                InputPorts.ForEach(p => { if (p != inputUniquePort) p.Disable(); });
+            }
+            else if(dir == Direction.Output && node.MaxOutputConnections == 1)
+            {
+                outputUniquePort = edgeView.output as PortView;
+                OutputPorts.ForEach(p => { if (p != outputUniquePort) p.Disable(); });
+            }
+
             if (edgeView.input.node != view || !view.graphView.IsRuntime) return;
 
             if (view.InputConnectionViews.Count == 1 && node is Transition transition)
@@ -49,6 +62,23 @@ namespace BehaviourAPI.Unity.Editor
                 OnSourceStateLastStatusChanged(transition.SourceStateLastStatus);
             }
         }
+
+        public override void OnDisconnected(EdgeView edgeView)
+        {
+            Direction dir = edgeView.input.node == view ? Direction.Input : Direction.Output;
+
+            if (dir == Direction.Input && node.MaxInputConnections == 1)
+            {
+                inputUniquePort = null;
+                InputPorts.ForEach(p => p.Enable());
+            }
+            else if(dir == Direction.Output && node.MaxOutputConnections == 1)
+            {
+                outputUniquePort = null;
+                OutputPorts.ForEach(p => p.Enable());
+            }
+        }
+
         private void OnSourceStateLastStatusChanged(Status status)
         {
             var edgeView = view.InputConnectionViews[0];
@@ -214,7 +244,13 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void OnMoved()
         {
-            foreach(var edgeView in view.OutputConnectionViews)
+            inputUniquePort = null;
+            InputPorts.ForEach(p => p.Enable());
+
+            outputUniquePort = null;
+            OutputPorts.ForEach(p => p.Enable());
+
+            foreach (var edgeView in view.OutputConnectionViews)
             {
                 var other = edgeView.input.node as MNodeView;
 

@@ -224,7 +224,6 @@ namespace BehaviourAPI.Unity.Editor
                 m_CurrentGraphNodesProperty.serializedObject.Update();
 
             DataChanged?.Invoke();
-            Debug.Log("Updated");
         }
 
         private void CreateNode(Type type, Vector2 pos)
