@@ -82,7 +82,6 @@ namespace BehaviourAPI.Unity.Editor
         private void OnEnable()
         {
             Undo.undoRedoPerformed += OnUndoOperationPreformed;
-            instance = this;
         }
 
         private void OnDisable()
@@ -105,6 +104,7 @@ namespace BehaviourAPI.Unity.Editor
             CustomEditorWindow window = GetWindow<CustomEditorWindow>();
             window.minSize = k_MinWindowSize;
             window.titleContent = new GUIContent(k_WindowTitle);
+            instance = window;
         }
 
         /// <summary>
@@ -117,6 +117,7 @@ namespace BehaviourAPI.Unity.Editor
             CustomEditorWindow window = GetWindow<CustomEditorWindow>();
             window.minSize = k_MinWindowSize;
             window.titleContent = new GUIContent(k_WindowTitle);
+            instance = window;
             window.UpdateSystem(system, runtime);
         }
 
@@ -299,7 +300,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     var graph = System.Data.graphs[i];
                     var graphName = string.IsNullOrWhiteSpace(graph.name) ? "unnamed" : graph.name;
-                    selectGraphDropdown.choices.Add((i + 1) + "\\" + System.Data.graphs.Count + " - " + graphName);          
+                    selectGraphDropdown.choices.Add((i + 1) + " - " + graphName);          
                 }
 
                 if(selectedGraphIndex < 0 || selectedGraphIndex >= System.Data.graphs.Count)
