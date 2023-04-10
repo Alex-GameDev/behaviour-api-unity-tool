@@ -12,46 +12,49 @@ namespace BehaviourAPI.Unity.Editor
     public abstract class GraphAdapter
     {
         /// <summary>
-        /// 
+        /// Get the node hierarchy of the graph. Used to display de node creation window.
         /// </summary>
         public EditorHierarchyNode NodeHierarchy { get; private set; }
 
         /// <summary>
-        /// 
+        /// Path to the icon file displayed in the graph creation panel. Override to set a custom icon.
         /// </summary>
         public virtual string IconPath => BehaviourAPISettings.instance.IconPath + "Graphs/default.png";
 
         /// <summary>
-        /// 
+        /// Create the supported hierarchy of the graph
         /// </summary>
-        /// <param name="graphType"></param>
-        /// <param name="nodeTypes"></param>
+        /// <param name="graphType">The graph type./param>
+        /// <param name="nodeTypes">The list of available node types.</param>
         public void BuildSupportedHerarchy(Type graphType, List<Type> nodeTypes)
         {
             var validTypes = GetValidNodeTypes(graphType, nodeTypes);
             NodeHierarchy = CreateNodeHierarchy(graphType, validTypes);
         }
 
+        /// <summary>
+        /// Compute the position of the nodes of the graph
+        /// </summary>
+        /// <param name="graphData">The graph data that contains the nodes.</param>
         public abstract void AutoLayout(GraphData graphData);
 
         /// <summary>
-        /// 
+        /// Gets the node hierarchy of the graph.
         /// </summary>
-        /// <param name="graphtype"></param>
-        /// <param name="types"></param>
+        /// <param name="graphType">The graph type./param>
+        /// <param name="nodeTypes">The list of available node types.</param>
         /// <returns></returns>
-        protected abstract EditorHierarchyNode CreateNodeHierarchy(Type graphtype, List<Type> types);
+        protected abstract EditorHierarchyNode CreateNodeHierarchy(Type graphType, List<Type> nodeTypes);
 
         #region ----------------- Static methods ----------------
-
 
         private static Dictionary<Type, GraphAdapter> factoryCache = new Dictionary<Type, GraphAdapter>();
 
         /// <summary>
-        /// 
+        /// Get the adapter assigned to the graph type. Create it if didn't exist yet.
         /// </summary>
-        /// <param name="graphType"></param>
-        /// <returns></returns>
+        /// <param name="graphType">The graph type.</param>
+        /// <returns>The graph adapter corresponding to the graph type.</returns>
         public static GraphAdapter GetAdapter(Type graphType)
         {
             var metadata = BehaviourAPISettings.instance.Metadata;
@@ -80,7 +83,7 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        static List<Type> GetValidNodeTypes(Type graphType, List<Type> nodeTypes)
+        private static List<Type> GetValidNodeTypes(Type graphType, List<Type> nodeTypes)
         {
             var graph = (BehaviourGraph)Activator.CreateInstance(graphType);
             List<Type> validNodeTypes = new List<Type>();

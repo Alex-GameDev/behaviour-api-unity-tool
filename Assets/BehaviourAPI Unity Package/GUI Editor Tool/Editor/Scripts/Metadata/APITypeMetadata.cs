@@ -42,6 +42,9 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public Dictionary<string, Type> componentMap { get; private set; } = new Dictionary<string, Type>();
 
+        /// <summary>
+        /// List of all node types available in the editor tool.
+        /// </summary>
         public List<Type> NodeTypes = new List<Type>();
 
         /// <summary>
@@ -123,30 +126,26 @@ namespace BehaviourAPI.Unity.Editor
                 }
             }
 
+            BuildNodeDrawerMap(nodeTypes, nodeDrawerMainTypeMap);
+            BuildNodeDrawerMap(nodeAdapterTypes, nodeDrawerMainTypeMap);
+
             nodeTypes.RemoveWhere((t) => nodeAdaptedTypes.Any(tb => tb.IsAssignableFrom(t)));
             nodeTypes.UnionWith(nodeAdapterTypes);
 
             NodeTypes = nodeTypes.ToList();
             BuildGraphAdapterMap(graphTypes, graphAdapterMainTypeMap);
-            BuildNodeDrawerMap(NodeTypes, nodeDrawerMainTypeMap);         
+      
             BuildActionHierarchy(actionTypes);
             BuildPerceptionHierarchy(perceptionTypes);
 
             Debug.Log((DateTime.Now - time).TotalMilliseconds);
-
-            //Debug.Log("Actions: " + actionTypes.Count);
-            //Debug.Log("Perceptions: " + perceptionTypes.Count);
-            //Debug.Log("Nodes: " + nodeTypes.Count);
-
-
-            Debug.Log((DateTime.Now - time).TotalMilliseconds);
         }
 
-        private void BuildNodeDrawerMap(List<Type> nodeTypes, Dictionary<Type, Type> nodeDrawerMainTypeMap)
+        private void BuildNodeDrawerMap(IEnumerable<Type> nodeTypes, Dictionary<Type, Type> nodeDrawerMainTypeMap)
         {
-            for (int i = 0; i < nodeTypes.Count; i++)
+            foreach(Type nodeType in nodeTypes)
             {
-                var type = nodeTypes[i];
+                var type = nodeType;
 
                 if (type.IsAbstract) continue;
 
@@ -155,7 +154,7 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     if (nodeDrawerMainTypeMap.TryGetValue(type, out Type drawerType))
                     {
-                        NodeDrawerTypeMap[nodeTypes[i]] = drawerType;
+                        NodeDrawerTypeMap[nodeType] = drawerType;
                         mainTypeFound = true;
                     }
                     else
@@ -166,17 +165,17 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        private void BuildGraphAdapterMap(List<Type> graphTypes, Dictionary<Type, Type> graphAdapterMainTypeMap)
+        private void BuildGraphAdapterMap(IEnumerable<Type> graphTypes, Dictionary<Type, Type> graphAdapterMainTypeMap)
         {
-            for (int i = 0; i < graphTypes.Count; i++)
+            foreach (Type graphType in graphTypes)
             {
-                var type = graphTypes[i];
+                var type = graphType;
                 bool mainTypeFound = false;
                 while (type != typeof(BehaviourGraph) && !mainTypeFound)
                 {
                     if (graphAdapterMainTypeMap.TryGetValue(type, out Type adapterType))
                     {
-                        GraphAdapterMap[graphTypes[i]] = adapterType;
+                        GraphAdapterMap[graphType] = adapterType;
                         mainTypeFound = true;
                     }
                     else
