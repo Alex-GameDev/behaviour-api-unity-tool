@@ -16,11 +16,11 @@ MonoBehaviour:
   CustomAssemblies: 
   GenerateScriptDefaultPath: Assets/Scripts/
   GenerateScriptDefaultName: NewBehaviourRunner
-  LeafNodeColor: {r: 1, g: 0.4324402, b: 0.1490196, a: 1}
+  LeafNodeColor: {r: 1, g: 0.45, b: 0.15, a: 1}
   DecoratorColor: {r: 0.34950158, g: 0.9622642, b: 0.7519771, a: 1}
   CompositeColor: {r: 0.24350302, g: 0.7011542, b: 0.9056604, a: 1}
   StateColor: {r: 1, g: 0.43137258, b: 0.14901961, a: 1}
-  TransitionColor: {r: 0.65241194, g: 0.7336611, b: 0.764151, a: 1}
+  TransitionColor: {r: 0.65, g: 0.7, b: 0.75, a: 1}
   LeafFactorColor: {r: 0.4575472, g: 0.74791014, b: 1, a: 1}
   CurveFactorColor: {r: 0.41717446, g: 0.3972499, b: 0.745283, a: 1}
   FusionFactorColor: {r: 0.7074133, g: 0.27033645, b: 0.7075472, a: 1}

@@ -11,16 +11,16 @@ namespace BehaviourAPI.Unity.Editor
     {
         #region ------------------------- Default values ------------------------
 
-        private static readonly Color k_LeafNodeColor = new Color(1f, 0.65f, 0.15f, 1f);
-        private static readonly Color k_DecoratorColor = new Color(1f, 0.65f, 0.15f, 1f);
-        private static readonly Color k_CompositeColor = new Color(1f, 0.65f, 0.15f, 1f);
-        private static readonly Color k_StateColor = new Color(1f, 0.65f, 0.15f, 1f);
-        private static readonly Color k_TransitionColor = new Color(1f, 0.65f, 0.15f, 1f);
-        private static readonly Color k_LeafFactorColor = new Color(1f, 0.65f, 0.15f, 1f);
-        private static readonly Color k_CurveFactorColor = new Color(1f, 0.65f, 0.15f, 1f);
-        private static readonly Color k_FusionFactorColor = new Color(1f, 0.65f, 0.15f, 1f);
-        private static readonly Color k_SelectableNodeColor = new Color(1f, 0.65f, 0.15f, 1f);
-        private static readonly Color k_BucketColor = new Color(1f, 0.65f, 0.15f, 1f);
+        private static readonly Color k_LeafNodeColor = new Color(1f, 0.45f, 0.15f, 1f);
+        private static readonly Color k_DecoratorColor = new Color(0.35f, 0.95f, 0.65f);
+        private static readonly Color k_CompositeColor = new Color(0.25f, 0.7f, 0.9f, 1f);
+        private static readonly Color k_StateColor = new Color(1f, 0.45f, 0.15f, 1f);
+        private static readonly Color k_TransitionColor = new Color(0.65f, 0.7f, 0.75f, 1f);
+        private static readonly Color k_LeafFactorColor = new Color(0.45f, 0.65f, 1f, 1f);
+        private static readonly Color k_CurveFactorColor = new Color(0.4f, 0.4f, 0.75f, 1f);
+        private static readonly Color k_FusionFactorColor = new Color(0.7f, 0.3f, 0.7f, 1f);
+        private static readonly Color k_SelectableNodeColor = new Color(1f, 0.45f, 0.15f, 1f);
+        private static readonly Color k_BucketColor = new Color(0.7f, 0.3f, 0.25f, 1f);
 
         private static readonly string[] k_DefaultAssemblies = new[]
         {
@@ -100,8 +100,8 @@ namespace BehaviourAPI.Unity.Editor
             {
                 Debug.LogWarning("BehaviourAPISettings: Root path doesn't exist. Change the path in ProyectSetting > BehaviourAPI");
             }
-        }  
-        
+        }
+
         /// <summary>
         /// return a uxml file from the layouts folder
         /// </summary>
