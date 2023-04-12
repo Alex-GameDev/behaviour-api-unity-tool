@@ -693,7 +693,7 @@ MonoBehaviour:
       graph:
         rid: 6537695503399780367
       nodes:
-      - name: IteratorNode
+      - name: iter
         id: cc469a5d-59e2-4fab-a68a-eabf50574363
         position: {x: 0, y: 0}
         node:
@@ -701,7 +701,7 @@ MonoBehaviour:
         parentIds: []
         childIds:
         - 89ee794c-bb88-44f0-953a-e1d8f1cede30
-      - name: SequencerNode
+      - name: seq
         id: 89ee794c-bb88-44f0-953a-e1d8f1cede30
         position: {x: 0, y: 200}
         node:
@@ -712,7 +712,7 @@ MonoBehaviour:
         - c3a7b82e-2da1-4c0c-b86f-a0ce040be058
         - e9069775-71da-466d-a1c7-ede7989087e0
         - 0a8c6cd3-4c19-4e7d-9832-a7d7c49cf7be
-      - name: LeafNode
+      - name: recipe
         id: c3a7b82e-2da1-4c0c-b86f-a0ce040be058
         position: {x: -300, y: 400}
         node:
@@ -720,7 +720,7 @@ MonoBehaviour:
         parentIds:
         - 89ee794c-bb88-44f0-953a-e1d8f1cede30
         childIds: []
-      - name: LeafNode
+      - name: create
         id: e9069775-71da-466d-a1c7-ede7989087e0
         position: {x: 0, y: 400}
         node:
@@ -728,7 +728,7 @@ MonoBehaviour:
         parentIds:
         - 89ee794c-bb88-44f0-953a-e1d8f1cede30
         childIds: []
-      - name: LeafNode
+      - name: bake
         id: 0a8c6cd3-4c19-4e7d-9832-a7d7c49cf7be
         position: {x: 300, y: 400}
         node:

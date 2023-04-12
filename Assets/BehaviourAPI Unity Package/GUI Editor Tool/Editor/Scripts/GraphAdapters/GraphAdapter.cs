@@ -2,7 +2,6 @@ using BehaviourAPI.Core;
 using BehaviourAPI.Unity.Framework;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -90,11 +89,10 @@ namespace BehaviourAPI.Unity.Editor
             for (int i = 0; i < nodeTypes.Count; i++)
             {
                 var node = (Node)Activator.CreateInstance(nodeTypes[i]);
-                if(node.GraphType.IsAssignableFrom(graphType) && graph.NodeType.IsAssignableFrom(nodeTypes[i]))
+                if (node.GraphType.IsAssignableFrom(graphType) && graph.NodeType.IsAssignableFrom(nodeTypes[i]))
                 {
                     validNodeTypes.Add(nodeTypes[i]);
                 }
-
             }
             return validNodeTypes;
         }

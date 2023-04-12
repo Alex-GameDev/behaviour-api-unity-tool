@@ -1,5 +1,3 @@
-using UnityEngine;
-using UnityEditor;
 using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
@@ -26,7 +24,7 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        public void Open(bool canClose = true)
+        public virtual void Open(bool canClose = true)
         {
             this.canClose = canClose;
             this.Enable();

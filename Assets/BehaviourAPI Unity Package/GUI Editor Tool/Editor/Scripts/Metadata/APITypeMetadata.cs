@@ -9,8 +9,8 @@ namespace BehaviourAPI.Unity.Editor
     using Core;
     using Core.Actions;
     using Core.Perceptions;
-    using UnityExtensions;
     using Framework.Adaptations;
+    using UnityExtensions;
 
     /// <summary>
     /// Class that manages all the Type metadata used in the package tools.
@@ -26,7 +26,12 @@ namespace BehaviourAPI.Unity.Editor
         /// Dictionary that relates each non-abstract type of behaviourGraph with
         /// </summary>
         public Dictionary<Type, Type> GraphAdapterMap { get; private set; } = new Dictionary<Type, Type>();
-      
+
+        /// <summary>
+        /// Dictionary that relates each non-abstract type of behaviourGraph with
+        /// </summary>
+        public Dictionary<Type, Type> CodeGeneratorMap { get; private set; } = new Dictionary<Type, Type>();
+
         /// <summary>
         /// The hierarchy node used to select a new <see cref="Action"/> in the creation window.
         /// </summary>
@@ -62,6 +67,7 @@ namespace BehaviourAPI.Unity.Editor
 
             Dictionary<Type, Type> nodeDrawerMainTypeMap = new Dictionary<Type, Type>();
             Dictionary<Type, Type> graphAdapterMainTypeMap = new Dictionary<Type, Type>();
+            Dictionary<Type, Type> graphCodeGeneratorMainTypeMap = new Dictionary<Type, Type>();
 
             HashSet<Type> nodeAdaptedTypes = new HashSet<Type>();
             HashSet<Type> nodeAdapterTypes = new HashSet<Type>();
@@ -72,7 +78,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 Type[] types = assemblies[i].GetTypes();
 
-                for(int j = 0; j < types.Length; j++)
+                for (int j = 0; j < types.Length; j++)
                 {
                     if (types[j].IsAbstract) continue;
 
@@ -109,12 +115,20 @@ namespace BehaviourAPI.Unity.Editor
                             nodeDrawerMainTypeMap[drawerAttribute.NodeType] = types[j];
                         }
                     }
-                    else if(typeof(GraphAdapter).IsAssignableFrom(types[j]))
+                    else if (typeof(GraphAdapter).IsAssignableFrom(types[j]))
                     {
                         var adapterAttribute = types[j].GetCustomAttribute<CustomGraphAdapterAttribute>();
                         if (adapterAttribute != null && typeof(BehaviourGraph).IsAssignableFrom(adapterAttribute.GraphType))
                         {
                             graphAdapterMainTypeMap[adapterAttribute.GraphType] = types[j];
+                        }
+                    }
+                    else if (typeof(GraphCodeGenerator).IsAssignableFrom(types[j]))
+                    {
+                        var generatorAttribute = types[j].GetCustomAttribute<CustomGraphCodeGeneratorAttribute>();
+                        if (generatorAttribute != null && typeof(BehaviourGraph).IsAssignableFrom(generatorAttribute.GraphType))
+                        {
+                            graphCodeGeneratorMainTypeMap[generatorAttribute.GraphType] = types[j];
                         }
                     }
                     else if (typeof(Component).IsAssignableFrom(types[j]))
@@ -133,17 +147,42 @@ namespace BehaviourAPI.Unity.Editor
             nodeTypes.UnionWith(nodeAdapterTypes);
 
             NodeTypes = nodeTypes.ToList();
-            BuildGraphAdapterMap(graphTypes, graphAdapterMainTypeMap);
-      
+            GraphAdapterMap = BuildFullGraphTypeMap(graphTypes, graphAdapterMainTypeMap);
+            CodeGeneratorMap = BuildFullGraphTypeMap(graphTypes, graphCodeGeneratorMainTypeMap);
+
             BuildActionHierarchy(actionTypes);
             BuildPerceptionHierarchy(perceptionTypes);
 
             Debug.Log((DateTime.Now - time).TotalMilliseconds);
         }
 
+        private Dictionary<Type, Type> BuildFullGraphTypeMap(IEnumerable<Type> graphTypes, Dictionary<Type, Type> graphCodeGeneratorMainTypeMap)
+        {
+            var dict = new Dictionary<Type, Type>();
+            foreach (Type graphType in graphTypes)
+            {
+                var type = graphType;
+                bool mainTypeFound = false;
+                while (type != typeof(BehaviourGraph) && !mainTypeFound)
+                {
+                    if (graphCodeGeneratorMainTypeMap.TryGetValue(type, out Type adapterType))
+                    {
+                        dict[graphType] = adapterType;
+                        mainTypeFound = true;
+                    }
+                    else
+                    {
+                        type = type.BaseType;
+                    }
+                }
+            }
+            return dict;
+        }
+
+
         private void BuildNodeDrawerMap(IEnumerable<Type> nodeTypes, Dictionary<Type, Type> nodeDrawerMainTypeMap)
         {
-            foreach(Type nodeType in nodeTypes)
+            foreach (Type nodeType in nodeTypes)
             {
                 var type = nodeType;
 
@@ -155,27 +194,6 @@ namespace BehaviourAPI.Unity.Editor
                     if (nodeDrawerMainTypeMap.TryGetValue(type, out Type drawerType))
                     {
                         NodeDrawerTypeMap[nodeType] = drawerType;
-                        mainTypeFound = true;
-                    }
-                    else
-                    {
-                        type = type.BaseType;
-                    }
-                }
-            }
-        }
-
-        private void BuildGraphAdapterMap(IEnumerable<Type> graphTypes, Dictionary<Type, Type> graphAdapterMainTypeMap)
-        {
-            foreach (Type graphType in graphTypes)
-            {
-                var type = graphType;
-                bool mainTypeFound = false;
-                while (type != typeof(BehaviourGraph) && !mainTypeFound)
-                {
-                    if (graphAdapterMainTypeMap.TryGetValue(type, out Type adapterType))
-                    {
-                        GraphAdapterMap[graphType] = adapterType;
                         mainTypeFound = true;
                     }
                     else
@@ -210,7 +228,7 @@ namespace BehaviourAPI.Unity.Editor
                     groupNode.Childs.Add(actionTypeNode);
                 }
 
-                if(groupAttributes.Count() == 0)
+                if (groupAttributes.Count() == 0)
                 {
                     ungroupedActionNodes.Add(actionTypeNode);
                 }
