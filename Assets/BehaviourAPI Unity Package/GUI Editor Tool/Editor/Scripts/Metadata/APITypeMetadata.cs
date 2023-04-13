@@ -61,6 +61,7 @@ namespace BehaviourAPI.Unity.Editor
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
             List<Type> actionTypes = new List<Type>();
+            List<Type> compoundPerceptionTypes = new List<Type>();
             List<Type> perceptionTypes = new List<Type>();
             HashSet<Type> nodeTypes = new HashSet<Type>();
             List<Type> graphTypes = new List<Type>();
@@ -107,6 +108,10 @@ namespace BehaviourAPI.Unity.Editor
                     {
                         perceptionTypes.Add(types[j]);
                     }
+                    else if (typeof(CompoundPerception).IsAssignableFrom(types[j]))
+                    {
+                        compoundPerceptionTypes.Add(types[j]);
+                    }
                     else if (typeof(NodeDrawer).IsAssignableFrom(types[j]))
                     {
                         var drawerAttribute = types[j].GetCustomAttribute<CustomNodeDrawerAttribute>();
@@ -151,7 +156,7 @@ namespace BehaviourAPI.Unity.Editor
             CodeGeneratorMap = BuildFullGraphTypeMap(graphTypes, graphCodeGeneratorMainTypeMap);
 
             BuildActionHierarchy(actionTypes);
-            BuildPerceptionHierarchy(perceptionTypes);
+            BuildPerceptionHierarchy(perceptionTypes, compoundPerceptionTypes);
 
             Debug.Log((DateTime.Now - time).TotalMilliseconds);
         }
@@ -239,15 +244,16 @@ namespace BehaviourAPI.Unity.Editor
             ActionHierarchy.Childs.Add(unityActionHierarchyNode);
         }
 
-        private void BuildPerceptionHierarchy(List<Type> perceptionTypes)
+        private void BuildPerceptionHierarchy(List<Type> perceptionTypes, List<Type> compoundPerceptionTypes)
         {
             PerceptionHierarchy = new EditorHierarchyNode("Actions", typeof(Perception));
             PerceptionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(CustomPerception)));
 
-            EditorHierarchyNode compoundPerceptionHierarchyNode = new EditorHierarchyNode(typeof(CompoundPerception));
-            compoundPerceptionHierarchyNode.Childs = perceptionTypes.FindAll(typeof(CompoundPerception).IsAssignableFrom)
+            EditorHierarchyNode compoundPerceptionHierarchyNode = new EditorHierarchyNode("Compound perceptions", null);
+            compoundPerceptionHierarchyNode.Childs = compoundPerceptionTypes.FindAll(typeof(CompoundPerception).IsAssignableFrom)
                 .Select(compoundPerceptionType => new EditorHierarchyNode(compoundPerceptionType)).ToList();
 
+            Debug.Log(compoundPerceptionHierarchyNode.Childs.Count);
             PerceptionHierarchy.Childs.Add(compoundPerceptionHierarchyNode);
 
             Dictionary<string, EditorHierarchyNode> groups = new Dictionary<string, EditorHierarchyNode>();
