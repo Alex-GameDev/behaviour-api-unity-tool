@@ -20,13 +20,10 @@ namespace BehaviourAPI.Unity.Editor.Graph
     public class NodeView : UnityEditor.Experimental.GraphView.Node
     {
         private static readonly string k_NameField = "title-input-field";
-        private static readonly string k_Warning = "node-warning";
-        private static readonly string k_Icon = "node-icon";
         private static readonly string k_Status = "node-status";
         private static readonly string k_Border = "node-border";
 
         private static readonly string k_DetailsDiv = "node-details";
-        private static readonly string k_ExtensionDiv = "node-extension-div";
         private static readonly string k_ExtensionToggle = "node-extension-toggle";
         private static readonly string k_ExtensionContainer = "node-extension-content";
 

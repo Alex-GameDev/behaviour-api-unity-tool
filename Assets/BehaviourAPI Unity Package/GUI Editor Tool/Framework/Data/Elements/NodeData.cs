@@ -43,11 +43,11 @@ namespace BehaviourAPI.Unity.Framework
         /// </summary>
         [HideInInspector] public List<string> childIds = new List<string>();
 
-        public NodeData(Type type, UnityEngine.Vector2 position)
+        public NodeData(Type type, Vector2 position)
         {
             this.position = position;
             node = (Node)Activator.CreateInstance(type);
-            name = type.Name;
+            name = "";
             id = Guid.NewGuid().ToString();
         }
 

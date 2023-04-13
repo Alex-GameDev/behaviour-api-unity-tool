@@ -13,8 +13,6 @@ namespace BehaviourAPI.Unity.Editor
 
     public class CodeTemplate
     {
-        private static readonly string k_NullParameter = "null";
-
         private static readonly string[] k_BaseNamespaces = new string[]
         {
             "System",
