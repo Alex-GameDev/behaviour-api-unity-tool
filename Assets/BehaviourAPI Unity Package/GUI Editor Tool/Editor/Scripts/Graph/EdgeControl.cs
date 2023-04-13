@@ -1,13 +1,9 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.UnityExtensions;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 using Vector2 = UnityEngine.Vector2;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.Unity.Editor.Graph
 {
     public class EdgeControl : UnityEditor.Experimental.GraphView.EdgeControl
     {
@@ -37,7 +33,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             var inputDir = Vector2.zero;
             var outputDir = Vector2.zero;
-             
+
             if (edgeView.input is PortView inputPortView)
             {
                 inputDir = inputPortView.Orientation.ToVector();
@@ -67,7 +63,7 @@ namespace BehaviourAPI.Unity.Editor
         public void UpdateIndex(int id)
         {
             edgeNumberLabel.text = id.ToString();
-            if(id == 0)
+            if (id == 0)
             {
                 edgeNumberDiv.Disable();
             }
@@ -81,7 +77,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             edgeStatusLabel.text = status.ToString();
             edgeStatusLabel.style.color = status.ToColor();
-            if(status == Status.None)
+            if (status == Status.None)
             {
                 edgeStatusDiv.Disable();
             }

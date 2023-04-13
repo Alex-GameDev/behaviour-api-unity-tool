@@ -7,7 +7,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.Unity.Editor.Graph
 {
     [CustomNodeDrawer(typeof(FSMNode))]
     public class FSMNodeDrawer : NodeDrawer

@@ -8,10 +8,10 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Vector2 = UnityEngine.Vector2;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.Unity.Editor.Graph
 {
     /// <summary>
-    /// 
+    /// Class used to represent the nodes of a <see cref="GraphData"/> element in a editor window.
     /// </summary>
     public class BehaviourGraphView : GraphView
     {
@@ -29,12 +29,14 @@ namespace BehaviourAPI.Unity.Editor
         #region ---------------------------------------- Properties ---------------------------------------
         public GraphData graphData { get; private set; }
 
-        public bool IsRuntime => m_EditorWindow.IsRuntime;
+        public bool IsRuntime => m_CurrentGraphNodesProperty == null;
 
         public Action DataChanged { get; set; }
         public Action<List<int>> SelectionNodeChanged { get; set; }
 
         public IEdgeConnectorListener Connector => m_EdgeConnectorListener;
+
+        public Action<string> UndoRegisterOperationPerformed { get; set; }
 
         #endregion
 
@@ -50,14 +52,15 @@ namespace BehaviourAPI.Unity.Editor
 
         SerializedProperty m_CurrentGraphNodesProperty;
 
-        private CustomEditorWindow m_EditorWindow;
+        private EditorWindow m_EditorWindow;
 
         #endregion
 
         /// <summary>
         /// Create the default graphView
         /// </summary>
-        public BehaviourGraphView(CustomEditorWindow editorWindow)
+        /// <param name="editorWindow">The editor window that contains the graph view.</param>
+        public BehaviourGraphView(EditorWindow editorWindow)
         {
             styleSheets.Add(BehaviourAPISettings.instance.GetStyleSheet(stylePath));
 
@@ -120,23 +123,26 @@ namespace BehaviourAPI.Unity.Editor
 
         private void OnEdgeCreated(EdgeView edge)
         {
-            var edgesToDelete = new List<Edge>();
+            var edgesToDelete = new HashSet<Edge>();
 
-            if (edge.input.capacity == Port.Capacity.Single)
+            foreach (Edge connection in edge.input.connections)
             {
-                foreach (Edge connection in edge.input.connections)
+                if (edge.input.capacity == Port.Capacity.Single || connection.output == edge.output)
                 {
                     if (connection != edge) edgesToDelete.Add(connection);
                 }
             }
 
-            if (edge.output.capacity == Port.Capacity.Single)
+            foreach (Edge connection in edge.output.connections)
             {
-                foreach (Edge connection in edge.output.connections)
+                if (edge.output.capacity == Port.Capacity.Single || connection.input == edge.input)
                 {
                     if (connection != edge) edgesToDelete.Add(connection);
                 }
             }
+
+
+            Debug.Log("Delete: " + edgesToDelete.Count);
 
             if (edgesToDelete.Count > 0) DeleteElements(edgesToDelete);
 
@@ -156,7 +162,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private GraphViewChange HandleGraphViewChanged(GraphViewChange change)
         {
-            if (m_EditorWindow.IsRuntime)
+            if (IsRuntime)
             {
                 change.elementsToRemove = null;
             }
@@ -164,7 +170,8 @@ namespace BehaviourAPI.Unity.Editor
             List<NodeView> nodeViewsRemoved = new List<NodeView>();
             if (change.elementsToRemove != null)
             {
-                m_EditorWindow.RegisterOperation("Deleted elements");
+                UndoRegisterOperationPerformed?.Invoke("Deleted elements");
+                //m_EditorWindow.RegisterOperation("Deleted elements");
                 foreach (var element in change.elementsToRemove)
                 {
                     if (element is NodeView nodeView)
@@ -185,8 +192,9 @@ namespace BehaviourAPI.Unity.Editor
             }
             else if (change.movedElements != null)
             {
-                if (!m_EditorWindow.IsRuntime)
-                    m_EditorWindow.RegisterOperation("Moved elements");
+                if (!IsRuntime)
+                    UndoRegisterOperationPerformed?.Invoke("Moved elements");
+                //m_EditorWindow.RegisterOperation("Moved elements");
 
                 foreach (var element in change.movedElements)
                 {
@@ -199,7 +207,7 @@ namespace BehaviourAPI.Unity.Editor
 
             foreach (var nodeRemoved in nodeViewsRemoved) nodeRemoved.OnDeleted();
 
-            if (!m_EditorWindow.IsRuntime)
+            if (!IsRuntime)
                 m_CurrentGraphNodesProperty.serializedObject.Update();
 
             if (nodeViewsRemoved.Count > 0)
@@ -208,7 +216,7 @@ namespace BehaviourAPI.Unity.Editor
                 RefreshViews();
             }
 
-            if (!m_EditorWindow.IsRuntime)
+            if (!IsRuntime)
                 DataChanged?.Invoke();
 
             return change;
@@ -230,7 +238,8 @@ namespace BehaviourAPI.Unity.Editor
             NodeData data = new NodeData(type, localPos);
             if (data != null)
             {
-                m_EditorWindow.RegisterOperation("Created node");
+                UndoRegisterOperationPerformed?.Invoke("Created node");
+                //m_EditorWindow.RegisterOperation("Created node");
                 graphData.nodes.Add(data);
                 m_CurrentGraphNodesProperty.serializedObject.Update();
                 DrawNode(data);
@@ -245,7 +254,8 @@ namespace BehaviourAPI.Unity.Editor
             source.OnConnected(edgeView);
             target.OnConnected(edgeView);
 
-            m_EditorWindow.RegisterOperation("Created connection");
+            UndoRegisterOperationPerformed?.Invoke("Created connection");
+            //m_EditorWindow.RegisterOperation("Created connection");
 
             AddElement(edgeView);
             UpdateProperties();
@@ -323,7 +333,7 @@ namespace BehaviourAPI.Unity.Editor
             var index = graphData.nodes.IndexOf(nodeData);
             NodeView mNodeView = new NodeView(nodeData, drawer, this, m_CurrentGraphNodesProperty?.GetArrayElementAtIndex(index));
 
-            if (m_EditorWindow.IsRuntime)
+            if (IsRuntime)
             {
                 mNodeView.capabilities -= Capabilities.Deletable;
             }
@@ -346,7 +356,7 @@ namespace BehaviourAPI.Unity.Editor
                 Port targetPort = targetNodeView.GetBestPort(sourceNodeView, Direction.Input);
                 EdgeView edge = sourcePort.ConnectTo<EdgeView>(targetPort);
 
-                if (m_EditorWindow.IsRuntime)
+                if (IsRuntime)
                 {
                     edge.capabilities -= Capabilities.Deletable;
                     edge.capabilities -= Capabilities.Selectable;
@@ -400,7 +410,7 @@ namespace BehaviourAPI.Unity.Editor
             evt.menu.AppendAction("Create Node", dma =>
             {
                 nodeCreationRequest(new NodeCreationContext() { screenMousePosition = dma.eventInfo.mousePosition + m_EditorWindow.position.position, target = null, index = -1 });
-            }, m_EditorWindow.IsRuntime ? DropdownMenuAction.Status.Hidden :
+            }, IsRuntime ? DropdownMenuAction.Status.Hidden :
                 (m_CurrentGraphNodesProperty != null) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled
             );
             evt.menu.AppendAction("Auto layout", _ => AutoLayoutGraph());
@@ -408,10 +418,11 @@ namespace BehaviourAPI.Unity.Editor
 
         private void AutoLayoutGraph()
         {
-            m_EditorWindow.RegisterOperation("Auto layout graph");
+            UndoRegisterOperationPerformed?.Invoke("Auto layout graph");
+            //m_EditorWindow.RegisterOperation("Auto layout graph");
             m_Adapter.AutoLayout(graphData);
 
-            if (!m_EditorWindow.IsRuntime)
+            if (!IsRuntime)
                 m_CurrentGraphNodesProperty.serializedObject.Update();
 
             RefreshViews();
@@ -422,7 +433,8 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public void SetNodeAsFirst(NodeView nodeView)
         {
-            m_EditorWindow.RegisterOperation("Change first node");
+            UndoRegisterOperationPerformed?.Invoke("Change first node");
+            //m_EditorWindow.RegisterOperation("Change first node");
             graphData.nodes.MoveAtFirst(nodeView.data);
             m_CurrentGraphNodesProperty.serializedObject.Update();
 
@@ -463,7 +475,8 @@ namespace BehaviourAPI.Unity.Editor
 
         public void RegisterUndo(string operationName)
         {
-            m_EditorWindow.RegisterOperation(operationName);
+            UndoRegisterOperationPerformed?.Invoke(operationName);
+            //m_EditorWindow.RegisterOperation(operationName);
         }
 
         #endregion

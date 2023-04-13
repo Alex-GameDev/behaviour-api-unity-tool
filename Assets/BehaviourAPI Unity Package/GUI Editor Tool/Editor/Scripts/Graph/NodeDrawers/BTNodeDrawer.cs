@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.Unity.Editor.Graph
 {
     [CustomNodeDrawer(typeof(BTNode))]
     public class BTNodeDrawer : NodeDrawer
@@ -27,11 +27,9 @@ namespace BehaviourAPI.Unity.Editor
                     view.SetColor(BehaviourAPISettings.instance.CompositeColor);
                     if (node is SequencerNode) view.SetIconText("-->");
                     else if (node is SelectorNode) view.SetIconText("?");
-                    else view.SetIconText(node.TypeName().CamelCaseToSpaced());
                     break;
                 case DecoratorNode:
                     view.SetColor(BehaviourAPISettings.instance.DecoratorColor);
-                    view.SetIconText(node.TypeName().CamelCaseToSpaced());
                     break;
             }
 

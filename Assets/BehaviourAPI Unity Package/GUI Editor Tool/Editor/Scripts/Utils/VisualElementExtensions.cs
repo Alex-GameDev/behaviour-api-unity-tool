@@ -1,13 +1,11 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
+    using Graph;
     public static class VisualElementExtensions
     {
         public static void Disable(this VisualElement visualElement) => visualElement.style.display = DisplayStyle.None;

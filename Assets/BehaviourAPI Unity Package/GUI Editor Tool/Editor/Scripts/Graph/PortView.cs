@@ -1,11 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.Unity.Editor.Graph
 {
     /// <summary>
     /// 
@@ -50,12 +49,12 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        public static PortView Create(EPortOrientation portOrientation, Direction portDirection, 
+        public static PortView Create(EPortOrientation portOrientation, Direction portDirection,
             Capacity portCapacity, Type type, IEdgeConnectorListener edgeConnector = null)
         {
             PortView port = new PortView(portOrientation, portDirection, portCapacity, type)
             {
-               m_EdgeConnector = new EdgeConnector<EdgeView>(edgeConnector)
+                m_EdgeConnector = new EdgeConnector<EdgeView>(edgeConnector)
             };
             port.AddManipulator(port.m_EdgeConnector);
             return port;

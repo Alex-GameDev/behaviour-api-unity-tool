@@ -2,7 +2,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.Unity.Editor.Graph
 {
     using System;
     using UtilitySystems;
@@ -25,18 +25,16 @@ namespace BehaviourAPI.Unity.Editor
                     view.SetColor(BehaviourAPISettings.instance.LeafFactorColor);
                     var functionTaskView = view.AddExtensionView("leaffactor");
                     break;
-
                 case FusionFactor:
                     view.SetColor(BehaviourAPISettings.instance.FusionFactorColor);
-                    view.SetIconText(node.TypeName().CamelCaseToSpaced());
+                    view.SetIconText(node.TypeName().RemoveTermination("Factor").CamelCaseToSpaced());
                     break;
 
                 case CurveFactor curve:
                     view.SetColor(BehaviourAPISettings.instance.CurveFactorColor);
-                    view.SetIconText(node.TypeName().CamelCaseToSpaced());
+                    view.SetIconText(node.TypeName().RemoveTermination("Factor").CamelCaseToSpaced());
                     functionTaskView = view.AddExtensionView("function");
                     m_FunctionDisplay = new FunctionDisplay(curve.TestEvaluate);
-                    //functionTaskView.Label.Disable();
                     functionTaskView.AddElement(m_FunctionDisplay);
                     break;
 
@@ -46,7 +44,6 @@ namespace BehaviourAPI.Unity.Editor
 
                 case UtilityExecutableNode:
                     view.SetColor(BehaviourAPISettings.instance.SelectableNodeColor);
-                    view.SetIconText(node.TypeName().CamelCaseToSpaced());
                     break;
             }
 
@@ -63,7 +60,7 @@ namespace BehaviourAPI.Unity.Editor
                 m_UtilityProgressBar.title = utilityHandler.Utility.ToString("0.000");
 
                 utilityHandler.UtilityChanged += OnUtilityChanged;
-                view.extensionContainer.Add(m_UtilityProgressBar);
+                view.Details.Add(m_UtilityProgressBar);
 
                 OnUtilityChanged(utilityHandler.Utility);
             }

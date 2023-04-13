@@ -1,16 +1,15 @@
 ﻿using BehaviourAPI.Core;
-using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Framework.Adaptations;
 using BehaviourAPI.UnityExtensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
+using Action = BehaviourAPI.Core.Actions.Action;
 using UnityAction = BehaviourAPI.UnityExtensions.UnityAction;
 
 namespace BehaviourAPI.Unity.Editor
@@ -64,6 +63,15 @@ namespace BehaviourAPI.Unity.Editor
             return str;
         }
 
+        public static string RemoveTermination(this string str, string termination)
+        {
+            if (str.EndsWith(termination))
+            {
+                str = str.Substring(0, str.Length - termination.Length);
+            }
+            return str;
+        }
+
         public static string TypeName(this object obj) => obj.GetType().Name;
         public static string ToCodeFormat(this float f) => f.ToString().Replace(',', '.') + "f";
         public static string ToCodeFormat(this bool b) => b.ToString().ToLower();
@@ -72,7 +80,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public static string DisplayInfo(this StatusFlags statusFlags)
         {
-            switch(statusFlags)
+            switch (statusFlags)
             {
                 case StatusFlags.None: return "never";
                 case StatusFlags.Success: return "when finish with success";
@@ -93,7 +101,7 @@ namespace BehaviourAPI.Unity.Editor
                     var actionMethodLines = new List<string>();
 
                     var code = customAction.start.GetSerializedMethodText();
-                    if(code != null) actionMethodLines.Add(code);
+                    if (code != null) actionMethodLines.Add(code);
 
                     code = customAction.update.GetSerializedMethodText();
                     if (code != null) actionMethodLines.Add(code);
@@ -162,7 +170,7 @@ namespace BehaviourAPI.Unity.Editor
                     var type = unityPerception.GetType();
                     var properties = type.GetFields();
 
-                    for(int i = 0; i < properties.Length; i++)
+                    for (int i = 0; i < properties.Length; i++)
                     {
                         string value = GetPropertyDisplay(properties[i].GetValue(unityPerception));
                         info = info.Replace($"${properties[i].Name}", value);

@@ -1,7 +1,7 @@
 using System;
 using UnityEditor.Experimental.GraphView;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.Unity.Editor.Graph
 {
     using Core;
     using UnityEngine.UIElements;

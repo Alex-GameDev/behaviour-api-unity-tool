@@ -11,6 +11,8 @@ using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
+    using Graph;
+
     /// <summary>
     /// 
     /// </summary>
@@ -90,6 +92,7 @@ namespace BehaviourAPI.Unity.Editor
             Undo.undoRedoPerformed -= OnUndoOperationPreformed;
             instance = null;
         }
+
         private void OnUndoOperationPreformed()
         {
             UpdateSelectionMenu();
@@ -176,6 +179,7 @@ namespace BehaviourAPI.Unity.Editor
             m_InspectorContainer.onGUIHandler = OnGUIHandler;
 
             graphDataView = new BehaviourGraphView(this);
+            graphDataView.UndoRegisterOperationPerformed += RegisterOperation;
             graphDataView.StretchToParentSize();
             var graphContainer = rootVisualElement.Q("bw-graph");
             graphContainer.Insert(0, graphDataView);
@@ -649,11 +653,11 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        public void RegisterOperation(string v)
+        public void RegisterOperation(string operationName)
         {
             if (System.ObjectReference != null)
             {
-                Undo.RegisterCompleteObjectUndo(System.ObjectReference, v);
+                Undo.RegisterCompleteObjectUndo(System.ObjectReference, operationName);
             }
 
         }

@@ -1,6 +1,6 @@
 using UnityEditor.Experimental.GraphView;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.Unity.Editor.Graph
 {
     public class EdgeView : Edge
     {

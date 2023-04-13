@@ -7,7 +7,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.Unity.Editor.Graph
 {
     using BehaviourAPI.Core;
     using BehaviourAPI.UnityExtensions;
@@ -15,7 +15,7 @@ namespace BehaviourAPI.Unity.Editor
     using Framework.Adaptations;
 
     /// <summary>
-    /// Class used to represent a <see cref="NodeData"/> element.
+    /// Class used to represent a <see cref="NodeData"/> element in a <see cref="GraphView"/>.
     /// </summary>
     public class NodeView : UnityEditor.Experimental.GraphView.Node
     {
@@ -25,6 +25,7 @@ namespace BehaviourAPI.Unity.Editor
         private static readonly string k_Status = "node-status";
         private static readonly string k_Border = "node-border";
 
+        private static readonly string k_DetailsDiv = "node-details";
         private static readonly string k_ExtensionDiv = "node-extension-div";
         private static readonly string k_ExtensionToggle = "node-extension-toggle";
         private static readonly string k_ExtensionContainer = "node-extension-content";
@@ -55,6 +56,11 @@ namespace BehaviourAPI.Unity.Editor
         /// </summary>
         public BehaviourGraphView graphView => m_graphView;
 
+        /// <summary>
+        /// The element that display node runtime information.
+        /// </summary>
+        public VisualElement Details => m_Details;
+
         #endregion
 
         #region ------------------------------- Private fields -------------------------------
@@ -65,6 +71,7 @@ namespace BehaviourAPI.Unity.Editor
 
         VisualElement m_BorderElement;
         VisualElement m_Warning;
+        VisualElement m_Details;
         VisualElement m_ExtensionContainer;
         VisualElement m_StatusBorder;
 
@@ -98,6 +105,7 @@ namespace BehaviourAPI.Unity.Editor
             m_StatusBorder = this.Q(k_Status);
             m_ColorTop = this.Q(k_ColorTop);
             m_ColorBottom = this.Q(k_ColorBottom);
+            m_Details = this.Q(k_DetailsDiv);
 
             m_ExtensionToggle.RegisterValueChangedCallback(OnChangeExtensionToggle);
 
@@ -111,6 +119,8 @@ namespace BehaviourAPI.Unity.Editor
         private void DrawNodeDetails()
         {
             m_NameInputField.value = data.name;
+
+            SetIconText(data.node.TypeName().CamelCaseToSpaced());
 
             if (nodeProperty != null)
             {
@@ -234,8 +244,11 @@ namespace BehaviourAPI.Unity.Editor
         /// <param name="color">The new color.</param>
         public void SetColor(Color color)
         {
-            m_ColorTop.ChangeBackgroundColor(color);
-            m_ColorBottom.ChangeBackgroundColor(color);
+            var iconElement = this.Q("node-icon");
+            iconElement.ChangeBackgroundColor(color);
+            elementTypeColor = color;
+            //m_ColorTop.ChangeBackgroundColor(color);
+            //m_ColorBottom.ChangeBackgroundColor(color);
         }
 
         /// <summary>
@@ -244,12 +257,8 @@ namespace BehaviourAPI.Unity.Editor
         /// <param name="text">The new text.</param>
         public void SetIconText(string text)
         {
-            if (!string.IsNullOrEmpty(text))
-            {
-                var iconElement = this.Q("node-icon");
-                iconElement.Enable();
-                iconElement.Add(new Label(text));
-            }
+            var iconElement = this.Q<Label>("node-icon-label");
+            iconElement.text = text;
         }
 
         #endregion
