@@ -2,7 +2,7 @@ using BehaviourAPI.Unity.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.Unity.Editor.CodeGenerator
 {
     public abstract class GraphCodeGenerator
     {

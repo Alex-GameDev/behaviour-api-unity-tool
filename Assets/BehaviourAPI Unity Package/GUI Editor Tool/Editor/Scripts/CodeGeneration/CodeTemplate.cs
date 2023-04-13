@@ -1,21 +1,22 @@
 using BehaviourAPI.Unity.Framework;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.Unity.Editor.CodeGenerator
 {
     using BehaviourAPI.Core.Actions;
     using BehaviourAPI.Core.Perceptions;
     using BehaviourAPI.Unity.Framework.Adaptations;
     using BehaviourAPI.UnityExtensions;
+    using BehaviourAPI.UtilitySystems;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using UnityEngine;
+    using Action = Core.Actions.Action;
 
     public class CodeTemplate
     {
         private static readonly string[] k_BaseNamespaces = new string[]
         {
-            "System",
             "System.Collections.Generic",
             "UnityEngine",
             "BehaviourAPI.Core",
@@ -34,6 +35,7 @@ namespace BehaviourAPI.Unity.Editor
         List<CodeFieldMember> m_FieldMembers = new List<CodeFieldMember>();
 
         List<CodeStatement> m_CodeGraphStatements = new List<CodeStatement>();
+        List<CodeStatement> m_CodePropertiesStatements = new List<CodeStatement>();
         List<CodeStatement> m_CodeStatements = new List<CodeStatement>();
 
         Dictionary<string, CodeMethodMember> m_MethodMembers = new Dictionary<string, CodeMethodMember>();
@@ -57,22 +59,12 @@ namespace BehaviourAPI.Unity.Editor
             {
                 GraphCodeGenerator codeGenerator = GraphCodeGenerator.GetGenerator(graphData);
                 codeGenerator.GenerateCode(this);
-                m_CodeStatements.Add(new CustomStatement(""));
+                m_CodeStatements.Add(new CodeCustomStatement(""));
             }
 
             foreach (PushPerceptionData pushPerceptionData in systemData.pushPerceptions)
             {
 
-            }
-
-            if (systemData.graphs.Count > 0)
-            {
-                string rootGraphIdentificator = GetSystemElementIdentificator(systemData.graphs[0].id);
-                m_CodeStatements.Add(new CustomStatement($"return {rootGraphIdentificator};"));
-            }
-            else
-            {
-                m_CodeStatements.Add(new CustomStatement($"return null;"));
             }
 
             m_SystemData = systemData;
@@ -95,6 +87,18 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (isGraph) m_CodeGraphStatements.Add(statement);
             else m_CodeStatements.Add(statement);
+
+            foreach (var st in m_CodePropertiesStatements)
+            {
+                m_CodeStatements.Add(st);
+            }
+            m_CodePropertiesStatements.Clear();
+
+        }
+
+        public void AddPropertyStatement(CodeStatement statement)
+        {
+            m_CodePropertiesStatements.Add(statement);
         }
 
         //public void GenerateVariableAssignations(object obj, string identifier)
@@ -130,18 +134,18 @@ namespace BehaviourAPI.Unity.Editor
 
         // ===================================================================================================== //
 
-        public CodeArgumentExpression CreateReferencedElementExpression(string id)
+        public CodeExpression CreateReferencedElementExpression(string id)
         {
             var identificator = m_SystemElementIdentificatorMap.GetValueOrDefault(id);
-            return new CodeSimpleExpression(identificator);
+            return new CodeCustomExpression(identificator);
         }
 
-        public CodeArgumentExpression CreateGenericExpression(string code)
+        public CodeExpression CreateGenericExpression(string code)
         {
-            return new CodeSimpleExpression(code);
+            return new CodeCustomExpression(code);
         }
 
-        public CodeArgumentExpression GetActionExpression(Core.Actions.Action action)
+        public CodeExpression GetActionExpression(Core.Actions.Action action, string identificator, bool inline = false)
         {
             if (action != null)
             {
@@ -151,13 +155,13 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     case Framework.Adaptations.CustomAction custom:
                         expression = new CodeObjectCreationExpression(typeof(FunctionalAction));
-                        CodeArgumentExpression startMethodArg = GenerateMethodCodeExpression(custom.start, null);
-                        CodeArgumentExpression updateMethodArg = GenerateMethodCodeExpression(custom.update, null, typeof(Core.Status));
-                        CodeArgumentExpression stopMethodArg = GenerateMethodCodeExpression(custom.stop, null);
+                        CodeExpression startMethodArg = GenerateMethodCodeExpression(custom.start, null);
+                        CodeExpression updateMethodArg = GenerateMethodCodeExpression(custom.update, null, typeof(Core.Status));
+                        CodeExpression stopMethodArg = GenerateMethodCodeExpression(custom.stop, null);
 
                         if (startMethodArg != null) expression.Add(startMethodArg);
                         if (updateMethodArg != null) expression.Add(updateMethodArg);
-                        else expression.Add(new CodeSimpleExpression("() => Status.Running"));
+                        else expression.Add(new CodeCustomExpression("() => Status.Running"));
                         if (stopMethodArg != null) expression.Add(stopMethodArg);
                         break;
                     case UnityAction unityAction:
@@ -167,19 +171,30 @@ namespace BehaviourAPI.Unity.Editor
                         expression = new CodeObjectCreationExpression(typeof(SubsystemAction));
 
                         expression.Add(CreateReferencedElementExpression(subgraphAction.subgraphId));
-                        expression.Add(new CodeSimpleExpression(subgraphAction.DontStopOnInterrupt.ToCodeFormat()));
-                        expression.Add(new CodeSimpleExpression(subgraphAction.ExecuteOnLoop.ToCodeFormat()));
+                        expression.Add(new CodeCustomExpression(subgraphAction.DontStopOnInterrupt.ToCodeFormat()));
+                        expression.Add(new CodeCustomExpression(subgraphAction.ExecuteOnLoop.ToCodeFormat()));
                         break;
                 }
-                return expression;
+                if (inline)
+                {
+                    return expression;
+                }
+                else
+                {
+                    var id = identificatorProvider.GenerateIdentificator(identificator);
+                    var actionStatement = new CodeVariableDeclarationStatement(typeof(Action), id);
+                    actionStatement.RightExpression = expression;
+                    AddStatement(actionStatement);
+                    return new CodeCustomExpression(id);
+                }
             }
             else
             {
-                return new CodeSimpleExpression("null /*missing action*/");
+                return new CodeCustomExpression("null /*missing action*/");
             }
         }
 
-        public CodeArgumentExpression GetPerceptionExpression(Perception perception)
+        public CodeExpression GetPerceptionExpression(Perception perception, string identificator, bool inline = false)
         {
             if (perception != null)
             {
@@ -189,13 +204,13 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     case Framework.Adaptations.CustomPerception custom:
                         expression = new CodeObjectCreationExpression(typeof(ConditionPerception));
-                        CodeArgumentExpression startMethodArg = GenerateMethodCodeExpression(custom.init, null);
-                        CodeArgumentExpression updateMethodArg = GenerateMethodCodeExpression(custom.check, null, typeof(bool));
-                        CodeArgumentExpression stopMethodArg = GenerateMethodCodeExpression(custom.reset, null);
+                        CodeExpression startMethodArg = GenerateMethodCodeExpression(custom.init, null);
+                        CodeExpression updateMethodArg = GenerateMethodCodeExpression(custom.check, null, typeof(bool));
+                        CodeExpression stopMethodArg = GenerateMethodCodeExpression(custom.reset, null);
 
                         if (startMethodArg != null) expression.Add(startMethodArg);
                         if (updateMethodArg != null) expression.Add(updateMethodArg);
-                        else expression.Add(new CodeSimpleExpression("() => Status.Running"));
+                        else expression.Add(new CodeCustomExpression("() => Status.Running"));
                         if (stopMethodArg != null) expression.Add(stopMethodArg);
                         break;
                     case UnityPerception unityPerception:
@@ -206,18 +221,32 @@ namespace BehaviourAPI.Unity.Editor
 
                         foreach (var subperception in compoundPerception.subPerceptions)
                         {
-                            expression.Add(GetPerceptionExpression(subperception.perception));
+                            expression.Add(GetPerceptionExpression(subperception.perception, identificator, true));
                         }
                         break;
                 }
 
-                if (expression != null) return expression;
+                if (expression != null)
+                {
+                    if (inline)
+                    {
+                        return expression;
+                    }
+                    else
+                    {
+                        var id = identificatorProvider.GenerateIdentificator(identificator);
+                        var perceptionStatement = new CodeVariableDeclarationStatement(typeof(Perception), id);
+                        perceptionStatement.RightExpression = expression;
+                        AddStatement(perceptionStatement);
+                        return new CodeCustomExpression(id);
+                    }
+                }
             }
-            return new CodeSimpleExpression("null /*missing action*/");
+            return new CodeCustomExpression("null /*missing perception*/");
 
         }
 
-        public CodeArgumentExpression GenerateMethodCodeExpression(SerializedContextMethod serializedMethod, Type[] args, Type returnType = null)
+        public CodeExpression GenerateMethodCodeExpression(SerializedContextMethod serializedMethod, Type[] args, Type returnType = null)
         {
             if (string.IsNullOrWhiteSpace(serializedMethod.methodName))
             {
@@ -259,16 +288,15 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (!m_MethodMembers.TryGetValue(methodName, out var member))
             {
-                var localMethod = new CodeMethodMember()
+                var localMethod = new CodeMethodMember(methodName, returnType);
+
+                if (args != null)
                 {
-                    Name = methodName,
-                    returnType = returnType,
-                    parameterExpressions = args?.Select(arg => new CodeParameterExpression()
+                    for (int i = 0; i < args.Length; i++)
                     {
-                        type = arg,
-                        name = "arg"
-                    }).ToList()
-                };
+                        localMethod.Parameters.Add(new CodeParameter(args[i], args[i].Name + "_" + i));
+                    }
+                }
                 m_MethodMembers[methodName] = localMethod;
             }
             return methodName;
@@ -292,7 +320,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             using (new DebugTimer())
             {
-                CodeWritter codeWritter = new CodeWritter();
+                CodeWriter codeWritter = new CodeWriter();
 
                 foreach (var usingNamespace in m_UsingNamespaces)
                 {
@@ -329,6 +357,20 @@ namespace BehaviourAPI.Unity.Editor
                 codeWritter.AppendLine("");
                 m_CodeStatements.ForEach(c => c.GenerateCode(codeWritter, options));
 
+                var firstGraphId = m_SystemData.graphs.FirstOrDefault()?.id;
+                if (options.registerGraphsInDebugger)
+                {
+                    foreach (var graph in m_SystemData.graphs)
+                    {
+                        codeWritter.AppendLine($"RegisterGraph({m_SystemElementIdentificatorMap[graph.id]});");
+                    }
+                    codeWritter.AppendLine("");
+                }
+
+                if (firstGraphId != null) codeWritter.AppendLine($"return {m_SystemElementIdentificatorMap[firstGraphId]};");
+                else codeWritter.Append("return null");
+
+
                 codeWritter.IdentationLevel--;
 
                 codeWritter.AppendLine("}");
@@ -357,38 +399,103 @@ namespace BehaviourAPI.Unity.Editor
             return m_SystemElementIdentificatorMap.GetValueOrDefault(elementId);
         }
 
-        public CodeArgumentExpression CreatePropertyExpression(object obj)
+        public CodeExpression CreatePropertyExpression(object obj, string defaultIdentificatorName)
         {
-            return new CodeSimpleExpression(ToCode(obj));
+            return CreateGenericExpression(obj, defaultIdentificatorName);
         }
 
-        private string ToCode(object obj)
+        private CodeExpression CreateGenericExpression(object obj, string defaultIdentificatorName)
         {
             var type = obj.GetType();
+
             if (type.IsEnum)
             {
-                return $"{type.Name}.{obj}";
+                return new CodeCustomExpression($"{type.Name}.{obj}");
+            }
+            else if (type.IsArray)
+            {
+                switch (obj)
+                {
+                    case int[] i:
+                        return new CodeCustomExpression($"new int[] {{ {i.Select(i => i.ToString()).Join()}}}");
+                    case float[] f:
+                        return new CodeCustomExpression($"new float[] {{ {f.Select(f => f.ToCodeFormat()).Join()}}}");
+                    case bool[] b:
+                        return new CodeCustomExpression($"new bool[] {{ {b.Select(b => b.ToCodeFormat()).Join()}}}");
+                    case char[] c:
+                        return new CodeCustomExpression($"new bool[] {{ {c.Select(c => $"\'{c}\'").Join()}}}");
+                }
             }
             else if (type.IsValueType)
             {
-                if (obj is int i) return i.ToString();
-                else if (obj is float f) return f.ToCodeFormat();
-                else if (obj is bool b) return b.ToCodeFormat();
-                else if (obj is char c) return $"\'{c}\'";
-                else if (obj is Vector2 v2) return $"new Vector2({ToCode(v2.x)}, {ToCode(v2.y)})";
-                else if (obj is Vector3 v3) return $"new Vector3({ToCode(v3.x)}, {ToCode(v3.y)}, {ToCode(v3.z)})";
-                else return "null";
-            }
-            else
-            {
-                var identificator = identificatorProvider.GenerateIdentificator("_" + type.Name.ToLower());
-                m_FieldMembers.Add(new CodeFieldMember()
+                switch (obj)
                 {
-                    type = type,
-                    name = identificator
-                });
-                return identificator;
+                    case int i:
+                        return new CodeCustomExpression(i.ToString());
+                    case float f:
+                        return new CodeCustomExpression(f.ToCodeFormat());
+                    case bool b:
+                        return new CodeCustomExpression(b.ToCodeFormat());
+                    case char c:
+                        return new CodeCustomExpression($"\'{c}\'");
+                    case Vector2 v2:
+                        var expression = new CodeObjectCreationExpression(typeof(Vector2));
+                        expression.Add(new CodeCustomExpression(v2.x.ToCodeFormat()));
+                        expression.Add(new CodeCustomExpression(v2.y.ToCodeFormat()));
+                        return expression;
+                    case Vector3 v3:
+                        expression = new CodeObjectCreationExpression(typeof(Vector3));
+                        expression.Add(new CodeCustomExpression(v3.x.ToCodeFormat()));
+                        expression.Add(new CodeCustomExpression(v3.y.ToCodeFormat()));
+                        expression.Add(new CodeCustomExpression(v3.z.ToCodeFormat()));
+                        return expression;
+                    case Color color:
+                        expression = new CodeObjectCreationExpression(typeof(Vector3));
+                        expression.Add(new CodeCustomExpression(color.r.ToCodeFormat()));
+                        expression.Add(new CodeCustomExpression(color.g.ToCodeFormat()));
+                        expression.Add(new CodeCustomExpression(color.b.ToCodeFormat()));
+                        expression.Add(new CodeCustomExpression(color.a.ToCodeFormat()));
+                        return expression;
+                }
             }
+            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                switch (obj)
+                {
+                    case List<int> i:
+                        return new CodeCustomExpression($"new List<int>() {{{i.Select(i => i.ToString()).Join()}}}");
+                    case List<float> f:
+                        return new CodeCustomExpression($"new List<float>() {{{f.Select(i => i.ToCodeFormat()).Join()}}}");
+                    case List<bool> b:
+                        return new CodeCustomExpression($"new List<bool>() {{{b.Select(i => i.ToCodeFormat()).Join()}}}");
+                    case List<char> c:
+                        return new CodeCustomExpression($"new List<char>() {{{c.Select(i => $"\'i\'").Join()}}}");
+                    case List<CurvePoint> c:
+                        return new CodeCustomExpression($"new List<CurvePoint>() {{{c.Select(i => $"new CurvePoint({i.x.ToCodeFormat()}, {i.y.ToCodeFormat()})").Join()}}}");
+                }
+            }
+
+            var identificator = identificatorProvider.GenerateIdentificator(defaultIdentificatorName);
+            m_FieldMembers.Add(new CodeFieldMember(identificator, type));
+            return new CodeCustomExpression(identificator);
+        }
+
+        public void AddPropertyStatement(object v, string identifier, string name)
+        {
+            var statement = new CodeAssignationStatement();
+            statement.LeftExpression = new CodeMethodReferenceExpression(identifier, name);
+
+            switch (v)
+            {
+                case Action action:
+                    statement.RightExpression = GetActionExpression(action, identifier); break;
+                case Perception perception:
+                    statement.RightExpression = GetPerceptionExpression(perception, identifier); break;
+                default:
+                    statement.RightExpression = CreateGenericExpression(v, identifier + "_" + name); break;
+            }
+
+            AddPropertyStatement(statement);
         }
     }
 }

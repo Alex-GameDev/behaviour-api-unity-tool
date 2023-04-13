@@ -1,9 +1,7 @@
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.Unity.Editor.CodeGenerator
 {
-    using BehaviourAPI.Core.Actions;
-    using BehaviourAPI.Core.Perceptions;
     using Framework;
     using UtilitySystems;
 
@@ -30,14 +28,10 @@ namespace BehaviourAPI.Unity.Editor
             UtilitySystem us = graphData.graph as UtilitySystem;
 
             var graphCreationExpression = new CodeObjectCreationExpression(us.GetType());
-            graphCreationExpression.Add(new CodeSimpleExpression(us.Inertia.ToCodeFormat()));
+            graphCreationExpression.Add(new CodeCustomExpression(us.Inertia.ToCodeFormat()));
 
-            var graphStatement = new CodeVariableDeclarationStatement()
-            {
-                Type = type,
-                Identificator = GraphIdentificator,
-                RightExpression = graphCreationExpression
-            };
+            var graphStatement = new CodeVariableDeclarationStatement(type, GraphIdentificator);
+            graphStatement.RightExpression = graphCreationExpression;
 
             template.AddNamespace("BehaviourAPI.UtilitySystems");
             template.AddStatement(graphStatement, true);
@@ -48,54 +42,49 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        private void GenerateNodeCode(NodeData nodeData, CodeTemplate template)
+        private void GenerateNodeCode(NodeData data, CodeTemplate template)
         {
-            if (nodeData == null) return;
-            if (IsGenerated(nodeData.id)) return;
+            if (data == null) return;
+            if (IsGenerated(data.id)) return;
 
-            switch (nodeData.node)
+            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement(data.node.GetType(), template.GetSystemElementIdentificator(data.id));
+            switch (data.node)
             {
-                case VariableFactor variableFactor: GenerateVariableFactorCode(nodeData, variableFactor, template); break;
-                case ConstantFactor constantFactor: GenerateConstantFactorCode(nodeData, constantFactor, template); break;
-                case FusionFactor fusionFactor: GenerateFusionFactorCode(nodeData, fusionFactor, template); break;
-                case CurveFactor curveFactor: GenerateCurveFactorCode(nodeData, curveFactor, template); break;
-                case UtilityAction utilityAction: GenerateutilityActionCode(nodeData, utilityAction, template); break;
-                case UtilityExitNode utilityExitNode: GenerateutilityExitNodeCode(nodeData, utilityExitNode, template); break;
-                case UtilityBucket utilityBucket: GenerateutilityBucketCode(nodeData, utilityBucket, template); break;
+                case VariableFactor variableFactor:
+                    nodeDeclaration.RightExpression = GenerateVariableFactorCode(data, variableFactor, template); break;
+                case ConstantFactor constantFactor:
+                    nodeDeclaration.RightExpression = GenerateConstantFactorCode(data, constantFactor, template); break;
+                case FusionFactor fusionFactor:
+                    nodeDeclaration.RightExpression = GenerateFusionFactorCode(data, fusionFactor, template); break;
+                case CurveFactor curveFactor:
+                    nodeDeclaration.RightExpression = GenerateCurveFactorCode(data, curveFactor, template); break;
+                case UtilityAction utilityAction:
+                    nodeDeclaration.RightExpression = GenerateutilityActionCode(data, utilityAction, template); break;
+                case UtilityExitNode utilityExitNode:
+                    nodeDeclaration.RightExpression = GenerateutilityExitNodeCode(data, utilityExitNode, template); break;
+                case UtilityBucket utilityBucket:
+                    nodeDeclaration.RightExpression = GenerateutilityBucketCode(data, utilityBucket, template); break;
             }
-            MarkGenerated(nodeData.id);
+            template.AddStatement(nodeDeclaration);
+            MarkGenerated(data.id);
         }
 
-        private void GenerateutilityBucketCode(NodeData data, UtilityBucket utilityBucket, CodeTemplate template)
+        private CodeNodeCreationMethodExpression GenerateutilityBucketCode(NodeData data, UtilityBucket utilityBucket, CodeTemplate template)
         {
-            CodeMethodInvocationExpression initMethod = new CodeMethodInvocationExpression()
-            {
-                methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_UtilityBucketMethod)
-            };
-
-            if (!string.IsNullOrWhiteSpace(data.name)) initMethod.Add(template.CreateGenericExpression("\"" + data.name + "\""));
+            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
+            initMethod.nodeName = data.name;
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_UtilityBucketMethod);
 
             initMethod.Add(template.CreateGenericExpression(utilityBucket.Inertia.ToCodeFormat()));
             initMethod.Add(template.CreateGenericExpression(utilityBucket.BucketThreshold.ToCodeFormat()));
-
-            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement()
-            {
-                Type = utilityBucket.GetType(),
-                Identificator = template.GetSystemElementIdentificator(data.id),
-                RightExpression = initMethod
-            };
-
-            template.AddStatement(nodeDeclaration);
+            return initMethod;
         }
 
-        private void GenerateutilityExitNodeCode(NodeData data, UtilityExitNode utilityExitNode, CodeTemplate template)
+        private CodeNodeCreationMethodExpression GenerateutilityExitNodeCode(NodeData data, UtilityExitNode utilityExitNode, CodeTemplate template)
         {
-            CodeMethodInvocationExpression initMethod = new CodeMethodInvocationExpression()
-            {
-                methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_UtilityExitNodeMethod)
-            };
-
-            if (!string.IsNullOrWhiteSpace(data.name)) initMethod.Add(template.CreateGenericExpression("\"" + data.name + "\""));
+            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
+            initMethod.nodeName = data.name;
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_UtilityExitNodeMethod);
 
             if (data.childIds.Count == 1)
             {
@@ -105,7 +94,7 @@ namespace BehaviourAPI.Unity.Editor
             else
             {
                 Debug.LogWarning("CodeGenError: The number of children is wrong.");
-                initMethod.Add(new CodeSimpleExpression("null /* missing node */"));
+                initMethod.Add(new CodeCustomExpression("null /* missing node */"));
             }
 
             initMethod.Add(template.CreateReferencedElementExpression(utilityExitNode.ExitStatus.ToCodeFormat()));
@@ -116,24 +105,14 @@ namespace BehaviourAPI.Unity.Editor
                 initMethod.Add(template.CreateReferencedElementExpression(data.parentIds[0]));
             }
 
-            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement()
-            {
-                Type = utilityExitNode.GetType(),
-                Identificator = template.GetSystemElementIdentificator(data.id),
-                RightExpression = initMethod
-            };
-
-            template.AddStatement(nodeDeclaration);
+            return initMethod;
         }
 
-        private void GenerateutilityActionCode(NodeData data, UtilityAction utilityAction, CodeTemplate template)
+        private CodeNodeCreationMethodExpression GenerateutilityActionCode(NodeData data, UtilityAction utilityAction, CodeTemplate template)
         {
-            CodeMethodInvocationExpression initMethod = new CodeMethodInvocationExpression()
-            {
-                methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_UtilityActionMethod)
-            };
-
-            if (!string.IsNullOrWhiteSpace(data.name)) initMethod.Add(template.CreateGenericExpression("\"" + data.name + "\""));
+            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
+            initMethod.nodeName = data.name;
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_UtilityActionMethod);
 
             if (data.childIds.Count == 1)
             {
@@ -143,10 +122,10 @@ namespace BehaviourAPI.Unity.Editor
             else
             {
                 Debug.LogWarning("CodeGenError: The number of children is wrong.");
-                initMethod.Add(new CodeSimpleExpression("null /* missing node */"));
+                initMethod.Add(new CodeCustomExpression("null /* missing node */"));
             }
 
-            initMethod.Add(template.GetActionExpression(utilityAction.ActionReference));
+            initMethod.Add(template.GetActionExpression(utilityAction.ActionReference, template.GetSystemElementIdentificator(data.id) + "_action"));
             initMethod.Add(template.CreateGenericExpression(utilityAction.FinishSystemOnComplete.ToCodeFormat()));
 
             if (data.parentIds.Count == 1)
@@ -155,24 +134,15 @@ namespace BehaviourAPI.Unity.Editor
                 initMethod.Add(template.CreateReferencedElementExpression(data.parentIds[0]));
             }
 
-            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement()
-            {
-                Type = utilityAction.GetType(),
-                Identificator = template.GetSystemElementIdentificator(data.id),
-                RightExpression = initMethod
-            };
+            return initMethod;
 
-            template.AddStatement(nodeDeclaration);
         }
 
-        private void GenerateCurveFactorCode(NodeData data, CurveFactor curveFactor, CodeTemplate template)
+        private CodeNodeCreationMethodExpression GenerateCurveFactorCode(NodeData data, CurveFactor curveFactor, CodeTemplate template)
         {
-            CodeMethodInvocationExpression initMethod = new CodeMethodInvocationExpression()
-            {
-                methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_CurveFactorMethod + "<" + curveFactor.TypeName() + ">")
-            };
-
-            if (!string.IsNullOrWhiteSpace(data.name)) initMethod.Add(template.CreateGenericExpression("\"" + data.name + "\""));
+            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
+            initMethod.nodeName = data.name;
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_CurveFactorMethod + "<" + data.node.TypeName() + ">");
 
             if (data.childIds.Count == 1)
             {
@@ -181,29 +151,18 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
+                initMethod.Add(new CodeCustomExpression("null"));
                 Debug.LogWarning("CodeGenError: The number of children is wrong.");
             }
-
-            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement()
-            {
-                Type = curveFactor.GetType(),
-                Identificator = template.GetSystemElementIdentificator(data.id),
-                RightExpression = initMethod
-            };
-
-            template.AddStatement(nodeDeclaration);
-            GenerateUtilityNodeProperties(curveFactor, nodeDeclaration.Identificator, template);
+            GenerateUtilityNodeProperties(data.node as UtilityNode, template.GetSystemElementIdentificator(data.id), template);
+            return initMethod;
         }
 
-        private void GenerateFusionFactorCode(NodeData data, FusionFactor fusionFactor, CodeTemplate template)
+        private CodeNodeCreationMethodExpression GenerateFusionFactorCode(NodeData data, FusionFactor fusionFactor, CodeTemplate template)
         {
-            CodeMethodInvocationExpression initMethod = new CodeMethodInvocationExpression()
-            {
-                methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_FusionFactorMethod
-                + "<" + fusionFactor.TypeName() + ">")
-            };
-
-            if (!string.IsNullOrWhiteSpace(data.name)) initMethod.Add(template.CreateGenericExpression("\"" + data.name + "\""));
+            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
+            initMethod.nodeName = data.name;
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_FusionFactorMethod + "<" + data.node.TypeName() + ">");
 
             for (int i = 0; i < data.childIds.Count; i++)
             {
@@ -211,60 +170,32 @@ namespace BehaviourAPI.Unity.Editor
                 initMethod.Add(template.CreateReferencedElementExpression(data.childIds[i]));
             }
 
-            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement()
-            {
-                Type = fusionFactor.GetType(),
-                Identificator = template.GetSystemElementIdentificator(data.id),
-                RightExpression = initMethod
-            };
-
-            template.AddStatement(nodeDeclaration);
-
-            GenerateUtilityNodeProperties(fusionFactor, nodeDeclaration.Identificator, template);
+            GenerateUtilityNodeProperties(data.node as UtilityNode, template.GetSystemElementIdentificator(data.id), template);
+            return initMethod;
         }
 
-        private void GenerateConstantFactorCode(NodeData data, ConstantFactor constantFactor, CodeTemplate template)
+        private CodeNodeCreationMethodExpression GenerateConstantFactorCode(NodeData data, ConstantFactor constantFactor, CodeTemplate template)
         {
-            CodeMethodInvocationExpression initMethod = new CodeMethodInvocationExpression()
-            {
-                methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_ConstantFactorMethod)
-            };
-
-            if (!string.IsNullOrWhiteSpace(data.name)) initMethod.Add(template.CreateGenericExpression("\"" + data.name + "\""));
+            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
+            initMethod.nodeName = data.name;
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_ConstantFactorMethod);
 
             initMethod.Add(template.CreateGenericExpression(constantFactor.value.ToCodeFormat()));
 
-            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement()
-            {
-                Type = constantFactor.GetType(),
-                Identificator = template.GetSystemElementIdentificator(data.id),
-                RightExpression = initMethod
-            };
-
-            template.AddStatement(nodeDeclaration);
+            return initMethod;
         }
 
-        private void GenerateVariableFactorCode(NodeData data, VariableFactor variableFactor, CodeTemplate template)
+        private CodeNodeCreationMethodExpression GenerateVariableFactorCode(NodeData data, VariableFactor variableFactor, CodeTemplate template)
         {
-            CodeMethodInvocationExpression initMethod = new CodeMethodInvocationExpression()
-            {
-                methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_VariableFactorMethod)
-            };
-
-            if (!string.IsNullOrWhiteSpace(data.name)) initMethod.Add(template.CreateGenericExpression("\"" + data.name + "\""));
+            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
+            initMethod.nodeName = data.name;
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_VariableFactorMethod);
 
             initMethod.Add(template.GenerateMethodCodeExpression(variableFactor.variableFunction, null, typeof(float)));
             initMethod.Add(template.CreateGenericExpression(variableFactor.min.ToCodeFormat()));
             initMethod.Add(template.CreateGenericExpression(variableFactor.max.ToCodeFormat()));
 
-            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement()
-            {
-                Type = variableFactor.GetType(),
-                Identificator = template.GetSystemElementIdentificator(data.id),
-                RightExpression = initMethod
-            };
-
-            template.AddStatement(nodeDeclaration);
+            return initMethod;
         }
         private void GenerateUtilityNodeProperties(UtilityNode obj, string identifier, CodeTemplate template)
         {
@@ -275,22 +206,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (field.Name == "PullingEnabled") continue;
 
-                var statement = new CodeVariableReassignationStatement();
-                statement.LeftExpression = new CodeMethodReferenceExpression(identifier, field.Name);
-
-                if (typeof(Action).IsAssignableFrom(field.FieldType))
-                {
-                    statement.RightExpression = template.GetActionExpression((Action)field.GetValue(obj));
-                }
-                else if (typeof(Perception).IsAssignableFrom(field.FieldType))
-                {
-                    statement.RightExpression = template.GetPerceptionExpression((Perception)field.GetValue(obj));
-                }
-                else
-                {
-                    statement.RightExpression = template.CreatePropertyExpression(field.GetValue(obj));
-                }
-                template.AddStatement(statement);
+                template.AddPropertyStatement(field.GetValue(obj), identifier, field.Name);
             }
         }
 

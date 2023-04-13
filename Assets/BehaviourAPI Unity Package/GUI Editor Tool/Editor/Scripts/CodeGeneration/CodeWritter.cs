@@ -3,7 +3,7 @@ using System.Text;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    public class CodeWritter
+    public class CodeWriter
     {
         StringBuilder stringBuilder = new StringBuilder();
         StringBuilder currentLineBuilder = new StringBuilder();

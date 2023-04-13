@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
-    using BehaviourAPI.UtilitySystems;
     using Core;
     using Core.Actions;
 
@@ -17,7 +16,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         /// <summary>
         /// List of probabilities. Allow to assign probabilities in the editor tool.
         /// </summary>
-        [SerializeField] List<float> probabilities = new List<float>();
+        [SerializeField] public List<float> probabilities = new List<float>();
 
         /// <summary>
         /// Serializable Wrapper for <see cref="StateMachines.State.Action"/>.

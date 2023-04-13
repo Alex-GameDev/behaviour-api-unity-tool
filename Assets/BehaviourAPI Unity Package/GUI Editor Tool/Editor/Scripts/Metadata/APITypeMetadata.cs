@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
+    using CodeGenerator;
     using Core;
     using Core.Actions;
     using Core.Perceptions;

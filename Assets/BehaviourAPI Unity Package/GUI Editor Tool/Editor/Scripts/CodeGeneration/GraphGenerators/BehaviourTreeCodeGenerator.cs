@@ -1,9 +1,7 @@
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.Unity.Editor.CodeGenerator
 {
-    using BehaviourAPI.Core.Actions;
-    using BehaviourAPI.Core.Perceptions;
     using BehaviourTrees;
     using Framework;
     using LeafNode = Framework.Adaptations.LeafNode;
@@ -19,13 +17,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             GraphIdentificator = template.GetSystemElementIdentificator(graphData.id);
             var type = graphData.graph.GetType();
-            var graphStatement = new CodeVariableDeclarationStatement()
-            {
-                Type = type,
-                Identificator = GraphIdentificator,
-                RightExpression = new CodeObjectCreationExpression(type)
-            };
-
+            var graphStatement = new CodeVariableDeclarationStatement(type, GraphIdentificator);
+            graphStatement.RightExpression = new CodeObjectCreationExpression(type);
 
             template.AddNamespace("BehaviourAPI.BehaviourTrees");
             template.AddStatement(graphStatement, true);
@@ -36,86 +29,67 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        private void GenerateNodeCode(NodeData nodeData, CodeTemplate template)
+        private void GenerateNodeCode(NodeData data, CodeTemplate template)
         {
-            if (nodeData == null) return;
-            if (IsGenerated(nodeData.id)) return;
+            if (data == null) return;
+            if (IsGenerated(data.id)) return;
 
-            switch (nodeData.node)
+            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement(data.node.GetType(), template.GetSystemElementIdentificator(data.id));
+
+            switch (data.node)
             {
-                case LeafNode leafNode: GenerateLeafNodeCode(leafNode, nodeData, template); break;
-                case DecoratorNode decoratorNode: GenerateDecoratorCode(decoratorNode, nodeData, template); break;
-                case CompositeNode compositeNode: GenerateCompositeCode(compositeNode, nodeData, template); break;
+                case LeafNode leafNode:
+                    nodeDeclaration.RightExpression = GenerateLeafNodeCode(leafNode, data, template); break;
+                case DecoratorNode decoratorNode:
+                    nodeDeclaration.RightExpression = GenerateDecoratorCode(decoratorNode, data, template); break;
+                case CompositeNode compositeNode:
+                    nodeDeclaration.RightExpression = GenerateCompositeCode(compositeNode, data, template); break;
             }
-            MarkGenerated(nodeData.id);
-        }
-
-        private void GenerateLeafNodeCode(LeafNode leafNode, NodeData data, CodeTemplate template)
-        {
-            CodeMethodInvocationExpression initMethod = new CodeMethodInvocationExpression()
-            {
-                methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_LeafMethod)
-            };
-
-            if (!string.IsNullOrWhiteSpace(data.name)) initMethod.Add(template.CreateGenericExpression("\"" + data.name + "\""));
-
-            initMethod.Add(template.GetActionExpression(leafNode.ActionReference));
-
-            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement()
-            {
-                Type = typeof(LeafNode),
-                Identificator = template.GetSystemElementIdentificator(data.id),
-                RightExpression = initMethod
-            };
-
             template.AddStatement(nodeDeclaration);
+
+            MarkGenerated(data.id);
         }
 
-        private void GenerateDecoratorCode(DecoratorNode decoratorNode, NodeData data, CodeTemplate template)
+        private CodeNodeCreationMethodExpression GenerateLeafNodeCode(LeafNode leafNode, NodeData data, CodeTemplate template)
         {
-            CodeMethodInvocationExpression initMethod = new CodeMethodInvocationExpression()
-            {
-                methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_DecoratorMethod + "<" + decoratorNode.TypeName() + ">")
-            };
+            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
+            initMethod.nodeName = data.name;
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_LeafMethod);
 
-            if (!string.IsNullOrWhiteSpace(data.name)) initMethod.Add(template.CreateGenericExpression("\"" + data.name + "\""));
+            initMethod.Add(template.GetActionExpression(leafNode.ActionReference, template.GetSystemElementIdentificator(data.id) + "_action"));
+
+            return initMethod;
+        }
+
+        private CodeNodeCreationMethodExpression GenerateDecoratorCode(DecoratorNode decoratorNode, NodeData data, CodeTemplate template)
+        {
+            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
+            initMethod.nodeName = data.name;
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_DecoratorMethod + "<" + decoratorNode.TypeName() + ">");
 
             if (data.childIds.Count != 1)
             {
                 Debug.LogWarning("CodeGenError: The number of children is wrong.");
-                initMethod.Add(new CodeSimpleExpression("null /* missing node */"));
+                initMethod.Add(new CodeCustomExpression("null /* missing node */"));
             }
             else
             {
                 GenerateNodeCode(GetNodeById(data.childIds[0]), template);
-
                 initMethod.Add(template.CreateReferencedElementExpression(data.childIds[0]));
             }
 
-            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement()
-            {
-                Type = decoratorNode.GetType(),
-                Identificator = template.GetSystemElementIdentificator(data.id),
-                RightExpression = initMethod
-            };
-
-            template.AddStatement(nodeDeclaration);
-            GenerateDecoratorProperties(decoratorNode, nodeDeclaration.Identificator, template);
+            GenerateDecoratorProperties(decoratorNode, template.GetSystemElementIdentificator(data.id), template);
+            return initMethod;
         }
 
 
-        private void GenerateCompositeCode(CompositeNode compositeNode, NodeData data, CodeTemplate template)
+        private CodeNodeCreationMethodExpression GenerateCompositeCode(CompositeNode compositeNode, NodeData data, CodeTemplate template)
         {
-            CodeMethodInvocationExpression initMethod = new CodeMethodInvocationExpression()
-            {
-                methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_CompositeMethod + "<" + compositeNode.TypeName() + ">")
-            };
+            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
+            initMethod.nodeName = data.name;
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_CompositeMethod + "<" + compositeNode.TypeName() + ">");
 
-            var randomArg = template.CreateGenericExpression(compositeNode.IsRandomized.ToCodeFormat());
-
-            if (!string.IsNullOrWhiteSpace(data.name)) initMethod.Add(template.CreateGenericExpression("\"" + data.name + "\""));
-
-            initMethod.Add(randomArg);
+            initMethod.Add(template.CreateGenericExpression(compositeNode.IsRandomized.ToCodeFormat()));
 
             for (int i = 0; i < data.childIds.Count; i++)
             {
@@ -123,17 +97,9 @@ namespace BehaviourAPI.Unity.Editor
                 initMethod.Add(template.CreateReferencedElementExpression(data.childIds[i]));
             }
 
+            GenerateCompositeProperties(compositeNode, template.GetSystemElementIdentificator(data.id), template);
 
-
-            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement()
-            {
-                Type = compositeNode.GetType(),
-                Identificator = template.GetSystemElementIdentificator(data.id),
-                RightExpression = initMethod
-            };
-
-            template.AddStatement(nodeDeclaration);
-            GenerateCompositeProperties(compositeNode, nodeDeclaration.Identificator, template);
+            return initMethod;
         }
 
         private void GenerateDecoratorProperties(DecoratorNode obj, string identifier, CodeTemplate template)
@@ -143,22 +109,7 @@ namespace BehaviourAPI.Unity.Editor
 
             foreach (var field in fields)
             {
-                var statement = new CodeVariableReassignationStatement();
-                statement.LeftExpression = new CodeMethodReferenceExpression(identifier, field.Name);
-
-                if (typeof(Action).IsAssignableFrom(field.FieldType))
-                {
-                    statement.RightExpression = template.GetActionExpression((Action)field.GetValue(obj));
-                }
-                else if (typeof(Perception).IsAssignableFrom(field.FieldType))
-                {
-                    statement.RightExpression = template.GetPerceptionExpression((Perception)field.GetValue(obj));
-                }
-                else
-                {
-                    statement.RightExpression = template.CreatePropertyExpression(field.GetValue(obj));
-                }
-                template.AddStatement(statement);
+                template.AddPropertyStatement(field.GetValue(obj), identifier, field.Name);
             }
         }
 
@@ -171,22 +122,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (field.Name == "IsRandomized") continue;
 
-                var statement = new CodeVariableReassignationStatement();
-                statement.LeftExpression = new CodeMethodReferenceExpression(identifier, field.Name);
-
-                if (typeof(Action).IsAssignableFrom(field.FieldType))
-                {
-                    statement.RightExpression = template.GetActionExpression((Action)field.GetValue(obj));
-                }
-                else if (typeof(Perception).IsAssignableFrom(field.FieldType))
-                {
-                    statement.RightExpression = template.GetPerceptionExpression((Perception)field.GetValue(obj));
-                }
-                else
-                {
-                    statement.RightExpression = template.CreatePropertyExpression(field.GetValue(obj));
-                }
-                template.AddStatement(statement);
+                template.AddPropertyStatement(field.GetValue(obj), identifier, field.Name);
             }
         }
     }
