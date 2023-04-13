@@ -1,4 +1,3 @@
-using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.UtilitySystems;
 using System;
@@ -23,14 +22,14 @@ namespace BehaviourAPI.Unity.Editor
             EditorHierarchyNode fusionFactorNode = new EditorHierarchyNode("Fusion factors");
             EditorHierarchyNode curveFactor = new EditorHierarchyNode("Curve factors");
 
-            EditorHierarchyNode actionNode = new EditorHierarchyNode(typeof(UtilityAction));
+            EditorHierarchyNode actionNode = new EditorHierarchyNode(typeof(Framework.Adaptations.UtilityAction));
             EditorHierarchyNode exitNode = new EditorHierarchyNode(typeof(UtilityExitNode));
             EditorHierarchyNode bucketNode = new EditorHierarchyNode(typeof(UtilityBucket));
 
 
             factorNodes.Childs.Add(fusionFactorNode);
             factorNodes.Childs.Add(curveFactor);
-            for(int i = 0; i < types.Count; i++)
+            for (int i = 0; i < types.Count; i++)
             {
                 if (typeof(FusionFactor).IsAssignableFrom(types[i]))
                     fusionFactorNode.Childs.Add(new EditorHierarchyNode(types[i]));
