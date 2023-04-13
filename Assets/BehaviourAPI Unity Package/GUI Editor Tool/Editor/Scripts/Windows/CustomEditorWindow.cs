@@ -7,7 +7,6 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Rendering.VirtualTexturing;
 using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
@@ -77,6 +76,8 @@ namespace BehaviourAPI.Unity.Editor
         Label m_PathLabel;
         Label m_ModeLabel;
 
+        private bool m_ChangeNodeFlag = false;
+        private bool m_ChangeGraphFlag = false;
         #region -------------------------------------------- Create window --------------------------------------------
 
         private void OnEnable()
@@ -216,9 +217,9 @@ namespace BehaviourAPI.Unity.Editor
             {
                 m_ModeLabel.text = runtime ? "Runtime" : "Editor";
 
-                if(system.ObjectReference != null)
+                if (system.ObjectReference != null)
                 {
-                    if(AssetDatabase.Contains(system.ObjectReference))
+                    if (AssetDatabase.Contains(system.ObjectReference))
                     {
                         m_PathLabel.text = AssetDatabase.GetAssetPath(system.ObjectReference);
                     }
@@ -300,10 +301,10 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     var graph = System.Data.graphs[i];
                     var graphName = string.IsNullOrWhiteSpace(graph.name) ? "unnamed" : graph.name;
-                    selectGraphDropdown.choices.Add((i + 1) + " - " + graphName);          
+                    selectGraphDropdown.choices.Add((i + 1) + " - " + graphName);
                 }
 
-                if(selectedGraphIndex < 0 || selectedGraphIndex >= System.Data.graphs.Count)
+                if (selectedGraphIndex < 0 || selectedGraphIndex >= System.Data.graphs.Count)
                 {
                     selectedGraphIndex = 0;
                 }
@@ -314,7 +315,7 @@ namespace BehaviourAPI.Unity.Editor
 
 
         private void OnSelectedGraphChanges(ChangeEvent<string> evt)
-        {           
+        {
             if (evt.previousValue == evt.newValue) return;
             if (selectGraphDropdown.index == selectedGraphIndex) return;
 
@@ -419,7 +420,7 @@ namespace BehaviourAPI.Unity.Editor
             //Debug.Log("Update graph view: " + selectedGraphIndex);
             if (selectedGraphIndex >= 0)
             {
-                if(!IsRuntime)
+                if (!IsRuntime)
                 {
                     var nodesProperty = graphsProperty.GetArrayElementAtIndex(selectedGraphIndex).FindPropertyRelative("nodes");
                     graphDataView.UpdateGraph(System.Data.graphs[selectedGraphIndex], nodesProperty);
@@ -440,8 +441,10 @@ namespace BehaviourAPI.Unity.Editor
         {
             if (System == null || serializedObject == null) return;
 
+            m_ChangeNodeFlag = false;
+            m_ChangeGraphFlag = false;
 
-            using(var changeCheck = new EditorGUI.ChangeCheckScope())
+            using (var changeCheck = new EditorGUI.ChangeCheckScope())
             {
 
                 EditorGUILayout.BeginHorizontal();
@@ -450,22 +453,23 @@ namespace BehaviourAPI.Unity.Editor
                 DrawInspectorTab();
 
                 EditorGUILayout.EndVertical();
-                EditorGUILayout.EndHorizontal();                
+                EditorGUILayout.EndHorizontal();
 
-                if(changeCheck.changed)
+                if (changeCheck.changed)
                 {
                     serializedObject.ApplyModifiedProperties();
-                    graphDataView.RefreshSelectedNodesProperties();
-                    UpdateSelectionMenu();
+
+                    if (m_ChangeGraphFlag) UpdateSelectionMenu();
+                    if (m_ChangeNodeFlag) graphDataView.RefreshSelectedNodesProperties();
                 }
-            }           
+            }
         }
 
         private void DrawInspectorTab()
         {
             inspectorMode = GUILayout.Toolbar(inspectorMode, k_inspectorOptions);
 
-            switch(inspectorMode)
+            switch (inspectorMode)
             {
                 case 0:
                     DisplayCurrentGraphProperty();
@@ -479,7 +483,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private void DisplayCurrentNodeProperty()
         {
-            using(var nodeChangeCheck = new EditorGUI.ChangeCheckScope())
+            using (var nodeChangeCheck = new EditorGUI.ChangeCheckScope())
             {
                 if (selectedNodeIndexList.Count == 0)
                 {
@@ -501,9 +505,9 @@ namespace BehaviourAPI.Unity.Editor
                     EditorGUILayout.HelpBox("Multiedit is not enabled", MessageType.Info);
                 }
 
-                if(nodeChangeCheck.changed)
+                if (nodeChangeCheck.changed)
                 {
-                    graphDataView.RefreshSelectedNodesProperties();
+                    m_ChangeNodeFlag = true;
                 }
             }
         }
@@ -511,22 +515,30 @@ namespace BehaviourAPI.Unity.Editor
         private void DisplayCurrentGraphProperty()
         {
 
-            if(selectedGraphIndex >= 0)
+            if (selectedGraphIndex >= 0)
             {
-                var selectedGraphProperty = graphsProperty.GetArrayElementAtIndex(selectedGraphIndex);
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.BeginVertical("box");
+                using (var graphChangeCheck = new EditorGUI.ChangeCheckScope())
+                {
+                    var selectedGraphProperty = graphsProperty.GetArrayElementAtIndex(selectedGraphIndex);
+                    EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.BeginVertical("box");
 
-                EditorGUILayout.LabelField("Graph", EditorStyles.centeredGreyMiniLabel);
+                    EditorGUILayout.LabelField("Graph", EditorStyles.centeredGreyMiniLabel);
 
-                EditorGUILayout.LabelField("Type", selectedGraphProperty.FindPropertyRelative("graph").managedReferenceValue.TypeName(), EditorStyles.wordWrappedLabel);
-                DrawPropertyField(selectedGraphProperty, "name");
-                DrawAllFieldsWithoutFoldout(selectedGraphProperty.FindPropertyRelative("graph"));
+                    EditorGUILayout.LabelField("Type", selectedGraphProperty.FindPropertyRelative("graph").managedReferenceValue.TypeName(), EditorStyles.wordWrappedLabel);
+                    DrawPropertyField(selectedGraphProperty, "name");
+                    DrawAllFieldsWithoutFoldout(selectedGraphProperty.FindPropertyRelative("graph"));
 
-                EditorGUILayout.Space(20);
+                    EditorGUILayout.Space(20);
 
-                EditorGUILayout.EndVertical();
-                EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.EndVertical();
+                    EditorGUILayout.EndHorizontal();
+
+                    if (graphChangeCheck.changed)
+                    {
+                        m_ChangeGraphFlag = true;
+                    }
+                }
             }
             else
             {
@@ -544,7 +556,7 @@ namespace BehaviourAPI.Unity.Editor
             pushPerceptionScrollPos = EditorGUILayout.BeginScrollView(pushPerceptionScrollPos, "window", GUILayout.MinHeight(100));
             if (pushPerceptionsProperty == null) return;
 
-            for(int i = 0; i < pushPerceptionsProperty.arraySize; i++)
+            for (int i = 0; i < pushPerceptionsProperty.arraySize; i++)
             {
                 SerializedProperty p = pushPerceptionsProperty.GetArrayElementAtIndex(i);
                 EditorGUILayout.BeginHorizontal();
@@ -639,11 +651,11 @@ namespace BehaviourAPI.Unity.Editor
 
         public void RegisterOperation(string v)
         {
-            if(System.ObjectReference != null)
+            if (System.ObjectReference != null)
             {
                 Undo.RegisterCompleteObjectUndo(System.ObjectReference, v);
             }
-            
+
         }
 
         public void OnChangePlayModeState(PlayModeStateChange playModeStateChange)
