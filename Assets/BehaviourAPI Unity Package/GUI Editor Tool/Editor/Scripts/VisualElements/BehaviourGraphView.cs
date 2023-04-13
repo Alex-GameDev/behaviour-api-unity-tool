@@ -34,6 +34,8 @@ namespace BehaviourAPI.Unity.Editor
         public Action DataChanged { get; set; }
         public Action<List<int>> SelectionNodeChanged { get; set; }
 
+        public IEdgeConnectorListener Connector => m_EdgeConnectorListener;
+
         #endregion
 
         #region ------------------------------------- Private fields --------------------------------------
@@ -319,7 +321,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             NodeDrawer drawer = NodeDrawer.Create(nodeData.node);
             var index = graphData.nodes.IndexOf(nodeData);
-            NodeView mNodeView = new NodeView(nodeData, drawer, this, m_EdgeConnectorListener, m_CurrentGraphNodesProperty?.GetArrayElementAtIndex(index));
+            NodeView mNodeView = new NodeView(nodeData, drawer, this, m_CurrentGraphNodesProperty?.GetArrayElementAtIndex(index));
 
             if (m_EditorWindow.IsRuntime)
             {

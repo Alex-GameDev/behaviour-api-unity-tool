@@ -1,11 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Text;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEditor;
-using System.Text;
-using System.Collections.Generic;
-using UnityEditor.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -13,163 +13,266 @@ namespace BehaviourAPI.Unity.Editor
     using BehaviourAPI.UnityExtensions;
     using Framework;
     using Framework.Adaptations;
-    using GluonGui.WorkspaceWindow.Views.WorkspaceExplorer.Explorer;
 
     /// <summary>
-    /// 
+    /// Class used to represent a <see cref="NodeData"/> element.
     /// </summary>
     public class NodeView : UnityEditor.Experimental.GraphView.Node
     {
+        private static readonly string k_NameField = "title-input-field";
+        private static readonly string k_Warning = "node-warning";
+        private static readonly string k_Icon = "node-icon";
+        private static readonly string k_Status = "node-status";
+        private static readonly string k_Border = "node-border";
+
+        private static readonly string k_ExtensionDiv = "node-extension-div";
+        private static readonly string k_ExtensionToggle = "node-extension-toggle";
+        private static readonly string k_ExtensionContainer = "node-extension-content";
+
+        private static readonly string k_ColorTop = "node-type-color-top";
+        private static readonly string k_ColorBottom = "node-type-color-bottom";
+        private static readonly string k_PortCover = "node-port-cover";
+
+        #region ------------------------------- Public fields -------------------------------
+
+        /// <summary>
+        /// The node data represented by the view.
+        /// </summary>
         public NodeData data;
-        
+
+        /// <summary>
+        /// The list of edges connected to input ports in the node.
+        /// </summary>
+        public List<EdgeView> InputConnectionViews { get; private set; } = new List<EdgeView>();
+
+        /// <summary>
+        /// The list of edges connected to output ports in the node.
+        /// </summary>
+        public List<EdgeView> OutputConnectionViews { get; private set; } = new List<EdgeView>();
+
+        /// <summary>
+        /// The graphview that contains the node.
+        /// </summary>
+        public BehaviourGraphView graphView => m_graphView;
+
+        #endregion
+
+        #region ------------------------------- Private fields -------------------------------
+
         NodeDrawer drawer;
 
         SerializedProperty nodeProperty;
 
-        public List<EdgeView> InputConnectionViews { get; private set; } = new List<EdgeView>();
-        public List<EdgeView> OutputConnectionViews { get; private set; } = new List<EdgeView>();
-
-        public VisualElement BorderElement { get; private set; }
-        public TaskView ActionView { get; private set; }
-        public TaskView PerceptionView { get; private set; }
-        public TaskView CustomView { get; private set; }
-
+        VisualElement m_BorderElement;
+        VisualElement m_Warning;
+        VisualElement m_ExtensionContainer;
         VisualElement m_StatusBorder;
 
-        TextField m_TitleInputField;
+        VisualElement m_ColorTop;
+        VisualElement m_ColorBottom;
 
-        public BehaviourGraphView graphView
-        {
-            get
-            {
-                if (m_graphView == null) m_graphView = GetFirstAncestorOfType<BehaviourGraphView>();
-                return m_graphView;
-            }
-        }
+        TextField m_NameInputField;
 
-        private BehaviourGraphView m_graphView;
-        IEdgeConnectorListener edgeConnector;
+        Toggle m_ExtensionToggle;
 
-        
-        public NodeView(NodeData data, NodeDrawer drawer, BehaviourGraphView graphView, IEdgeConnectorListener edgeConnector, SerializedProperty property = null) : base(drawer.LayoutPath)
+        Dictionary<string, ExtensionView> m_taskViews = new Dictionary<string, ExtensionView>();
+
+        BehaviourGraphView m_graphView;
+
+        #endregion
+
+        public NodeView(NodeData data, NodeDrawer drawer, BehaviourGraphView graphView, SerializedProperty property = null) : base(drawer.LayoutPath)
         {
             this.data = data;
             this.drawer = drawer;
 
-            m_TitleInputField = this.Q<TextField>(name: "title-input-field");
+            m_graphView = graphView;
 
             drawer.SetView(this, data.node);
-            this.m_graphView = graphView;
-            SetPosition(new Rect(data.position, UnityEngine.Vector2.zero));
-            this.edgeConnector = edgeConnector;
+            SetPosition(new Rect(data.position, Vector2.zero));
 
-            BorderElement = this.Q("node-border");
+            m_NameInputField = this.Q<TextField>(k_NameField);
+            m_BorderElement = this.Q(k_Border);
+            m_ExtensionToggle = this.Q<Toggle>(k_ExtensionToggle);
+            m_ExtensionContainer = this.Q(k_ExtensionContainer);
+            m_StatusBorder = this.Q(k_Status);
+            m_ColorTop = this.Q(k_ColorTop);
+            m_ColorBottom = this.Q(k_ColorBottom);
 
-            var extensionContainer = this.Q("node-extension-content");
-            ActionView = new TaskView();
-            extensionContainer.Add(ActionView);
-            PerceptionView = new TaskView();
-            extensionContainer.Add(PerceptionView);
-            CustomView = new TaskView();
-            extensionContainer.Add(CustomView);
+            m_ExtensionToggle.RegisterValueChangedCallback(OnChangeExtensionToggle);
 
-            UpdateSerializedProperty(property);
+            nodeProperty = property;
+
             drawer.SetUpPorts();
-            drawer.DrawNodeDetails();
+            DrawNodeDetails();
+            RefreshDisplay();
+        }
 
-            m_StatusBorder = this.Q("node-status");
+        private void DrawNodeDetails()
+        {
+            m_NameInputField.value = data.name;
+
+            if (nodeProperty != null)
+            {
+                m_NameInputField.bindingPath = nodeProperty.FindPropertyRelative("name").propertyPath;
+                m_NameInputField.Bind(nodeProperty.serializedObject);
+                m_NameInputField.isReadOnly = false;
+            }
+            else
+            {
+                m_NameInputField.isReadOnly = true;
+            }
+
             if (graphView.IsRuntime)
             {
-                this.Q("node-port-cover").Enable();
-                if(data.node is IStatusHandler statusHandler)
+                var portCover = this.Q(k_PortCover);
+                portCover.Enable();
+
+                if (data.node is IStatusHandler statusHandler)
                 {
                     statusHandler.StatusChanged += OnStatusChanged;
                     OnStatusChanged(statusHandler.Status);
                 }
             }
-            RefreshDisplay();
+
+            if (data.node is IActionAssignable actionAssignable) AddExtensionView("action");
+            if (data.node is IPerceptionAssignable perceptionAssignable) AddExtensionView("perception");
+
+            drawer.DrawNodeDetails();
+
+            if (m_taskViews.Count == 0) m_ExtensionToggle.Disable();
         }
 
-        public void OnDestroy()
+        #region --------------------------------------- Modify elements ---------------------------------------
+
+        /// <summary>
+        /// Create a new port in the node.
+        /// </summary>
+        /// <param name="direction">The direction of the port.</param>
+        /// <param name="orientation">The orientation of the port.</param>
+        /// <returns>The port created.</returns>
+        public PortView InstantiatePort(Direction direction, EPortOrientation orientation)
         {
-            if (graphView.IsRuntime && data.node is IStatusHandler statusHandler)
+            var isInput = direction == Direction.Input;
+
+            Port.Capacity portCapacity;
+            Type portType;
+
+            if (data.node != null)
             {
-                statusHandler.StatusChanged -= OnStatusChanged;
-            }
-            drawer.OnDestroy();
-        }
-
-        private void OnStatusChanged(Status status)
-        {
-            m_StatusBorder.ChangeBorderColor(status.ToColor());
-        }
-
-        public void UpdateSerializedProperty(SerializedProperty prop)
-        {
-            nodeProperty = prop;
-            UpdatePropertyBinding();
-        }
-
-        private void UpdatePropertyBinding()
-        {
-            m_TitleInputField.value = data.name;
-            if (nodeProperty == null)
-            {
-                m_TitleInputField.isReadOnly = true;
+                if (isInput) portCapacity = data.node.MaxInputConnections == -1 ? Port.Capacity.Multi : Port.Capacity.Single;
+                else portCapacity = data.node.MaxOutputConnections == -1 ? Port.Capacity.Multi : Port.Capacity.Single;
+                portType = isInput ? data.node.GetType() : data.node.ChildType;
             }
             else
             {
-                // The binding path needs to be assigned before the object:
-                m_TitleInputField.bindingPath = nodeProperty.FindPropertyRelative("name").propertyPath;
-                m_TitleInputField.Bind(nodeProperty.serializedObject);
-                m_TitleInputField.isReadOnly = false;
+                portCapacity = Port.Capacity.Multi;
+                portType = typeof(NodeView); // Any invalid type
             }
+
+            var port = PortView.Create(orientation, direction, portCapacity, portType, graphView.Connector);
+            (isInput ? inputContainer : outputContainer).Add(port);
+
+            if (graphView.IsRuntime)
+            {
+                port.capabilities -= Capabilities.Selectable;
+            }
+
+            port.portName = "";
+            port.style.flexDirection = orientation.ToFlexDirection();
+
+            var bg = new VisualElement();
+            bg.style.position = Position.Absolute;
+            bg.style.top = 0; bg.style.left = 0; bg.style.bottom = 0; bg.style.right = 0;
+            port.Add(bg);
+
+            return port;
         }
 
-        public void RefreshDisplay()
+        /// <summary>
+        /// Add a new label to the extension container in the node.
+        /// </summary>
+        /// <param name="name">The name of the extension element.</param>
+        /// <returns>The element created.</returns>
+        public ExtensionView AddExtensionView(string name)
         {
-            //var t = DateTime.Now;
-            if (data.node is IActionAssignable actionAssignable) 
-            {
-                ActionView.Update(actionAssignable.ActionReference.GetActionInfo());
-            }
-            if (data.node is IPerceptionAssignable perceptionAssignable)
-            {
-                var perceptionInfo = perceptionAssignable.PerceptionReference.GetPerceptionInfo();
-                if (string.IsNullOrWhiteSpace(perceptionInfo)) perceptionInfo = "true";
-                PerceptionView.Update("if " + perceptionInfo);
-            }
-            drawer.OnRefreshDisplay();
+            ExtensionView taskView = new ExtensionView();
 
-            if(ActionView.Container.style.display == DisplayStyle.None &&
-                PerceptionView.Container.style.display == DisplayStyle.None &&
-                CustomView.Container.style.display == DisplayStyle.None)
+            if (m_taskViews.TryAdd(name, taskView))
             {
-                var toggle = this.Q<Foldout>("node-extension-foldout");
-                toggle.Disable();
+                m_ExtensionContainer.Add(taskView);
+                return taskView;
             }
             else
             {
-                var toggle = this.Q<Foldout>("node-extension-foldout");
-                toggle.Enable();
+                Debug.LogWarning("Error creating a taskview. Other with the same name already exists");
+                return null;
             }
-            //Debug.Log((DateTime.Now - t).TotalMilliseconds);
         }
 
+        /// <summary>
+        /// Find a extension element by its name.
+        /// </summary>
+        /// <param name="name">The name of the element.</param>
+        /// <returns>The element found.</returns>
+        public ExtensionView GetTaskView(string name)
+        {
+            if (m_taskViews.TryGetValue(name, out var taskView))
+            {
+                return taskView;
+            }
+            else
+            {
+                Debug.LogWarning("Error creating a taskview. Other with the same name already exists");
+                return null;
+            }
+        }
 
-        #region ------------------------------- Events -------------------------------
+        /// <summary>
+        /// Change the color of the horizontal strips in the node. 
+        /// </summary>
+        /// <param name="color">The new color.</param>
+        public void SetColor(Color color)
+        {
+            m_ColorTop.ChangeBackgroundColor(color);
+            m_ColorBottom.ChangeBackgroundColor(color);
+        }
 
+        /// <summary>
+        /// Displays and change the text of the icon element.
+        /// </summary>
+        /// <param name="text">The new text.</param>
+        public void SetIconText(string text)
+        {
+            if (!string.IsNullOrEmpty(text))
+            {
+                var iconElement = this.Q("node-icon");
+                iconElement.Enable();
+                iconElement.Add(new Label(text));
+            }
+        }
+
+        #endregion
+
+        #region -------------------------------------- Editor Events --------------------------------------
+
+        /// <summary>
+        /// Call this method when the node is selected.
+        /// </summary>
         public override void OnSelected()
         {
             base.OnSelected();
-            BorderElement.ChangeBackgroundColor(new Color(.5f, .5f, .5f, .5f));
+            m_BorderElement.ChangeBackgroundColor(new Color(.5f, .5f, .5f, .5f));
             drawer.OnSelected();
         }
 
+        /// <summary>
+        /// Call this method when the node is unselected.
+        /// </summary>
         public override void OnUnselected()
         {
             base.OnSelected();
-            BorderElement.ChangeBackgroundColor(new Color(0f, 0f, 0f, 0f));
+            m_BorderElement.ChangeBackgroundColor(new Color(0f, 0f, 0f, 0f));
             drawer.OnUnselected();
         }
 
@@ -182,6 +285,11 @@ namespace BehaviourAPI.Unity.Editor
             drawer.OnMoved();
         }
 
+        /// <summary>
+        /// Call this method when a new edge is connected to the node.
+        /// </summary>
+        /// <param name="edgeView">The edge connected.</param>
+        /// <param name="updateData">True if the edge was created by the user and the node connection data must be updated.</param>
         public void OnConnected(EdgeView edgeView, bool updateData = true)
         {
             if (edgeView.output.node == this)
@@ -210,7 +318,8 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Call when an edge is disconnected to the node.
         /// </summary>
-
+        /// <param name="edgeView">The edge disconnected.</param>
+        /// <param name="updateData">True if the edge was removed by the user and the node connection data must be updated.</param>
         public void OnDisconnected(EdgeView edgeView, bool updateData = true)
         {
             if (edgeView.output.node == this)
@@ -236,52 +345,85 @@ namespace BehaviourAPI.Unity.Editor
             drawer.OnDisconnected(edgeView);
         }
 
-        #endregion
 
-
-        public PortView InstantiatePort(Direction direction, EPortOrientation orientation)
+        /// <summary>
+        /// Called when the node index changes and the serialized property must be updated, after deleting a node or changing the start node.
+        /// </summary>
+        /// <param name="prop">The new property associated with the node.</param>
+        public void UpdateSerializedProperty(SerializedProperty prop)
         {
-            var isInput = direction == Direction.Input;
-
-            Port.Capacity portCapacity;
-            Type portType;
-
-            if (data.node != null)
+            nodeProperty = prop;
+            m_NameInputField.value = data.name;
+            if (nodeProperty == null)
             {
-                if (isInput) portCapacity = data.node.MaxInputConnections == -1 ? Port.Capacity.Multi : Port.Capacity.Single;
-                else portCapacity = data.node.MaxOutputConnections == -1 ? Port.Capacity.Multi : Port.Capacity.Single;
-                portType = isInput ? data.node.GetType() : data.node.ChildType;
+                m_NameInputField.isReadOnly = true;
             }
             else
             {
-                portCapacity = Port.Capacity.Multi;
-                portType = typeof(NodeView); // Any invalid type
+                // The binding path needs to be assigned before the object:
+                m_NameInputField.bindingPath = nodeProperty.FindPropertyRelative("name").propertyPath;
+                m_NameInputField.Bind(nodeProperty.serializedObject);
+                m_NameInputField.isReadOnly = false;
             }
-
-            var port = PortView.Create(orientation, direction, portCapacity, portType, edgeConnector);
-            (isInput ? inputContainer : outputContainer).Add(port);
-
-            if (graphView.IsRuntime)
-            {
-                port.capabilities -= Capabilities.Selectable;
-            }
-
-            port.portName = "";
-            port.style.flexDirection = orientation.ToFlexDirection();
-
-            var bg = new VisualElement();
-            bg.style.position = Position.Absolute;
-            bg.style.top = 0; bg.style.left = 0; bg.style.bottom = 0; bg.style.right = 0;
-            port.Add(bg);
-
-            return port;
         }
+
+        /// <summary>
+        /// Called every time the node serialized property changed in editor:
+        /// </summary>
+        public void RefreshDisplay()
+        {
+            //var t = DateTime.Now;
+            if (data.node is IActionAssignable actionAssignable)
+            {
+                var actionTaskDisplay = m_taskViews["action"];
+                actionTaskDisplay.Update(actionAssignable.ActionReference.GetActionInfo());
+            }
+            if (data.node is IPerceptionAssignable perceptionAssignable)
+            {
+                var perceptionTaskDisplay = m_taskViews["perception"];
+                perceptionTaskDisplay.Update(perceptionAssignable.PerceptionReference.GetPerceptionInfo());
+            }
+            drawer.OnRefreshDisplay();
+            //Debug.Log((DateTime.Now - t).TotalMilliseconds);
+        }
+
+        /// <summary>
+        /// Called when the node is deleted.
+        /// Is used to remove the event handlers in runtime mode.
+        /// </summary>
+        public void OnDestroy()
+        {
+            if (graphView.IsRuntime && data.node is IStatusHandler statusHandler)
+            {
+                statusHandler.StatusChanged -= OnStatusChanged;
+            }
+            drawer.OnDestroy();
+        }
+
+        /// <summary>
+        /// Called when the element will be deleted
+        /// </summary>
+        public void OnDeleted()
+        {
+            drawer.OnDeleted();
+        }
+
+        #endregion
+
+        #region ------------------------------------- Runtime Events -------------------------------------
+
+        private void OnStatusChanged(Status status)
+        {
+            m_StatusBorder.ChangeBorderColor(status.ToColor());
+        }
+
+        #endregion      
 
         #region ------------------------------- Contextual menu -------------------------------
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
-            if(!graphView.IsRuntime)
+            if (!graphView.IsRuntime)
             {
                 evt.menu.AppendAction("Disconnect all.", _ => DisconnectAll(),
                 (InputConnectionViews.Count > 0 || OutputConnectionViews.Count > 0) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
@@ -298,6 +440,10 @@ namespace BehaviourAPI.Unity.Editor
             evt.StopPropagation();
         }
 
+        /// <summary>
+        /// Change the order of the child elements of the node.
+        /// </summary>
+        /// <param name="orderFunction">The function used to sort the elements, usually using its position.</param>
         public void OrderChildNodes(Func<NodeData, float> orderFunction)
         {
             m_graphView.RegisterUndo("Order child nodes");
@@ -332,7 +478,7 @@ namespace BehaviourAPI.Unity.Editor
             sb.AppendLine("Id: " + data.id);
             sb.AppendLine("Parents (" + data.parentIds.Count + ") :");
 
-            for(int i = 0; i < data.parentIds.Count; i++)
+            for (int i = 0; i < data.parentIds.Count; i++)
             {
                 sb.AppendLine("\t- " + data.parentIds[i]);
             }
@@ -350,51 +496,48 @@ namespace BehaviourAPI.Unity.Editor
 
         #endregion
 
+        /// <summary>
+        /// Get the best port to connect a new edge, according to the position of the other node.
+        /// </summary>
+        /// <param name="targetNodeView">The other node view.</param>
+        /// <param name="direction">The direction of the conection in the local node.</param>
+        /// <returns>The selected port for the connection.</returns>
         public Port GetBestPort(NodeView targetNodeView, Direction direction) => drawer.GetPort(targetNodeView, direction);
 
-        public VisualElement Find(string name) => this.Q(name);
-
+        /// <summary>
+        /// Get the index of the node represented by this view in the graph.
+        /// </summary>
+        /// <returns>The index of the node.</returns>
         public int GetDataIndex()
         {
             var graphData = graphView.graphData;
             return graphData.nodes.IndexOf(data);
         }
 
+        /// <summary>
+        /// Move the represented node to the first position in the node list.
+        /// </summary>
         public void ConvertToFirstNode()
         {
             graphView.SetNodeAsFirst(this);
         }
 
-        public void DisconnectAllInputPorts()
+        /// <summary>
+        /// Remove all edges connected to input ports in the node.
+        /// </summary>
+        public void DisconnectAllPorts(Direction direction)
         {
-            DisconnectPorts(inputContainer);
+            if (direction == Direction.Input) DisconnectAllInput();
+            else DisconnectAllInput();
         }
 
-        public void DisconnectPorts(VisualElement portContainer)
-        {
-            if (graphView != null)
-            {
-                var elements = new List<GraphElement>();
-                portContainer.Query<Port>().ForEach(port =>
-                {
-                    if (port.connected)
-                    {
-                        foreach (var c in port.connections) elements.Add(c);
-                    }
-                });
-                graphView.DeleteElements(elements);
-            }
-        }
-
+        /// <summary>
+        /// Force the update of the view.
+        /// </summary>
         public void RefreshView()
         {
             SetPosition(new Rect(data.position, Vector2.zero));
             drawer.OnRepaint();
-        }
-
-        internal void OnDeleted()
-        {
-            drawer.OnDeleted();
         }
 
         private void UpdateChildConnectionViews()
@@ -422,33 +565,29 @@ namespace BehaviourAPI.Unity.Editor
         {
 
         }
+
+        private void OnChangeExtensionToggle(ChangeEvent<bool> evt)
+        {
+            m_ExtensionContainer.style.display = evt.newValue ? DisplayStyle.Flex : DisplayStyle.None;
+        }
     }
 
-    public class TaskView : VisualElement
+    public class ExtensionView : VisualElement
     {
         public Label Label { get; private set; }
         public VisualElement Container { get; private set; }
 
-        public TaskView()
+        public ExtensionView()
         {
-            var asset = BehaviourAPISettings.instance.GetLayoutAsset("Elements/taskview.uxml");
+            var asset = BehaviourAPISettings.instance.GetLayoutAsset("Elements/extensionview.uxml");
             asset.CloneTree(this);
 
             Label = this.Q<Label>("tv-label");
             Container = this.Q("tv-container");
-            Container.Disable();
         }
 
         public void Update(string text)
-        {            
-            if(string.IsNullOrEmpty(text))
-            {
-                Container.Disable();
-            }
-            else
-            {
-                Container.Enable();
-            }
+        {
             Label.text = text;
         }
 

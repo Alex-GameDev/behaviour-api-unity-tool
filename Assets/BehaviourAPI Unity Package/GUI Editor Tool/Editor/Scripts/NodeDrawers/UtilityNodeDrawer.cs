@@ -4,10 +4,7 @@ using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
 {
-    using BehaviourAPI.Unity.Framework.Adaptations;
     using System;
-    using System.Collections.Generic;
-    using UnityEditor;
     using UtilitySystems;
     [CustomNodeDrawer(typeof(UtilityNode))]
     public class UtilityNodeDrawer : NodeDrawer
@@ -17,7 +14,7 @@ namespace BehaviourAPI.Unity.Editor
         private FunctionDisplay m_FunctionDisplay;
         public override string LayoutPath => BehaviourAPISettings.instance.EditorLayoutsPath + "Nodes/acyclicgraphnode.uxml";
 
-        ProgressBar m_UtilityProgressBar; 
+        ProgressBar m_UtilityProgressBar;
 
         public override void DrawNodeDetails()
         {
@@ -25,25 +22,35 @@ namespace BehaviourAPI.Unity.Editor
             {
                 case Framework.Adaptations.VariableFactor:
                 case ConstantFactor:
-                    SetColor(BehaviourAPISettings.instance.LeafFactorColor);
+                    view.SetColor(BehaviourAPISettings.instance.LeafFactorColor);
+                    var functionTaskView = view.AddExtensionView("leaffactor");
                     break;
+
                 case FusionFactor:
-                    SetColor(BehaviourAPISettings.instance.FusionFactorColor);
-                    SetIconText(node.TypeName().CamelCaseToSpaced());
+                    view.SetColor(BehaviourAPISettings.instance.FusionFactorColor);
+                    view.SetIconText(node.TypeName().CamelCaseToSpaced());
                     break;
-                case CurveFactor:
-                    SetColor(BehaviourAPISettings.instance.CurveFactorColor);
-                    SetIconText(node.TypeName().CamelCaseToSpaced());
+
+                case CurveFactor curve:
+                    view.SetColor(BehaviourAPISettings.instance.CurveFactorColor);
+                    view.SetIconText(node.TypeName().CamelCaseToSpaced());
+                    functionTaskView = view.AddExtensionView("function");
+                    m_FunctionDisplay = new FunctionDisplay(curve.TestEvaluate);
+                    //functionTaskView.Label.Disable();
+                    functionTaskView.AddElement(m_FunctionDisplay);
                     break;
+
                 case UtilityBucket:
-                    SetColor(BehaviourAPISettings.instance.BucketColor);
+                    view.SetColor(BehaviourAPISettings.instance.BucketColor);
                     break;
+
                 case UtilityExecutableNode:
-                    SetColor(BehaviourAPISettings.instance.SelectableNodeColor);
+                    view.SetColor(BehaviourAPISettings.instance.SelectableNodeColor);
+                    view.SetIconText(node.TypeName().CamelCaseToSpaced());
                     break;
             }
 
-            if(view.graphView.IsRuntime && node is UtilityNode utilityHandler)
+            if (view.graphView.IsRuntime && node is UtilityNode utilityHandler)
             {
                 m_UtilityProgressBar = new ProgressBar()
                 {
@@ -60,7 +67,6 @@ namespace BehaviourAPI.Unity.Editor
 
                 OnUtilityChanged(utilityHandler.Utility);
             }
-
         }
 
         private void OnUtilityChanged(float utility)
@@ -75,19 +81,6 @@ namespace BehaviourAPI.Unity.Editor
             {
                 utilityHandler.UtilityChanged -= OnUtilityChanged;
             }
-        }
-
-        private void SetColor(Color color)
-        {
-            view.Find("node-type-color-top").ChangeBackgroundColor(color);
-            view.Find("node-type-color-bottom").ChangeBackgroundColor(color);
-        }
-
-        private void SetIconText(string text)
-        {
-            var iconElement = view.Find("node-icon");
-            iconElement.Enable();
-            iconElement.Add(new Label(text));
         }
 
         public override PortView GetPort(NodeView nodeView, Direction direction)
@@ -116,7 +109,7 @@ namespace BehaviourAPI.Unity.Editor
             base.BuildContextualMenu(evt);
 
             if (view.graphView.IsRuntime) return;
-           
+
             evt.menu.AppendAction("Order childs by y position", _ => view.OrderChildNodes(n => n.position.y),
                 view.data.childIds.Count > 1 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
         }
@@ -124,44 +117,44 @@ namespace BehaviourAPI.Unity.Editor
         public override void OnRefreshDisplay()
         {
             switch (node)
-            { 
+            {
                 case Framework.Adaptations.VariableFactor variableFactor:
                     var methodDisplay = variableFactor.variableFunction.GetSerializedMethodText();
-                    if(methodDisplay != null)
+                    var functionTaskView = view.GetTaskView("leaffactor");
+                    if (methodDisplay != null)
                     {
-                        view.CustomView.Update($"{methodDisplay}\n[{variableFactor.min} - {variableFactor.max}]");
+                        functionTaskView.Update($"{methodDisplay}\n[{variableFactor.min} - {variableFactor.max}]");
                     }
                     else
                     {
-                        view.CustomView.Disable();
+                        functionTaskView.Disable();
                     }
                     break;
 
                 case ConstantFactor constant:
-                    view.CustomView.Update(constant.value.ToString());
+                    functionTaskView = view.GetTaskView("leaffactor");
+                    functionTaskView.Update(constant.value.ToString());
                     break;
 
                 case Framework.Adaptations.CustomCurveFactor customCurve:
                     methodDisplay = customCurve.function.GetSerializedMethodText();
+                    functionTaskView = view.GetTaskView("function");
                     if (methodDisplay != null)
                     {
-                        view.CustomView.Update(methodDisplay);
+                        functionTaskView.Update(methodDisplay);
                     }
                     else
                     {
-                        view.CustomView.Disable();
+                        functionTaskView.Disable();
                     }
                     break;
 
                 case CurveFactor curveFactor:
-                    if(m_FunctionDisplay == null)
+
+                    if (m_FunctionDisplay != null)
                     {
-                        view.CustomView.Container.Enable();
-                        view.CustomView.Label.Disable();
-                        m_FunctionDisplay = new FunctionDisplay(curveFactor.TestEvaluate);
-                        view.CustomView.AddElement(m_FunctionDisplay);
+                        m_FunctionDisplay.Update();
                     }
-                    m_FunctionDisplay.Update();
 
                     break;
             }
@@ -169,7 +162,7 @@ namespace BehaviourAPI.Unity.Editor
 
 
 
-       
+
         private class FunctionDisplay : VisualElement
         {
             private static readonly int k_FunctionIntervals = 50;
@@ -178,7 +171,7 @@ namespace BehaviourAPI.Unity.Editor
 
             private VisualElement k_Display;
 
-            public FunctionDisplay(Func<float,float> evaluationMethod)
+            public FunctionDisplay(Func<float, float> evaluationMethod)
             {
                 var asset = BehaviourAPISettings.instance.GetLayoutAsset("Elements/functiondisplay.uxml");
                 asset.CloneTree(this);

@@ -1,8 +1,6 @@
-using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
 using BehaviourAPI.StateMachines;
 using BehaviourAPI.Unity.Framework;
-using BehaviourAPI.UtilitySystems;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
@@ -18,6 +16,7 @@ namespace BehaviourAPI.Unity.Editor
         PortView inputUniquePort, outputUniquePort;
 
         VisualElement rootIcon;
+        Label rootLabel;
 
         public override string LayoutPath => BehaviourAPISettings.instance.EditorLayoutsPath + "Nodes/cyclicgraphnode.uxml";
 
@@ -27,13 +26,19 @@ namespace BehaviourAPI.Unity.Editor
             switch (node)
             {
                 case State:
-                    SetColor(BehaviourAPISettings.instance.StateColor);
+                    view.SetColor(BehaviourAPISettings.instance.StateColor);
                     break;
-                case Transition:
-                    SetColor(BehaviourAPISettings.instance.TransitionColor);
+                case StateTransition:
+                    view.SetColor(BehaviourAPISettings.instance.TransitionColor);
+                    view.AddExtensionView("statusFlags");
+                    break;
+                case ExitTransition:
+                    view.SetColor(BehaviourAPISettings.instance.TransitionColor);
+                    rootIcon.Enable();
+                    view.AddExtensionView("statusFlags");
+                    rootLabel = view.Q<Label>("node-root-label");
                     break;
             }
-
 
             RecomputeEntryNode();
             OnRepaint();
@@ -43,12 +48,12 @@ namespace BehaviourAPI.Unity.Editor
         {
             Direction dir = edgeView.input.node == view ? Direction.Input : Direction.Output;
 
-            if(dir == Direction.Input && node.MaxInputConnections == 1)
+            if (dir == Direction.Input && node.MaxInputConnections == 1)
             {
                 inputUniquePort = edgeView.input as PortView;
                 InputPorts.ForEach(p => { if (p != inputUniquePort) p.Disable(); });
             }
-            else if(dir == Direction.Output && node.MaxOutputConnections == 1)
+            else if (dir == Direction.Output && node.MaxOutputConnections == 1)
             {
                 outputUniquePort = edgeView.output as PortView;
                 OutputPorts.ForEach(p => { if (p != outputUniquePort) p.Disable(); });
@@ -72,17 +77,11 @@ namespace BehaviourAPI.Unity.Editor
                 inputUniquePort = null;
                 InputPorts.ForEach(p => p.Enable());
             }
-            else if(dir == Direction.Output && node.MaxOutputConnections == 1)
+            else if (dir == Direction.Output && node.MaxOutputConnections == 1)
             {
                 outputUniquePort = null;
                 OutputPorts.ForEach(p => p.Enable());
             }
-        }
-
-        private void OnSourceStateLastStatusChanged(Status status)
-        {
-            var edgeView = view.InputConnectionViews[0];
-            edgeView.control.UpdateStatus(status);
         }
 
         public override void OnDestroy()
@@ -93,22 +92,9 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        private void SetColor(Color color)
-        {
-            view.Find("node-type-color-top").ChangeBackgroundColor(color);
-            view.Find("node-type-color-bottom").ChangeBackgroundColor(color);
-        }
-
-        private void SetIconText(string text)
-        {
-            var iconElement = view.Find("node-icon");
-            iconElement.Enable();
-            iconElement.Add(new Label(text));
-        }
-
         public override PortView GetPort(NodeView other, Direction dir)
         {
-            if(dir == Direction.Input)
+            if (dir == Direction.Input)
             {
                 if (inputUniquePort != null) return inputUniquePort;
                 else
@@ -134,13 +120,16 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void OnRepaint()
         {
-            if (view.graphView.graphData.nodes.First() == view.data && IsValidEntryNode(view.data))
+            if (IsValidEntryNode(view.data))
             {
-                rootIcon.Enable();
-            }
-            else
-            {
-                rootIcon.Disable();
+                if (view.graphView.graphData.nodes.First() == view.data)
+                {
+                    rootIcon.Enable();
+                }
+                else
+                {
+                    rootIcon.Disable();
+                }
             }
         }
 
@@ -216,30 +205,9 @@ namespace BehaviourAPI.Unity.Editor
                 view.data.childIds.Count > 1 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
         }
 
-        private void ConvertToEntryState()
-        {
-            view.ConvertToFirstNode();
-        }
-
         public override void OnDeleted()
         {
             RecomputeEntryNode();
-        }
-
-        private static bool IsValidEntryNode(NodeData data)
-        {
-            return data.node is State;
-        }
-
-        private void RecomputeEntryNode()
-        {
-            var nodes = view.graphView.graphData.nodes;
-            if (nodes.Count > 0 && !IsValidEntryNode(nodes.First()))
-            {
-                var newRootNode = nodes.FirstOrDefault(IsValidEntryNode);
-
-                if (newRootNode != null) nodes.MoveAtFirst(newRootNode);
-            }
         }
 
         public override void OnMoved()
@@ -255,7 +223,7 @@ namespace BehaviourAPI.Unity.Editor
                 var other = edgeView.input.node as NodeView;
 
                 var newOutputPort = view.GetBestPort(other, Direction.Output);
-                if(newOutputPort != edgeView.output)
+                if (newOutputPort != edgeView.output)
                 {
                     edgeView.output.Disconnect(edgeView);
                     newOutputPort.Connect(edgeView);
@@ -263,7 +231,7 @@ namespace BehaviourAPI.Unity.Editor
                 }
 
                 var newInputPort = other.GetBestPort(view, Direction.Input);
-                if(newInputPort != edgeView.input)
+                if (newInputPort != edgeView.input)
                 {
                     edgeView.input.Disconnect(edgeView);
                     newInputPort.Connect(edgeView);
@@ -296,13 +264,42 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void OnRefreshDisplay()
         {
-            switch (node)
+            if (node is Transition t)
             {
-                case Transition t:
-                    var flagsDisplay = t.StatusFlags.DisplayInfo();
-                    view.CustomView.Update("Check " + flagsDisplay);
-                    break;
+                var flagsDisplay = t.StatusFlags.DisplayInfo();
+                var taskView = view.GetTaskView("statusFlags");
+                taskView.Update("Check " + flagsDisplay);
+                if (t is ExitTransition exit)
+                {
+                    rootLabel.text = "Exit with " + exit.ExitStatus;
+                }
             }
+        }
+        private void RecomputeEntryNode()
+        {
+            var nodes = view.graphView.graphData.nodes;
+            if (nodes.Count > 0 && !IsValidEntryNode(nodes.First()))
+            {
+                var newRootNode = nodes.FirstOrDefault(IsValidEntryNode);
+
+                if (newRootNode != null) nodes.MoveAtFirst(newRootNode);
+            }
+        }
+
+        private void ConvertToEntryState()
+        {
+            view.ConvertToFirstNode();
+        }
+
+        private void OnSourceStateLastStatusChanged(Status status)
+        {
+            var edgeView = view.InputConnectionViews[0];
+            edgeView.control.UpdateStatus(status);
+        }
+
+        private static bool IsValidEntryNode(NodeData data)
+        {
+            return data.node is State;
         }
     }
 }

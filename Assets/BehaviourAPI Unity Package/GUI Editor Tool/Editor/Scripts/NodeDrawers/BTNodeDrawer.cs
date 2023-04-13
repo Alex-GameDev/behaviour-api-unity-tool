@@ -3,7 +3,6 @@ using BehaviourAPI.Core;
 using BehaviourAPI.Unity.Framework;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace BehaviourAPI.Unity.Editor
@@ -19,21 +18,22 @@ namespace BehaviourAPI.Unity.Editor
         public override void DrawNodeDetails()
         {
             rootIcon = view.Q("node-root");
-            switch(node)
+            switch (node)
             {
-
                 case LeafNode:
-                    SetColor(BehaviourAPISettings.instance.LeafNodeColor);
+                    view.SetColor(BehaviourAPISettings.instance.LeafNodeColor);
                     break;
                 case CompositeNode:
-                    SetColor(BehaviourAPISettings.instance.CompositeColor);
-                    SetIconText(node.TypeName().CamelCaseToSpaced());
+                    view.SetColor(BehaviourAPISettings.instance.CompositeColor);
+                    if (node is SequencerNode) view.SetIconText("-->");
+                    else if (node is SelectorNode) view.SetIconText("?");
+                    else view.SetIconText(node.TypeName().CamelCaseToSpaced());
                     break;
                 case DecoratorNode:
-                    SetColor(BehaviourAPISettings.instance.DecoratorColor);
-                    SetIconText(node.TypeName().CamelCaseToSpaced());
+                    view.SetColor(BehaviourAPISettings.instance.DecoratorColor);
+                    view.SetIconText(node.TypeName().CamelCaseToSpaced());
                     break;
-            }            
+            }
 
             OnRepaint();
         }
@@ -44,7 +44,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (view.InputConnectionViews.Count == 1 && node is BTNode btNode)
             {
-                btNode.LastExecutionStatusChanged +=  OnLastExecutionStatusChanged;
+                btNode.LastExecutionStatusChanged += OnLastExecutionStatusChanged;
                 OnLastExecutionStatusChanged(btNode.LastExecutionStatus);
             }
         }
@@ -63,24 +63,12 @@ namespace BehaviourAPI.Unity.Editor
             edgeView.control.UpdateStatus(status);
         }
 
-        private void SetColor(Color color)
-        {
-            view.Find("node-type-color-top").ChangeBackgroundColor(color);
-            view.Find("node-type-color-bottom").ChangeBackgroundColor(color);
-        }
-
-        private void SetIconText(string text)
-        {
-            var iconElement = view.Find("node-icon");
-            iconElement.Enable();
-            iconElement.Add(new Label(text));
-        }
 
         public override void OnRepaint()
         {
             if (view.graphView.graphData.nodes.First() == view.data && IsValidRootNode(view.data))
             {
-                if(view.data.parentIds.Count > 0)
+                if (view.data.parentIds.Count > 0)
                 {
 
                 }
@@ -115,7 +103,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public override PortView GetPort(NodeView nodeView, Direction direction)
         {
-            if(direction == Direction.Input) return InputPort;
+            if (direction == Direction.Input) return InputPort;
             else return OutputPort;
         }
 
@@ -133,7 +121,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private void ConvertToRootNode()
         {
-            view.DisconnectAllInputPorts();
+            view.DisconnectAllPorts(Direction.Input);
             view.ConvertToFirstNode();
         }
 

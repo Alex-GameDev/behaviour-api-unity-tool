@@ -30,7 +30,7 @@ namespace BehaviourAPI.Unity.Editor
         public abstract void SetUpPorts();
 
         /// <summary>
-        /// 
+        /// Draw the specified elements of the node drawed.
         /// </summary>
         public abstract void DrawNodeDetails();
 
@@ -61,7 +61,7 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// Method called when the node is unselected.
         /// </summary>
-        public virtual void OnUnselected() {}
+        public virtual void OnUnselected() { }
 
         /// <summary>
         /// Method called when a new connection is created in the node.
@@ -105,7 +105,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 return new BTNodeDrawer();
             }
-          
+
         }
     }
 }
