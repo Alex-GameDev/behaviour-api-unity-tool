@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:Template name="elementnodeview" src="project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Editor%20Tool/Editor/Resources/uxml/Elements/nodedisplay.uxml?fileID=9197481963319205126&amp;guid=381f1a45a4c7a0f46bcdbd2437f78481&amp;type=3#nodedisplay" />
     <Style src="project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Editor%20Tool/Editor/Resources/uss/node.uss?fileID=7433441132597879392&amp;guid=81512d53a4bea9b4494135dc1f99b76f&amp;type=3#node" />
     <ui:VisualElement name="node-div" class="node-div" style="padding-top: 12px; padding-bottom: 12px; position: relative;">
         <ui:VisualElement name="node-ports" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; justify-content: space-between;">
@@ -15,19 +16,7 @@
             <ui:VisualElement name="node-status" class="node-status">
                 <ui:VisualElement name="contents">
                     <ui:VisualElement name="top">
-                        <ui:VisualElement name="node-type-color-top" style="height: 5px; border-top-left-radius: 2px; border-bottom-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; background-color: rgb(166, 166, 166); margin-left: 5px; margin-right: 5px;" />
-                        <ui:VisualElement name="node-content" style="align-items: stretch;">
-                            <ui:VisualElement name="title" style="height: auto; flex-direction: column;">
-                                <ui:TextField max-length="30" name="title-input-field" tooltip="Node name" />
-                            </ui:VisualElement>
-                            <ui:VisualElement name="node-details">
-                                <ui:VisualElement name="node-icon" />
-                            </ui:VisualElement>
-                        </ui:VisualElement>
-                        <ui:Foldout name="node-extension-foldout">
-                            <ui:VisualElement name="node-extension-content" style="display: flex; margin-right: 5px; margin-left: -10px;" />
-                        </ui:Foldout>
-                        <ui:VisualElement name="node-type-color-bottom" style="height: 5px; border-top-left-radius: 2px; border-bottom-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; background-color: rgb(166, 166, 166); margin-left: 5px; margin-right: 5px;" />
+                        <ui:Instance template="elementnodeview" name="node-display" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

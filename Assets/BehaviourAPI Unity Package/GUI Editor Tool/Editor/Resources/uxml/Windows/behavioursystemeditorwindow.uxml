@@ -21,7 +21,7 @@
     </uie:Toolbar>
     <ui:VisualElement name="bw-main" style="flex-direction: row; height: 100%;">
         <ui:VisualElement name="bw-graph" style="width: 100%; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex;" />
-        <ui:IMGUIContainer name="bw-inspector" style="background-color: rgba(43, 43, 43, 0.95); width: 25%; min-width: 250px; max-width: 500px; height: 100%; display: flex;" />
+        <ui:IMGUIContainer name="bw-inspector" style="background-color: rgba(43, 43, 43, 0.95); height: 100%; display: flex; width: 400px;" />
     </ui:VisualElement>
     <ui:VisualElement name="bw-empty" style="background-color: rgba(31, 31, 31, 0.95); position: absolute; left: 0; top: 0; right: 0; bottom: 0; align-items: center; justify-content: center; display: flex;">
         <ui:Label text="Edit mode: Press the EDIT button in a EditorBehaviourRunner script or BehaviourSystemAsset" display-tooltip-when-elided="true" style="font-size: 20px; flex-wrap: nowrap; white-space: normal; -unity-text-align: upper-center; margin-left: 30px; margin-right: 30px; margin-top: 10px; margin-bottom: 10px; -unity-font-style: italic;" />
