@@ -11,8 +11,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             var xRect = new Rect(position.x, position.y, position.width * 0.5f - 5, position.height);
             var yRect = new Rect(position.x + position.width * 0.5f, position.y, position.width * 0.5f - 5, position.height);
-            EditorGUI.PropertyField(xRect, property.FindPropertyRelative("x"));
-            EditorGUI.PropertyField(yRect, property.FindPropertyRelative("y"));
+            EditorGUI.PropertyField(xRect, property.FindPropertyRelative("x"), GUIContent.none);
+            EditorGUI.PropertyField(yRect, property.FindPropertyRelative("y"), GUIContent.none);
         }
     }
 }
