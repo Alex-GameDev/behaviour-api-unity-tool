@@ -34,7 +34,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             graphStatement.RightExpression = graphCreationExpression;
 
             template.AddNamespace("BehaviourAPI.UtilitySystems");
-            template.AddStatement(graphStatement, true);
+            template.AddGraphCreationStatement(graphStatement);
 
             foreach (var data in graphData.nodes)
             {
@@ -75,8 +75,8 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             initMethod.nodeName = data.name;
             initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_UtilityBucketMethod);
 
-            initMethod.Add(template.CreateGenericExpression(utilityBucket.Inertia.ToCodeFormat()));
-            initMethod.Add(template.CreateGenericExpression(utilityBucket.BucketThreshold.ToCodeFormat()));
+            initMethod.Add(new CodeCustomExpression(utilityBucket.Inertia.ToCodeFormat()));
+            initMethod.Add(new CodeCustomExpression(utilityBucket.BucketThreshold.ToCodeFormat()));
             return initMethod;
         }
 
@@ -89,7 +89,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             if (data.childIds.Count == 1)
             {
                 GenerateNodeCode(GetNodeById(data.childIds[0]), template);
-                initMethod.Add(template.CreateReferencedElementExpression(data.childIds[0]));
+                initMethod.Add(GetChildExpression(data.childIds[0], template));
             }
             else
             {
@@ -97,12 +97,12 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                 initMethod.Add(new CodeCustomExpression("null /* missing node */"));
             }
 
-            initMethod.Add(template.CreateReferencedElementExpression(utilityExitNode.ExitStatus.ToCodeFormat()));
+            initMethod.Add(new CodeCustomExpression(utilityExitNode.ExitStatus.ToCodeFormat()));
 
             if (data.parentIds.Count == 1)
             {
                 GenerateNodeCode(GetNodeById(data.parentIds[0]), template);
-                initMethod.Add(template.CreateReferencedElementExpression(data.parentIds[0]));
+                initMethod.Add(GetChildExpression(data.parentIds[0], template));
             }
 
             return initMethod;
@@ -117,7 +117,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             if (data.childIds.Count == 1)
             {
                 GenerateNodeCode(GetNodeById(data.childIds[0]), template);
-                initMethod.Add(template.CreateReferencedElementExpression(data.childIds[0]));
+                initMethod.Add(GetChildExpression(data.childIds[0], template));
             }
             else
             {
@@ -126,12 +126,12 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             }
 
             initMethod.Add(template.GetActionExpression(utilityAction.ActionReference, template.GetSystemElementIdentificator(data.id) + "_action"));
-            initMethod.Add(template.CreateGenericExpression(utilityAction.FinishSystemOnComplete.ToCodeFormat()));
+            initMethod.Add(new CodeCustomExpression(utilityAction.FinishSystemOnComplete.ToCodeFormat()));
 
             if (data.parentIds.Count == 1)
             {
                 GenerateNodeCode(GetNodeById(data.parentIds[0]), template);
-                initMethod.Add(template.CreateReferencedElementExpression(data.parentIds[0]));
+                initMethod.Add(GetChildExpression(data.parentIds[0], template));
             }
 
             return initMethod;
@@ -147,7 +147,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             if (data.childIds.Count == 1)
             {
                 GenerateNodeCode(GetNodeById(data.childIds[0]), template);
-                initMethod.Add(template.CreateReferencedElementExpression(data.childIds[0]));
+                initMethod.Add(GetChildExpression(data.childIds[0], template));
             }
             else
             {
@@ -167,7 +167,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             for (int i = 0; i < data.childIds.Count; i++)
             {
                 GenerateNodeCode(GetNodeById(data.childIds[i]), template);
-                initMethod.Add(template.CreateReferencedElementExpression(data.childIds[i]));
+                initMethod.Add(GetChildExpression(data.childIds[i], template));
             }
 
             GenerateUtilityNodeProperties(data.node as UtilityNode, template.GetSystemElementIdentificator(data.id), template);
@@ -180,7 +180,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             initMethod.nodeName = data.name;
             initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_ConstantFactorMethod);
 
-            initMethod.Add(template.CreateGenericExpression(constantFactor.value.ToCodeFormat()));
+            initMethod.Add(new CodeCustomExpression(constantFactor.value.ToCodeFormat()));
 
             return initMethod;
         }
@@ -192,8 +192,8 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_VariableFactorMethod);
 
             initMethod.Add(template.GenerateMethodCodeExpression(variableFactor.variableFunction, null, typeof(float)));
-            initMethod.Add(template.CreateGenericExpression(variableFactor.min.ToCodeFormat()));
-            initMethod.Add(template.CreateGenericExpression(variableFactor.max.ToCodeFormat()));
+            initMethod.Add(new CodeCustomExpression(variableFactor.min.ToCodeFormat()));
+            initMethod.Add(new CodeCustomExpression(variableFactor.max.ToCodeFormat()));
 
             return initMethod;
         }

@@ -28,7 +28,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             graphStatement.RightExpression = new CodeObjectCreationExpression(type);
 
             template.AddNamespace("BehaviourAPI.StateMachines");
-            template.AddStatement(graphStatement, true);
+            template.AddGraphCreationStatement(graphStatement);
 
             foreach (var nodeData in graphData.nodes)
             {
@@ -103,7 +103,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             if (data.parentIds.Count == 1)
             {
                 GenerateNodeCode(GetNodeById(data.parentIds[0]), template);
-                initMethod.Add(template.CreateReferencedElementExpression(data.parentIds[0]));
+                initMethod.Add(GetChildExpression(data.parentIds[0], template));
             }
             else
             {
@@ -114,7 +114,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             if (data.childIds.Count == 1)
             {
                 GenerateNodeCode(GetNodeById(data.childIds[0]), template);
-                initMethod.Add(template.CreateReferencedElementExpression(data.childIds[0]));
+                initMethod.Add(GetChildExpression(data.childIds[0], template));
             }
             else
             {
@@ -136,7 +136,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             if (data.parentIds.Count == 1)
             {
                 GenerateNodeCode(GetNodeById(data.parentIds[0]), template);
-                initMethod.Add(template.CreateReferencedElementExpression(data.parentIds[0]));
+                initMethod.Add(GetChildExpression(data.parentIds[0], template));
             }
             else
             {
@@ -144,7 +144,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                 initMethod.Add(new CodeCustomExpression("null /* missing node */"));
             }
 
-            initMethod.Add(template.CreateGenericExpression(exitTransition.ExitStatus.ToCodeFormat()));
+            initMethod.Add(new CodeCustomExpression(exitTransition.ExitStatus.ToCodeFormat()));
 
             CreateTransitionArguments(initMethod, template.GetSystemElementIdentificator(data.id), exitTransition.ActionReference, exitTransition.PerceptionReference, exitTransition.StatusFlags, template);
 
@@ -174,7 +174,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             }
             if (flags != Core.StatusFlags.Active)
             {
-                expression.Add(new CodeNamedExpression(lastArgumentAdded ? null : "statusFlags", template.CreateGenericExpression(flags.ToCodeFormat())));
+                expression.Add(new CodeNamedExpression(lastArgumentAdded ? null : "statusFlags", new CodeCustomExpression(flags.ToCodeFormat())));
             }
         }
     }

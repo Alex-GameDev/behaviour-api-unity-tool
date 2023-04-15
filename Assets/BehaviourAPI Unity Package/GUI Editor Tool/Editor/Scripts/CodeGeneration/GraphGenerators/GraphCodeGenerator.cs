@@ -9,6 +9,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         GraphData m_GraphData;
 
         Dictionary<string, NodeData> m_NodeIdMap;
+
         HashSet<string> m_GeneratedNodes;
 
         public string GraphIdentificator { get; protected set; }
@@ -44,5 +45,18 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         protected void MarkGenerated(string id) => m_GeneratedNodes.Add(id);
 
         protected bool IsGenerated(string id) => m_GeneratedNodes.Contains(id);
+
+        protected CodeExpression GetChildExpression(string nodeId, CodeTemplate template)
+        {
+            var nodeIdentificatorName = template.GetSystemElementIdentificator(nodeId);
+            if (nodeIdentificatorName != null)
+            {
+                return new CodeCustomExpression(nodeIdentificatorName);
+            }
+            else
+            {
+                return new CodeCustomExpression("null /* missing node */");
+            }
+        }
     }
 }

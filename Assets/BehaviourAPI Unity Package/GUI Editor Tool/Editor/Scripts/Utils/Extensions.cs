@@ -196,6 +196,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private static string GetPropertyDisplay(object property)
         {
+            if (property == null) return null;
             switch (property)
             {
                 case Color color:

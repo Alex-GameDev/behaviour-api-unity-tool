@@ -1,4 +1,4 @@
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.Unity.Editor.CodeGenerator
 {
     public struct CodeGenerationOptions
     {

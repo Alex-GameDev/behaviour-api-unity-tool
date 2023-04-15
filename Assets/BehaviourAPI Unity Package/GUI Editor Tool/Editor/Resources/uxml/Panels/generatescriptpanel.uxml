@@ -8,7 +8,6 @@
                     <ui:Toggle value="true" name="csw-includenodename-toggle" text="Include node name argument in methods." tooltip="if checked, when a node has a name assigned in the editor, it will be included in the constructor." style="justify-content: flex-start; -unity-text-align: upper-left;" />
                     <ui:Toggle value="true" name="csw-usevarkeyword-toggle" text="Use &apos;var&apos; keyword in declarations." tooltip="if checked, the variable declarations will use the &apos;var&apos; keyword." style="justify-content: flex-start; -unity-text-align: upper-left;" />
                     <ui:Toggle value="true" name="csw-registergraphs-toggle" text="Register graphs for debugger." tooltip="if checked, the instruction &quot;registerGraph&quot; will be added for every graph created." style="justify-content: flex-start; -unity-text-align: upper-left;" />
-                    <ui:Toggle value="true" name="csw-tasksameline-toggle" text="Create actions inline." tooltip="if checked, the action and perception variables will be created in the same line that are required." style="justify-content: flex-start; -unity-text-align: upper-left;" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" mode="VerticalAndHorizontal" style="margin-left: 3px; margin-right: 3px; margin-top: 10px; margin-bottom: 10px; max-height: 300px;">

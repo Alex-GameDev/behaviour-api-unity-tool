@@ -21,7 +21,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             graphStatement.RightExpression = new CodeObjectCreationExpression(type);
 
             template.AddNamespace("BehaviourAPI.BehaviourTrees");
-            template.AddStatement(graphStatement, true);
+            template.AddGraphCreationStatement(graphStatement);
 
             foreach (NodeData nodeData in graphData.nodes)
             {
@@ -75,7 +75,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             else
             {
                 GenerateNodeCode(GetNodeById(data.childIds[0]), template);
-                initMethod.Add(template.CreateReferencedElementExpression(data.childIds[0]));
+                initMethod.Add(GetChildExpression(data.childIds[0], template));
             }
 
             GenerateDecoratorProperties(decoratorNode, template.GetSystemElementIdentificator(data.id), template);
@@ -89,12 +89,12 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             initMethod.nodeName = data.name;
             initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_CompositeMethod + "<" + compositeNode.TypeName() + ">");
 
-            initMethod.Add(template.CreateGenericExpression(compositeNode.IsRandomized.ToCodeFormat()));
+            initMethod.Add(new CodeCustomExpression(compositeNode.IsRandomized.ToCodeFormat()));
 
             for (int i = 0; i < data.childIds.Count; i++)
             {
                 GenerateNodeCode(GetNodeById(data.childIds[i]), template);
-                initMethod.Add(template.CreateReferencedElementExpression(data.childIds[i]));
+                initMethod.Add(GetChildExpression(data.childIds[0], template));
             }
 
             GenerateCompositeProperties(compositeNode, template.GetSystemElementIdentificator(data.id), template);

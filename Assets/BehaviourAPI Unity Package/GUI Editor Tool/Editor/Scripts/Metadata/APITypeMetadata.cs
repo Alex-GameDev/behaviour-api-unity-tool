@@ -255,7 +255,6 @@ namespace BehaviourAPI.Unity.Editor
             compoundPerceptionHierarchyNode.Childs = compoundPerceptionTypes.FindAll(typeof(CompoundPerception).IsAssignableFrom)
                 .Select(compoundPerceptionType => new EditorHierarchyNode(compoundPerceptionType)).ToList();
 
-            Debug.Log(compoundPerceptionHierarchyNode.Childs.Count);
             PerceptionHierarchy.Childs.Add(compoundPerceptionHierarchyNode);
 
             Dictionary<string, EditorHierarchyNode> groups = new Dictionary<string, EditorHierarchyNode>();

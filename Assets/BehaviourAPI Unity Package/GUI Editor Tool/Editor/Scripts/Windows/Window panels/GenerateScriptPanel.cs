@@ -16,8 +16,6 @@ namespace BehaviourAPI.Unity.Editor
         private Toggle m_IncludeNodeNamesToggle;
         private Toggle m_RegisterGraphsInDebuggerToggle;
         private Toggle m_UseVarKeywordToggle;
-        private Toggle m_CreateTasksInlineToggle;
-        private Toggle m_OpenBracketsInNewLineToggle;
 
         CustomEditorWindow m_window;
 
@@ -42,10 +40,6 @@ namespace BehaviourAPI.Unity.Editor
             m_RegisterGraphsInDebuggerToggle.RegisterValueChangedCallback(_ => RefreshGeneratedCode());
             m_UseVarKeywordToggle = this.Q<Toggle>("csw-usevarkeyword-toggle");
             m_UseVarKeywordToggle.RegisterValueChangedCallback(_ => RefreshGeneratedCode());
-            //m_CreateTasksInlineToggle = this.Q<Toggle>("csw-includenodename-toggle");
-            //m_CreateTasksInlineToggle.RegisterValueChangedCallback(_ => RefreshGeneratedCode());
-            //m_OpenBracketsInNewLineToggle = this.Q<Toggle>("csw-tasksameline-toggle");
-            //m_OpenBracketsInNewLineToggle.RegisterValueChangedCallback(_ => RefreshGeneratedCode());
         }
 
         public override void Open(bool canClose = true)
@@ -64,8 +58,6 @@ namespace BehaviourAPI.Unity.Editor
                 includeNames = m_IncludeNodeNamesToggle.value,
                 registerGraphsInDebugger = m_RegisterGraphsInDebuggerToggle.value,
                 useVarKeyword = m_UseVarKeywordToggle.value,
-                //createTasksInline = m_CreateTasksInlineToggle.value,
-                //openBracketsInSameLine = m_OpenBracketsInNewLineToggle.value
             };
             m_ScriptText.value = m_Template.GenerateCode(m_classNameText.value, options);
         }
