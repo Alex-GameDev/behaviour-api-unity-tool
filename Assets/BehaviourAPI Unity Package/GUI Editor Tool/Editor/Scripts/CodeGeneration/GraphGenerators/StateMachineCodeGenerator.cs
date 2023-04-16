@@ -22,9 +22,9 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
         public override void GenerateGraphDeclaration(GraphData graphData, CodeTemplate template)
         {
-            GraphIdentificator = template.GetSystemElementIdentificator(graphData.id);
+            GraphIdentifier = template.GetSystemElementIdentifier(graphData.id);
             var type = graphData.graph.GetType();
-            var graphStatement = new CodeVariableDeclarationStatement(type, GraphIdentificator);
+            var graphStatement = new CodeVariableDeclarationStatement(type, GraphIdentifier);
             graphStatement.RightExpression = new CodeObjectCreationExpression(type);
 
             template.AddNamespace("BehaviourAPI.StateMachines");
@@ -41,7 +41,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             if (data == null) return;
             if (IsGenerated(data.id)) return;
 
-            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement(data.node.GetType(), template.GetSystemElementIdentificator(data.id));
+            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement(data.node.GetType(), template.GetSystemElementIdentifier(data.id));
 
             switch (data.node)
             {
@@ -63,9 +63,9 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         {
             CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
             initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_StateMethod);
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_StateMethod);
 
-            initMethod.Add(template.GetActionExpression(state.ActionReference, template.GetSystemElementIdentificator(data.id) + "_action"));
+            initMethod.Add(template.GetActionExpression(state.ActionReference, template.GetSystemElementIdentifier(data.id) + "_action"));
 
             return initMethod;
         }
@@ -74,18 +74,18 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         {
             CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
             initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_ProbabilisticStateMethod);
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_ProbabilisticStateMethod);
 
-            initMethod.Add(template.GetActionExpression(state.ActionReference, template.GetSystemElementIdentificator(data.id) + "_action"));
+            initMethod.Add(template.GetActionExpression(state.ActionReference, template.GetSystemElementIdentifier(data.id) + "_action"));
 
             var probNum = Mathf.Max(data.childIds.Count, state.probabilities.Count);
 
             for (int i = 0; i < probNum; i++)
             {
-                var id = template.GetSystemElementIdentificator(data.childIds[i]);
+                var id = template.GetSystemElementIdentifier(data.childIds[i]);
                 if (id != null && state.probabilities[i] > 0)
                 {
-                    var nodeId = template.GetSystemElementIdentificator(data.id);
+                    var nodeId = template.GetSystemElementIdentifier(data.id);
                     CodeCustomStatement probAssignation = new CodeCustomStatement($"{nodeId}.SetProbability({state.probabilities[i]});");
                     template.AddStatement(probAssignation);
                 }
@@ -98,7 +98,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         {
             CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
             initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_StateTransitionMethod);
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_StateTransitionMethod);
 
             if (data.parentIds.Count == 1)
             {
@@ -122,7 +122,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                 initMethod.Add(new CodeCustomExpression("null /* missing node */"));
             }
 
-            CreateTransitionArguments(initMethod, template.GetSystemElementIdentificator(data.id), stateTransition.ActionReference, stateTransition.PerceptionReference, stateTransition.StatusFlags, template);
+            CreateTransitionArguments(initMethod, template.GetSystemElementIdentifier(data.id), stateTransition.ActionReference, stateTransition.PerceptionReference, stateTransition.StatusFlags, template);
 
             return initMethod;
         }
@@ -131,7 +131,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         {
             CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
             initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_ExitTransitionMethod);
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_ExitTransitionMethod);
 
             if (data.parentIds.Count == 1)
             {
@@ -146,7 +146,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
             initMethod.Add(new CodeCustomExpression(exitTransition.ExitStatus.ToCodeFormat()));
 
-            CreateTransitionArguments(initMethod, template.GetSystemElementIdentificator(data.id), exitTransition.ActionReference, exitTransition.PerceptionReference, exitTransition.StatusFlags, template);
+            CreateTransitionArguments(initMethod, template.GetSystemElementIdentifier(data.id), exitTransition.ActionReference, exitTransition.PerceptionReference, exitTransition.StatusFlags, template);
 
             return initMethod;
         }

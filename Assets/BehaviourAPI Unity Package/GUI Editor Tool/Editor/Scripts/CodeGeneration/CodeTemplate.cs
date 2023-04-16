@@ -10,12 +10,24 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using UnityEngine;
     using Action = Core.Actions.Action;
 
     public class CodeTemplate
     {
         #region ------------------------------- Private fields -------------------------------
+
+        private static readonly string[] k_Keywords = new[]
+{
+            "bool", "byte", "sbyte", "short", "ushort", "int", "uint", "long", "ulong", "double", "float", "decimal",
+            "string", "char", "void", "object", "typeof", "sizeof", "null", "true", "false", "if", "else", "while", "for", "foreach", "do", "switch",
+            "case", "default", "lock", "try", "throw", "catch", "finally", "goto", "break", "continue", "return", "public", "private", "internal",
+            "protected", "static", "readonly", "sealed", "const", "fixed", "stackalloc", "volatile", "new", "override", "abstract", "virtual",
+            "event", "extern", "ref", "out", "in", "is", "as", "params", "__arglist", "__makeref", "__reftype", "__refvalue", "this", "base",
+            "namespace", "using", "class", "struct", "interface", "enum", "delegate", "checked", "unchecked", "unsafe", "operator", "implicit", "explicit"
+        };
+
 
         private static readonly string[] k_BaseNamespaces = new string[]
         {
@@ -30,11 +42,9 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
         SystemData m_SystemData;
 
-        IdentificatorProvider identificatorProvider = new IdentificatorProvider();
+        Dictionary<string, string> m_SystemElementIdentifierMap = new Dictionary<string, string>();
 
-        Dictionary<string, string> m_SystemElementIdentificatorMap = new Dictionary<string, string>();
-
-        Dictionary<Type, string> m_ComponentReferenceIdentificatorMap = new Dictionary<Type, string>();
+        Dictionary<Type, string> m_ComponentReferenceIdentifierMap = new Dictionary<Type, string>();
 
         List<CodeFieldMember> m_FieldMembers = new List<CodeFieldMember>();
 
@@ -46,6 +56,9 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
         HashSet<string> m_UsingNamespaces = new HashSet<string>();
 
+        HashSet<string> m_UsedIdentifiers = new HashSet<string>();
+
+
         #endregion
 
         /// <summary>
@@ -56,7 +69,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         {
             if (systemData == null) return;
 
-            RegisterSystemElementIdentificators(systemData);
+            RegisterSystemElementIdentifiers(systemData);
 
             foreach (string ns in k_BaseNamespaces)
             {
@@ -72,7 +85,19 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
             foreach (PushPerceptionData pushPerceptionData in systemData.pushPerceptions)
             {
-
+                var id = GenerateIdentifier(pushPerceptionData.name);
+                var field = new CodeFieldMember(id, typeof(PushPerception), isSerializeField: false);
+                m_FieldMembers.Add(field);
+                var pushStatement = new CodeAssignationStatement();
+                pushStatement.LeftExpression = new CodeMethodReferenceExpression(id);
+                var createExpression = new CodeObjectCreationExpression(typeof(PushPerception));
+                pushStatement.RightExpression = createExpression;
+                foreach (var target in pushPerceptionData.targetNodeIds)
+                {
+                    var targetId = GetSystemElementIdentifier(target);
+                    createExpression.Add(new CodeCustomExpression(targetId));
+                }
+                m_CodeStatements.Add(pushStatement);
             }
 
             m_SystemData = systemData;
@@ -102,15 +127,6 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         }
 
         /// <summary>
-        /// Add a new statement that will be added in code after the next statement.
-        /// </summary>
-        /// <param name="statement">The statement added.</param>
-        public void AddPropertyStatement(CodeStatement statement)
-        {
-            m_CodePropertiesStatements.Add(statement);
-        }
-
-        /// <summary>
         /// Add a new namespace to the template if wasn't added yet.
         /// </summary>
         /// <param name="ns">The new namespace added.</param>
@@ -120,17 +136,16 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         }
 
         /// <summary>
-        /// 
+        /// Generates a code expression for an action.
         /// </summary>
-        /// <param name="action"></param>
-        /// <param name="identificator"></param>
-        /// <param name="inline"></param>
-        /// <returns></returns>
-        public CodeExpression GetActionExpression(Action action, string identificator)
+        /// <param name="action">The action converted to code.</param>
+        /// <param name="Identifier">The base Identifier for the action.</param>
+        /// <returns>A code expression with the identifier of the action created</returns>
+        public CodeExpression GetActionExpression(Action action, string Identifier)
         {
             if (action != null)
             {
-                var id = identificatorProvider.GenerateIdentificator(identificator);
+                var id = GenerateIdentifier(Identifier);
                 CodeVariableDeclarationStatement statement;
                 switch (action)
                 {
@@ -158,7 +173,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
                     case SubgraphAction subgraphAction:
                         expression = new CodeObjectCreationExpression(typeof(SubsystemAction));
-                        var subgraphId = GetSystemElementIdentificator(subgraphAction.subgraphId);
+                        var subgraphId = GetSystemElementIdentifier(subgraphAction.subgraphId);
 
                         if (subgraphId != null)
                         {
@@ -199,15 +214,14 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         /// <summary>
         /// Generates a code expression for a perception
         /// </summary>
-        /// <param name="perception"></param>
-        /// <param name="identificator"></param>
-        /// <param name="inline"></param>
-        /// <returns></returns>
-        public CodeExpression GetPerceptionExpression(Perception perception, string identificator)
+        /// <param name="action">The perception converted to code.</param>
+        /// <param name="Identifier">The base Identifier for the perception.</param>
+        /// <returns>A code expression with the identifier of the perception created</returns>
+        public CodeExpression GetPerceptionExpression(Perception perception, string Identifier)
         {
             if (perception != null)
             {
-                var id = identificatorProvider.GenerateIdentificator(identificator);
+                var id = GenerateIdentifier(Identifier);
                 CodeVariableDeclarationStatement statement;
                 switch (perception)
                 {
@@ -238,7 +252,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                         for (int i = 0; i < compoundPerception.subPerceptions.Count; i++)
                         {
                             var subperception = compoundPerception.subPerceptions[i];
-                            expression.Add(GetPerceptionExpression(subperception.perception, identificator + "_sub" + (i + 1)));
+                            expression.Add(GetPerceptionExpression(subperception.perception, Identifier + "_sub" + (i + 1)));
                         }
                         statement = new CodeVariableDeclarationStatement(compoundPerception.compoundPerception.GetType(), id);
                         statement.RightExpression = expression;
@@ -263,11 +277,11 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         }
 
         /// <summary>
-        /// 
+        /// Create a code expression for a method. If the method is local, generate a method member in the template.
         /// </summary>
-        /// <param name="serializedMethod"></param>
-        /// <param name="args"></param>
-        /// <param name="returnType"></param>
+        /// <param name="serializedMethod">The data that contains the method and component name.</param>
+        /// <param name="args">The type of arguments that the method must have.</param>
+        /// <param name="returnType">The return type of the method. Void if null.</param>
         /// <returns></returns>
         public CodeExpression GenerateMethodCodeExpression(SerializedContextMethod serializedMethod, Type[] args, Type returnType = null)
         {
@@ -282,8 +296,8 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                     if (BehaviourAPISettings.instance.Metadata.componentMap.TryGetValue(serializedMethod.componentName, out Type componentType) &&
                         CheckIfMethodExists(componentType, serializedMethod.methodName, args))
                     {
-                        string componentIdentificator = GetOrCreateLocalComponentReference(componentType);
-                        return new CodeMethodReferenceExpression(componentIdentificator, serializedMethod.methodName);
+                        string componentIdentifier = GetOrCreateLocalComponentReference(componentType);
+                        return new CodeMethodReferenceExpression(componentIdentifier, serializedMethod.methodName);
                     }
                     else
                     {
@@ -292,29 +306,169 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                 }
                 else
                 {
-                    string methodIdentificator = GetOrCreateLocalMethod(serializedMethod.methodName, args, returnType);
-                    return new CodeMethodReferenceExpression(methodIdentificator);
+                    string methodIdentifier = GetOrCreateLocalMethod(serializedMethod.methodName, args, returnType);
+                    return new CodeMethodReferenceExpression(methodIdentifier);
                 }
             }
         }
 
-        private void RegisterSystemElementIdentificators(SystemData systemData)
+        /// <summary>
+        /// Return the identifier reserved for a graph or node by its id.
+        /// </summary>
+        /// <param name="elementId">The id of the node or graph.</param>
+        /// <returns>The variable name used for the element.</returns>
+        public string GetSystemElementIdentifier(string elementId)
+        {
+            return m_SystemElementIdentifierMap.GetValueOrDefault(elementId);
+        }
+
+        /// <summary>
+        /// Add a new statement that will be included just after the next added to modify one of its properties.
+        /// </summary>
+        /// <param name="obj">The reference of the element assigned to the property</param>
+        /// <param name="identifier">The node identifier</param>
+        /// <param name="name">The property name</param>
+        public void AddPropertyStatement(object obj, string identifier, string name)
+        {
+            var statement = new CodeAssignationStatement();
+            statement.LeftExpression = new CodeMethodReferenceExpression(identifier, name);
+
+            switch (obj)
+            {
+                case Action action:
+                    statement.RightExpression = GetActionExpression(action, identifier); break;
+                case Perception perception:
+                    statement.RightExpression = GetPerceptionExpression(perception, identifier); break;
+                default:
+                    statement.RightExpression = CreateGenericExpression(obj, identifier + "_" + name); break;
+            }
+
+            m_CodePropertiesStatements.Add(statement);
+        }
+
+        /// <summary>
+        /// Generate the code 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public string GenerateCode(string value, CodeGenerationOptions options)
+        {
+            using (new DebugTimer())
+            {
+                CodeWriter codeWriter = new CodeWriter();
+
+                foreach (var usingNamespace in m_UsingNamespaces)
+                {
+                    codeWriter.AppendLine($"using {usingNamespace};");
+                }
+
+                codeWriter.AppendLine("");
+
+                if (!string.IsNullOrWhiteSpace(options.scriptNamespace))
+                {
+                    codeWriter.AppendLine("namespace " + options.scriptNamespace);
+                    codeWriter.AppendLine("{");
+                    codeWriter.IdentationLevel++;
+                }
+
+                codeWriter.AppendLine($"public class {value} : CodeBehaviourRunner");
+                codeWriter.AppendLine("{");
+
+                codeWriter.IdentationLevel++;
+
+                foreach (var fieldCode in m_FieldMembers)
+                {
+                    fieldCode.GenerateCode(codeWriter, options);
+                }
+
+                codeWriter.AppendLine("");
+
+                if (m_ComponentReferenceIdentifierMap.Count > 0)
+                {
+                    codeWriter.AppendLine("protected override void OnAwake()");
+                    codeWriter.AppendLine("{");
+                    codeWriter.IdentationLevel++;
+
+                    foreach (var kvp in m_ComponentReferenceIdentifierMap)
+                    {
+                        codeWriter.AppendLine($"{kvp.Value} = GetComponent<{kvp.Key.Name}>();");
+                    }
+                    codeWriter.AppendLine("");
+                    codeWriter.AppendLine("base.OnAwake();");
+                    codeWriter.IdentationLevel--;
+                    codeWriter.AppendLine("}");
+                }
+
+                codeWriter.AppendLine("");
+
+                codeWriter.AppendLine("protected override BehaviourGraph CreateGraph()");
+                codeWriter.AppendLine("{");
+
+                codeWriter.IdentationLevel++;
+
+                m_CodeGraphStatements.ForEach(c => c.GenerateCode(codeWriter, options));
+                codeWriter.AppendLine("");
+                m_CodeStatements.ForEach(c => c.GenerateCode(codeWriter, options));
+
+                var firstGraphId = m_SystemData.graphs.FirstOrDefault()?.id;
+                if (options.registerGraphsInDebugger)
+                {
+                    foreach (var graph in m_SystemData.graphs)
+                    {
+                        codeWriter.AppendLine($"RegisterGraph({m_SystemElementIdentifierMap[graph.id]});");
+                    }
+                    codeWriter.AppendLine("");
+                }
+
+                if (firstGraphId != null) codeWriter.AppendLine($"return {m_SystemElementIdentifierMap[firstGraphId]};");
+                else codeWriter.Append("return null");
+
+
+                codeWriter.IdentationLevel--;
+
+                codeWriter.AppendLine("}");
+
+                foreach (var method in m_MethodMembers.Values)
+                {
+                    method.GenerateCode(codeWriter, options);
+                }
+
+                codeWriter.IdentationLevel--;
+
+                codeWriter.AppendLine("}");
+
+                if (!string.IsNullOrWhiteSpace(options.scriptNamespace))
+                {
+                    codeWriter.IdentationLevel--;
+                    codeWriter.AppendLine("}");
+                }
+
+                return codeWriter.ToString();
+            }
+        }
+
+        private void RegisterSystemElementIdentifiers(SystemData systemData)
         {
             foreach (GraphData graphData in systemData.graphs)
             {
-                RegisterSystemElementIdentificator(graphData.id, graphData.name);
+                RegisterSystemElementIdentifier(graphData.id, graphData.name);
 
                 foreach (NodeData nodeData in graphData.nodes)
                 {
-                    RegisterSystemElementIdentificator(nodeData.id, nodeData.name);
+                    RegisterSystemElementIdentifier(nodeData.id, nodeData.name);
                 }
             }
         }
 
         private bool CheckIfMethodExists(Type type, string methodName, Type[] argumentTypes)
         {
-            var methodInfo = type.GetMethod("methodName", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public, null,
+            if (argumentTypes == null) argumentTypes = new Type[0];
+            var methodInfo = type.GetMethod(methodName, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public, null,
                 System.Reflection.CallingConventions.Any, argumentTypes, null);
+
+            Debug.Log($"Method:  {type.Name}.{methodName} {(methodInfo == null ? "dont exists" : "exists")}");
+
             return methodInfo != null;
         }
 
@@ -338,125 +492,20 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
         private string GetOrCreateLocalComponentReference(Type componentType)
         {
-            return componentType.Name;
+            var id = GenerateIdentifier($"m_{componentType.Name}");
+            var member = new CodeFieldMember(id, componentType);
+            m_FieldMembers.Add(member);
+            m_ComponentReferenceIdentifierMap[componentType] = id;
+            return id;
         }
 
-        // Registra el identificador de un nodo o grafo
-        private void RegisterSystemElementIdentificator(string id, string name)
+        private void RegisterSystemElementIdentifier(string id, string name)
         {
-            string identificator = identificatorProvider.GenerateIdentificator(name);
-            m_SystemElementIdentificatorMap[id] = identificator;
+            string Identifier = GenerateIdentifier(name);
+            m_SystemElementIdentifierMap[id] = Identifier;
         }
 
-
-        /// <summary>
-        /// Generate the code 
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public string GenerateCode(string value, CodeGenerationOptions options)
-        {
-            using (new DebugTimer())
-            {
-                CodeWriter codeWritter = new CodeWriter();
-
-                foreach (var usingNamespace in m_UsingNamespaces)
-                {
-                    codeWritter.AppendLine($"using {usingNamespace};");
-                }
-
-                codeWritter.AppendLine("");
-
-                if (!string.IsNullOrWhiteSpace(options.scriptNamespace))
-                {
-                    codeWritter.AppendLine("namespace " + options.scriptNamespace);
-                    codeWritter.AppendLine("{");
-                    codeWritter.IdentationLevel++;
-                }
-
-                codeWritter.AppendLine($"public class {value} : CodeBehaviourRunner");
-                codeWritter.AppendLine("{");
-
-                codeWritter.IdentationLevel++;
-
-                foreach (var fieldCode in m_FieldMembers)
-                {
-                    fieldCode.GenerateCode(codeWritter, options);
-                }
-
-                codeWritter.AppendLine("");
-
-                codeWritter.AppendLine("protected override BehaviourGraph CreateGraph()");
-                codeWritter.AppendLine("{");
-
-                codeWritter.IdentationLevel++;
-
-                m_CodeGraphStatements.ForEach(c => c.GenerateCode(codeWritter, options));
-                codeWritter.AppendLine("");
-                m_CodeStatements.ForEach(c => c.GenerateCode(codeWritter, options));
-
-                var firstGraphId = m_SystemData.graphs.FirstOrDefault()?.id;
-                if (options.registerGraphsInDebugger)
-                {
-                    foreach (var graph in m_SystemData.graphs)
-                    {
-                        codeWritter.AppendLine($"RegisterGraph({m_SystemElementIdentificatorMap[graph.id]});");
-                    }
-                    codeWritter.AppendLine("");
-                }
-
-                if (firstGraphId != null) codeWritter.AppendLine($"return {m_SystemElementIdentificatorMap[firstGraphId]};");
-                else codeWritter.Append("return null");
-
-
-                codeWritter.IdentationLevel--;
-
-                codeWritter.AppendLine("}");
-
-                foreach (var method in m_MethodMembers.Values)
-                {
-                    method.GenerateCode(codeWritter, options);
-                }
-
-                codeWritter.IdentationLevel--;
-
-                codeWritter.AppendLine("}");
-
-                if (!string.IsNullOrWhiteSpace(options.scriptNamespace))
-                {
-                    codeWritter.IdentationLevel--;
-                    codeWritter.AppendLine("}");
-                }
-
-                return codeWritter.ToString();
-            }
-        }
-
-        public string GetSystemElementIdentificator(string elementId)
-        {
-            return m_SystemElementIdentificatorMap.GetValueOrDefault(elementId);
-        }
-
-        public void AddPropertyStatement(object obj, string identifier, string name)
-        {
-            var statement = new CodeAssignationStatement();
-            statement.LeftExpression = new CodeMethodReferenceExpression(identifier, name);
-
-            switch (obj)
-            {
-                case Action action:
-                    statement.RightExpression = GetActionExpression(action, identifier); break;
-                case Perception perception:
-                    statement.RightExpression = GetPerceptionExpression(perception, identifier); break;
-                default:
-                    statement.RightExpression = CreateGenericExpression(obj, identifier + "_" + name); break;
-            }
-
-            AddPropertyStatement(statement);
-        }
-
-        private CodeExpression CreateGenericExpression(object obj, string defaultIdentificatorName)
+        private CodeExpression CreateGenericExpression(object obj, string defaultIdentifierName)
         {
             var type = obj.GetType();
 
@@ -527,9 +576,35 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                 }
             }
 
-            var identificator = identificatorProvider.GenerateIdentificator(defaultIdentificatorName);
-            m_FieldMembers.Add(new CodeFieldMember(identificator, type));
-            return new CodeCustomExpression(identificator);
+            var Identifier = GenerateIdentifier(defaultIdentifierName);
+            m_FieldMembers.Add(new CodeFieldMember(Identifier, type));
+            return new CodeCustomExpression(Identifier);
+        }
+
+        private string GenerateIdentifier(string defaultName)
+        {
+            var idName = ConvertToValidIdentifier(defaultName);
+
+            int i = 1;
+            string fixedName = idName;
+            while (m_UsedIdentifiers.Contains(fixedName))
+            {
+                fixedName = idName + "_" + i;
+                i++;
+            }
+            m_UsedIdentifiers.Add(fixedName);
+            return fixedName;
+        }
+
+        private string ConvertToValidIdentifier(string input)
+        {
+            string validString = Regex.Replace(input, @"[^\w]+", "_");
+
+            if (string.IsNullOrEmpty(validString)) return "unnamed";
+            if (char.IsDigit(input[0])) validString = "_" + validString;
+            if (k_Keywords.Contains(validString)) validString = "@" + validString;
+
+            return validString;
         }
 
     }

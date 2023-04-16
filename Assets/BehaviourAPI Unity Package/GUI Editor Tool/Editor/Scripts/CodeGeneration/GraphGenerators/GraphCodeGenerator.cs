@@ -12,7 +12,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
         HashSet<string> m_GeneratedNodes;
 
-        public string GraphIdentificator { get; protected set; }
+        public string GraphIdentifier { get; protected set; }
 
         public static GraphCodeGenerator GetGenerator(GraphData graphData)
         {
@@ -48,10 +48,10 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
         protected CodeExpression GetChildExpression(string nodeId, CodeTemplate template)
         {
-            var nodeIdentificatorName = template.GetSystemElementIdentificator(nodeId);
-            if (nodeIdentificatorName != null)
+            var nodeIdentifierName = template.GetSystemElementIdentifier(nodeId);
+            if (nodeIdentifierName != null)
             {
-                return new CodeCustomExpression(nodeIdentificatorName);
+                return new CodeCustomExpression(nodeIdentifierName);
             }
             else
             {

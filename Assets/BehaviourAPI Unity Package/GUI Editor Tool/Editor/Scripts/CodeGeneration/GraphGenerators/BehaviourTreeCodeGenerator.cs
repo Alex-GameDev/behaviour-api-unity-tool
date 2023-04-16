@@ -15,9 +15,9 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
         public override void GenerateGraphDeclaration(GraphData graphData, CodeTemplate template)
         {
-            GraphIdentificator = template.GetSystemElementIdentificator(graphData.id);
+            GraphIdentifier = template.GetSystemElementIdentifier(graphData.id);
             var type = graphData.graph.GetType();
-            var graphStatement = new CodeVariableDeclarationStatement(type, GraphIdentificator);
+            var graphStatement = new CodeVariableDeclarationStatement(type, GraphIdentifier);
             graphStatement.RightExpression = new CodeObjectCreationExpression(type);
 
             template.AddNamespace("BehaviourAPI.BehaviourTrees");
@@ -34,7 +34,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             if (data == null) return;
             if (IsGenerated(data.id)) return;
 
-            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement(data.node.GetType(), template.GetSystemElementIdentificator(data.id));
+            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement(data.node.GetType(), template.GetSystemElementIdentifier(data.id));
 
             switch (data.node)
             {
@@ -54,9 +54,9 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         {
             CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
             initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_LeafMethod);
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_LeafMethod);
 
-            initMethod.Add(template.GetActionExpression(leafNode.ActionReference, template.GetSystemElementIdentificator(data.id) + "_action"));
+            initMethod.Add(template.GetActionExpression(leafNode.ActionReference, template.GetSystemElementIdentifier(data.id) + "_action"));
 
             return initMethod;
         }
@@ -65,7 +65,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         {
             CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
             initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_DecoratorMethod + "<" + decoratorNode.TypeName() + ">");
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_DecoratorMethod + "<" + decoratorNode.TypeName() + ">");
 
             if (data.childIds.Count != 1)
             {
@@ -78,7 +78,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                 initMethod.Add(GetChildExpression(data.childIds[0], template));
             }
 
-            GenerateDecoratorProperties(decoratorNode, template.GetSystemElementIdentificator(data.id), template);
+            GenerateDecoratorProperties(decoratorNode, template.GetSystemElementIdentifier(data.id), template);
             return initMethod;
         }
 
@@ -87,7 +87,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         {
             CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
             initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentificator, k_CompositeMethod + "<" + compositeNode.TypeName() + ">");
+            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_CompositeMethod + "<" + compositeNode.TypeName() + ">");
 
             initMethod.Add(new CodeCustomExpression(compositeNode.IsRandomized.ToCodeFormat()));
 
@@ -97,7 +97,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                 initMethod.Add(GetChildExpression(data.childIds[0], template));
             }
 
-            GenerateCompositeProperties(compositeNode, template.GetSystemElementIdentificator(data.id), template);
+            GenerateCompositeProperties(compositeNode, template.GetSystemElementIdentifier(data.id), template);
 
             return initMethod;
         }

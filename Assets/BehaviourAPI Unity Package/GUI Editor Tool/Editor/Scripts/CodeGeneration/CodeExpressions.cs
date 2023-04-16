@@ -100,19 +100,19 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
     public class CodeVariableDeclarationStatement : CodeStatement
     {
         public Type Type;
-        public string Identificator;
+        public string Identifier;
         public CodeExpression RightExpression;
 
-        public CodeVariableDeclarationStatement(Type type, string identificator)
+        public CodeVariableDeclarationStatement(Type type, string identifier)
         {
             Type = type;
-            Identificator = identificator;
+            Identifier = identifier;
         }
 
         public override void GenerateCode(CodeWriter writer, CodeGenerationOptions options)
         {
             var typeName = options.useVarKeyword ? "var" : Type.Name;
-            writer.Append($"{typeName} {Identificator} = ");
+            writer.Append($"{typeName} {Identifier} = ");
             if (RightExpression != null)
                 RightExpression.GenerateCode(writer, options);
             else
@@ -155,7 +155,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
     public class CodeMethodReferenceExpression : CodeExpression
     {
-        public string invokerIdentificator;
+        public string invokerIdentifier;
         public string memberName;
 
         public CodeMethodReferenceExpression(string memberName)
@@ -163,15 +163,15 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             this.memberName = memberName;
         }
 
-        public CodeMethodReferenceExpression(string invokerIdentificator, string memberName)
+        public CodeMethodReferenceExpression(string invokerIdentifier, string memberName)
         {
-            this.invokerIdentificator = invokerIdentificator;
+            this.invokerIdentifier = invokerIdentifier;
             this.memberName = memberName;
         }
 
         public override void GenerateCode(CodeWriter writer, CodeGenerationOptions options)
         {
-            if (invokerIdentificator != null) writer.Append(invokerIdentificator + ".");
+            if (invokerIdentifier != null) writer.Append(invokerIdentifier + ".");
             writer.Append(memberName);
         }
     }

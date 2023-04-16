@@ -3,7 +3,6 @@ using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Framework.Adaptations;
 using BehaviourAPI.UnityExtensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -47,21 +46,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public static string Join(this IEnumerable<string> strings, string separator = ", ") => string.Join(separator, strings);
 
-        public static string ToValidIdentificatorName(this string str)
-        {
 
-            str = str.RemoveWhitespaces();
-            str = str.Replace('-', '_');
-            str = str.RemovePunctuationsAndSymbols();
-
-            if (string.IsNullOrEmpty(str)) return "variable";
-
-            if (char.IsDigit(str[0])) str = "_" + str;
-
-            if (k_Keywords.Contains(str)) str = "@" + str;
-
-            return str;
-        }
 
         public static string RemoveTermination(this string str, string termination)
         {

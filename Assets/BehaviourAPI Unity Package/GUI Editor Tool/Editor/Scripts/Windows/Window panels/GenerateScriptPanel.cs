@@ -64,8 +64,6 @@ namespace BehaviourAPI.Unity.Editor
 
         private void GenerateScriptAsset()
         {
-            bool includeNodeNames = m_IncludeNodeNamesToggle.value;
-
             if (string.IsNullOrEmpty(m_ScriptText.value)) return;
 
             var path = m_pathText.value;

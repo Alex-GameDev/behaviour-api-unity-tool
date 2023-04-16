@@ -13,8 +13,9 @@ public class #SCRIPTNAME# : EditorBehaviourRunner
     // Use this method to modify the editor graph in code
     protected override void ModifyGraphs()
     {
-        // Use FindGraph() to get a behaviourGraph by its name.
-        // Use FindPushPerception() to get a Pushperception by its name.
+        // Use FindGraph("graphname") to get a behaviourGraph called "graphname".
+        // Use FindPushPerception("pushname") to get a Pushperception called "pushname".
+        // Use FindGraph("graphname").FindNode("nodename") to get a node called "nodename" in a graph called "graphname".
     }
 
     // Use this method instead of Awake
