@@ -2,10 +2,10 @@
 
 namespace BehaviourAPI.StateMachines
 {
-    using Core;
-    using Core.Perceptions;
-    using Core.Actions;
     using BehaviourAPI.Core.Exceptions;
+    using Core;
+    using Core.Actions;
+    using Core.Perceptions;
 
     /// <summary>
     /// Decision system builded as a State machine. Each frame, the current state is executed and check its
@@ -215,7 +215,8 @@ namespace BehaviourAPI.StateMachines
         /// <param name="from">The source state of the transition and it's parent node.</param>
         /// <param name="perception">The perception checked by the transition.</param>
         /// <param name="action">The action executed by the transition.</param>
-        /// <param name="statusFlags">The status that the source state can h
+        /// <param name="statusFlags">The status that the source state can have to check the perception. If none, the transition will never be checked.</param>
+        /// <returns>The <see cref="ExitTransition"/> created.</returns>
         public ExitTransition CreateExitTransition(State from, Status exitStatus, Perception perception = null, Action action = null, StatusFlags statusFlags = StatusFlags.Active)
         {
             ExitTransition transition = CreateInternalTransition<ExitTransition>(from, perception, action, statusFlags);
