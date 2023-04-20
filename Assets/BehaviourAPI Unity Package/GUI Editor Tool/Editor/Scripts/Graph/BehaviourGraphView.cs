@@ -141,9 +141,6 @@ namespace BehaviourAPI.Unity.Editor.Graph
                 }
             }
 
-
-            Debug.Log("Delete: " + edgesToDelete.Count);
-
             if (edgesToDelete.Count > 0) DeleteElements(edgesToDelete);
 
 

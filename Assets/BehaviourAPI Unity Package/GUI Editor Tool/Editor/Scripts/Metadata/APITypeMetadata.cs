@@ -160,7 +160,7 @@ namespace BehaviourAPI.Unity.Editor
             BuildActionHierarchy(actionTypes);
             BuildPerceptionHierarchy(perceptionTypes, compoundPerceptionTypes);
 
-            Debug.Log((DateTime.Now - time).TotalMilliseconds);
+            //  Debug.Log((DateTime.Now - time).TotalMilliseconds);
         }
 
         private Dictionary<Type, Type> BuildFullGraphTypeMap(IEnumerable<Type> graphTypes, Dictionary<Type, Type> graphCodeGeneratorMainTypeMap)

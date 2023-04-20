@@ -710,7 +710,7 @@ MonoBehaviour:
       graph:
         rid: 6537695503399780485
       nodes:
-      - name: IteratorNode
+      - name: LoopNode
         id: 1fc0f671-e0e8-4a87-b8bf-846ca6557355
         position: {x: 272, y: 110}
         node:
@@ -742,7 +742,7 @@ MonoBehaviour:
     - rid: 6537695503399780485
       type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
     - rid: 6537695503399780486
-      type: {class: IteratorNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+      type: {class: LoopNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
         Iterations: -1
     - rid: 6537695503399780487

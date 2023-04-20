@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
@@ -13,7 +12,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public void Dispose()
         {
-            Debug.Log((DateTime.Now - m_StartTime).TotalMilliseconds);
+            //Debug.Log((DateTime.Now - m_StartTime).TotalMilliseconds);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace BehaviourAPI.Unity.Demo
             var sel = bt.CreateComposite<SelectorNode>("sel", false, check, returnToWater);
             var seq = bt.CreateComposite<SequencerNode>("seq", false, throwTheRod, timer, sel);
 
-            var loop = bt.CreateDecorator<IteratorNode>("loop", seq).SetIterations(-1);
+            var loop = bt.CreateDecorator<LoopNode>("loop", seq).SetIterations(-1);
 
             bt.SetRootNode(loop);
 

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5000012665791813595}
   - component: {fileID: 1897590593199712440}
   - component: {fileID: 5737582584103695516}
+  - component: {fileID: 89949517329148788}
   m_Layer: 0
   m_Name: Test boy comb (Visual)
   m_TagString: Player
@@ -216,11 +217,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ExecuteOnLoop: 0
   DontStopOnDisable: 0
-  UseNodeNames: 1
   data:
     graphs:
-    - id: 6fc51b0e-377e-4e13-8d42-ec1d6f37f6e3
-      name: main
+    - name: main
+      id: 6fc51b0e-377e-4e13-8d42-ec1d6f37f6e3
       graph:
         rid: 6537695503399780489
       nodes:
@@ -256,7 +256,7 @@ MonoBehaviour:
         - 5470e2be-e766-441f-9372-48975fc269c7
       - name: enter house
         id: f22c2ea0-467e-4aba-b606-9c1424480393
-        position: {x: 656, y: 622}
+        position: {x: 764, y: 654}
         node:
           rid: 6537695503399780494
         parentIds:
@@ -273,7 +273,7 @@ MonoBehaviour:
         - 6fcb84b6-2f72-4886-8f72-005f4a83834e
       - name: key to running
         id: 0e29801c-b20e-4451-863d-8cdd85e6963f
-        position: {x: 453, y: 401}
+        position: {x: 446, y: 501}
         node:
           rid: 6537695503399780496
         parentIds:
@@ -282,7 +282,7 @@ MonoBehaviour:
         - 9e065d07-7e7e-46be-ba15-10a1b9f158c4
       - name: key to enter
         id: ea0a4dad-259c-4c06-b8fb-ce2f85e5f8f7
-        position: {x: 674, y: 392}
+        position: {x: 745, y: 447}
         node:
           rid: 6537695503399780497
         parentIds:
@@ -291,7 +291,7 @@ MonoBehaviour:
         - f22c2ea0-467e-4aba-b606-9c1424480393
       - name: house to running
         id: e43c9d74-36c2-45df-9966-28762c1d1963
-        position: {x: 274, y: 366}
+        position: {x: 207, y: 361}
         node:
           rid: 6537695503399780499
         parentIds:
@@ -300,15 +300,15 @@ MonoBehaviour:
         - 9e065d07-7e7e-46be-ba15-10a1b9f158c4
       - name: running to house
         id: 5470e2be-e766-441f-9372-48975fc269c7
-        position: {x: 43, y: 374}
+        position: {x: -39, y: 369}
         node:
           rid: 6537695503399780500
         parentIds:
         - 9e065d07-7e7e-46be-ba15-10a1b9f158c4
         childIds:
         - 3afc4b1a-5ee5-46a0-ab5a-10a139cee8b2
-    - id: baab3991-04ac-4d4b-827e-739bb15f8572
-      name: key subtree
+    - name: key subtree
+      id: baab3991-04ac-4d4b-827e-739bb15f8572
       graph:
         rid: 6537695524283219969
       nodes:
@@ -456,9 +456,30 @@ MonoBehaviour:
     - rid: 6537695524283219976
       type: {class: FleeAction, ns: BehaviourAPI.UnityExtensions, asm: BehaviourAPI.UnityExtensions}
       data:
+        OtherTransform: {fileID: 0}
         speed: 8
         distance: 10
         maxTimeRunning: 13
+--- !u!114 &89949517329148788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8841883541597954724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 888cb022a2337f84ea943a23247d4f0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ExecuteOnLoop: 0
+  DontStopOnDisable: 0
+  data:
+    graphs: []
+    pushPerceptions: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &8841883541597954734
 GameObject:
   m_ObjectHideFlags: 0

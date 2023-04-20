@@ -49,7 +49,7 @@ public class PizzaBoyRunner : CodeBehaviourRunner
         var bakeAction = bt.CreateLeafNode("bake pizza", new FunctionalAction(BakePizza, pizzaBaked, BakedActionCompleted));
 
         var seq = bt.CreateComposite<SequencerNode>("pizza seq", false, recipeAction, makePizzaAction, bakeAction);
-        var root = bt.CreateDecorator<IteratorNode>("loop", seq).SetIterations(-1);
+        var root = bt.CreateDecorator<LoopNode>("loop", seq).SetIterations(-1);
         bt.SetRootNode(root);
 
         RegisterGraph(bt);
