@@ -117,7 +117,7 @@ namespace BehaviourAPI.Unity.Editor
                     }
                     else
                     {
-                        var graph = CustomEditorWindow.instance.System.Data.graphs.Find(g => g.id == subgraphAction.subgraphId);
+                        var graph = BehaviourSystemEditorWindow.instance.System.Data.graphs.Find(g => g.id == subgraphAction.subgraphId);
                         if (graph == null) return "Subgraph: missing subgraph";
                         else return "Subgraph: " + graph.name;
                     }

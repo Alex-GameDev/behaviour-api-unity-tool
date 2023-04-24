@@ -20,11 +20,11 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if(!Application.isPlaying)
                 {
-                    EditorWindow.GetWindow<CustomEditorWindow>().ShowNotification(new GUIContent("Runtime debugger must be opened in play mode"));
+                    EditorWindow.GetWindow<BehaviourSystemEditorWindow>().ShowNotification(new GUIContent("Runtime debugger must be opened in play mode"));
                 }
                 else
                 {
-                    CustomEditorWindow.Create(runtimeDebugger, runtime: true);
+                    BehaviourSystemEditorWindow.Create(runtimeDebugger, runtime: true);
                 }
             }
         }

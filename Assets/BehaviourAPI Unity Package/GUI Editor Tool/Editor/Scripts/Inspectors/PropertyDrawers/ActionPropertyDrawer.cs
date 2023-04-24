@@ -133,7 +133,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (property.managedReferenceValue == null) return;
 
-            if (CustomEditorWindow.instance == null)
+            if (BehaviourSystemEditorWindow.instance == null)
             {
                 EditorGUILayout.HelpBox("Cannot assign subgraph outside the editor window", MessageType.Warning);
             }
@@ -146,13 +146,13 @@ namespace BehaviourAPI.Unity.Editor
                 if (GUILayout.Button("Assign subgraph"))
                 {
                     var provider = ElementSearchWindowProvider<GraphData>.Create<GraphSearchWindowProvider>((g) => SetSubgraph(subGraphProperty, g));
-                    provider.Data = CustomEditorWindow.instance.System.Data;
-                    SearchWindow.Open(new SearchWindowContext(Event.current.mousePosition + CustomEditorWindow.instance.position.position), provider);
+                    provider.Data = BehaviourSystemEditorWindow.instance.System.Data;
+                    SearchWindow.Open(new SearchWindowContext(Event.current.mousePosition + BehaviourSystemEditorWindow.instance.position.position), provider);
                 }
             }
             else
             {
-                var subgraph = CustomEditorWindow.instance.System.Data.graphs.Find(g => g.id == subGraphProperty.stringValue);
+                var subgraph = BehaviourSystemEditorWindow.instance.System.Data.graphs.Find(g => g.id == subGraphProperty.stringValue);
                 EditorGUILayout.LabelField(subgraph?.name ?? "missing subgraph");
                 if (GUILayout.Button("Remove subgraph"))
                 {

@@ -45,12 +45,12 @@ namespace BehaviourAPI.Unity.Editor
                 {
                     if (Application.isPlaying)
                     {
-                        EditorWindow.GetWindow<CustomEditorWindow>().ShowNotification(new GUIContent("Cannot edit binded behaviour system on runtime"));
+                        EditorWindow.GetWindow<BehaviourSystemEditorWindow>().ShowNotification(new GUIContent("Cannot edit binded behaviour system on runtime"));
                         return;
                     }
 
                     //Debug.Log("OpenWindow editor");
-                    CustomEditorWindow.Create(runner);
+                    BehaviourSystemEditorWindow.Create(runner);
                 }
             }
             else

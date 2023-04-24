@@ -476,6 +476,12 @@ namespace BehaviourAPI.Unity.Editor.Graph
             //m_EditorWindow.RegisterOperation(operationName);
         }
 
+        public void SetMinimapVisibility(bool active)
+        {
+            if (active) m_Minimap.Enable();
+            else m_Minimap.Disable();
+        }
+
         #endregion
     }
 }

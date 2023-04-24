@@ -12,11 +12,12 @@ using UnityEngine.UIElements;
 namespace BehaviourAPI.Unity.Editor
 {
     using Graph;
+    using UnityEditor.UIElements;
 
     /// <summary>
     /// 
     /// </summary>
-    public class CustomEditorWindow : EditorWindow
+    public class BehaviourSystemEditorWindow : EditorWindow
     {
         private static readonly Vector2 k_MinWindowSize = new Vector2(500, 300);
         private static readonly string k_WindowTitle = "Behaviour System Editor";
@@ -31,7 +32,7 @@ namespace BehaviourAPI.Unity.Editor
         /// <summary>
         /// The singleton instance of the window.
         /// </summary>
-        public static CustomEditorWindow instance { get; private set; }
+        public static BehaviourSystemEditorWindow instance { get; private set; }
 
         /// <summary>
         /// The reference to the system that is currently being edited
@@ -80,6 +81,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private bool m_ChangeNodeFlag = false;
         private bool m_ChangeGraphFlag = false;
+
         #region -------------------------------------------- Create window --------------------------------------------
 
         private void OnEnable()
@@ -105,7 +107,7 @@ namespace BehaviourAPI.Unity.Editor
         [MenuItem("BehaviourAPI/Open editor window")]
         public static void Create()
         {
-            CustomEditorWindow window = GetWindow<CustomEditorWindow>();
+            BehaviourSystemEditorWindow window = GetWindow<BehaviourSystemEditorWindow>();
             window.minSize = k_MinWindowSize;
             window.titleContent = new GUIContent(k_WindowTitle);
             instance = window;
@@ -118,7 +120,7 @@ namespace BehaviourAPI.Unity.Editor
         /// <param name="runtime">True if the window is in runtime mode and the editor tools are disabled.</param>
         public static void Create(IBehaviourSystem system, bool runtime = false)
         {
-            CustomEditorWindow window = GetWindow<CustomEditorWindow>();
+            BehaviourSystemEditorWindow window = GetWindow<BehaviourSystemEditorWindow>();
             window.minSize = k_MinWindowSize;
             window.titleContent = new GUIContent(k_WindowTitle);
             instance = window;
@@ -172,6 +174,10 @@ namespace BehaviourAPI.Unity.Editor
             var clearBtn = rootVisualElement.Q<Button>("bw-clear-graph-btn");
             clearBtn.clicked += OnClickClearBtn;
 
+            // Minimap
+            var minimapToggle = rootVisualElement.Q<ToolbarToggle>("bw-minimap-toggle");
+            minimapToggle.RegisterValueChangedCallback(OnMinimapToggleChanged);
+
             m_InspectorContainer = rootVisualElement.Q<IMGUIContainer>("bw-inspector");
             //m_EditorInspector = new EditorInspector();
             //m_InspectorContainer.Add(m_EditorInspector);
@@ -188,6 +194,14 @@ namespace BehaviourAPI.Unity.Editor
 
             m_PathLabel = rootVisualElement.Q<Label>("bw-path-label");
             m_ModeLabel = rootVisualElement.Q<Label>("bw-mode-label");
+        }
+
+        private void OnMinimapToggleChanged(ChangeEvent<bool> evt)
+        {
+            if (evt.newValue != evt.previousValue)
+            {
+                graphDataView.SetMinimapVisibility(evt.newValue);
+            }
         }
 
         private void OnClickClearBtn()

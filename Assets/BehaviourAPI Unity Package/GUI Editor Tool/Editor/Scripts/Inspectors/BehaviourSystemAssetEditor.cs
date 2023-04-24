@@ -37,11 +37,11 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (Application.isPlaying && !AssetDatabase.Contains(system))
                 {
-                    EditorWindow.GetWindow<CustomEditorWindow>().ShowNotification(new GUIContent("Cannot edit binded behaviour system on runtime"));
+                    EditorWindow.GetWindow<BehaviourSystemEditorWindow>().ShowNotification(new GUIContent("Cannot edit binded behaviour system on runtime"));
                     return;
                 }
 
-                CustomEditorWindow.Create(system);
+                BehaviourSystemEditorWindow.Create(system);
             }
 
             GUILayout.EndVertical();

@@ -10,7 +10,10 @@
                 <ui:Button display-tooltip-when-elided="true" name="bw-clear-graph-btn" tooltip="Delete all nodes in the selected graph" class="toolbar-btn toolbar-squared-btn" style="background-image: resource(&apos;Icons/clear&apos;);" />
                 <ui:Button display-tooltip-when-elided="true" name="bw-script-btn" tooltip="Open the code generation panel." class="toolbar-btn toolbar-squared-btn" style="background-image: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Editor%20Tool/Editor/Resources/Icons/code.png?fileID=2800000&amp;guid=dd2972ab964903a44817886b07f1fe51&amp;type=3#code&apos;); height: 30px;" />
             </ui:VisualElement>
-            <ui:VisualElement name="bw-common-toolbar" style="flex-direction: row;" />
+            <uie:ToolbarSpacer style="width: 20px;" />
+            <ui:VisualElement name="bw-common-toolbar" style="flex-direction: row;">
+                <uie:ToolbarToggle focusable="false" label="MAP" name="bw-minimap-toggle" value="true" style="-unity-text-align: middle-center; font-size: 16px; width: 60px; justify-content: center; height: 120%;" />
+            </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement style="align-items: center; justify-content: center;">
             <ui:VisualElement style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px; -unity-font-definition: url(&apos;project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Editor%20Tool/Editor/Resources/Fonts/Cascadia%20SDF.asset?fileID=11400000&amp;guid=8fc71b80ca9989c4c92b587c827b612a&amp;type=2#Cascadia SDF&apos;); font-size: 16px; flex-direction: column; max-width: 200px; align-items: flex-end; overflow: hidden;">

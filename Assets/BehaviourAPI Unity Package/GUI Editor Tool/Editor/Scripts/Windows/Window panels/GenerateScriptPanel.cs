@@ -17,11 +17,11 @@ namespace BehaviourAPI.Unity.Editor
         private Toggle m_RegisterGraphsInDebuggerToggle;
         private Toggle m_UseVarKeywordToggle;
 
-        CustomEditorWindow m_window;
+        BehaviourSystemEditorWindow m_window;
 
         private CodeTemplate m_Template;
 
-        public GenerateScriptPanel(CustomEditorWindow customEditorWindow) : base("/generatescriptpanel.uxml")
+        public GenerateScriptPanel(BehaviourSystemEditorWindow customEditorWindow) : base("/generatescriptpanel.uxml")
         {
             m_window = customEditorWindow;
             m_ScriptText = this.Q<TextField>("gsp-text");
