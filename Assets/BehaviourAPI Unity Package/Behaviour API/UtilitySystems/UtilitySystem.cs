@@ -6,7 +6,7 @@ namespace BehaviourAPI.UtilitySystems
 {
     using Core;
     using Core.Exceptions;
-    using Action = Core.Actions.Action;
+    using Core.Actions;
 
     /// <summary>
     /// Behaviour graph that choose between diferent <see cref="UtilitySelectableNode"/> items and executes.
@@ -20,17 +20,21 @@ namespace BehaviourAPI.UtilitySystems
         public override bool CanRepeatConnection => false;
         public override bool CanCreateLoops => false;
 
-        List<UtilitySelectableNode> _utilityCandidates;
-
-        UtilitySelectableNode _currentBestElement;
-
         #endregion
 
         #region ------------------------------------------- Fields -------------------------------------------
 
-        public float Inertia = 1.3f;      
+        /// <summary>
+        /// The utility multiplier of the selected element and prevents it from jittering.
+        /// </summary>
+        public float Inertia = 1.3f;
 
         #endregion
+
+        List<UtilitySelectableNode> _utilityCandidates;
+        List<UtilityNode> _utilityNodes;
+
+        UtilitySelectableNode _currentBestElement;
 
         #region ---------------------------------------- Build methods ---------------------------------------
 
@@ -40,6 +44,7 @@ namespace BehaviourAPI.UtilitySystems
         public UtilitySystem()
         {
             Inertia = 1.3f;
+            _utilityNodes = new List<UtilityNode>();
             _utilityCandidates = new List<UtilitySelectableNode>();
         }
 
@@ -51,6 +56,7 @@ namespace BehaviourAPI.UtilitySystems
         public UtilitySystem(float inertia = 1.3f)
         {
             Inertia = inertia;
+            _utilityNodes = new List<UtilityNode>();
             _utilityCandidates = new List<UtilitySelectableNode>();
         }
 
@@ -337,9 +343,40 @@ namespace BehaviourAPI.UtilitySystems
             return bucket;
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// If the node is an <see cref="UtilityNode"/>, add to the internal list.
+        /// </summary>
+        /// <param name="node"></param>
+        protected override void AddNode(Node node)
+        {
+            base.AddNode(node);
 
+            if (node is UtilityNode utilityNode)
+                _utilityNodes.Add(utilityNode);
+        }
 
-        protected void AddToGroup(UtilitySelectableNode element, UtilityBucket group)
+        public override object Clone()
+        {
+            var us = (UtilitySystem) base.Clone();
+            us._utilityCandidates = new List<UtilitySelectableNode>();
+            return us;
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// Create the main <see cref="UtilitySelectableNode"/> candidate list.
+        /// </summary>
+        protected override void Build()
+        {
+            foreach(Node node in Nodes)
+            {
+                if (node is UtilitySelectableNode selectableNode && selectableNode.ParentCount == 0)
+                    _utilityCandidates.Add(selectableNode);
+            }
+        }
+
+        private void AddToGroup(UtilitySelectableNode element, UtilityBucket group)
         {
             if (group != null)
             {
@@ -352,38 +389,32 @@ namespace BehaviourAPI.UtilitySystems
             }
         }
 
-        protected override void AddNode(Node node)
-        {
-            base.AddNode(node);
-
-            if (node is UtilitySelectableNode selectableNode && selectableNode.ParentCount == 0)
-                _utilityCandidates.Add(selectableNode);
-        }
-
-        public override object Clone()
-        {
-            var us = (UtilitySystem) base.Clone();
-            us._utilityCandidates = new List<UtilitySelectableNode>();
-            return us;
-        }
-
-
         #endregion
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Throws and error if there are no <see cref="UtilitySelectableNode"/> in the graph.
+        /// </summary>
+        /// <exception cref="EmptyGraphException">If the candidate list is empty.</exception>
         public override void Start()
         {
             base.Start ();
 
             if (_utilityCandidates.Count == 0)
                 throw new EmptyGraphException(this, "The list of utility candidates is empty.");
-
-            _utilityCandidates = Nodes.FindAll(n => n is UtilitySelectableNode && n.ParentCount == 0).Select(n => n as UtilitySelectableNode). ToList();
         }
 
-        public override void Execute()
+        /// <summary>
+        /// <inheritdoc/>
+        /// Recalculates the utilities of the nodes and selects the best candidate to run it.
+        /// If the new candidate chosen is different from the one of the previous iteration, it stops its execution and starts the new one.
+        /// </summary>
+        protected override void Execute()
         {
+            foreach(UtilityNode node in _utilityNodes) node.MarkUtilityAsDirty();
+
             var newBestAction = ComputeCurrentBestAction();
             // If the best action changes:
             if(newBestAction != _currentBestElement)
@@ -393,9 +424,6 @@ namespace BehaviourAPI.UtilitySystems
                 _currentBestElement?.Start();
             }
             _currentBestElement?.Update();
-
-            // If the executed action finish and the "finish on complete" flag is true, the utility systems finish too.
-            if (_currentBestElement?.FinishExecutionWhenActionFinishes() ?? false && _currentBestElement.Status != Status.Running) Finish(_currentBestElement.Status);
         }
 
         private UtilitySelectableNode ComputeCurrentBestAction()
@@ -433,6 +461,10 @@ namespace BehaviourAPI.UtilitySystems
             return newBestElement;
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Also stops the current best element execution.
+        /// </summary>
         public override void Stop()
         {
             base.Stop();

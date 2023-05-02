@@ -6,6 +6,9 @@ namespace BehaviourAPI.UtilitySystems
     using Core.Exceptions;
     using Core;
 
+    /// <summary>
+    /// Utility selectable node that computes its utility with a factor.
+    /// </summary>
     public abstract class UtilityExecutableNode : UtilitySelectableNode
     {
         #region ------------------------------------------ Properties ----------------------------------------
@@ -23,7 +26,12 @@ namespace BehaviourAPI.UtilitySystems
 
         #region ---------------------------------------- Build methods ---------------------------------------
 
-        public void SetFactor(Factor factor)
+        /// <summary>
+        /// Set the child factor of the node.
+        /// </summary>
+        /// <param name="factor">The factor.</param>
+        /// <exception cref="MissingChildException">If factor is null.</exception>
+        protected internal void SetFactor(Factor factor)
         {
             if(factor != null)
             {
@@ -49,6 +57,11 @@ namespace BehaviourAPI.UtilitySystems
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Gets the utility from its child
+        /// </summary>
+        /// <returns>The child factor utility.</returns>
         protected override float GetUtility()
         {
             _factor?.UpdateUtility();

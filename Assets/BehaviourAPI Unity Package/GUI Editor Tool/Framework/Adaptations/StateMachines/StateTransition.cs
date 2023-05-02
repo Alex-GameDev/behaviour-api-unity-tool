@@ -1,12 +1,13 @@
-using behaviourAPI.Unity.Framework.Adaptations;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
+using BehaviourAPI.UtilitySystems;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
+    [NodeAdapter(typeof(StateMachines.StateTransition))]
     public class StateTransition : StateMachines.StateTransition, IActionAssignable, IPerceptionAssignable, IBuildable
     {
         [SerializeReference] Action action;
@@ -26,7 +27,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
 
         public StateTransition()
         {
-            StatusFlags = StatusFlags.Actived;
+            StatusFlags = StatusFlags.Active;
         }
 
         public override object Clone()

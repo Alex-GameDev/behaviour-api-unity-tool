@@ -2,26 +2,44 @@ using UnityEngine;
 
 namespace BehaviourAPI.UnityExtensions
 {
+    /// <summary>
+    /// Perception that checks the distance to another object.
+    /// </summary>
     public class DistancePerception : UnityPerception
     {
+        /// <summary>
+        /// The transform of the other object.
+        /// </summary>
         public Transform OtherTransform;
-        public float Maxdistance;
 
+        /// <summary>
+        /// The distance to trigger the perception.
+        /// </summary>
+        public float MaxDistance;
+
+        /// <summary>
+        /// Create a new Distance perception.
+        /// </summary>
+        /// <param name="otherTransform">The transform of the other object.</param>
+        /// <param name="maxdistance">The distance to trigger the perception.</param>
         public DistancePerception(Transform otherTransform, float maxdistance)
         {
             OtherTransform = otherTransform;
-            Maxdistance = maxdistance;
+            MaxDistance = maxdistance;
         }
 
+        /// <summary>
+        /// Create a new Distance perception.
+        /// </summary>
         public DistancePerception()
         {
         }
 
         public override bool Check()
         {
-            return Vector3.Distance(context.Transform.position, OtherTransform.position) < Maxdistance;
+            return Vector3.Distance(context.Transform.position, OtherTransform.position) < MaxDistance;
         }
 
-        public override string DisplayInfo => "if dist < $maxDistance";
+        public override string DisplayInfo => "if dist to $OtherTransform < $MaxDistance";
     }
 }

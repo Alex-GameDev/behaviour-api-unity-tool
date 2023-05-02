@@ -1,7 +1,6 @@
 namespace BehaviourAPI.BehaviourTrees
 {
     using Core;
-    using Core.Exceptions;
 
     /// <summary>
     /// Node that inverts the result returned by its child node (Success/Failure).
@@ -11,6 +10,12 @@ namespace BehaviourAPI.BehaviourTrees
     {
         #region --------------------------------------- Runtime methods --------------------------------------
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Get the inverted value of <paramref name="childStatus"/>.
+        /// </summary>
+        /// <param name="childStatus"><inheritdoc/></param>
+        /// <returns>Success if <paramref name="childStatus"/> is Failure, Failure if <paramref name="childStatus"/> is success, Running otherwise.</returns>
         protected override Status ModifyStatus(Status childStatus)
         {
             return childStatus.Inverted();

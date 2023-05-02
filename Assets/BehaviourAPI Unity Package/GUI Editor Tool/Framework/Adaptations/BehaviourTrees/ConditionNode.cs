@@ -1,14 +1,23 @@
-using behaviourAPI.Unity.Framework.Adaptations;
-using BehaviourAPI.Core;
-using BehaviourAPI.Core.Perceptions;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
+    using Core;
+    using Core.Perceptions;
+
+    /// <summary>
+    /// Adaptation wrapper class for use <see cref="BehaviourTrees.ConditionNode"/> in editor tools. 
+    /// <para>! -- Don't use this class directly in code.</para>
+    /// </summary>
+    [NodeAdapter(typeof(BehaviourTrees.ConditionNode))]
     public class ConditionNode : BehaviourTrees.ConditionNode, IBuildable, IPerceptionAssignable
     {
+        /// <summary>
+        /// Serializable Wrapper for <see cref="BehaviourTrees.ConditionNode.Perception"/>.
+        /// </summary>
         [SerializeReference] public Perception perception;
+
         public Perception PerceptionReference
         {
             get => perception;

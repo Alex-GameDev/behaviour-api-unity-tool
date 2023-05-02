@@ -5,20 +5,35 @@ namespace BehaviourAPI.UnityExtensions
     using Core;
 
     /// <summary>
-    /// Custom action that moves an agent to a given position, returning success when the position is arrived.
+    /// Action that moves an agent to a random position.
     /// </summary>
-
     [SelectionGroup("MOVEMENT")]
     public class PatrolAction : UnityAction
     {
+        /// <summary>
+        /// The movement speed of the agent.
+        /// </summary>
         public float speed;
+
+        /// <summary>
+        /// The max distance of the target point.
+        /// </summary>
         public float maxDistance;
+
         Vector3 _target;
 
+        /// <summary>
+        /// Create a new PatrolAction
+        /// </summary>
         public PatrolAction()
         {
         }
 
+        /// <summary>
+        /// Create a new PatrolAction
+        /// </summary>
+        /// <param name="speed">The movement speed of the agent.</param>
+        /// <param name="maxDistance">The max distance of the target point.</param>
         public PatrolAction(float speed, float maxDistance)
         {
             this.speed = speed;
@@ -41,6 +56,7 @@ namespace BehaviourAPI.UnityExtensions
 
         public override Status Update()
         {
+            if(context.NavMeshAgent.destination != _target) context.NavMeshAgent.destination = _target;
             if (!context.NavMeshAgent.hasPath || context.NavMeshAgent.velocity.sqrMagnitude == -1f ||
                 Vector3.Distance(context.NavMeshAgent.transform.position, _target) < .1f)
             {
@@ -50,6 +66,6 @@ namespace BehaviourAPI.UnityExtensions
                 return Status.Running;
         }
 
-        public override string DisplayInfo => "Move randomly";
+        public override string DisplayInfo => "Move to a random position in a $maxDistance radius circle.";
     }
 }

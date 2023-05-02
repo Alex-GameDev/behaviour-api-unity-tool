@@ -1,35 +1,58 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Linq;
 using UnityEngine;
-using BehaviourAPI.Core;
-using BehaviourAPI.UnityExtensions;
 
 namespace BehaviourAPI.Unity.Framework
 {
+    using Core;
+    using UnityExtensions;
+
+    /// <summary>
+    /// Data class to serialize a component method call.
+    /// </summary>
     [Serializable]
+
     public class SerializedContextMethod : ICloneable
     {
+        /// <summary>
+        /// The name of the component. If is empty, the used component will be the behaviour runner.
+        /// </summary>
         public string componentName;
+
+        /// <summary>
+        /// The name of the method called.
+        /// </summary>
         public string methodName;
 
         public object Clone()
         {
-            var copy = (SerializedContextMethod)MemberwiseClone();
-            return copy;
+            return MemberwiseClone();
         }
     }
 
+    /// <summary>
+    /// Serialized method data that uses their fields to generate a delegate of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the delegate that stores the method.</typeparam>
     [Serializable]
     public class SerializedContextMethod<T> : SerializedContextMethod where T : Delegate
     {
         T _function;
+
+        /// <summary>
+        /// Get the generated function in set context method.
+        /// </summary>
+        /// <returns>The function.</returns>
         public T GetFunction() => _function;
 
         protected virtual Type[] FunctionArgs => new Type[0];
 
+        /// <summary>
+        /// Set value to <see cref="_function"/> using reflection to create a method call by <see cref="SerializedContextMethod.methodName"/> 
+        /// and <see cref="SerializedContextMethod.componentName"/>.
+        /// </summary>
+        /// <param name="context">The context used to get the component reference.</param>
         public void SetContext(UnityExecutionContext context)
         {
             if (string.IsNullOrWhiteSpace(methodName)) return;
@@ -60,7 +83,7 @@ namespace BehaviourAPI.Unity.Framework
     }
 
     /// <summary>
-    /// Serialized method for start and stop events with context
+    /// Serialized method for void events.
     /// </summary>
     [Serializable]
     public class ContextualSerializedAction : SerializedContextMethod<Action>
@@ -68,7 +91,7 @@ namespace BehaviourAPI.Unity.Framework
     }
 
     /// <summary>
-    /// Serialized method for action update event with context
+    /// Serialized method for action update event.
     /// </summary>
     [Serializable]
     public class ContextualSerializedStatusFunction : SerializedContextMethod<Func<Status>>
@@ -76,7 +99,7 @@ namespace BehaviourAPI.Unity.Framework
     }
 
     /// <summary>
-    /// Serialized method for PerceptionReference check event with context
+    /// Serialized method for PerceptionReference check event.
     /// </summary>
     [Serializable]
     public class ContextualSerializedBoolFunction : SerializedContextMethod<Func<bool>>
@@ -84,7 +107,7 @@ namespace BehaviourAPI.Unity.Framework
     }
 
     /// <summary>
-    /// Serialized method for variable factor utility computing with context
+    /// Serialized method for variable factor utility.
     /// </summary>
     [Serializable]
     public class ContextualSerializedFloatFunction : SerializedContextMethod<Func<float>>
@@ -92,7 +115,7 @@ namespace BehaviourAPI.Unity.Framework
     }
 
     /// <summary>
-    /// Serialized method for function factor utility computing with context
+    /// Serialized method for function factor utility.
     /// </summary>
     [Serializable]
     public class ContextualSerializedFloatFloatFunction : SerializedContextMethod<Func<float, float>>

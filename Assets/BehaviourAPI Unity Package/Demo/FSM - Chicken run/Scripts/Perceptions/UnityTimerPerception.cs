@@ -1,10 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using BehaviourAPI.Core;
-using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.UnityExtensions;
 using UnityEngine;
-using UnityEngine.AI;
 
 /// <summary>
 /// Perception triggered when a totalTime passes, asuming its executing on Update
@@ -41,6 +36,6 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
             return _currentTime >= TotalTime;
         }
 
-        public override string DisplayInfo => "$TotalTime passes"; 
+        public override string DisplayInfo => "$TotalTime second(s) passes"; 
     }
 }

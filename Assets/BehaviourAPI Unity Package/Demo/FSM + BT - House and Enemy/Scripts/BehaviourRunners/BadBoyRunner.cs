@@ -18,7 +18,7 @@ public class BadBoyRunner : CodeBehaviourRunner
 
         var bt = new BehaviourTree();
         var leaf = bt.CreateLeafNode(patrol);
-        var root = bt.CreateDecorator<IteratorNode>(leaf);
+        var root = bt.CreateDecorator<LoopNode>(leaf);
         bt.SetRootNode(root);
         RegisterGraph(bt, "main");
         return bt;

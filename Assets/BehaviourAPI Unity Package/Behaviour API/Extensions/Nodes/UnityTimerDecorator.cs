@@ -5,8 +5,15 @@ namespace BehaviourAPI.UnityExtensions
 {
     using Core;
     using BehaviourTrees;
+
+    /// <summary>
+    /// Timer decorator that used unity time instead of system time..
+    /// </summary>
     public class UnityTimerDecorator : DecoratorNode
     {
+        /// <summary>
+        /// The time that the decorator waits.
+        /// </summary>
         public float TotalTime;
 
         float _currentTime;
@@ -19,6 +26,11 @@ namespace BehaviourAPI.UnityExtensions
             _childExecuted = false;
         }
 
+        /// <summary>
+        /// Set the time that the decorator waits.
+        /// </summary>
+        /// <param name="time">The amount of time.</param>
+        /// <returns>The decorator itself.</returns>
         public UnityTimerDecorator SetTotalTime(float time)
         {
             TotalTime = time;

@@ -1,25 +1,25 @@
-using BehaviourAPI.Core;
-using BehaviourAPI.Unity.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
 {
+    using Core;
+    using Framework;
     using UnityExtensions;
 
     [DefaultExecutionOrder(1000)]
 
     /// <summary>
-    /// Component used for debug a behaviour system runner
+    /// Component used for debug a behaviour system runner.
     /// </summary>   
     public class BSRuntimeDebugger : MonoBehaviour, IBehaviourSystem
     {
+        /// <summary>
+        /// If true, display the node status changes in the debug console.
+        /// </summary>
+        public bool debugStatusChanges;
+
         public SystemData Data { get; private set; }
-
-        [SerializeField] bool debugStatusChanges;
-
-        public bool IsDebuggerReady { get; private set; } = false;
-
         public Object ObjectReference => null;
 
         void Awake()

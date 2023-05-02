@@ -12,20 +12,21 @@ namespace BehaviourAPI.UtilitySystems
     public abstract class FusionFactor : Factor
     {
         #region ------------------------------------------ Properties -----------------------------------------
+        
         public override int MaxOutputConnections => -1;
-
-        protected List<Factor> m_childFactors;
 
         #endregion
 
+        protected List<Factor> m_childFactors = new List<Factor>();
+
         #region ---------------------------------------- Build methods ---------------------------------------
 
-        public FusionFactor()
-        {
-            m_childFactors = new List<Factor>();
-        }
-
-        public void AddFactor(Factor factor)
+        /// <summary>
+        /// Add a new child factor.
+        /// </summary>
+        /// <param name="factor">The new child factor.</param>
+        /// <exception cref="MissingChildException">If <paramref name="factor"/> is null.</exception>
+        protected internal void AddFactor(Factor factor)
         {
             if (factor != null) m_childFactors.Add(factor);
             else throw new MissingChildException(this, "Can't add null node as child");
@@ -49,12 +50,21 @@ namespace BehaviourAPI.UtilitySystems
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
+        /// <summary>
+        /// Update the children utilities and compute its utility.
+        /// </summary>
+        /// <returns>The computed utility.</returns>
         protected override float ComputeUtility()
         {
             m_childFactors.ForEach(f => f.UpdateUtility());
             return Evaluate(m_childFactors.Select(child => child.Utility).ToList());
         }
 
+        /// <summary>
+        /// Override this method to compute the fusion factor utility.
+        /// </summary>
+        /// <param name="utilities">The children utilities.</param>
+        /// <returns>The computed utility.</returns>
         protected abstract float Evaluate(List<float> utilities);
 
         #endregion

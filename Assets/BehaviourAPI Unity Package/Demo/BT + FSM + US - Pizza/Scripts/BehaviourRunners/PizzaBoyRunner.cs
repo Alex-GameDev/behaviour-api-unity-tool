@@ -49,7 +49,7 @@ public class PizzaBoyRunner : CodeBehaviourRunner
         var bakeAction = bt.CreateLeafNode("bake pizza", new FunctionalAction(BakePizza, pizzaBaked, BakedActionCompleted));
 
         var seq = bt.CreateComposite<SequencerNode>("pizza seq", false, recipeAction, makePizzaAction, bakeAction);
-        var root = bt.CreateDecorator<IteratorNode>("loop", seq).SetIterations(-1);
+        var root = bt.CreateDecorator<LoopNode>("loop", seq).SetIterations(-1);
         bt.SetRootNode(root);
 
         RegisterGraph(bt);
@@ -84,13 +84,13 @@ public class PizzaBoyRunner : CodeBehaviourRunner
         var peperoniSumFactor = us.CreateFusion<WeightedFusionFactor>("peperoni", pizzafactor, pepperoniFactor)
             .SetWeights(0.6f, 0.4f);
 
-        var pointList = new List<BehaviourAPI.Core.Vector2>();
-        pointList.Add(new BehaviourAPI.Core.Vector2(0.0f, 1f));
-        pointList.Add(new BehaviourAPI.Core.Vector2(0.2f, 0.5f));
-        pointList.Add(new BehaviourAPI.Core.Vector2(0.4f, 0.1f));
-        pointList.Add(new BehaviourAPI.Core.Vector2(0.6f, 0.4f));
-        pointList.Add(new BehaviourAPI.Core.Vector2(0.8f, 0.2f));
-        pointList.Add(new BehaviourAPI.Core.Vector2(1.0f, 0.0f));
+        var pointList = new List<CurvePoint>();
+        pointList.Add(new CurvePoint(0.0f, 1f));
+        pointList.Add(new CurvePoint(0.2f, 0.5f));
+        pointList.Add(new CurvePoint(0.4f, 0.1f));
+        pointList.Add(new CurvePoint(0.6f, 0.4f));
+        pointList.Add(new CurvePoint(0.8f, 0.2f));
+        pointList.Add(new CurvePoint(1.0f, 0.0f));
         var vegetarianFactor = us.CreateCurve<PointedCurveFactor>("vegetarian", pizzafactor).SetPoints(pointList);
 
         var hawaiianFactor = us.CreateCurve<ExponentialCurveFactor>("hawaiian", pizzafactor).SetExponent(.7f);

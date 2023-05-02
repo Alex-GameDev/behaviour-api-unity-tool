@@ -1,24 +1,33 @@
-using BehaviourAPI.Core;
-using BehaviourAPI.Core.Actions;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
+    using Core.Actions;
+
     /// <summary>
-    /// Action that stores its subgraph in an asset.
+    /// Adaptation wrapper class for use <see cref="SubsystemAction"/> in editor tools.
+    /// <para>! -- Don't use this class directly in code.</para>
     /// </summary>
     public class SubgraphAction : SubsystemAction, IBuildable
     {
+        /// <summary>
+        /// The guid of the subgraph in the system data.
+        /// </summary>
         [HideInInspector] public string subgraphId;
 
+        /// <summary>
+        /// Reflection constructor.
+        /// </summary>
         public SubgraphAction() : base(null)
         {
         }
 
-        public SubgraphAction(BehaviourEngine subSystem, bool executeOnLoop = false, bool dontStopOnInterrupt = false) : base(subSystem, executeOnLoop, dontStopOnInterrupt)
-        {
-        }
-
+        /// <summary>
+        /// <inheritdoc/>
+        /// Set the <see cref="SubsystemAction.SubSystem"/> reference searching for a graph 
+        /// with the id stored in <see cref="subgraphId"/>.
+        /// </summary>
+        /// <param name="data"><inheritdoc/></param>
         public void Build(SystemData data)
         {
             if (!string.IsNullOrEmpty(subgraphId))

@@ -1,14 +1,16 @@
-using BehaviourAPI.Core;
-using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.Unity.Framework;
 using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 
 namespace BehaviourAPI.Unity.Runtime
 {
+    using Core;
+    using Core.Perceptions;
+    using Unity.Framework;
+
+    /// <summary>
+    /// Base class of components that use an editable behavior system.
+    /// </summary>
     public abstract class DataBehaviourRunner : BehaviourRunner
     {
         #region -------------------------------- private fields ---------------------------------
@@ -70,9 +72,9 @@ namespace BehaviourAPI.Unity.Runtime
         void BuildDictionaries()
         {
             _graphMap = new Dictionary<string, BehaviourGraph>();
-            foreach(GraphData data in _executionSystem.graphs)
+            foreach (GraphData data in _executionSystem.graphs)
             {
-                if(!string.IsNullOrWhiteSpace(data.name))
+                if (!string.IsNullOrWhiteSpace(data.name))
                 {
                     if (!_graphMap.TryAdd(data.name, data.graph))
                     {

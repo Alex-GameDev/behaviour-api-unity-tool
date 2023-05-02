@@ -216,6 +216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ExecuteOnLoop: 0
   DontStopOnDisable: 0
+  UseNodeNames: 1
   data:
     graphs:
     - id: f5c2baef-2aef-45a9-86d2-4156e26db825
@@ -223,7 +224,7 @@ MonoBehaviour:
       graph:
         rid: 6537695503399780467
       nodes:
-      - name: SequencerNode
+      - name: root
         id: 3a80d56d-4e32-49dc-a8b4-ff987c7807c9
         position: {x: 0, y: 0}
         node:
@@ -233,7 +234,7 @@ MonoBehaviour:
         - ac92051b-f575-4429-baff-3c6f0b0d16ef
         - bfc6eabe-5136-44db-89f6-2de5cb10a4a5
         - 2071ce1f-955f-41d6-a731-1a65237a7f9a
-      - name: SelectorNode
+      - name: sel
         id: bfc6eabe-5136-44db-89f6-2de5cb10a4a5
         position: {x: 0, y: 200}
         node:
@@ -244,7 +245,7 @@ MonoBehaviour:
         - 9758a336-fd07-418a-9afb-2b3cf960991e
         - 2a941e77-9028-4f6d-a4e0-15d9da5e5dcc
         - bd6dc49f-f1b5-4297-bda1-96cf1887d4d1
-      - name: SequencerNode
+      - name: seq
         id: 2a941e77-9028-4f6d-a4e0-15d9da5e5dcc
         position: {x: 0, y: 400}
         node:
@@ -271,7 +272,7 @@ MonoBehaviour:
         parentIds:
         - 3a80d56d-4e32-49dc-a8b4-ff987c7807c9
         childIds: []
-      - name: LeafNode
+      - name: open door
         id: 9758a336-fd07-418a-9afb-2b3cf960991e
         position: {x: -284, y: 416}
         node:
@@ -287,7 +288,7 @@ MonoBehaviour:
         parentIds:
         - bfc6eabe-5136-44db-89f6-2de5cb10a4a5
         childIds: []
-      - name: LeafNode
+      - name: go to key
         id: 59f837da-a781-4e07-b08c-1af199982ff6
         position: {x: -300, y: 600}
         node:
@@ -303,7 +304,7 @@ MonoBehaviour:
         parentIds:
         - 2a941e77-9028-4f6d-a4e0-15d9da5e5dcc
         childIds: []
-      - name: LeafNode
+      - name: ' open door 2'
         id: 61801ece-f6d2-4c7a-893b-bc7a56b489d7
         position: {x: 300, y: 600}
         node:

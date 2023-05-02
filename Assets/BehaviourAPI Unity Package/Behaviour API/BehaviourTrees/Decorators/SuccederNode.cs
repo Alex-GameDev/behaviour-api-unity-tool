@@ -10,6 +10,12 @@ namespace BehaviourAPI.BehaviourTrees
     {
         #region --------------------------------------- Runtime methods --------------------------------------
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// If <paramref name="childStatus"/> is failure returns success.
+        /// </summary>
+        /// <param name="childStatus"></param>
+        /// <returns>Success if <paramref name="childStatus"/> is failure, <paramref name="childStatus"/> otherwise.</returns>
         protected override Status ModifyStatus(Status childStatus)
         {
             if (childStatus == Status.Failure) childStatus = Status.Success;

@@ -1,16 +1,26 @@
-using behaviourAPI.Unity.Framework.Adaptations;
-using BehaviourAPI.Core;
-using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.StateMachines;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
+    using Core;
+    using Core.Actions;
+
+    /// <summary>
+    /// Adaptation wrapper class for use <see cref="StateMachines.ProbabilisticState"/> in editor tools. 
+    /// <para>! -- Don't use this class directly in code.</para>
+    /// </summary>
+    [NodeAdapter(typeof(StateMachines.ProbabilisticState))]
     public class ProbabilisticState : StateMachines.ProbabilisticState, IActionAssignable, IBuildable
     {
+        /// <summary>
+        /// List of probabilities. Allow to assign probabilities in the editor tool.
+        /// </summary>
+        [SerializeField] public List<float> probabilities = new List<float>();
+
+        /// <summary>
+        /// Serializable Wrapper for <see cref="StateMachines.State.Action"/>.
+        /// </summary>
         [SerializeReference] Action action;
 
         public Action ActionReference
@@ -35,6 +45,16 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         {
             base.BuildConnections(parents, children);
             Action = action;
+
+            var count = Mathf.Min(_transitions.Count, probabilities.Count);
+
+            for (int i = 0; i < count; i++)
+            {
+                if (probabilities[i] > 0)
+                {
+                    SetProbability(_transitions[i], probabilities[i]);
+                }
+            }
         }
     }
 }

@@ -1,0 +1,51 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+using BehaviourAPI.Core;
+using BehaviourAPI.Unity.Runtime;
+
+#ROOTNAMESPACEBEGIN#
+
+public class #SCRIPTNAME# : AssetBehaviourRunner
+{
+    // Use this method to modify the editor graph in code
+    protected override void ModifyGraphs()
+    {
+        // Use FindGraph() to get a behaviourGraph by its name.
+        // Use FindPushPerception() to get a Pushperception by its name.
+    }
+
+    // Use this method instead of Awake
+    protected override void OnAwake()
+    {
+        base.OnAwake();
+    }
+
+    // Use this method instead of OnDisable
+    protected override void OnDisableSystem()
+    {
+        base.OnDisableSystem();
+    }
+
+    // Use this method instead of OnEnable
+    protected override void OnEnableSystem()
+    {
+        base.OnEnableSystem();
+    }
+
+    // Use this method instead of Start
+    protected override void OnStart()
+    {
+        base.OnStart();
+    }
+
+    // Use this method instead of Update
+    protected override void OnUpdate()
+    {
+        base.OnUpdate();
+    }
+}
+
+#ROOTNAMESPACEEND#

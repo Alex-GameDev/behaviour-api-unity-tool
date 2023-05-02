@@ -16,9 +16,8 @@ namespace BehaviourAPI.Unity.Editor
 
         static void RefreshBehaviourEditorWindow(PlayModeStateChange playModeStateChange)
         {
-            if (BehaviourEditorWindow.Instance != null)
-                BehaviourEditorWindow.Instance.OnChangePlayModeState(playModeStateChange);
-
+            if (CustomEditorWindow.instance != null)
+                CustomEditorWindow.instance.OnChangePlayModeState(playModeStateChange);
         }
     }
 }

@@ -1,12 +1,13 @@
-using BehaviourAPI.Core;
-using BehaviourAPI.Unity.Framework;
+
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace BehaviourAPI.Unity.Runtime
 {
+    using Core;
+    using Unity.Framework;
+
     /// <summary>
-    /// Subclass of <see cref="BehaviourRunner"/> that creates the behaviour system in code.
+    /// Unity Component that creates a behaviour system in code.
     /// </summary>
     public abstract class CodeBehaviourRunner : BehaviourRunner
     {
@@ -23,7 +24,7 @@ namespace BehaviourAPI.Unity.Runtime
             return new SystemData(allgraphs);
         }
 
-        protected override BehaviourGraph GetExecutionGraph() => CreateGraph();
+        protected sealed override BehaviourGraph GetExecutionGraph() => CreateGraph();
 
         /// <summary>
         /// Register a graph to use it in a <see cref="BSRuntimeDebugger"/>.

@@ -8,7 +8,7 @@ namespace BehaviourAPI.UnityExtensions
         protected UnityExecutionContext context;
         public virtual string DisplayInfo => "Unity Action";
 
-        public override void SetExecutionContext(ExecutionContext context)
+        public sealed override void SetExecutionContext(ExecutionContext context)
         {
             this.context = (UnityExecutionContext)context;
             OnSetContext();
@@ -16,6 +16,7 @@ namespace BehaviourAPI.UnityExtensions
 
         protected virtual void OnSetContext()
         {
+            return;
         }
     }
 }

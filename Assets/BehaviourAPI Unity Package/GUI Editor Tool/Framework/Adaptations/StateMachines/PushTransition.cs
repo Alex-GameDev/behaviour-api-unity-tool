@@ -1,15 +1,28 @@
-using behaviourAPI.Unity.Framework.Adaptations;
-using BehaviourAPI.Core;
-using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Core.Perceptions;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
+    using BehaviourAPI.UtilitySystems;
+    using Core;
+    using Core.Actions;
+    using Core.Perceptions;
+
+    /// <summary>
+    /// Adaptation wrapper class for use <see cref="StateMachines.StackFSMs.PopTransition"/> in editor tools. 
+    /// <para>! -- Don't use this class directly in code.</para>
+    /// </summary>
+    [NodeAdapter(typeof(StateMachines.StackFSMs.PushTransition))]
     public class PushTransition : StateMachines.StackFSMs.PushTransition, IActionAssignable, IPerceptionAssignable, IBuildable
     {
+        /// <summary>
+        /// Serializable Wrapper for <see cref="StateMachines.Transition.Action"/>.
+        /// </summary>
         [SerializeReference] Action action;
+
+        /// <summary>
+        /// Serializable Wrapper for <see cref="StateMachines.Transition.Action"/>.
+        /// </summary>
         [SerializeReference] Perception perception;
 
         public Action ActionReference
@@ -24,9 +37,12 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
             set => perception = value;
         }
 
+        /// <summary>
+        /// The default value for flags will be Active.
+        /// </summary>
         public PushTransition()
         {
-            StatusFlags = StatusFlags.Actived;
+            StatusFlags = StatusFlags.Active;
         }
 
         public override object Clone()

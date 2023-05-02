@@ -1,11 +1,14 @@
-﻿using System;
+﻿using BehaviourAPI.Core.Exceptions;
+using System;
 
 namespace BehaviourAPI.Core
 {
     public abstract class BehaviourEngine : IStatusHandler
     {
+        #region ----------------------------------------- Properties -------------------------------------------
+
         /// <summary>
-        /// The current execution status of the graph.
+        /// The current status of the element
         /// </summary>
         public Status Status 
         {
@@ -20,34 +23,48 @@ namespace BehaviourAPI.Core
             }
         }
 
+        /// <summary>
+        /// Event called when <see cref="Status"/> value changed.
+        /// </summary>
         public Action<Status> StatusChanged { get; set; }
+
+        #endregion
+
+        #region -------------------------------------- Private variables -------------------------------------
 
         Status _status;
 
+        #endregion
+
+        #region --------------------------------------- Runtime methods --------------------------------------
+
         /// <summary>
-        /// Executes the first frame
+        /// Call this method at the beginning of the execution (before calling Update) 
+        /// to set <see cref="Status"/> to Running. Use only if its not a subsystem.
         /// </summary>
+        /// <exception cref="ExecutionStatusException">If the graph is already in execution.</exception>
         public virtual void Start()
         {
             if (Status != Status.None)
-                throw new Exception("ERROR: This behaviour engine is already been executed");
+                throw new ExecutionStatusException(this, "ERROR: This behaviour engine is already been executed");
 
             Status = Status.Running;
         }
 
         /// <summary>
-        /// Executes the last frame
+        /// Call this method at the end of the execution to restart it <see cref="Status"/>.
         /// </summary>
+        /// <exception cref="ExecutionStatusException">If the graph is not in execution.</exception>
         public virtual void Stop()
         {
             if (Status == Status.None)
-                throw new Exception("ERROR: This behaviour engine is already been stopped");
+                throw new ExecutionStatusException(this, "ERROR: This behaviour engine is already been stopped");
 
             Status = Status.None;
         }
 
         /// <summary>
-        /// Executes every frame
+        /// Called every execution frame.
         /// </summary>
         public void Update()
         {
@@ -56,19 +73,38 @@ namespace BehaviourAPI.Core
         }
 
         /// <summary>
-        /// Finish the execution status giving 
+        /// Finish the graph execution with the status given. 
         /// </summary>
-        /// <param name="executionResult"></param>
-        public void Finish(Status executionResult) => Status = executionResult;
+        /// <param name="executionResult">The final value for <see cref="Status"></see>. Must be <see cref="Status.Success"/> or <see cref="Status.Failure"/>. </param>
+        /// <exception cref="ExecutionStatusException">If the value passed as argument is not success or failure.</exception>
+        public void Finish(Status executionResult)
+        {
+            if (executionResult == Status.Running || executionResult == Status.None)
+                throw new ExecutionStatusException(this, $"Error: BehaviourEngine execution result can't be {executionResult}");
 
-        public abstract void Execute();
+            Status = executionResult;
+        }
 
+        /// <summary>
+        /// Set the execution context of the system.
+        /// </summary>
+        /// <param name="context">The <see cref="ExecutionContext"/> used.</param>
         public abstract void SetExecutionContext(ExecutionContext context);
 
+        /// <summary>
+        /// Stop the execution and start it right after.
+        /// </summary>
         public void Restart()
         {
             Stop();
             Start();
         }
+
+        /// <summary>
+        /// Executes every frame if the execution has not finished yet. 
+        /// </summary>
+        protected abstract void Execute();
+
+        #endregion
     }
 }

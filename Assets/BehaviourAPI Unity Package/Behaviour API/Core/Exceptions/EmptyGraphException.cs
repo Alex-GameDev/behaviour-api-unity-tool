@@ -1,31 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BehaviourAPI.Core.Exceptions
 {
+    /// <summary>
+    /// Exception that is thrown when a graph is executed without nodes.
+    /// </summary>
     public class EmptyGraphException : Exception
     {
+        /// <summary>
+        /// The graph that throws the exception.
+        /// </summary>
         public BehaviourGraph Graph { get; private set; }
+
+        /// <summary>
+        /// Create a new <see cref="EmptyGraphException"/> with the specified graph.
+        /// </summary>
+        /// <param name="graph">The graph that throws the exception.</param>
         public EmptyGraphException(BehaviourGraph graph)
         {
             Graph = graph;
         }
 
+        /// <summary>
+        /// Create a new <see cref="EmptyGraphException"/> with the specified graph and a message.
+        /// </summary>
+        /// <param name="graph">The graph that throws the exception.</param>
+        /// <param name="message">The message.</param>
         public EmptyGraphException(BehaviourGraph graph, string message) : base(message)
-        {
-            Graph = graph;
-        }
-
-        public EmptyGraphException(BehaviourGraph graph, string message, Exception innerException) : base(message, innerException)
-        {
-            Graph = graph;
-        }
-
-        protected EmptyGraphException(BehaviourGraph graph, SerializationInfo info, StreamingContext context) : base(info, context)
         {
             Graph = graph;
         }
