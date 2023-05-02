@@ -8,17 +8,24 @@ public class SpawnVehicles : MonoBehaviour
 
     [SerializeField] private List<GameObject> _vehicles = new List<GameObject>();
 
+    [SerializeField] List<Transform> _spawnPoints;
+
     #endregion variables
 
     // Start is called before the first frame update
-    private void Start()
+    private IEnumerator Start()
     {
-        InvokeRepeating("SpawnVehicle", 2, 4);
+        while (true)
+        {
+            yield return new WaitForSeconds(Random.Range(2f, 4f));
+            SpawnVehicle();
+        }
     }
 
     private void SpawnVehicle()
     {
         int vehicleIndex = Random.Range(0, _vehicles.Count);
-        Instantiate(_vehicles[vehicleIndex], transform.position, transform.rotation);
+        var tf = _spawnPoints[Random.Range(0, _spawnPoints.Count)];
+        Instantiate(_vehicles[vehicleIndex], tf.position, tf.rotation);
     }
 }

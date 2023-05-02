@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 5000012665791813595}
   - component: {fileID: 1897590593199712440}
   - component: {fileID: 5737582584103695516}
-  - component: {fileID: 89949517329148788}
   m_Layer: 0
   m_Name: Test boy comb (Visual)
   m_TagString: Player
@@ -460,26 +459,6 @@ MonoBehaviour:
         speed: 8
         distance: 10
         maxTimeRunning: 13
---- !u!114 &89949517329148788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8841883541597954724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 888cb022a2337f84ea943a23247d4f0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ExecuteOnLoop: 0
-  DontStopOnDisable: 0
-  data:
-    graphs: []
-    pushPerceptions: []
-  references:
-    version: 2
-    RefIds: []
 --- !u!1 &8841883541597954734
 GameObject:
   m_ObjectHideFlags: 0

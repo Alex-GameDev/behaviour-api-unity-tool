@@ -3,9 +3,7 @@ using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Runtime;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CarFSMRunner : CodeBehaviourRunner, ICar
 {
@@ -16,7 +14,7 @@ public class CarFSMRunner : CodeBehaviourRunner, ICar
     protected override void OnAwake()
     {
         _rb = GetComponent<Rigidbody>();
-        _radar = GameObject.FindGameObjectWithTag("Radar").GetComponent<IRadar>();
+        _radar = FindObjectOfType<RadarFSMRunner>();
         _speed = Random.Range(10f, 30f);
         base.OnAwake();
     }
