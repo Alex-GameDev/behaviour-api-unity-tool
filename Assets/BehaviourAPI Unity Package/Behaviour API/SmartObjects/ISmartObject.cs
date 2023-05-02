@@ -1,11 +1,51 @@
+using System.Collections.Generic;
+
 namespace BehaviourAPI.SmartObjects
 {
-    public interface ISmartObject
+    /// <summary> 
+    /// An object that can provide behaviour to a smart agent and cover some of its needs.
+    /// </summary>
+    public interface ISmartObject<T> where T : ISmartAgent
     {
-        void RequestInteraction();
+        /// <summary>   
+        /// Request the interaction. 
+        /// </summary>
+        /// <param name="agent"> The agent who request the interaction. </param>
+        /// <returns> </returns>
+        SmartInteraction<T> RequestInteraction(T agent);
 
-        float GetCapability(string name);
+        /// <summary>
+        /// Validates the agent described by agent. 
+        /// </summary>
+        /// <param name="agent"> The agent who request the interaction. </param>
+        /// <returns> True if it succeeds, false if it fails. </returns>
+        bool ValidateAgent(T agent);
 
-        bool ValidateAgent();
+        /// <summary> 
+        /// Gets a capability value. 
+        /// </summary>
+        /// <param name="capabilityName"> Name of the capability. </param>
+        /// <returns>  The capability. </returns>
+        float GetCapabilityValue(string capabilityName);
+
+        /// <summary>
+        /// Invoked when the interaction provided by the object ends with failure. 
+        /// Commonly used to apply the properties
+        /// </summary>
+        /// <param name="agent"> The agent who request the interaction. </param>
+        void OnCompleteWithSuccess(T agent);
+
+        /// <summary>
+        /// Invoked when the interaction provided by the object ends with failure. 
+        /// </summary>
+        /// <param name="agent"> The agent who request the interaction. </param>
+        void OnCompleteWithFailure(T m_Agent);
+
+        /// <summary> 
+        /// Gets all the capabilities that this smart object has. 
+        /// </summary>
+        /// <returns> An enumerator that allows foreach to be used to process the capabilities.
+        /// </returns>
+        IEnumerable<string> GetCapabilities();
     }
 }
