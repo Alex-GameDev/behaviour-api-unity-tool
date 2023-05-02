@@ -1,11 +1,12 @@
 using BehaviourAPI.UnityExtensions;
 using UnityEngine;
 
-/// <summary>
-/// Perception triggered when a totalTime passes, asuming its executing on Update
-/// </summary>
 namespace BehaviourAPI.Unity.Runtime.Extensions
-{    public class UnityTimePerception : UnityPerception
+{
+    /// <summary>
+    /// Perception triggered when a totalTime passes, asuming its executing on Update
+    /// </summary>
+    public class UnityTimePerception : UnityPerception
     {
         public float TotalTime;
 
@@ -36,6 +37,6 @@ namespace BehaviourAPI.Unity.Runtime.Extensions
             return _currentTime >= TotalTime;
         }
 
-        public override string DisplayInfo => "$TotalTime second(s) passes"; 
+        public override string DisplayInfo => "$TotalTime second(s) passes";
     }
 }

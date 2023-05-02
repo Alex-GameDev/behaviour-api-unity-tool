@@ -1,13 +1,16 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿namespace BehaviourAPI.Unity.Demos
+{
+	using UnityEngine;
 
-public class DestroyEffect : MonoBehaviour {
-
-	void Update ()
+	public class DestroyEffect : MonoBehaviour
 	{
 
-		if(Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.C))
-		   Destroy(transform.gameObject);
-	
+		void Update()
+		{
+
+			if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.C))
+				Destroy(transform.gameObject);
+
+		}
 	}
 }

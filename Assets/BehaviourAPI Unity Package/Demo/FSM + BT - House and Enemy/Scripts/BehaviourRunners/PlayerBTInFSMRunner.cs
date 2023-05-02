@@ -1,12 +1,12 @@
+using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
-using UnityEngine;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Runtime;
-using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.UnityExtensions;
+using UnityEngine;
 
-namespace BehaviourAPI.Unity.Demo
+namespace BehaviourAPI.Unity.Demos
 {
     public class PlayerBTInFSMRunner : CodeBehaviourRunner
     {

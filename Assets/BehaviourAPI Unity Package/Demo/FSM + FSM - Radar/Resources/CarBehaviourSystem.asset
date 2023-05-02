@@ -90,13 +90,13 @@ MonoBehaviour:
         perception:
           rid: -2
     - rid: 6537695503399780429
-      type: {class: ChangeSpeedAction, ns: , asm: Assembly-CSharp}
+      type: {class: ChangeSpeedAction, ns: BehaviourAPI.Unity.Demos, asm: Assembly-CSharp}
       data:
         baseSpeed: 0
         minAddedSpeed: 10
         maxAddedSpeed: 30
     - rid: 6537695503399780430
-      type: {class: ChangeSpeedAction, ns: , asm: Assembly-CSharp}
+      type: {class: ChangeSpeedAction, ns: BehaviourAPI.Unity.Demos, asm: Assembly-CSharp}
       data:
         baseSpeed: 10
         minAddedSpeed: 10

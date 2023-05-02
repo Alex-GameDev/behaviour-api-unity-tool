@@ -1,20 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class KeyRotation : MonoBehaviour
+namespace BehaviourAPI.Unity.Demos
 {
-    public Toggle toggle;
-
-    private void Start()
+    public class KeyRotation : MonoBehaviour
     {
-        if(toggle != null)
-            gameObject.SetActive(toggle.isOn);
-    }
+        public Toggle toggle;
 
-    private void Update()
-    {
-        transform.Rotate(new Vector3(0, 1.5f, 0));
+        private void Start()
+        {
+            if (toggle != null)
+                gameObject.SetActive(toggle.isOn);
+        }
+
+        private void Update()
+        {
+            transform.Rotate(new Vector3(0, 1.5f, 0));
+        }
     }
 }

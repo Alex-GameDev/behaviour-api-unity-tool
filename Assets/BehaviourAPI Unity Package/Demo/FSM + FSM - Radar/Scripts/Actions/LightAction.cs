@@ -1,55 +1,58 @@
 using BehaviourAPI.Core;
-using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Unity.Runtime.Extensions;
 using BehaviourAPI.UnityExtensions;
 using UnityEngine;
-using UnityEngine.AI;
 
 /// <summary>
 /// Custom action that changes the color of a light.
 /// </summary>
-public class LightAction : UnityAction
+
+namespace BehaviourAPI.Unity.Demos
 {
-    public Light Light;
-    public Color Color;
-    public float TimeToEnd;
-
-    float _currentTime;
-
-    public override string DisplayInfo => "Change light color to $Color";
-
-    public LightAction()
+    [SelectionGroup("DEMO - Radar")]
+    public class LightAction : UnityAction
     {
-    }
+        public Light Light;
+        public Color Color;
+        public float TimeToEnd;
 
-    public LightAction(Light light, Color color, float timeToEnd = -1f)
-    {
-        Light = light;
-        Color = color;
-        TimeToEnd = timeToEnd;
-    }
+        float _currentTime;
 
-    public override void Start()
-    {
-        _currentTime = 0f;
-        Light.color = Color;
-    }
+        public override string DisplayInfo => "Change light color to $Color";
 
-    public override void Stop()
-    {
-        _currentTime = 0f;
-    }
-
-    public override Status Update()
-    {
-        if (TimeToEnd >= 0f)
+        public LightAction()
         {
-            _currentTime += Time.deltaTime;
-            if (_currentTime > TimeToEnd)
-            {
-                return Status.Success;
-            }
         }
-        return Status.Running;
+
+        public LightAction(Light light, Color color, float timeToEnd = -1f)
+        {
+            Light = light;
+            Color = color;
+            TimeToEnd = timeToEnd;
+        }
+
+        public override void Start()
+        {
+            _currentTime = 0f;
+            Light.color = Color;
+        }
+
+        public override void Stop()
+        {
+            _currentTime = 0f;
+        }
+
+        public override Status Update()
+        {
+            if (TimeToEnd >= 0f)
+            {
+                _currentTime += Time.deltaTime;
+                if (_currentTime > TimeToEnd)
+                {
+                    return Status.Success;
+                }
+            }
+            return Status.Running;
+        }
     }
+
 }

@@ -1,34 +1,38 @@
 using BehaviourAPI.StateMachines;
 using BehaviourAPI.Unity.Runtime;
 
-public class RadarFSMEditorRunner : EditorBehaviourRunner, IRadar
+namespace BehaviourAPI.Unity.Demos
 {
-    RadarDisplay _radarDisplay;
-
-    protected override void OnAwake()
+    public class RadarFSMEditorRunner : EditorBehaviourRunner, IRadar
     {
-        _radarDisplay = GetComponent<RadarDisplay>();
-        base.OnAwake();
+        RadarDisplay _radarDisplay;
+
+        protected override void OnAwake()
+        {
+            _radarDisplay = GetComponent<RadarDisplay>();
+            base.OnAwake();
+        }
+
+
+        public State GetBrokenState()
+        {
+            return FindGraph("Main").FindNode<State>("broken");
+        }
+
+        public State GetWorkingState()
+        {
+            return FindGraph("Main").FindNode<State>("working");
+        }
+
+        public bool CheckRadarForOverSpeed()
+        {
+            return _radarDisplay.CheckRadar((speed) => speed > 20);
+        }
+
+        public bool CheckRadarForUnderSpeed()
+        {
+            return _radarDisplay.CheckRadar((speed) => speed <= 20);
+        }
     }
 
-
-    public State GetBrokenState()
-    {
-        return FindGraph("Main").FindNode<State>("broken");
-    }
-
-    public State GetWorkingState()
-    {
-        return FindGraph("Main").FindNode<State>("working");
-    }
-
-    public bool CheckRadarForOverSpeed()
-    {
-        return _radarDisplay.CheckRadar((speed) => speed > 20);
-    }
-
-    public bool CheckRadarForUnderSpeed()
-    {
-        return _radarDisplay.CheckRadar((speed) => speed <= 20);
-    }
 }

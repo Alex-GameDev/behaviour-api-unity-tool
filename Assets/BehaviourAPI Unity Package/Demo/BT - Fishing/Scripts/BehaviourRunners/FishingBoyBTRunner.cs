@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Runtime;
-using BehaviourAPI.Unity.Runtime.Extensions;
 using BehaviourAPI.UnityExtensions;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Demo
+namespace BehaviourAPI.Unity.Demos
 {
     public class FishingBoyBTRunner : CodeBehaviourRunner
     {
@@ -77,9 +74,9 @@ namespace BehaviourAPI.Unity.Demo
 
         Status WaitToSuccess()
         {
-            if(Time.time > _timeToSuccess + 2f)
+            if (Time.time > _timeToSuccess + 2f)
             {
-                return Status.Success; 
+                return Status.Success;
             }
             else
             {

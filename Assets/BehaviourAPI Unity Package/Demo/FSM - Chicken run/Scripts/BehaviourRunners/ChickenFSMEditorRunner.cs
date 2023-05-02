@@ -1,33 +1,34 @@
-using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Runtime;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class ChickenFSMEditorRunner : EditorBehaviourRunner
+namespace BehaviourAPI.Unity.Demos
 {
-    [SerializeField] Transform _target;
-    [SerializeField] Collider _visionCollider;
-    NavMeshAgent _agent;
-
-    protected override void OnAwake()
+    public class ChickenFSMEditorRunner : EditorBehaviourRunner
     {
-        _agent = GetComponent<NavMeshAgent>();
-        base.OnAwake();
-    }
+        [SerializeField] Transform _target;
+        [SerializeField] Collider _visionCollider;
+        NavMeshAgent _agent;
 
-    public bool CheckWatchTarget()
-    {
-        if (_visionCollider.bounds.Contains(_target.position))
+        protected override void OnAwake()
         {
-            Vector3 direction = (_target.position - transform.position).normalized;
-            Ray ray = new Ray(transform.position + transform.up, direction * 20);
-
-            bool watchPlayer = Physics.Raycast(ray, out RaycastHit hit, 20) && hit.collider.gameObject.transform == _target;
-
-            return watchPlayer;
+            _agent = GetComponent<NavMeshAgent>();
+            base.OnAwake();
         }
-        return false;
+
+        public bool CheckWatchTarget()
+        {
+            if (_visionCollider.bounds.Contains(_target.position))
+            {
+                Vector3 direction = (_target.position - transform.position).normalized;
+                Ray ray = new Ray(transform.position + transform.up, direction * 20);
+
+                bool watchPlayer = Physics.Raycast(ray, out RaycastHit hit, 20) && hit.collider.gameObject.transform == _target;
+
+                return watchPlayer;
+            }
+            return false;
+        }
     }
+
 }

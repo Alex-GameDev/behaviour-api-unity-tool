@@ -4,24 +4,28 @@ using BehaviourAPI.StateMachines;
 using BehaviourAPI.Unity.Runtime;
 using UnityEngine;
 
-public class CarFSMAssetRunner : AssetBehaviourRunner, ICar
+namespace BehaviourAPI.Unity.Demos
 {
-    Rigidbody _rb;
-
-    protected override void OnAwake()
+    public class CarFSMAssetRunner : AssetBehaviourRunner, ICar
     {
-        _rb = GetComponent<Rigidbody>();
+        Rigidbody _rb;
 
-        base.OnAwake();
-        IRadar radar = GameObject.FindGameObjectWithTag("Radar").GetComponent<IRadar>();
+        protected override void OnAwake()
+        {
+            _rb = GetComponent<Rigidbody>();
 
-        var mainGraph = FindGraph("main");
-        var speedUp = mainGraph.FindNode<StateTransition>("speed up");
-        var speedDown = mainGraph.FindNode<StateTransition>("speed down");
+            base.OnAwake();
+            IRadar radar = GameObject.FindGameObjectWithTag("Radar").GetComponent<IRadar>();
 
-        speedUp.Perception = new ExecutionStatusPerception(radar.GetBrokenState(), StatusFlags.Running);
-        speedDown.Perception = new ExecutionStatusPerception(radar.GetWorkingState(), StatusFlags.Running);
+            var mainGraph = FindGraph("main");
+            var speedUp = mainGraph.FindNode<StateTransition>("speed up");
+            var speedDown = mainGraph.FindNode<StateTransition>("speed down");
+
+            speedUp.Perception = new ExecutionStatusPerception(radar.GetBrokenState(), StatusFlags.Running);
+            speedDown.Perception = new ExecutionStatusPerception(radar.GetWorkingState(), StatusFlags.Running);
+        }
+
+        public float GetSpeed() => _rb.velocity.magnitude;
     }
 
-    public float GetSpeed() => _rb.velocity.magnitude;
 }

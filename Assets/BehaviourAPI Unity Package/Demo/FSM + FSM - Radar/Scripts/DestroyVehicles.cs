@@ -1,13 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class DestroyVehicles : MonoBehaviour {
-
-    private void OnTriggerEnter(Collider other)
+namespace BehaviourAPI.Unity.Demos
+{
+    public class DestroyVehicles : MonoBehaviour
     {
-        if(other.tag == "Car") {
-            Destroy(other.gameObject);
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.tag == "Car")
+            {
+                Destroy(other.gameObject);
+            }
         }
     }
 }

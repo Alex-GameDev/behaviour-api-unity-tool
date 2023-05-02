@@ -1,10 +1,11 @@
 using BehaviourAPI.StateMachines;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public interface IRadar
+namespace BehaviourAPI.Unity.Demos
 {
-    public State GetBrokenState();
-    public State GetWorkingState();
+	public interface IRadar
+	{
+		public State GetBrokenState();
+		public State GetWorkingState();
+	}
+
 }

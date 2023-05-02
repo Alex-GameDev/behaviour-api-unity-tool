@@ -1,62 +1,63 @@
 using BehaviourAPI.Core;
-using BehaviourAPI.Unity.Runtime;
-using BehaviourAPI.Unity.Runtime.Extensions;
 using BehaviourAPI.UnityExtensions;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// Custom action that makes a light blink.
-/// </summary>
-/// 
-[SelectionGroup("DEMO - Radar")]
-public class BlinkAction : UnityAction
+namespace BehaviourAPI.Unity.Demos
 {
-    public Light Light;
-    public Color Color;
-    public Text Marker;
-
-    bool _intensityIncreasing;
-
-    public BlinkAction()
+    /// <summary>
+    /// Custom action that makes a light blink.
+    /// </summary>
+    /// 
+    [SelectionGroup("DEMO - Radar")]
+    public class BlinkAction : UnityAction
     {
-    }
+        public Light Light;
+        public Color Color;
+        public Text Marker;
 
+        bool _intensityIncreasing;
 
-    public BlinkAction(Light light, Text marker, Color color)
-    {
-        Light = light;
-        Color = color;
-        Marker = marker;
-    }
-
-    public override void Start()
-    {
-        Light.color = Color;
-        Light.intensity = 1f;
-        _intensityIncreasing = true;
-        Marker.text = "---";
-    }
-
-    public override void Stop()
-    {
-        if(Light != null) Light.intensity = 1f;
-        if(Marker != null)  Marker.text = "000";
-    }
-
-    public override Status Update()
-    {
-        if (Light.intensity >= 2)
+        public BlinkAction()
         {
-            _intensityIncreasing = false;
         }
-        else if (Light.intensity <= 0)
+
+
+        public BlinkAction(Light light, Text marker, Color color)
         {
+            Light = light;
+            Color = color;
+            Marker = marker;
+        }
+
+        public override void Start()
+        {
+            Light.color = Color;
+            Light.intensity = 1f;
             _intensityIncreasing = true;
+            Marker.text = "---";
         }
-        Light.intensity += (_intensityIncreasing) ? 0.1f : -0.1f;
-        return Status.Running;
-    }
 
-    public override string DisplayInfo => "Make light blink in $Color";
+        public override void Stop()
+        {
+            if (Light != null) Light.intensity = 1f;
+            if (Marker != null) Marker.text = "000";
+        }
+
+        public override Status Update()
+        {
+            if (Light.intensity >= 2)
+            {
+                _intensityIncreasing = false;
+            }
+            else if (Light.intensity <= 0)
+            {
+                _intensityIncreasing = true;
+            }
+            Light.intensity += (_intensityIncreasing) ? 0.1f : -0.1f;
+            return Status.Running;
+        }
+
+        public override string DisplayInfo => "Make light blink in $Color";
+    }
 }

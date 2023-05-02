@@ -481,7 +481,7 @@ MonoBehaviour:
       data:
         TotalTime: 10
     - rid: 6537695503399780410
-      type: {class: BlinkAction, ns: , asm: Assembly-CSharp}
+      type: {class: BlinkAction, ns: BehaviourAPI.Unity.Demos, asm: Assembly-CSharp}
       data:
         Light: {fileID: 2054399758}
         Color: {r: 1, g: 1, b: 0, a: 1}
@@ -536,13 +536,13 @@ MonoBehaviour:
         perception:
           rid: -2
     - rid: 6537695503399780420
-      type: {class: LightAction, ns: , asm: Assembly-CSharp}
+      type: {class: LightAction, ns: BehaviourAPI.Unity.Demos, asm: Assembly-CSharp}
       data:
         Light: {fileID: 2054399758}
         Color: {r: 0, g: 1, b: 0, a: 1}
         TimeToEnd: 1
     - rid: 6537695503399780421
-      type: {class: LightAction, ns: , asm: Assembly-CSharp}
+      type: {class: LightAction, ns: BehaviourAPI.Unity.Demos, asm: Assembly-CSharp}
       data:
         Light: {fileID: 2054399758}
         Color: {r: 1, g: 0, b: 0, a: 1}
@@ -572,7 +572,7 @@ MonoBehaviour:
           componentName: 
           methodName: 
     - rid: 6537695503399780431
-      type: {class: LightAction, ns: , asm: Assembly-CSharp}
+      type: {class: LightAction, ns: BehaviourAPI.Unity.Demos, asm: Assembly-CSharp}
       data:
         Light: {fileID: 2054399758}
         Color: {r: 0, g: 0, b: 1, a: 1}
