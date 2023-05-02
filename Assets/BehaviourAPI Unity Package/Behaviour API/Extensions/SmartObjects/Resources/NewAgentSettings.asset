@@ -9,9 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82eaeee293215534d8a54303b61abc7a, type: 3}
-  m_Name: NPCSettings
+  m_Script: {fileID: 11500000, guid: 205fe516ceaaec040890da8eed847c05, type: 3}
+  m_Name: NewAgentSettings
   m_EditorClassIdentifier: 
-  spr1: {fileID: 0}
-  spr2: {fileID: 0}
-  spr3: {fileID: 0}
+  _needMap:
+    keys:
+    - hunger
+    values:
+    - 0
