@@ -736,13 +736,6 @@ MonoBehaviour:
         parentIds:
         - 89ee794c-bb88-44f0-953a-e1d8f1cede30
         childIds: []
-      - name: asas
-        id: d979255b-749c-4401-ba80-da9b74b3729d
-        position: {x: 502, y: -21}
-        node:
-          rid: 8223533736142831620
-        parentIds: []
-        childIds: []
     - name: Recipe US
       id: 83a6a2f6-d924-4743-9c35-444504d0c2d9
       graph:
@@ -1202,17 +1195,6 @@ MonoBehaviour:
         stop:
           componentName: 
           methodName: BakedActionCompleted
-    - rid: 8223533736142831620
-      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
-      data:
-        action:
-          rid: 8223533736142831623
-    - rid: 8223533736142831623
-      type: {class: BlinkAction, ns: , asm: Assembly-CSharp}
-      data:
-        Light: {fileID: 0}
-        Color: {r: 1, g: 0.4575472, b: 0.4575472, a: 0}
-        Marker: {fileID: 0}
 --- !u!114 &1401791170
 MonoBehaviour:
   m_ObjectHideFlags: 0

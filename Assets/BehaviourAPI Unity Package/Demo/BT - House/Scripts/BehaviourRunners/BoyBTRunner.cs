@@ -36,7 +36,7 @@ namespace BehaviourAPI.Unity.Demos
             var doorPos = new Vector3(_door.transform.position.x, transform.position.y, _door.transform.position.z);
 
             var walkToDoorAction = new WalkAction(doorPos, 5f);
-            var openDoorAction = new FunctionalAction(OpenDoor, () => (!_door.IsClosed).ToStatus());
+            var openDoorAction = new FunctionalAction(OpenDoor, DoorStatus);
             var explodeAction = new FunctionalAction(SmashDoor, () => Status.Success);
             var enterAction = new FunctionalAction(EnterTheHouse, () => Status.Success);
             var findKeyAction = new FunctionalAction(FindKey, IsKeyObtained);
@@ -69,6 +69,11 @@ namespace BehaviourAPI.Unity.Demos
             _audioSource.clip = explosionClip;
             _audioSource.Play();
             Destroy(explosion, 3);
+        }
+
+        private Status DoorStatus()
+        {
+            return !_door.IsClosed ? Status.Success : Status.Failure;
         }
 
         private void OpenDoor()

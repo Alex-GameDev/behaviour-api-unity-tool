@@ -3,7 +3,6 @@
 namespace BehaviourAPI.BehaviourTrees
 {
     using Core;
-    using Core.Exceptions;
 
     /// <summary>
     /// Decorator that waits an amount of time to execute the child.
@@ -11,7 +10,7 @@ namespace BehaviourAPI.BehaviourTrees
     public class TimerDecoratorNode : DecoratorNode
     {
         #region --------------------------------------- Private fields ---------------------------------------
-        
+
         Timer _timer;
 
         bool _isTimeout;
@@ -70,7 +69,7 @@ namespace BehaviourAPI.BehaviourTrees
         protected override Status UpdateStatus()
         {
             if (!_isTimeout) return Status.Running;
-            
+
             if (m_childNode != null)
             {
                 if (!_childExecuted)
@@ -93,13 +92,13 @@ namespace BehaviourAPI.BehaviourTrees
         {
             base.Stop();
             _isTimeout = false;
-            if(_timer != null)
-            { 
+            if (_timer != null)
+            {
                 _timer.Enabled = false;
                 _timer.Stop();
             }
 
-            if(_childExecuted)
+            if (_childExecuted)
             {
                 if (m_childNode == null)
                     throw new MissingChildException(this);

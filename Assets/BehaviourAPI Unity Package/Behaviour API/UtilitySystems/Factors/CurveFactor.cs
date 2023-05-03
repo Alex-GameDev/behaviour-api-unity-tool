@@ -3,7 +3,6 @@ using System.Collections.Generic;
 namespace BehaviourAPI.UtilitySystems
 {
     using Core;
-    using Core.Exceptions;
 
     /// <summary>
     /// Factor that modifies its child value with a function.
@@ -26,7 +25,7 @@ namespace BehaviourAPI.UtilitySystems
         /// <exception cref="MissingChildException">If factor is null.</exception>
         protected internal void SetChild(Factor factor)
         {
-            if(factor != null)
+            if (factor != null)
             {
                 m_childFactor = factor;
             }

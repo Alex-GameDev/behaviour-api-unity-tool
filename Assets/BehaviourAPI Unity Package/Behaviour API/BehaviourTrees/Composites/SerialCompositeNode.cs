@@ -5,7 +5,7 @@
     /// <summary>
     /// Composite node that executes its children sequencially.
     /// </summary>
-    public abstract class SerialNode : CompositeNode
+    public abstract class SerialCompositeNode : CompositeNode
     {
         #region ------------------------------------------ Properties -----------------------------------------
 

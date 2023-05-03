@@ -72,4 +72,22 @@ namespace BehaviourAPI.Core
         /// </summary>
         Active = 7
     }
+
+    /// <summary>
+    /// Extension methods for Status enum.
+    /// </summary>
+    public static class StatusExtensions
+    {
+        /// <summary>
+        /// Invert the <see cref="Status"/> value (<see cref="Status.Success"/> --- <see cref="Status.Failure"/>).
+        /// </summary>
+        /// <param name="status">The status value</param>
+        /// <returns>The value inverted.</returns>
+        public static Status Inverted(this Status status)
+        {
+            if (status == Status.Success) return Status.Failure;
+            if (status == Status.Failure) return Status.Success;
+            else return status;
+        }
+    }
 }

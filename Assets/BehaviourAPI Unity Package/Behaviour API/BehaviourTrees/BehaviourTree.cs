@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace BehaviourAPI.BehaviourTrees
 {
-    using Core.Exceptions;
     using Core;
-    using Action = Core.Actions.Action;
+    using Core.Actions;
 
     /// <summary>
     /// Decision system that consists of traversing a tree in depth depending on the result returned by its nodes.
@@ -18,7 +17,7 @@ namespace BehaviourAPI.BehaviourTrees
 
         public override Type NodeType => typeof(BTNode);
 
-        public override bool CanRepeatConnection => false; // This won't happen because BTNode's max input connections is 1.
+        public override bool CanRepeatConnection => false;
 
         public override bool CanCreateLoops => false;
 

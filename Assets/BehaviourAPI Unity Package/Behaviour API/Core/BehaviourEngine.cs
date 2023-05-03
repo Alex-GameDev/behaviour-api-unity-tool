@@ -1,21 +1,20 @@
-﻿using BehaviourAPI.Core.Exceptions;
-using System;
+﻿using System;
 
 namespace BehaviourAPI.Core
 {
+    /// <summary>
+    /// Basic class for all behaviour systems. 
+    /// </summary>
     public abstract class BehaviourEngine : IStatusHandler
     {
         #region ----------------------------------------- Properties -------------------------------------------
 
-        /// <summary>
-        /// The current status of the element
-        /// </summary>
-        public Status Status 
+        public Status Status
         {
-            get => _status; 
+            get => _status;
             protected set
             {
-                if(_status != value)
+                if (_status != value)
                 {
                     _status = value;
                     StatusChanged?.Invoke(_status);
@@ -23,9 +22,6 @@ namespace BehaviourAPI.Core
             }
         }
 
-        /// <summary>
-        /// Event called when <see cref="Status"/> value changed.
-        /// </summary>
         public Action<Status> StatusChanged { get; set; }
 
         #endregion
@@ -69,7 +65,7 @@ namespace BehaviourAPI.Core
         public void Update()
         {
             if (Status != Status.Running) return; // Graph already finished
-            Execute();                
+            Execute();
         }
 
         /// <summary>

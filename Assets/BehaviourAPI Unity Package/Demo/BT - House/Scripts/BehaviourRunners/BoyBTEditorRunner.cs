@@ -43,7 +43,12 @@ namespace BehaviourAPI.Unity.Demos
         }
 
         public Status EndWithSuccess() => Status.Success;
-        public Status DoorStatus() => (!_door.IsClosed).ToStatus();
+
+        public Status DoorStatus()
+        {
+            return !_door.IsClosed ? Status.Success : Status.Failure;
+        }
+
         public void OpenDoor()
         {
             if (!_door.IsClosed)

@@ -5,7 +5,6 @@ namespace BehaviourAPI.StateMachines
 {
     using Core;
     using Core.Actions;
-    using Core.Exceptions;
     /// <summary>
     /// Represents a state in a FSM graph.
     /// </summary>
@@ -118,7 +117,7 @@ namespace BehaviourAPI.StateMachines
         /// </summary>
         public virtual void Update()
         {
-            if (Status == Status.Running) 
+            if (Status == Status.Running)
                 Status = Action?.Update() ?? Status.Running;
 
             CheckTransitions();

@@ -1,10 +1,7 @@
 ﻿using BehaviourAPI.Core;
-using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Core.Perceptions;
 
 namespace BehaviourAPI.BehaviourTrees
 {
-    using Core.Exceptions;
     using Core.Actions;
 
     /// <summary>
@@ -18,7 +15,7 @@ namespace BehaviourAPI.BehaviourTrees
         /// <summary>
         /// The action executed by this node.
         /// </summary>
-        public Action Action; 
+        public Action Action;
 
         #endregion
 
@@ -26,7 +23,7 @@ namespace BehaviourAPI.BehaviourTrees
 
         public override object Clone()
         {
-            var node = (LeafNode) base.Clone();
+            var node = (LeafNode)base.Clone();
             node.Action = (Action)Action?.Clone();
             return node;
         }

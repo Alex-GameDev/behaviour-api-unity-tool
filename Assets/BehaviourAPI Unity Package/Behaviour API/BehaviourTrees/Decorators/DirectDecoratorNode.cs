@@ -1,7 +1,6 @@
 ﻿namespace BehaviourAPI.BehaviourTrees
 {
     using BehaviourAPI.Core;
-    using Core.Exceptions;
 
     /// <summary>
     /// Decorator that always execute its child.

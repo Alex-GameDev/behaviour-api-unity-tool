@@ -1,11 +1,10 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BehaviourAPI.UtilitySystems
 {
     using Core;
-    using Core.Exceptions;
     using Core.Actions;
 
     /// <summary>
@@ -358,7 +357,7 @@ namespace BehaviourAPI.UtilitySystems
 
         public override object Clone()
         {
-            var us = (UtilitySystem) base.Clone();
+            var us = (UtilitySystem)base.Clone();
             us._utilityCandidates = new List<UtilitySelectableNode>();
             return us;
         }
@@ -369,7 +368,7 @@ namespace BehaviourAPI.UtilitySystems
         /// </summary>
         protected override void Build()
         {
-            foreach(Node node in Nodes)
+            foreach (Node node in Nodes)
             {
                 if (node is UtilitySelectableNode selectableNode && selectableNode.ParentCount == 0)
                     _utilityCandidates.Add(selectableNode);
@@ -400,7 +399,7 @@ namespace BehaviourAPI.UtilitySystems
         /// <exception cref="EmptyGraphException">If the candidate list is empty.</exception>
         public override void Start()
         {
-            base.Start ();
+            base.Start();
 
             if (_utilityCandidates.Count == 0)
                 throw new EmptyGraphException(this, "The list of utility candidates is empty.");
@@ -413,11 +412,11 @@ namespace BehaviourAPI.UtilitySystems
         /// </summary>
         protected override void Execute()
         {
-            foreach(UtilityNode node in _utilityNodes) node.MarkUtilityAsDirty();
+            foreach (UtilityNode node in _utilityNodes) node.MarkUtilityAsDirty();
 
             var newBestAction = ComputeCurrentBestAction();
             // If the best action changes:
-            if(newBestAction != _currentBestElement)
+            if (newBestAction != _currentBestElement)
             {
                 _currentBestElement?.Stop();
                 _currentBestElement = newBestAction;
@@ -430,31 +429,33 @@ namespace BehaviourAPI.UtilitySystems
         {
             float currentHigherUtility = -1f; // If value starts in 0, elems with Utility == 0 cant be executed
 
-            UtilitySelectableNode newBestElement = _currentBestElement;
+            UtilitySelectableNode newBestElement = null;
 
             int i = 0;
-            var currentActionIsLocked = false; // True if current action is a locked bucket.
+            var currentElementIsLocked = false; // True if current action is a locked bucket.
 
-            while (i < _utilityCandidates.Count && !currentActionIsLocked)
+            while (i < _utilityCandidates.Count && !currentElementIsLocked)
             {
                 // Update utility
-                var currentAction = _utilityCandidates[i];
-                if (currentAction == null) continue;
-                currentAction.UpdateUtility();
+                var currentCandidate = _utilityCandidates[i];
 
-                // Compute the current action utility:
-                var utility = currentAction.Utility;
-                if (currentAction == _currentBestElement) utility *= Inertia;
+                if (currentCandidate == null) continue;
+
+                currentCandidate.UpdateUtility();
+
+                var utility = currentCandidate.Utility;
+                if (currentCandidate == _currentBestElement) utility *= Inertia;
 
                 // If it's higher than the current max utility, update the selection.
-                if(utility > currentHigherUtility)
+                if (utility > currentHigherUtility)
                 {
-                    newBestElement = currentAction;
+                    newBestElement = currentCandidate;
                     currentHigherUtility = utility;
-
-                    // If the action is a locked bucket:
-                    if (currentAction.ExecutionPriority) currentActionIsLocked = true;
                 }
+
+                // If the current candidate is a locked bucket:
+                if (currentCandidate.ExecutionPriority) currentElementIsLocked = true;
+
                 i++;
             }
 

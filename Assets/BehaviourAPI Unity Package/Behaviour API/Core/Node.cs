@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace BehaviourAPI.Core
 {
+    /// <summary> 
+    /// The basic element of the behaviour graphs. 
+    /// </summary>
     public abstract class Node : ICloneable
     {
         #region ------------------------------------------ Properties -----------------------------------------
@@ -31,8 +34,16 @@ namespace BehaviourAPI.Core
         /// </summary>
         public abstract int MaxOutputConnections { get; }
 
+        /// <summary>   
+        /// Gets the number of child nodes.
+        /// </summary>
+        /// <value> The number of elements in child node list. </value>
         public int ChildCount => Children.Count;
 
+        /// <summary>   
+        /// Gets the number of parent nodes.
+        /// </summary>
+        /// <value> The number of elements in parent node list. </value>
         public int ParentCount => Parents.Count;
 
         #endregion
@@ -52,10 +63,11 @@ namespace BehaviourAPI.Core
         #endregion
 
         #region ---------------------------------------- Build methods ---------------------------------------
+
         /// <summary>
         /// Empty constructor
         /// </summary>
-        public Node()
+        protected Node()
         {
             Children = new List<Node>();
             Parents = new List<Node>();
@@ -108,16 +120,6 @@ namespace BehaviourAPI.Core
         public Node GetFirstParent() => Parents.Count > 0 ? Parents[0] : null;
 
         /// <summary>
-        /// Check if this node is connected with other node
-        /// </summary>
-        /// <param name="node">The other node</param>
-        /// <returns></returns>
-        public bool IsConnectedWith(Node node)
-        {
-            return IsParentOf(node) || IsChildOf(node);
-        }
-
-        /// <summary>
         /// Return true if this node is the start node of the graph.
         /// </summary>
         public bool IsStartNode() => BehaviourGraph?.StartNode == this;
@@ -135,7 +137,7 @@ namespace BehaviourAPI.Core
         public bool CanAddAParent() => MaxInputConnections == -1 || Parents.Count < MaxInputConnections;
 
         /// <summary>
-        /// Build the internal connection references.
+        /// Override this method to set internal node variables when building from serialized data.
         /// </summary>
         /// <param name="parents">The list of parent nodes.</param>
         /// <param name="children">The list of child nodes.</param>
@@ -152,7 +154,7 @@ namespace BehaviourAPI.Core
         }
 
         /// <summary>
-        /// Create a shallow copy of the node with empty parent and child lists. 
+        /// Overrides this method to set the node's internal variables when a copy is created.
         /// </summary>
         /// <returns>A field copy of the node. </returns>
         public virtual object Clone()
@@ -165,12 +167,13 @@ namespace BehaviourAPI.Core
         }
 
         /// <summary>
-        /// Set the execution context. 
+        /// Override this method to define how it uses the execution context.
         /// </summary>
         public virtual void SetExecutionContext(ExecutionContext context)
         {
             return;
         }
+
         #endregion
     }
 }

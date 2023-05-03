@@ -1,13 +1,13 @@
-using BehaviourAPI.Core.Exceptions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace BehaviourAPI.Core
 {
+    /// <summary> 
+    /// Behavior engine in the form of a directed graph.
+    /// </summary>
     public abstract class BehaviourGraph : BehaviourEngine, ICloneable
     {
         #region ----------------------------------------- Properties -------------------------------------------
@@ -34,7 +34,9 @@ namespace BehaviourAPI.Core
                     throw new ArgumentException("Ths node is not in the graph");
 
                 if (Nodes[0] != value)
-                    Nodes.MoveAtFirst(value);
+                {
+                    if (Nodes.Remove(value)) Nodes.Insert(0, value);
+                }
             }
         }
 
@@ -106,7 +108,7 @@ namespace BehaviourAPI.Core
                 throw new ArgumentException($"Error adding a node: An instance of type {node.GetType()} cannot be added, " +
                     $"this graph only handles nodes of types derived from {NodeType}");
 
-            if(!node.GraphType.IsAssignableFrom(GetType()))
+            if (!node.GraphType.IsAssignableFrom(GetType()))
                 throw new ArgumentException($"Error adding a node: An instance of type {node.GetType()} cannot be added, " +
                     $"This node can only belongs to a graph of types derived from {node.GraphType}");
 
@@ -231,6 +233,8 @@ namespace BehaviourAPI.Core
         /// </summary>
         protected internal virtual void Build()
         {
+
+            return;
         }
 
         /// <summary>

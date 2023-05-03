@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BehaviourAPI.Core.Exceptions
+namespace BehaviourAPI.Core
 {
     /// <summary>
     /// Exception that is thrown when a graph is executed without nodes.

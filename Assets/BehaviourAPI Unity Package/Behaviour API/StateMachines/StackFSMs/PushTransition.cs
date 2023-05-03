@@ -4,7 +4,6 @@ using System.Collections.Generic;
 namespace BehaviourAPI.StateMachines.StackFSMs
 {
     using Core;
-    using Core.Exceptions;
 
     /// <summary>
     /// Stack transition between two states that saves the source state in the stack when is performed.

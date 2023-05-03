@@ -1,6 +1,4 @@
-﻿using BehaviourAPI.Core.Exceptions;
-
-namespace BehaviourAPI.Core.Actions
+﻿namespace BehaviourAPI.Core.Actions
 {
     /// <summary>
     /// Represents an action that executes a sub behaviour engine.
@@ -82,7 +80,7 @@ namespace BehaviourAPI.Core.Actions
                 throw new MissingSubsystemException(this, "Subsystem cannot be null");
 
             if (DontStopOnInterrupt && SubSystem.Status == Status.Running) return;
-            
+
             SubSystem?.Stop();
         }
 

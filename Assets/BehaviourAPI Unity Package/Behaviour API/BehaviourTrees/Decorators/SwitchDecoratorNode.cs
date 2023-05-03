@@ -3,7 +3,6 @@
 namespace BehaviourAPI.BehaviourTrees
 {
     using Core;
-    using Core.Exceptions;
     using Core.Perceptions;
 
     /// <summary>
@@ -46,14 +45,14 @@ namespace BehaviourAPI.BehaviourTrees
         public override void Start()
         {
             base.Start();
-            if(Perception != null) Perception.Initialize();
-            else  throw new NullReferenceException("ERROR: Perception is not defined.");
+            if (Perception != null) Perception.Initialize();
+            else throw new NullReferenceException("ERROR: Perception is not defined.");
         }
 
         public override void Stop()
         {
             base.Stop();
-            if(_childExecutedLastFrame)
+            if (_childExecutedLastFrame)
             {
                 m_childNode.Stop();
                 _childExecutedLastFrame = false;
@@ -66,9 +65,9 @@ namespace BehaviourAPI.BehaviourTrees
         {
             if (Perception != null)
             {
-                if(m_childNode != null)
+                if (m_childNode != null)
                 {
-                    if(Perception.Check())
+                    if (Perception.Check())
                     {
                         if (!_childExecutedLastFrame) m_childNode.Start();
                         _childExecutedLastFrame = true;

@@ -73,7 +73,10 @@ namespace BehaviourAPI.Unity.Demos
         }
 
         // Espera a que el personaje se haya colocado en la mesa
-        public Status RecipeCreated() => (Vector3.Distance(transform.position, _table.position) < 0.3f).ToStatus(Status.Running);
+        public Status RecipeCreated()
+        {
+            return (Vector3.Distance(transform.position, _table.position) < 0.3f) ? Status.Success : Status.Running;
+        }
 
         // Cuando termina la acción:
         public void CreateRecipeCompleted()
@@ -96,8 +99,7 @@ namespace BehaviourAPI.Unity.Demos
         // Espera un tiempo
         public Status WaitToPutIngredient()
         {
-            Status st = (Time.time > _lastIngredientAddedTime + _timeToAddIngredient).ToStatus(Status.Running);
-            return st;
+            return Time.time > _lastIngredientAddedTime + _timeToAddIngredient ? Status.Success : Status.Running;
         }
 
         // Añade el siguiente ingrediente de la receta
@@ -113,7 +115,7 @@ namespace BehaviourAPI.Unity.Demos
         {
             if (Time.time > _lastIngredientAddedTime + _timeToAddIngredient)
             {
-                return (_currentIngredient == _currentRecipe.ingredients.Count).ToStatus();
+                return _currentIngredient == _currentRecipe.ingredients.Count ? Status.Success : Status.Failure;
             }
             else
                 return Status.Running;
@@ -127,7 +129,10 @@ namespace BehaviourAPI.Unity.Demos
         }
 
         // Espera a que el personaje llegue al horno
-        public Status pizzaBaked() => (Vector3.Distance(transform.position, _oven.position) < 0.5f).ToStatus(Status.Running);
+        public Status pizzaBaked()
+        {
+            return Vector3.Distance(transform.position, _oven.position) < 0.5f ? Status.Success : Status.Running;
+        }
 
         // Cuando la acción de hornear la pizza acaba, se borra la receta y se destruye la pizza
         public void BakedActionCompleted()
