@@ -23,6 +23,7 @@ namespace BehaviourAPI.Unity.SmartObjects
 
         void OnEnable()
         {
+            Debug.Log(GetType().Name);
             if (_registerOnManager)
                 SmartObjectManager.Instance.RegisterSmartObject(this);
         }

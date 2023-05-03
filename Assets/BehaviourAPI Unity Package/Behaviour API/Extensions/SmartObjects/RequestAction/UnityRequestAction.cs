@@ -1,6 +1,7 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.SmartObjects;
 using BehaviourAPI.Unity.SmartObjects;
+using UnityEngine;
 
 namespace BehaviourAPI.UnityExtensions
 {
@@ -31,7 +32,12 @@ namespace BehaviourAPI.UnityExtensions
         {
         }
 
-        protected sealed override ISmartObject<SmartAgent> FindSmartObject(SmartAgent agent) => GetSmartObject(agent);
+        protected sealed override ISmartObject<SmartAgent> FindSmartObject(SmartAgent agent)
+        {
+            var obj = GetSmartObject(agent);
+            Debug.Log("Smart object selected", obj.gameObject);
+            return obj;
+        }
 
 
         protected abstract SmartObject GetSmartObject(SmartAgent agent);
