@@ -1,4 +1,3 @@
-using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Unity.SmartObjects;
 using BehaviourAPI.UnityExtensions;
@@ -6,15 +5,16 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Demos
 {
-    public class ShowerSmartObject : SmartObject
+    using Core;
+
+    public class ToiletSmartObject : SmartObject
     {
         [SerializeField] Transform _targetTransform;
         [SerializeField] Transform _useTransform;
-        [SerializeField] ParticleSystem _particleSystem;
-
         [SerializeField] float useTime = 5f;
 
         SmartAgent _owner;
+
         NPCPoseController _poseController;
 
         float lieTime;
@@ -34,7 +34,8 @@ namespace BehaviourAPI.Unity.Demos
 
         protected override Action GetRequestedAction(SmartAgent agent)
         {
-            return new FunctionalAction(() => StartUse(agent), Wait, () => StopUse(agent));
+            var sit = new FunctionalAction(() => SitDown(agent), Wait, () => SitUp(agent));
+            return sit;
         }
 
         protected override Vector3 GetTargetPosition(SmartAgent agent)
@@ -42,23 +43,19 @@ namespace BehaviourAPI.Unity.Demos
             return _targetTransform.position;
         }
 
-        void StartUse(SmartAgent smartAgent)
+        void SitDown(SmartAgent smartAgent)
         {
             lieTime = Time.time;
             _owner = smartAgent;
-            _poseController = smartAgent.GetComponent<NPCPoseController>();
+            _poseController = smartAgent.gameObject.GetComponent<NPCPoseController>();
+            _poseController.ChangeToSittingPose();
             smartAgent.transform.SetPositionAndRotation(_useTransform.position, _useTransform.rotation);
-            _poseController.ChangeToStaticPose();
-            _particleSystem.Play();
         }
 
-        void StopUse(SmartAgent smartAgent)
+        void SitUp(SmartAgent smartAgent)
         {
-            if (_targetTransform == null) return;
-
             smartAgent.transform.SetLocalPositionAndRotation(_targetTransform.position, _targetTransform.rotation);
-            _poseController.ChangeToReleasePose();
-            _particleSystem.Stop();
+            _poseController?.ChangeToReleasePose();
             _owner = null;
         }
 

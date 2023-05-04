@@ -27,9 +27,9 @@ public class NPCPoseController : MonoBehaviour
         m_NavMeshAgent.enabled = true;
     }
 
-    public void ChangeToLayDownPose()
+    public void ChangeToStaticPose()
     {
+        _tfBody.rotation = Quaternion.Euler(k_SittingRot);
         m_NavMeshAgent.enabled = false;
-        _tfModel.rotation = Quaternion.Euler(k_LayDownRot);
     }
 }
