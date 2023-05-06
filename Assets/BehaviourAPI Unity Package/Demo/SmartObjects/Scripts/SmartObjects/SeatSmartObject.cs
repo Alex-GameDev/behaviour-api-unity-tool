@@ -37,6 +37,8 @@ namespace BehaviourAPI.Unity.Demos
             return sit;
         }
 
+
+
         protected override Vector3 GetTargetPosition(SmartAgent agent)
         {
             return _targetTransform.position;
@@ -53,6 +55,8 @@ namespace BehaviourAPI.Unity.Demos
 
         void SitUp(SmartAgent smartAgent)
         {
+            if (smartAgent == null) return;
+
             smartAgent.transform.SetLocalPositionAndRotation(_targetTransform.position, _targetTransform.rotation);
             _poseController?.ChangeToReleasePose();
             _owner = null;
