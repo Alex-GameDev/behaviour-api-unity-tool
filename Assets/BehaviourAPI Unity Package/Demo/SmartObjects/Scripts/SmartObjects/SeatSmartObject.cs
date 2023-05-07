@@ -55,7 +55,7 @@ namespace BehaviourAPI.Unity.Demos
 
         void SitUp(SmartAgent smartAgent)
         {
-            if (smartAgent == null) return;
+            if (smartAgent == null && _targetTransform != null) return;
 
             smartAgent.transform.SetLocalPositionAndRotation(_targetTransform.position, _targetTransform.rotation);
             _poseController?.ChangeToReleasePose();

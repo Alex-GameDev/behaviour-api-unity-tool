@@ -47,7 +47,7 @@ public class BathroomDrawerSmartObject : SmartObject
 
     void StopUse(SmartAgent smartAgent)
     {
-        _particleSystem.Stop();
+        _particleSystem?.Stop();
     }
 
     Status Wait()
