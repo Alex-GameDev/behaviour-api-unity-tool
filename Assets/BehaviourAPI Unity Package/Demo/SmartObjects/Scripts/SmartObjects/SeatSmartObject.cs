@@ -5,13 +5,14 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Demos
 {
-
     public class SeatSmartObject : DirectSmartObject
     {
+        private static float k_DefaultUseTime = 5f;
+
         [Tooltip("The position where the agent")]
         [SerializeField] Transform _useTarget;
 
-        [SerializeField] float _useTime = 5f;
+        float _useTime = k_DefaultUseTime;
 
         NPCPoseController _poseController;
 
@@ -39,6 +40,7 @@ namespace BehaviourAPI.Unity.Demos
 
             smartAgent.transform.SetLocalPositionAndRotation(_placeTarget.position, _placeTarget.rotation);
             _poseController?.ChangeToReleasePose();
+            _useTime = k_DefaultUseTime;
         }
 
         Status Wait()
