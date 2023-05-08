@@ -2,6 +2,7 @@ namespace BehaviourAPI.SmartObjects
 {
     using Core;
     using Core.Actions;
+    using UnityEngine;
 
     /// <summary>   
     /// Action that request a behaviour to a smart object. 
@@ -61,10 +62,13 @@ namespace BehaviourAPI.SmartObjects
 
                 if (m_CurrentInteraction != null)
                 {
+                    m_CurrentInteraction.SmartObject.InitInteraction(m_Agent);
                     m_CurrentInteraction.Action.SetExecutionContext(m_Context);
                     m_CurrentInteraction.Action.Start();
                 }
             }
+            else if (!obj.ValidateAgent(m_Agent))
+                Debug.Log("obj is null or validate is false");
         }
 
         /// <summary>   
@@ -76,6 +80,8 @@ namespace BehaviourAPI.SmartObjects
             if (m_CurrentInteraction != null)
             {
                 m_CurrentInteraction.Action.Stop();
+                //TODO: Notificar al objeto que el agente lo ha liberado.
+                m_CurrentInteraction.SmartObject.ReleaseInteraction(m_Agent);
                 m_CurrentInteraction = null;
             }
         }
@@ -96,12 +102,11 @@ namespace BehaviourAPI.SmartObjects
                     {
                         m_Agent.CoverNeed(capabilityName, m_CurrentInteraction.SmartObject.GetCapabilityValue(capabilityName));
                     }
-                    m_CurrentInteraction.SmartObject.OnCompleteWithSuccess(m_Agent);
                 }
-                else if (status == Status.Failure)
-                {
-                    m_CurrentInteraction.SmartObject.OnCompleteWithFailure(m_Agent);
-                }
+
+                if (status != Status.Running)
+                    m_CurrentInteraction.SmartObject.OnComplete(m_Agent, status);
+
                 return status;
             }
             else

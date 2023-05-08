@@ -4,7 +4,7 @@ using UnityEngine;
 namespace BehaviourAPI.Unity.SmartObjects
 {
     using BehaviourAPI.SmartObjects;
-    using BehaviourTrees;
+    using Core;
     using Core.Actions;
     using UnityExtensions;
 
@@ -44,32 +44,29 @@ namespace BehaviourAPI.Unity.SmartObjects
             return _config.GetCapability(name);
         }
 
-        public abstract void OnCompleteWithFailure(SmartAgent m_Agent);
+        public virtual void OnComplete(SmartAgent agent, Status status)
+        {
+            return;
+        }
 
-        public abstract void OnCompleteWithSuccess(SmartAgent agent);
+        public virtual void InitInteraction(SmartAgent agent)
+        {
+            return;
+        }
+
+        public virtual void ReleaseInteraction(SmartAgent agent)
+        {
+            return;
+        }
 
         public SmartInteraction<SmartAgent> RequestInteraction(SmartAgent agent)
         {
-            BehaviourTree bt = new BehaviourTree();
-            var movement = bt.CreateLeafNode(GetMovementAction(agent));
-            var action = bt.CreateLeafNode(GetRequestedAction(agent));
-            var seq = bt.CreateComposite<SequencerNode>(false, movement, action);
-            bt.SetRootNode(seq);
-            return new SmartInteraction<SmartAgent>(this, new SubsystemAction(bt));
+            Action action = GetRequestedAction(agent);
+            return new SmartInteraction<SmartAgent>(this, action);
         }
-
-        protected abstract Action GetRequestedAction(SmartAgent agent);
 
         public abstract bool ValidateAgent(SmartAgent agent);
 
-        private Action GetMovementAction(SmartAgent agent)
-        {
-            IAgentMovement movementComponent = agent.gameObject.GetComponent<IAgentMovement>();
-            var targetPosition = GetTargetPosition(agent);
-            var action = new FunctionalAction(() => movementComponent.Move(targetPosition));
-            return action;
-        }
-
-        protected abstract Vector3 GetTargetPosition(SmartAgent agent);
+        protected abstract Action GetRequestedAction(SmartAgent agent);
     }
 }

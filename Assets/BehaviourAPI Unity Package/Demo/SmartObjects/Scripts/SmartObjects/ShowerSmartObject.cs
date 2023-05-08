@@ -1,51 +1,29 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Unity.SmartObjects;
 using BehaviourAPI.UnityExtensions;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Demos
 {
-    public class ShowerSmartObject : SmartObject
+    public class ShowerSmartObject : DirectSmartObject
     {
-        [SerializeField] Transform _targetTransform;
         [SerializeField] Transform _useTransform;
         [SerializeField] ParticleSystem _particleSystem;
 
         [SerializeField] float useTime = 5f;
 
-        SmartAgent _owner;
         NPCPoseController _poseController;
 
         float lieTime;
 
-        public override void OnCompleteWithFailure(SmartAgent m_Agent)
-        {
-        }
-
-        public override void OnCompleteWithSuccess(SmartAgent agent)
-        {
-        }
-
-        public override bool ValidateAgent(SmartAgent agent)
-        {
-            return _owner == null;
-        }
-
-        protected override Action GetRequestedAction(SmartAgent agent)
+        protected override Action GetUseAction(SmartAgent agent)
         {
             return new FunctionalAction(() => StartUse(agent), Wait, () => StopUse(agent));
-        }
-
-        protected override Vector3 GetTargetPosition(SmartAgent agent)
-        {
-            return _targetTransform.position;
         }
 
         void StartUse(SmartAgent smartAgent)
         {
             lieTime = Time.time;
-            _owner = smartAgent;
             _poseController = smartAgent.GetComponent<NPCPoseController>();
             smartAgent.transform.SetPositionAndRotation(_useTransform.position, _useTransform.rotation);
             _poseController.ChangeToStaticPose();
@@ -54,12 +32,11 @@ namespace BehaviourAPI.Unity.Demos
 
         void StopUse(SmartAgent smartAgent)
         {
-            if (_targetTransform == null) return;
+            if (_placeTarget == null) return;
 
-            smartAgent.transform.SetLocalPositionAndRotation(_targetTransform.position, _targetTransform.rotation);
+            smartAgent.transform.SetLocalPositionAndRotation(_placeTarget.position, _placeTarget.rotation);
             _poseController.ChangeToReleasePose();
             _particleSystem.Stop();
-            _owner = null;
         }
 
         Status Wait()

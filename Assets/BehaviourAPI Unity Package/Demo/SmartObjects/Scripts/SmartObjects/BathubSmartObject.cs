@@ -1,5 +1,4 @@
 using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Unity.SmartObjects;
 using BehaviourAPI.UnityExtensions;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,9 +7,9 @@ namespace BehaviourAPI.Unity.Demos
 {
     using Core;
 
-    public class BathubSmartObject : SmartObject
+    public class BathubSmartObject : DirectSmartObject
     {
-        [SerializeField] Transform _targetTransform;
+
         [SerializeField] Transform _useTransform;
         [SerializeField] float useTime = 5f;
 
@@ -18,23 +17,10 @@ namespace BehaviourAPI.Unity.Demos
 
         float lieTime;
 
-        public override void OnCompleteWithFailure(SmartAgent agent)
-        {
-        }
-
-        public override void OnCompleteWithSuccess(SmartAgent agent)
-        {
-        }
-
-        protected override Action GetRequestedAction(SmartAgent agent)
+        protected override Action GetUseAction(SmartAgent agent)
         {
             var liedown = new FunctionalAction(() => BedDown(agent), Wait, () => BedUp(agent));
             return liedown;
-        }
-
-        public override bool ValidateAgent(SmartAgent agent)
-        {
-            return true;
         }
 
         void BedDown(SmartAgent smartAgent)
@@ -57,13 +43,8 @@ namespace BehaviourAPI.Unity.Demos
         void BedUp(SmartAgent smartAgent)
         {
             _particleSystem?.Stop();
-            smartAgent.transform.SetLocalPositionAndRotation(_targetTransform.position, _targetTransform.rotation);
+            smartAgent.transform.SetLocalPositionAndRotation(_placeTarget.position, _placeTarget.rotation);
             smartAgent.gameObject.GetComponent<NavMeshAgent>().enabled = enabled;
-        }
-
-        protected override Vector3 GetTargetPosition(SmartAgent agent)
-        {
-            return _targetTransform.position;
         }
     }
 

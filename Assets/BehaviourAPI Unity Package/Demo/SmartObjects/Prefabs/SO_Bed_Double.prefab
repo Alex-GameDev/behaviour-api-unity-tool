@@ -111,7 +111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _config: {fileID: 11400000, guid: 97473e2c9c71dbf4abbf121b9e318833, type: 2}
   _registerOnManager: 1
-  _targetTransform: {fileID: 4674831136780256893}
+  _placeTarget: {fileID: 4674831136780256893}
   _useTransform: {fileID: 4674831137786423583}
   useTime: 5
 --- !u!1001 &4674831137843328616

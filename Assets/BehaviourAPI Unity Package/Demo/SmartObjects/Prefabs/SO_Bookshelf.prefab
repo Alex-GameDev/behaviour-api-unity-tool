@@ -79,7 +79,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _config: {fileID: 11400000, guid: 97473e2c9c71dbf4abbf121b9e318833, type: 2}
   _registerOnManager: 1
-  _targetTransform: {fileID: 6944540666758602876}
+  _placeTarget: {fileID: 6944540666758602876}
 --- !u!1001 &7374699191880368794
 PrefabInstance:
   m_ObjectHideFlags: 0

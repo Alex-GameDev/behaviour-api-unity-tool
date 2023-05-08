@@ -36,7 +36,6 @@ namespace BehaviourAPI.UnityExtensions
             m_NavMeshAgent.speed = speed;
             if (Vector3.Distance(transform.position, targetPos) < 1.5f)
             {
-                m_NavMeshAgent.path = null;
                 m_NavMeshAgent.speed = 0f;
                 return Status.Success;
             }

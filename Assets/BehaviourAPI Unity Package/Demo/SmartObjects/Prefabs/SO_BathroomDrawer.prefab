@@ -49,8 +49,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _config: {fileID: 11400000, guid: 97473e2c9c71dbf4abbf121b9e318833, type: 2}
   _registerOnManager: 1
-  _targetTransform: {fileID: 5635835734402339521}
+  _placeTarget: {fileID: 5635835734402339521}
   _particleSystem: {fileID: 7079501153511523887}
+  _useTransform: {fileID: 0}
   useTime: 5
 --- !u!1 &3422734090073584341
 GameObject:

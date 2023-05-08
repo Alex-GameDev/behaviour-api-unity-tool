@@ -1,3 +1,4 @@
+using BehaviourAPI.Core;
 using System.Collections.Generic;
 
 namespace BehaviourAPI.SmartObjects
@@ -33,13 +34,7 @@ namespace BehaviourAPI.SmartObjects
         /// Commonly used to apply the properties
         /// </summary>
         /// <param name="agent"> The agent who request the interaction. </param>
-        void OnCompleteWithSuccess(T agent);
-
-        /// <summary>
-        /// Invoked when the interaction provided by the object ends with failure. 
-        /// </summary>
-        /// <param name="agent"> The agent who request the interaction. </param>
-        void OnCompleteWithFailure(T m_Agent);
+        void OnComplete(T agent, Status status);
 
         /// <summary> 
         /// Gets all the capabilities that this smart object has. 
@@ -47,5 +42,18 @@ namespace BehaviourAPI.SmartObjects
         /// <returns> An enumerator that allows foreach to be used to process the capabilities.
         /// </returns>
         IEnumerable<string> GetCapabilities();
+
+        /// <summary>
+        /// Invoked when the agent ends its interaction with the smart object. 
+        /// </summary>
+        /// <param name="agent"> The agent who request the interaction. </param>
+        void ReleaseInteraction(T agent);
+
+        /// <summary>
+        /// Invoked when the agent ends its interaction with the smart object. 
+        /// </summary>
+        /// <param name="agent"> The agent who request the interaction. </param>
+        void InitInteraction(T agent);
+
     }
 }

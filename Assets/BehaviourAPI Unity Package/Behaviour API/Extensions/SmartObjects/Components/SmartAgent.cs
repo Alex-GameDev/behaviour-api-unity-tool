@@ -8,12 +8,18 @@ namespace BehaviourAPI.UnityExtensions
     public class SmartAgent : MonoBehaviour, ISmartAgent
     {
         [SerializeField] SmartAgentSettings _settings;
+        public IAgentMovement Movement { get; private set; }
 
         Dictionary<string, float> m_Needs;
 
         private void Awake()
         {
             m_Needs = new Dictionary<string, float>();
+
+            Movement = GetComponent<IAgentMovement>();
+
+            if (Movement == null)
+                Debug.LogWarning("This agent has no movement component", this);
         }
 
         public float GetNeed(string name)

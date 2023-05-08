@@ -1,5 +1,4 @@
 using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Unity.SmartObjects;
 using BehaviourAPI.UnityExtensions;
 using UnityEngine;
 
@@ -7,61 +6,42 @@ namespace BehaviourAPI.Unity.Demos
 {
     using Core;
 
-    public class ToiletSmartObject : SmartObject
+    public class ToiletSmartObject : DirectSmartObject
     {
-        [SerializeField] Transform _targetTransform;
-        [SerializeField] Transform _useTransform;
-        [SerializeField] float useTime = 5f;
+        [Tooltip("The position where the agent")]
+        [SerializeField] Transform _useTarget;
 
-        SmartAgent _owner;
+        [SerializeField] float _useTime = 5f;
 
         NPCPoseController _poseController;
 
         float lieTime;
 
-        public override void OnCompleteWithFailure(SmartAgent m_Agent)
+        protected override Action GetUseAction(SmartAgent agent)
         {
-        }
-
-        public override void OnCompleteWithSuccess(SmartAgent agent)
-        {
-        }
-
-        public override bool ValidateAgent(SmartAgent agent)
-        {
-            return _owner == null;
-        }
-
-        protected override Action GetRequestedAction(SmartAgent agent)
-        {
-            var sit = new FunctionalAction(() => SitDown(agent), Wait, () => SitUp(agent));
-            return sit;
-        }
-
-        protected override Vector3 GetTargetPosition(SmartAgent agent)
-        {
-            return _targetTransform.position;
+            Action action = new FunctionalAction(() => SitDown(agent), Wait, () => SitUp(agent));
+            return action;
         }
 
         void SitDown(SmartAgent smartAgent)
         {
             lieTime = Time.time;
-            _owner = smartAgent;
             _poseController = smartAgent.gameObject.GetComponent<NPCPoseController>();
             _poseController.ChangeToSittingPose();
-            smartAgent.transform.SetPositionAndRotation(_useTransform.position, _useTransform.rotation);
+            smartAgent.transform.SetPositionAndRotation(_useTarget.position, _useTarget.rotation);
         }
 
         void SitUp(SmartAgent smartAgent)
         {
-            smartAgent.transform.SetLocalPositionAndRotation(_targetTransform.position, _targetTransform.rotation);
+            if (smartAgent == null && _placeTarget != null) return;
+
+            smartAgent.transform.SetLocalPositionAndRotation(_placeTarget.position, _placeTarget.rotation);
             _poseController?.ChangeToReleasePose();
-            _owner = null;
         }
 
         Status Wait()
         {
-            if (Time.time > lieTime + useTime)
+            if (Time.time > lieTime + _useTime)
             {
                 return Status.Success;
             }

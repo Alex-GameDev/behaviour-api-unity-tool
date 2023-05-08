@@ -1,48 +1,42 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Unity.SmartObjects;
+using BehaviourAPI.Unity.Demos;
 using BehaviourAPI.UnityExtensions;
 using UnityEngine;
 
-public class FridgeSmartObject : SmartObject
+namespace BehaviourAPI.Unity.SmartObjects
 {
-    [SerializeField] float useTime = 3f;
-    [SerializeField] Transform _target;
-
-    SmartAgent _owner;
-
-    float lieTime;
-
-    public override void OnCompleteWithFailure(SmartAgent m_Agent)
+    public class FridgeSmartObject : DirectSmartObject
     {
+        [SerializeField] float useTime = 3f;
+        [SerializeField] Transform fridgeDoor;
+        float lieTime;
 
-    }
-
-    public override void OnCompleteWithSuccess(SmartAgent agent)
-    {
-    }
-
-    public override bool ValidateAgent(SmartAgent agent)
-    {
-        return _owner != agent;
-    }
-
-    protected override Action GetRequestedAction(SmartAgent agent)
-    {
-        return new FunctionalAction(() => lieTime = Time.time, () => OnUpdate(agent));
-    }
-
-    protected override Vector3 GetTargetPosition(SmartAgent agent)
-    {
-        return _target.position;
-    }
-
-    Status OnUpdate(SmartAgent smartAgent)
-    {
-        if (Time.time > lieTime + useTime)
+        protected override Action GetUseAction(SmartAgent agent)
         {
-            return Status.Success;
+            return new FunctionalAction(StartUse, () => OnUpdate(agent), StopUse);
         }
-        return Status.Running;
+
+        void StartUse()
+        {
+            Debug.Log("_______________________________");
+            lieTime = Time.time;
+            fridgeDoor.rotation = Quaternion.Euler(0, -90, 0);
+        }
+
+        void StopUse()
+        {
+            fridgeDoor.rotation = Quaternion.identity;
+        }
+
+        Status OnUpdate(SmartAgent smartAgent)
+        {
+            if (Time.time > lieTime + useTime)
+            {
+                return Status.Success;
+            }
+            return Status.Running;
+        }
     }
 }
+

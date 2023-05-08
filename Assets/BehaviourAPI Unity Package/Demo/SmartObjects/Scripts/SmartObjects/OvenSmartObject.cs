@@ -1,49 +1,47 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Unity.SmartObjects;
 using BehaviourAPI.UnityExtensions;
 using UnityEngine;
 
-public class OvenSmartObject : SmartObject
+namespace BehaviourAPI.Unity.Demos
 {
-    [SerializeField] float useTime = 3f;
-    [SerializeField] Transform _target;
-
-    SmartAgent _owner;
-
-    float lieTime;
-
-    public override void OnCompleteWithFailure(SmartAgent m_Agent)
+    public class OvenSmartObject : DirectSmartObject
     {
+        [SerializeField] float useTime = 3f;
+        [SerializeField] Light _light;
 
-    }
+        float lieTime;
 
-    public override void OnCompleteWithSuccess(SmartAgent agent)
-    {
-    }
-
-    public override bool ValidateAgent(SmartAgent agent)
-    {
-        return _owner != agent;
-
-    }
-
-    protected override Action GetRequestedAction(SmartAgent agent)
-    {
-        return new FunctionalAction(() => lieTime = Time.time, () => OnUpdate(agent));
-    }
-
-    protected override Vector3 GetTargetPosition(SmartAgent agent)
-    {
-        return _target.position;
-    }
-
-    Status OnUpdate(SmartAgent smartAgent)
-    {
-        if (Time.time > lieTime + useTime)
+        private void Awake()
         {
-            return Status.Success;
+            _light.enabled = false;
         }
-        return Status.Running;
+
+        protected override Action GetUseAction(SmartAgent agent)
+        {
+            return new FunctionalAction(StartUsing, () => OnUpdate(agent), StopUsing);
+        }
+
+        void StartUsing()
+        {
+            lieTime = Time.time;
+            _light.enabled = true;
+        }
+
+        void StopUsing()
+        {
+            if (_light != null)
+                _light.enabled = false;
+        }
+
+        Status OnUpdate(SmartAgent smartAgent)
+        {
+            if (Time.time > lieTime + useTime)
+            {
+                return Status.Success;
+            }
+            return Status.Running;
+        }
     }
+
 }

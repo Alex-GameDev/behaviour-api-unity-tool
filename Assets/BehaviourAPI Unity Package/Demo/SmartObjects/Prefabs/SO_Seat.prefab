@@ -109,7 +109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _config: {fileID: 11400000, guid: 97473e2c9c71dbf4abbf121b9e318833, type: 2}
-  _registerOnManager: 1
-  _targetTransform: {fileID: 5221180960534156352}
-  _useTransform: {fileID: 4621258631835926069}
-  useTime: 5
+  _registerOnManager: 0
+  _placeTarget: {fileID: 5221180960534156352}
+  _useTarget: {fileID: 4621258631835926069}
+  _useTime: 5

@@ -13,11 +13,7 @@ public class UnityTypedRequestAction<T> : UnityRequestAction
 
     protected override SmartObject GetSmartObject(SmartAgent agent)
     {
-        var ovens = SmartObjectManager.Instance.RegisteredObjects.Find(obj => obj is OvenSmartObject);
+        var ovens = SmartObjectManager.Instance.RegisteredObjects.Find(obj => obj is T);
         return ovens;
     }
-
-
-
-
 }
