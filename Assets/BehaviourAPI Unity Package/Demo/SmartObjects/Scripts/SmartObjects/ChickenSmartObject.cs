@@ -9,6 +9,7 @@ namespace BehaviourAPI.Unity.Demos
     public class ChickenSmartObject : SmartObject
     {
         [SerializeField] FridgeSmartObject _fridge;
+        [SerializeField] OvenSmartObject _oven;
 
         public override bool ValidateAgent(SmartAgent agent)
         {
@@ -20,8 +21,8 @@ namespace BehaviourAPI.Unity.Demos
             var bt = new BehaviourTree();
             bt.SetRootNode(
                 bt.CreateComposite<SequencerNode>(false,
-                    bt.CreateLeafNode(_fridge.RequestInteraction(agent).Action),
-                    bt.CreateLeafNode(new UnityTypedRequestAction<OvenSmartObject>(agent)),
+                    bt.CreateLeafNode(new DirectRequestAction(agent, _fridge)),
+                    bt.CreateLeafNode(new DirectRequestAction(agent, _oven)),
                     bt.CreateLeafNode(new SeatRequestAction(agent))
             ));
             return new SubsystemAction(bt);
