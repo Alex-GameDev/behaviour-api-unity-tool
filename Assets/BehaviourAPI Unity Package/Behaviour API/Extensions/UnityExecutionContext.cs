@@ -54,6 +54,9 @@ namespace BehaviourAPI.UnityExtensions
         /// </summary>
         public CharacterController CharacterController { get; private set; }
 
+
+        public IAgentMovement Movement { get; private set; }
+
         /// <summary>
         /// Create a new uniy execution context with a runner script component. Use this constructor
         /// to access methods in the runner component with custom actions or perceptions.
@@ -80,6 +83,7 @@ namespace BehaviourAPI.UnityExtensions
                 Collider = gameObject.GetComponent<Collider>();
                 Collider2D = gameObject.GetComponent<Collider2D>();
                 CharacterController = gameObject.GetComponent<CharacterController>();
+                Movement = gameObject.GetComponent<IAgentMovement>();
             }
             else
             {

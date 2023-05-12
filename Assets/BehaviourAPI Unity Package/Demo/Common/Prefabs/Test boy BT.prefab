@@ -378,6 +378,7 @@ GameObject:
   - component: {fileID: 1640918691852074709}
   - component: {fileID: 530351811942559551}
   - component: {fileID: 922734696}
+  - component: {fileID: 8275284379017087738}
   m_Layer: 0
   m_Name: Test boy BT
   m_TagString: Player
@@ -552,6 +553,23 @@ NavMeshAgent:
   m_BaseOffset: 1.6
   m_WalkableMask: 5
   m_ObstacleAvoidanceType: 3
+--- !u!114 &8275284379017087738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4600201873981623957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81016613ea3feb04b8c61c0b1124211a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  targetThreshold: 1
+  minDistanceToTarget: 0.3
+  drawGizmos: 1
+  targetColor: {r: 0, g: 0.36250877, b: 1, a: 1}
 --- !u!1 &4600201873981623967
 GameObject:
   m_ObjectHideFlags: 0

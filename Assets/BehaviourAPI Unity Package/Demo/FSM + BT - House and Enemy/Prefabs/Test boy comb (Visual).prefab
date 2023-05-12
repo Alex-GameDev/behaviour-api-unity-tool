@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5000012665791813595}
   - component: {fileID: 1897590593199712440}
   - component: {fileID: 5737582584103695516}
+  - component: {fileID: 4898935086108083608}
   m_Layer: 0
   m_Name: Test boy comb (Visual)
   m_TagString: Player
@@ -201,7 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugStatusChanges: 0
+  debugStatusChanges: 1
 --- !u!114 &5737582584103695516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,7 +378,7 @@ MonoBehaviour:
       type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
         action:
-          rid: 6537695524283219976
+          rid: -2
     - rid: 6537695503399780494
       type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
@@ -452,13 +453,23 @@ MonoBehaviour:
         ExecuteOnLoop: 0
         DontStopOnInterrupt: 0
         subgraphId: baab3991-04ac-4d4b-827e-739bb15f8572
-    - rid: 6537695524283219976
-      type: {class: FleeAction, ns: BehaviourAPI.UnityExtensions, asm: BehaviourAPI.UnityExtensions}
-      data:
-        OtherTransform: {fileID: 0}
-        speed: 8
-        distance: 10
-        maxTimeRunning: 13
+--- !u!114 &4898935086108083608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8841883541597954724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81016613ea3feb04b8c61c0b1124211a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  targetThreshold: 1
+  minDistanceToTarget: 2
+  drawGizmos: 1
+  targetColor: {r: 0, g: 0.48795986, b: 1, a: 1}
 --- !u!1 &8841883541597954734
 GameObject:
   m_ObjectHideFlags: 0

@@ -30,8 +30,8 @@ namespace BehaviourAPI.Unity.Demos
         protected override void ModifyGraphs()
         {
             var doorPos = new Vector3(_door.transform.position.x, transform.position.y, _door.transform.position.z);
-            BuildedGraph.FindNode<LeafNode>("go to door").Action = new WalkAction(doorPos, 5f);
-            BuildedGraph.FindNode<LeafNode>("return to door").Action = new WalkAction(doorPos, 5f);
+            BuildedGraph.FindNode<LeafNode>("go to door").Action = new WalkAction(doorPos);
+            BuildedGraph.FindNode<LeafNode>("return to door").Action = new WalkAction(doorPos);
         }
 
         public void SmashDoor()
@@ -70,6 +70,7 @@ namespace BehaviourAPI.Unity.Demos
             if (key != null)
             {
                 _keyFound = true;
+                _meshAgent.isStopped = false;
                 _meshAgent.destination = new Vector3(key.transform.position.x, transform.position.y, key.transform.position.z);
             }
         }
@@ -88,6 +89,11 @@ namespace BehaviourAPI.Unity.Demos
             {
                 return Status.Running;
             }
+        }
+
+        public void KeyFound()
+        {
+            _meshAgent.isStopped = true;
         }
 
         private void OnTriggerEnter(Collider other)

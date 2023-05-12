@@ -34,8 +34,8 @@ namespace BehaviourAPI.Unity.Demos
 
             // Estados
             var idle = fsm.CreateState("Idle");
-            var moving = fsm.CreateState("Moving", new PatrolAction(3f, 13f));
-            var chasing = fsm.CreateState("Chasing", new ChaseAction(_target, 5f, 10f, 2.5f));
+            var moving = fsm.CreateState("Moving", new PatrolAction(13f));
+            var chasing = fsm.CreateState("Chasing", new ChaseAction(_target, 1.2f, 1f, 2f));
 
             // Las transiciones que pasan al estado moving se lanzan con un temporizador:
             var idleToMoving = fsm.CreateTransition("idle to moving", idle, moving, timeToStartMoving);

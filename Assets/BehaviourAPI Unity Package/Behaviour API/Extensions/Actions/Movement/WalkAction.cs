@@ -11,11 +11,6 @@ namespace BehaviourAPI.UnityExtensions
     public class WalkAction : UnityAction
     {
         /// <summary>
-        /// The movement speed of the agent.
-        /// </summary>
-        public float Speed;
-
-        /// <summary>
         /// The target position.
         /// </summary>
         public Vector3 Target;
@@ -32,26 +27,31 @@ namespace BehaviourAPI.UnityExtensions
         /// </summary>
         /// <param name="target">The target position.</param>
         /// <param name="speed">The movement speed of the agent. </param>
-        public WalkAction(Vector3 target, float speed)
+        public WalkAction(Vector3 target)
         {
-            Speed = speed;
             Target = target;
         }
 
         public override void Start()
         {
-            context.NavMeshAgent.destination = Target;
-            context.NavMeshAgent.speed = Speed;
+            context.Movement.SetTarget(Target);
         }
 
         public override Status Update()
         {
-            if (Vector3.Distance(context.NavMeshAgent.transform.position, Target) < .5f)
+            if (context.Movement.HasArrived())
             {
                 return Status.Success;
             }
             else
+            {
                 return Status.Running;
+            }
+        }
+
+        public override void Stop()
+        {
+            context.Movement.CancelMove();
         }
 
         public override string DisplayInfo => "Walk to $Target";

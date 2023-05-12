@@ -35,7 +35,7 @@ namespace BehaviourAPI.Unity.Demos
         {
             BehaviourTree bt = new BehaviourTree();
 
-            Action placeAction = new FunctionalAction(() => agent.Movement.Move(_placeTarget.position, _placeTarget.rotation));
+            Action placeAction = new FunctionalAction(() => agent.Movement.SetTarget(_placeTarget.position));
             var movementNode = bt.CreateLeafNode(placeAction);
 
             Action useAction = GetUseAction(agent);

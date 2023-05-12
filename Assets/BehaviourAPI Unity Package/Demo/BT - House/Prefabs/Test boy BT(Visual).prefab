@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5182972682353591803}
   - component: {fileID: 9138742413185974374}
   - component: {fileID: 4130144290868409212}
+  - component: {fileID: 38395481042276570}
   m_Layer: 0
   m_Name: Test boy BT(Visual)
   m_TagString: Player
@@ -216,11 +217,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ExecuteOnLoop: 0
   DontStopOnDisable: 0
-  UseNodeNames: 1
   data:
     graphs:
-    - id: f5c2baef-2aef-45a9-86d2-4156e26db825
-      name: BehaviourTree
+    - name: BehaviourTree
+      id: f5c2baef-2aef-45a9-86d2-4156e26db825
       graph:
         rid: 6537695503399780467
       nodes:
@@ -274,7 +274,7 @@ MonoBehaviour:
         childIds: []
       - name: open door
         id: 9758a336-fd07-418a-9afb-2b3cf960991e
-        position: {x: -284, y: 416}
+        position: {x: -293, y: 416}
         node:
           rid: 6537695503399780474
         parentIds:
@@ -442,7 +442,24 @@ MonoBehaviour:
           methodName: IsKeyObtained
         stop:
           componentName: 
-          methodName: 
+          methodName: KeyFound
+--- !u!114 &38395481042276570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8663427095336082182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81016613ea3feb04b8c61c0b1124211a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  targetThreshold: 1
+  minDistanceToTarget: 2
+  drawGizmos: 1
+  targetColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &8663427095336082188
 GameObject:
   m_ObjectHideFlags: 0

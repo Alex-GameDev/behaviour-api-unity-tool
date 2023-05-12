@@ -12,7 +12,7 @@ namespace BehaviourAPI.Unity.Demos
         public Transform[] routePoints;
         protected override BehaviourGraph CreateGraph()
         {
-            var patrol = new PathingAction(routePoints.Select(tf => tf.position).ToList(), 3f, .1f);
+            var patrol = new PathingAction(routePoints.Select(tf => tf.position).ToList(), .1f);
 
             var bt = new BehaviourTree();
             var leaf = bt.CreateLeafNode(patrol);

@@ -36,16 +36,17 @@ namespace BehaviourAPI.Unity.Demos
             var mainGraph = FindGraph("main");
             var subgraph = FindGraph("key subtree");
 
-            mainGraph.FindNode<State>("go to home").Action = new WalkAction(_doorPos, 5f);
+            mainGraph.FindNode<State>("go to home").Action = new WalkAction(_doorPos);
             mainGraph.FindNode<State>("enter house").Action = new FunctionalAction(EnterTheHouse);
+            mainGraph.FindNode<State>("run").Action = new FleeAction(_enemyTransform, 1.5f, 10, 3);
 
             Perception enemyPerception = new DistancePerception(_enemyTransform, 10);
             mainGraph.FindNode<StateTransition>("house to running").Perception = enemyPerception;
             mainGraph.FindNode<StateTransition>("key to running").Perception = enemyPerception;
 
             subgraph.FindNode<ConditionNode>("has no key").SetPerception(new ConditionPerception(() => !_hasKey));
-            subgraph.FindNode<LeafNode>("walk to key").Action = new WalkAction(_keyPos, 5f);
-            subgraph.FindNode<LeafNode>("return to door").Action = new WalkAction(_doorPos, 5f);
+            subgraph.FindNode<LeafNode>("walk to key").Action = new WalkAction(_keyPos);
+            subgraph.FindNode<LeafNode>("return to door").Action = new WalkAction(_doorPos);
         }
 
         private void EnterTheHouse()

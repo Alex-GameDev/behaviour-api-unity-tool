@@ -1,4 +1,3 @@
-using BehaviourAPI.Core;
 using BehaviourAPI.SmartObjects;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +7,9 @@ namespace BehaviourAPI.UnityExtensions
     public class SmartAgent : MonoBehaviour, ISmartAgent
     {
         [SerializeField] SmartAgentSettings _settings;
+
         public IAgentMovement Movement { get; private set; }
+
 
         Dictionary<string, float> m_Needs;
 
@@ -40,13 +41,6 @@ namespace BehaviourAPI.UnityExtensions
         {
         }
 
-        public Status Move(Transform target)
-        {
-            transform.position = target.position;
-            transform.rotation = target.rotation;
-            return Status.Success;
-        }
-
-
+        //TODO: Animaciones, Texto, audio, sprites
     }
 }

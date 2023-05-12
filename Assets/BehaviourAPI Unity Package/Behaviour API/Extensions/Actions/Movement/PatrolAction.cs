@@ -11,16 +11,9 @@ namespace BehaviourAPI.UnityExtensions
     public class PatrolAction : UnityAction
     {
         /// <summary>
-        /// The movement speed of the agent.
-        /// </summary>
-        public float speed;
-
-        /// <summary>
         /// The max distance of the target point.
         /// </summary>
         public float maxDistance;
-
-        Vector3 _target;
 
         /// <summary>
         /// Create a new PatrolAction
@@ -34,31 +27,26 @@ namespace BehaviourAPI.UnityExtensions
         /// </summary>
         /// <param name="speed">The movement speed of the agent.</param>
         /// <param name="maxDistance">The max distance of the target point.</param>
-        public PatrolAction(float speed, float maxDistance)
+        public PatrolAction(float maxDistance)
         {
-            this.speed = speed;
             this.maxDistance = maxDistance;
         }
 
         public override void Start()
         {
-            context.NavMeshAgent.speed = speed;
-            Vector3 positionToRun = Random.insideUnitSphere * maxDistance;
-            _target = new Vector3(positionToRun.x, context.NavMeshAgent.transform.position.y, positionToRun.z);
-            context.NavMeshAgent.destination = _target;
-
+            Vector2 positionToRun = Random.insideUnitCircle * maxDistance;
+            Vector3 desp = new Vector3(positionToRun.x, 0, positionToRun.y);
+            context.Movement.SetTarget(context.Transform.position + desp);
         }
 
         public override void Stop()
         {
-            context.NavMeshAgent.speed = 0f;
+            context.Movement.CancelMove();
         }
 
         public override Status Update()
         {
-            if(context.NavMeshAgent.destination != _target) context.NavMeshAgent.destination = _target;
-            if (!context.NavMeshAgent.hasPath || context.NavMeshAgent.velocity.sqrMagnitude == -1f ||
-                Vector3.Distance(context.NavMeshAgent.transform.position, _target) < .1f)
+            if (context.Movement.HasArrived())
             {
                 return Status.Success;
             }

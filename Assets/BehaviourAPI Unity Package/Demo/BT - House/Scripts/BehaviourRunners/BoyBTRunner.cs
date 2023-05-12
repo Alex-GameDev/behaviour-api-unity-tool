@@ -35,11 +35,11 @@ namespace BehaviourAPI.Unity.Demos
             var bt = new BehaviourTree();
             var doorPos = new Vector3(_door.transform.position.x, transform.position.y, _door.transform.position.z);
 
-            var walkToDoorAction = new WalkAction(doorPos, 5f);
+            var walkToDoorAction = new WalkAction(doorPos);
             var openDoorAction = new FunctionalAction(OpenDoor, DoorStatus);
             var explodeAction = new FunctionalAction(SmashDoor, () => Status.Success);
             var enterAction = new FunctionalAction(EnterTheHouse, () => Status.Success);
-            var findKeyAction = new FunctionalAction(FindKey, IsKeyObtained);
+            var findKeyAction = new FunctionalAction(FindKey, IsKeyObtained, KeyFound);
 
             var walkToDoor = bt.CreateLeafNode("walkToDoor", walkToDoorAction); // Camina a la puerta
 
@@ -97,6 +97,7 @@ namespace BehaviourAPI.Unity.Demos
             if (key != null)
             {
                 _keyFound = true;
+                meshAgent.isStopped = false;
                 meshAgent.destination = new Vector3(key.transform.position.x, transform.position.y, key.transform.position.z);
             }
         }
@@ -115,6 +116,11 @@ namespace BehaviourAPI.Unity.Demos
             {
                 return Status.Running;
             }
+        }
+
+        private void KeyFound()
+        {
+            meshAgent.isStopped = true;
         }
 
         private void OnTriggerEnter(Collider other)

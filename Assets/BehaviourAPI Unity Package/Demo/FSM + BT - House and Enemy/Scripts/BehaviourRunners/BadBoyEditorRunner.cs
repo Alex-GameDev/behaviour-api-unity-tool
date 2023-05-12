@@ -12,7 +12,7 @@ namespace BehaviourAPI.Unity.Demos
 
         protected override void ModifyGraphs()
         {
-            FindGraph("main").FindNode<LeafNode>("patrol").Action = new PathingAction(routePoints.Select(tf => tf.position).ToList(), 3f, .1f);
+            FindGraph("main").FindNode<LeafNode>("patrol").Action = new PathingAction(routePoints.Select(tf => tf.position).ToList(), .1f);
         }
     }
 

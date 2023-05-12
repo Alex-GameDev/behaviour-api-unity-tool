@@ -13,6 +13,7 @@ namespace BehaviourAPI.Unity.Demos
 
         [SerializeField] private float minDistanceToChicken = 5;
         [SerializeField] private Transform chicken;
+        [SerializeField] private Transform restartPoint;
 
         private NavMeshAgent meshAgent;
         private PushPerception _click;
@@ -34,8 +35,8 @@ namespace BehaviourAPI.Unity.Demos
 
             // Estados
             var idle = fsm.CreateState("Idle");
-            var moving = fsm.CreateState("Moving", new MoveToMousePosAction(3.5f));
-            var flee = fsm.CreateState("Flee", new FleeAction(chicken, 7f, 13f, 3f));
+            var moving = fsm.CreateState("Moving", new MoveToMousePosAction());
+            var flee = fsm.CreateState("Flee", new FleeAction(chicken, 2.5f, 15f, 5f));
 
             // Las transiciones que pasan al estado "moving" se activan con percepciones Push.
             var idleToMoving = fsm.CreateTransition("idle to moving", idle, moving, statusFlags: StatusFlags.None);
@@ -66,6 +67,11 @@ namespace BehaviourAPI.Unity.Demos
         private bool CheckDistanceToChicken()
         {
             return Vector3.Distance(transform.position, chicken.transform.position) < minDistanceToChicken;
+        }
+
+        public void Restart()
+        {
+            transform.position = restartPoint.position;
         }
     }
 }

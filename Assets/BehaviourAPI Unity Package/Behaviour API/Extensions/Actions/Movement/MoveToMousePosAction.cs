@@ -11,44 +11,29 @@ namespace BehaviourAPI.UnityExtensions
     public class MoveToMousePosAction : UnityAction
     {
         /// <summary>
-        /// The movement speed of the agent when moving
-        /// </summary>
-        public float speed;
-
-        /// <summary>
         /// Create a new MoveToMousePosAction
         /// </summary>
         public MoveToMousePosAction()
         {
         }
 
-        /// <summary>
-        /// Create a new MoveToMousePosAction
-        /// </summary>
-        /// <param name="speed">The movement speed of the agent when moving.</param>
-        public MoveToMousePosAction(float speed)
-        {
-            this.speed = speed;
-        }
-
         public override void Start()
         {
-            context.NavMeshAgent.speed = speed;
             Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(cameraRay, out RaycastHit hit, 100f))
             {
-                context.NavMeshAgent.destination = new Vector3(hit.point.x, context.NavMeshAgent.transform.position.y, hit.point.z);
+                context.Movement.SetTarget(hit.point);
             }
         }
 
         public override void Stop()
         {
-            context.NavMeshAgent.speed = 0f;
+            context.Movement.CancelMove();
         }
 
         public override Status Update()
         {
-            if (!context.NavMeshAgent.hasPath || context.NavMeshAgent.speed == -1)
+            if (context.Movement.HasArrived())
             {
                 return Status.Success;
             }
@@ -59,7 +44,7 @@ namespace BehaviourAPI.UnityExtensions
 
         }
 
-        public override string DisplayInfo => "Move to mousePosition";
+        public override string DisplayInfo => "Move to mouse position";
     }
 }
 

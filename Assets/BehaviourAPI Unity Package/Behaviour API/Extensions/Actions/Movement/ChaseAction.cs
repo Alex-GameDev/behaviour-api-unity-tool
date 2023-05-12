@@ -30,7 +30,7 @@ namespace BehaviourAPI.UnityExtensions
         /// </summary>
         public float maxTime;
 
-        float _currentTime;
+        float _timeRunning;
 
         /// <summary>
         /// Create a new Chase Action.
@@ -54,34 +54,31 @@ namespace BehaviourAPI.UnityExtensions
 
         public override void Start()
         {
-            context.NavMeshAgent.speed = speed;
-            _currentTime = 0f;
-            context.NavMeshAgent.destination = new Vector3(target.transform.position.x, context.NavMeshAgent.transform.position.y, target.transform.position.z);
-        }
-
-        public override void Stop()
-        {
-            context.NavMeshAgent.speed = 0f;
+            _timeRunning = Time.time;
+            context.Movement.Speed *= speed;
         }
 
         public override Status Update()
         {
-            _currentTime += Time.deltaTime;
+            if (_timeRunning + maxTime < Time.time) return Status.Failure;
 
-            if (_currentTime > maxTime)
+            context.Movement.SetTarget(target.position);
+
+            if (Vector3.Distance(target.position, context.Transform.position) < maxDistance)
             {
                 return Status.Success;
             }
             else
             {
-                float distance = Vector3.Distance(context.NavMeshAgent.transform.position, target.position);
-
-                if (distance < .3f) return Status.Success;
-                else if (distance > maxDistance) return Status.Failure;
+                return Status.Running;
             }
-            return Status.Running;
         }
 
+        public override void Stop()
+        {
+            context.Movement.CancelMove();
+            context.Movement.Speed *= 1f / speed;
+        }
         public override string DisplayInfo => "Chase $target for $maxTime seconds";
     }
 

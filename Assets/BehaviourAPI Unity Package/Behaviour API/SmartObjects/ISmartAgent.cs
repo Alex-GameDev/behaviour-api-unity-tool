@@ -19,5 +19,8 @@ namespace BehaviourAPI.SmartObjects
         /// <param name="name"> The name of the need. </param>
         /// <returns> The value of the need. </returns>
         void CoverNeed(string name, float value);
+
+
+
     }
 }

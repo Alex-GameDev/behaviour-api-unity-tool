@@ -49,6 +49,7 @@ namespace BehaviourAPI.UnityExtensions
         /// <param name="maxTimeRunning">The maximum time the agent will run.</param>
         public FleeAction(Transform otherTransform, float speed, float distance, float maxTimeRunning)
         {
+            OtherTransform = otherTransform;
             this.speed = speed;
             this.distance = distance;
             this.maxTimeRunning = maxTimeRunning;
@@ -56,34 +57,29 @@ namespace BehaviourAPI.UnityExtensions
 
         public override void Start()
         {
-            _timeRunning = 0f;
-            context.NavMeshAgent.speed = speed;
-            Vector3 positionToRun = Random.insideUnitSphere * distance;
-            _target = new Vector3(positionToRun.x, context.NavMeshAgent.transform.position.y, positionToRun.z);
-            context.NavMeshAgent.destination = _target;
+            _timeRunning = Time.time;
+            context.Movement.Speed *= speed;
         }
 
         public override void Stop()
         {
-            context.NavMeshAgent.speed = 0f;
+            context.Movement.CancelMove();
+            context.Movement.Speed /= speed;
         }
 
         public override Status Update()
         {
-            _timeRunning += Time.deltaTime;
+            if (_timeRunning + maxTimeRunning < Time.time) return Status.Failure;
 
-            if(context.NavMeshAgent.destination != _target) context.NavMeshAgent.destination = _target;
-
-            if (_timeRunning > maxTimeRunning)
-            {
-                return Status.Failure;
-            }
-            else if (!context.NavMeshAgent.hasPath || context.NavMeshAgent.velocity.sqrMagnitude == 0f)
+            if (Vector3.Distance(context.Transform.position, OtherTransform.position) > distance)
             {
                 return Status.Success;
             }
             else
             {
+                var dir = (context.Transform.position - OtherTransform.position).normalized;
+                var targetPos = context.Transform.position + dir;
+                context.Movement.SetTarget(targetPos);
                 return Status.Running;
             }
         }

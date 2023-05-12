@@ -20,7 +20,6 @@ namespace BehaviourAPI.Unity.Demos
         void StartUse(SmartAgent smartAgent)
         {
             smartAgent.transform.SetPositionAndRotation(_placeTarget.position, _placeTarget.rotation);
-
             startTime = Time.time;
             _particleSystem.Play();
         }

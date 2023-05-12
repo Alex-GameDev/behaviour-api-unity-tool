@@ -8,6 +8,7 @@ namespace BehaviourAPI.Unity.Demos
     {
         [SerializeField] private float minDistanceToChicken = 5;
         [SerializeField] private Transform chicken;
+        [SerializeField] private Transform origin;
 
         private PushPerception _click;
 
@@ -30,6 +31,11 @@ namespace BehaviourAPI.Unity.Demos
         public bool CheckDistanceToChicken()
         {
             return Vector3.Distance(transform.position, chicken.transform.position) < minDistanceToChicken;
+        }
+
+        public void Restart()
+        {
+            transform.position = origin.position;
         }
     }
 
