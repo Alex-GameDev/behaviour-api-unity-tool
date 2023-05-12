@@ -2,7 +2,6 @@ using System;
 
 namespace BehaviourAPI.BehaviourTrees
 {
-    using BehaviourAPI.Core.Exceptions;
     using BehaviourAPI.Core.Perceptions;
     using Core;
 
@@ -97,7 +96,7 @@ namespace BehaviourAPI.BehaviourTrees
         /// <exception cref="ExecutionStatusException">If the node is not executing.</exception>
         public void Update()
         {
-            if(Status == Status.None)
+            if (Status == Status.None)
                 throw new ExecutionStatusException(this, "ERROR: This node must be started before update.");
 
             if (Status != Status.Running) return;
@@ -132,7 +131,7 @@ namespace BehaviourAPI.BehaviourTrees
         /// <returns>True if the <see cref="LastExecutionStatus"/> value changed.</returns>
         public virtual bool ResetLastStatus()
         {
-            if(LastExecutionStatus != Status.None)
+            if (LastExecutionStatus != Status.None)
             {
                 LastExecutionStatus = Status.None;
                 return true;
@@ -148,9 +147,9 @@ namespace BehaviourAPI.BehaviourTrees
         /// </summary>
         public void Fire(Status status)
         {
-            if(Status == Status.Running)
+            if (Status == Status.Running)
             {
-                if(status != Status.None)
+                if (status != Status.None)
                     Status = status;
             }
         }

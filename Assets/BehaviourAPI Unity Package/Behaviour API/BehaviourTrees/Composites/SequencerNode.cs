@@ -5,7 +5,7 @@ namespace BehaviourAPI.BehaviourTrees
     /// <summary>
     /// Serial Composite node that executes its children until one of them returns Failure.
     /// </summary>
-    public class SequencerNode : SerialNode
+    public class SequencerNode : SerialCompositeNode
     {
         protected override bool KeepExecuting(Status status)
         {

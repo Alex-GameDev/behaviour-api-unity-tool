@@ -2,7 +2,6 @@
 
 namespace BehaviourAPI.StateMachines
 {
-    using BehaviourAPI.Core.Exceptions;
     using Core;
     using Core.Actions;
     using Core.Perceptions;

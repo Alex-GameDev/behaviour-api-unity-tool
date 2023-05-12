@@ -1,20 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class FishingRod : MonoBehaviour
+namespace BehaviourAPI.Unity.Demos
 {
-    Animator _animator;
-    private void Awake()
+    public class FishingRod : MonoBehaviour
     {
-        _animator = GetComponent<Animator>();
+        Animator _animator;
+        private void Awake()
+        {
+            _animator = GetComponent<Animator>();
+        }
+
+        public void Throw() => _animator.SetTrigger("throw");
+
+        public void PickUp() => _animator.SetTrigger("pickup");
+
+        public bool IsThrown() => _animator.GetCurrentAnimatorStateInfo(0).IsName("Throwing");
+
+        public bool IsPickedUp() => _animator.GetCurrentAnimatorStateInfo(0).IsName("Picking up");
     }
 
-    public void Throw() => _animator.SetTrigger("throw");
-
-    public void PickUp() => _animator.SetTrigger("pickup");
-
-    public bool IsThrown() => _animator.GetCurrentAnimatorStateInfo(0).IsName("Throwing");
-
-    public bool IsPickedUp() => _animator.GetCurrentAnimatorStateInfo(0).IsName("Picking up");
 }

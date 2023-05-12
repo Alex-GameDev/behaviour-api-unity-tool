@@ -5,7 +5,6 @@ using System.Linq;
 namespace BehaviourAPI.BehaviourTrees
 {
     using Core;
-    using Core.Exceptions;
 
     /// <summary>
     /// BTNode subtype that has multiple children and executes them according to certain conditions.
@@ -43,7 +42,7 @@ namespace BehaviourAPI.BehaviourTrees
         /// <exception cref="MissingChildException">If <paramref name="child"/> is null."/></exception>
         protected internal void AddChild(BTNode child)
         {
-            if(child != null) m_children.Add(child);
+            if (child != null) m_children.Add(child);
             else throw new MissingChildException(this, "Can't add null node as child");
         }
 
@@ -100,7 +99,7 @@ namespace BehaviourAPI.BehaviourTrees
         {
             if (m_children.Count == 0) throw new MissingChildException(this, "This composite has no childs");
             if (idx < 0 || idx >= m_children.Count) throw new MissingChildException(this, "This composite has no child at index " + idx);
-            
+
             return m_children[idx];
         }
 
@@ -112,7 +111,7 @@ namespace BehaviourAPI.BehaviourTrees
         public override bool ResetLastStatus()
         {
             bool b = base.ResetLastStatus();
-            if(b) m_children.ForEach(child => child.ResetLastStatus());
+            if (b) m_children.ForEach(child => child.ResetLastStatus());
             return b;
         }
 

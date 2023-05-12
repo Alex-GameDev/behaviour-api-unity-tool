@@ -4,7 +4,6 @@ using System.Linq;
 namespace BehaviourAPI.UtilitySystems
 {
     using Core;
-    using Core.Exceptions;
 
     /// <summary>
     /// Factor that combines the utility of its childs factors.
@@ -12,7 +11,7 @@ namespace BehaviourAPI.UtilitySystems
     public abstract class FusionFactor : Factor
     {
         #region ------------------------------------------ Properties -----------------------------------------
-        
+
         public override int MaxOutputConnections => -1;
 
         #endregion

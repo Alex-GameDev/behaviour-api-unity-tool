@@ -2,23 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnVehicles : MonoBehaviour
+namespace BehaviourAPI.Unity.Demos
 {
-    #region variables
-
-    [SerializeField] private List<GameObject> _vehicles = new List<GameObject>();
-
-    #endregion variables
-
-    // Start is called before the first frame update
-    private void Start()
+    public class SpawnVehicles : MonoBehaviour
     {
-        InvokeRepeating("SpawnVehicle", 2, 4);
-    }
+        #region variables
 
-    private void SpawnVehicle()
-    {
-        int vehicleIndex = Random.Range(0, _vehicles.Count);
-        Instantiate(_vehicles[vehicleIndex], transform.position, transform.rotation);
+        [SerializeField] private List<GameObject> _vehicles = new List<GameObject>();
+
+        [SerializeField] List<Transform> _spawnPoints;
+
+        #endregion variables
+
+        // Start is called before the first frame update
+        private IEnumerator Start()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(Random.Range(2f, 4f));
+                SpawnVehicle();
+            }
+        }
+
+        private void SpawnVehicle()
+        {
+            int vehicleIndex = Random.Range(0, _vehicles.Count);
+            var tf = _spawnPoints[Random.Range(0, _spawnPoints.Count)];
+            Instantiate(_vehicles[vehicleIndex], tf.position, tf.rotation);
+        }
     }
 }

@@ -1,12 +1,12 @@
+using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
-using UnityEngine;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Runtime;
-using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.UnityExtensions;
+using UnityEngine;
 
-namespace BehaviourAPI.Unity.Demo
+namespace BehaviourAPI.Unity.Demos
 {
     public class PlayerBTInFSMRunner : CodeBehaviourRunner
     {
@@ -38,7 +38,7 @@ namespace BehaviourAPI.Unity.Demo
 
             var bt = CreateFindKeySubBT();
 
-            var doorState = fsm.CreateState("Go to home", new WalkAction(_doorPos, 5f)); // Caminar hacia la casa
+            var doorState = fsm.CreateState("Go to home", new WalkAction(_doorPos)); // Caminar hacia la casa
             var keyState = fsm.CreateState("Search key", new SubsystemAction(bt));      // Subarbol de buscar la llave
             var houseState = fsm.CreateState("Enter the house", new FunctionalAction(EnterTheHouse));                        // Destroy
             var runState = fsm.CreateState("Runaway", new FleeAction(_enemyTransform, 8f, 10f, 3f));
@@ -66,11 +66,11 @@ namespace BehaviourAPI.Unity.Demo
             var bt = new BehaviourTree();
 
             var keyPos = GameObject.FindGameObjectWithTag("Key").transform.position;
-            var l1 = bt.CreateLeafNode(new WalkAction(keyPos, 5f));
+            var l1 = bt.CreateLeafNode(new WalkAction(keyPos));
             var hasKey = bt.CreateDecorator<ConditionNode>(l1).SetPerception(new ConditionPerception(() => !_hasKey));
             var succeder = bt.CreateDecorator<SuccederNode>(hasKey);
 
-            var l2 = bt.CreateLeafNode("Return to door", new WalkAction(_doorPos, 5f));
+            var l2 = bt.CreateLeafNode("Return to door", new WalkAction(_doorPos));
             var seqRoot = bt.CreateComposite<SequencerNode>(false, succeder, l2);
             bt.SetRootNode(seqRoot);
             return bt;

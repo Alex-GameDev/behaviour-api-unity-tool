@@ -200,6 +200,11 @@ namespace BehaviourAPI.Unity.Editor
             return prop.GetArrayElementAtIndex(size);
         }
 
+        public static void MoveAtFirst<T>(this List<T> list, T element)
+        {
+            if (list.Remove(element)) list.Insert(0, element);
+        }
+
         #endregion
     }
 }

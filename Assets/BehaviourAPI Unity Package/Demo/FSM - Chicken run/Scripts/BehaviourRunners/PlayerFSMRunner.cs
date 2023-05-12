@@ -1,72 +1,77 @@
 ﻿using BehaviourAPI.Core;
-using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Runtime;
-using BehaviourAPI.Unity.Runtime.Extensions;
 using BehaviourAPI.UnityExtensions;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PlayerFSMRunner : CodeBehaviourRunner
+namespace BehaviourAPI.Unity.Demos
 {
-    #region variables
-
-    [SerializeField] private float minDistanceToChicken = 5;
-    [SerializeField] private Transform chicken;
-
-    private NavMeshAgent meshAgent;
-    private PushPerception _click;
-
-    #endregion variables
-
-    protected override void OnAwake()
+    public class PlayerFSMRunner : CodeBehaviourRunner
     {
-        meshAgent = GetComponent<NavMeshAgent>();
-        base.OnAwake();
-    }
+        #region variables
 
-    protected override BehaviourGraph CreateGraph()
-    {
-        var fsm = new BehaviourAPI.StateMachines.FSM();
+        [SerializeField] private float minDistanceToChicken = 5;
+        [SerializeField] private Transform chicken;
+        [SerializeField] private Transform restartPoint;
 
-        // Percepciones
-        var chickenNear = new ConditionPerception(CheckDistanceToChicken);
+        private NavMeshAgent meshAgent;
+        private PushPerception _click;
 
-        // Estados
-        var idle = fsm.CreateState("Idle");
-        var moving = fsm.CreateState("Moving", new MoveToMousePosAction(3.5f));
-        var flee = fsm.CreateState("Flee", new FleeAction(chicken, 7f, 13f, 3f));
+        #endregion variables
 
-        // Las transiciones que pasan al estado "moving" se activan con percepciones Push.
-        var idleToMoving = fsm.CreateTransition("idle to moving", idle, moving, statusFlags: StatusFlags.None);
-        var movingToMoving = fsm.CreateTransition("moving to moving", moving, moving, statusFlags: StatusFlags.None);
-        _click = new PushPerception(movingToMoving, idleToMoving);
-
-        // La transición que pasan al estado "idle" se lanzan cuando la acción del estado anterior termine.
-        fsm.CreateTransition("moving to idle", moving, idle, statusFlags: StatusFlags.Finished);
-        fsm.CreateTransition("runaway to idle", flee, idle, statusFlags: StatusFlags.Finished);
-
-        // Las transiciones que pasan al estado "flee" se activan con la percepción "chicken near"
-        fsm.CreateTransition("idle to runaway", idle, flee, chickenNear);
-        fsm.CreateTransition("moving to runaway", moving, flee, chickenNear);
-
-        RegisterGraph(fsm);
-        return fsm;
-    }
-
-    protected override void OnUpdate()
-    {
-        if (Input.GetMouseButtonDown(0))
+        protected override void OnAwake()
         {
-            _click.Fire();
+            meshAgent = GetComponent<NavMeshAgent>();
+            base.OnAwake();
         }
-        base.OnUpdate();
-    }
 
-    private bool CheckDistanceToChicken()
-    {
-        return Vector3.Distance(transform.position, chicken.transform.position) < minDistanceToChicken;
-    }
+        protected override BehaviourGraph CreateGraph()
+        {
+            var fsm = new BehaviourAPI.StateMachines.FSM();
 
+            // Percepciones
+            var chickenNear = new ConditionPerception(CheckDistanceToChicken);
+
+            // Estados
+            var idle = fsm.CreateState("Idle");
+            var moving = fsm.CreateState("Moving", new MoveToMousePosAction());
+            var flee = fsm.CreateState("Flee", new FleeAction(chicken, 2.5f, 15f, 5f));
+
+            // Las transiciones que pasan al estado "moving" se activan con percepciones Push.
+            var idleToMoving = fsm.CreateTransition("idle to moving", idle, moving, statusFlags: StatusFlags.None);
+            var movingToMoving = fsm.CreateTransition("moving to moving", moving, moving, statusFlags: StatusFlags.None);
+            _click = new PushPerception(movingToMoving, idleToMoving);
+
+            // La transición que pasan al estado "idle" se lanzan cuando la acción del estado anterior termine.
+            fsm.CreateTransition("moving to idle", moving, idle, statusFlags: StatusFlags.Finished);
+            fsm.CreateTransition("runaway to idle", flee, idle, statusFlags: StatusFlags.Finished);
+
+            // Las transiciones que pasan al estado "flee" se activan con la percepción "chicken near"
+            fsm.CreateTransition("idle to runaway", idle, flee, chickenNear);
+            fsm.CreateTransition("moving to runaway", moving, flee, chickenNear);
+
+            RegisterGraph(fsm);
+            return fsm;
+        }
+
+        protected override void OnUpdate()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                _click.Fire();
+            }
+            base.OnUpdate();
+        }
+
+        private bool CheckDistanceToChicken()
+        {
+            return Vector3.Distance(transform.position, chicken.transform.position) < minDistanceToChicken;
+        }
+
+        public void Restart()
+        {
+            transform.position = restartPoint.position;
+        }
+    }
 }

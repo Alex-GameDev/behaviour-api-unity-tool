@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5000012665791813595}
   - component: {fileID: 7683602792652669143}
   - component: {fileID: 1897590593199712440}
+  - component: {fileID: -877296757917718649}
   m_Layer: 0
   m_Name: Test boy comb
   m_TagString: Player
@@ -201,6 +202,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea99ffc61ea3906498e96d2227f13753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ExecuteOnLoop: 0
+  DontStopOnDisable: 0
+  keyFoundClip: {fileID: 0}
 --- !u!114 &1897590593199712440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,7 +217,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  systemAsset: {fileID: 0}
+  debugStatusChanges: 0
+--- !u!114 &-877296757917718649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8841883541597954724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81016613ea3feb04b8c61c0b1124211a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  targetThreshold: 1
+  minDistanceToTarget: 2
+  drawGizmos: 1
+  targetColor: {r: 0, g: 0.638464, b: 1, a: 1}
 --- !u!1 &8841883541597954734
 GameObject:
   m_ObjectHideFlags: 0

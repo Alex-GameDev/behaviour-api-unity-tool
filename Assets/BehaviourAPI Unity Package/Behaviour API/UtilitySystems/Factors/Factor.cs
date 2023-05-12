@@ -1,4 +1,3 @@
-using BehaviourAPI.Core;
 using System;
 
 namespace BehaviourAPI.UtilitySystems
@@ -22,7 +21,10 @@ namespace BehaviourAPI.UtilitySystems
         /// <returns>The utility clamped between 0 and 1.</returns>
         protected override float GetUtility()
         {
-            return MathUtilities.Clamp01(ComputeUtility());
+            var value = ComputeUtility();
+            if (0 <= value && value <= 1) return value;
+            else if (value < 0) return 0;
+            else return 1;
         }
 
         /// <summary>

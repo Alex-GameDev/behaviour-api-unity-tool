@@ -2,7 +2,6 @@ using System;
 
 namespace BehaviourAPI.UtilitySystems
 {
-    using BehaviourAPI.Core.Exceptions;
     using Core;
 
     /// <summary>

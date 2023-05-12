@@ -3,12 +3,13 @@ using UnityEngine;
 namespace BehaviourAPI.Unity.Runtime
 {
     using Core;
-    using UnityExtensions;
     using Framework;
+    using UnityExtensions;
 
     /// <summary>
     /// Base class for behaviour system runners
     /// </summary>
+
     public abstract class BehaviourRunner : MonoBehaviour
     {
         #region -------------------------------- public variables --------------------------------
@@ -120,6 +121,8 @@ namespace BehaviourAPI.Unity.Runtime
         /// </summary>
         protected virtual void OnDisableSystem()
         {
+            if (Object.ReferenceEquals(gameObject, null)) return;
+
             if (!DontStopOnDisable && _systemRunning)
             {
                 if (_executionGraph != null)

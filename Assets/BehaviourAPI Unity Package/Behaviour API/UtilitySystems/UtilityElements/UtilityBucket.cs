@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace BehaviourAPI.UtilitySystems
 {
-    using Core.Exceptions;
     using Core;
 
     /// <summary>
@@ -51,14 +50,14 @@ namespace BehaviourAPI.UtilitySystems
         /// <exception cref="MissingChildException">If <paramref name="elem"/> is null.</exception>
         protected internal void AddElement(UtilitySelectableNode elem)
         {
-            if(elem != null)
+            if (elem != null)
             {
                 _utilityCandidates.Add(elem);
             }
             else
             {
                 throw new MissingChildException(this, $"Can't add null selectable node.");
-            }            
+            }
         }
 
         protected override void BuildConnections(List<Node> parents, List<Node> children)
@@ -99,7 +98,7 @@ namespace BehaviourAPI.UtilitySystems
         protected override float GetUtility()
         {
             _currentBestElement = ComputeCurrentBestAction();
-            var maxUtility = _currentBestElement?.Utility ?? 0f;
+            var maxUtility = _currentBestElement?.Utility ?? -1f;
             // if utility is higher than the bucket threshold, enable the priority.
             ExecutionPriority = maxUtility > BucketThreshold;
             return maxUtility;
@@ -107,33 +106,35 @@ namespace BehaviourAPI.UtilitySystems
 
         private UtilitySelectableNode ComputeCurrentBestAction()
         {
-            float currentHigherUtility = -1f; // If value starts in 0, elems with Utility == 0 cant be executed
+            float currentHigherUtility = -1f; // If value starts in 0, elems with Utility == 0 couldn't be executed
 
-            UtilitySelectableNode newBestElement = _currentBestElement;
+            UtilitySelectableNode newBestElement = null;
 
             int i = 0;
-            var currentActionIsLocked = false; // True if current action is a locked bucket.
+            var currentElementIsLocked = false; // Set to true when a the current element is a locked bucket
 
-            while (i < _utilityCandidates.Count && !currentActionIsLocked)
+            while (i < _utilityCandidates.Count && !currentElementIsLocked)
             {
-                // Update utility
-                var currentAction = _utilityCandidates[i];
-                if (currentAction == null) continue;
-                currentAction.UpdateUtility();
+                // Update utility:
+                var currentCandidate = _utilityCandidates[i];
 
-                // Compute the current action utility:
-                var utility = currentAction.Utility;
-                if (currentAction == _currentBestElement) utility *= Inertia;
+                if (currentCandidate == null) continue;
 
-                // If it's higher than the current max utility, update the selection.
-                if (utility > currentHigherUtility)
+                currentCandidate.UpdateUtility();
+
+                var utility = currentCandidate.Utility;
+                if (currentCandidate == _currentBestElement) utility *= Inertia;
+
+                // If it's higher than the current max utility, update the selected element.
+                if (utility >= BucketThreshold && utility > currentHigherUtility)
                 {
-                    newBestElement = currentAction;
+                    newBestElement = currentCandidate;
                     currentHigherUtility = utility;
-
-                    // If the action is a locked bucket:
-                    if (currentAction.ExecutionPriority) currentActionIsLocked = true;
                 }
+
+                // If the current candidate is a locked bucket:
+                if (currentCandidate.ExecutionPriority) currentElementIsLocked = true;
+
                 i++;
             }
 
@@ -147,14 +148,14 @@ namespace BehaviourAPI.UtilitySystems
         /// </summary>
         public override void Update()
         {
-            if(_currentBestElement != _lastExecutedElement)
+            if (_currentBestElement != _lastExecutedElement)
             {
                 _lastExecutedElement?.Stop();
                 _lastExecutedElement = _currentBestElement;
                 _lastExecutedElement?.Start();
             }
 
-            if(_lastExecutedElement != null)
+            if (_lastExecutedElement != null)
             {
                 _lastExecutedElement.Update();
                 Status = _lastExecutedElement.Status;

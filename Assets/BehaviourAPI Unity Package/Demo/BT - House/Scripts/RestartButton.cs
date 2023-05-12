@@ -1,36 +1,37 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class RestartButton : MonoBehaviour
+namespace BehaviourAPI.Unity.Demos
 {
-
-    #region variables
-
-    [SerializeField] private GameObject testBoyPrefab;
-    [SerializeField] private Door door;
-    [SerializeField] private Transform spawnPoint;
-    [SerializeField] private KeyRotation key;
-
-    #endregion variables
-
-    private void Start()
+    public class RestartButton : MonoBehaviour
     {
-        // The first iteration is bugged for some reason
-        Restart();
-    }
 
-    public void Restart()
-    {
-        if (key.toggle.isOn) key.gameObject.SetActive(true);
-        door.OnReset();
+        #region variables
 
-        GameObject oldPlayer = GameObject.FindGameObjectWithTag("Player");
-        if (oldPlayer != null)
+        [SerializeField] private GameObject testBoyPrefab;
+        [SerializeField] private Door door;
+        [SerializeField] private Transform spawnPoint;
+        [SerializeField] private KeyRotation key;
+
+        #endregion variables
+
+        private void Start()
         {
-            Destroy(oldPlayer);
+            // The first iteration is bugged for some reason
+            Restart();
         }
 
-        Instantiate(testBoyPrefab, spawnPoint.position, spawnPoint.rotation);
+        public void Restart()
+        {
+            if (key.toggle.isOn) key.gameObject.SetActive(true);
+            door.OnReset();
+
+            GameObject oldPlayer = GameObject.FindGameObjectWithTag("Player");
+            if (oldPlayer != null)
+            {
+                Destroy(oldPlayer);
+            }
+
+            Instantiate(testBoyPrefab, spawnPoint.position, spawnPoint.rotation);
+        }
     }
 }
