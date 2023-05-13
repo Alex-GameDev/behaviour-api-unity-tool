@@ -181,6 +181,18 @@ namespace BehaviourAPI.BehaviourTrees
             m_rootNode.Stop();
         }
 
+        public override void Pause()
+        {
+            base.Pause();
+            m_rootNode.Pause();
+        }
+
+        public override void Unpause()
+        {
+            base.Unpause();
+            m_rootNode.Unpause();
+        }
+
         #endregion
     }
 }

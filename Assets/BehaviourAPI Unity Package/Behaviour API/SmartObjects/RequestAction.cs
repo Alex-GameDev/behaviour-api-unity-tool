@@ -114,5 +114,15 @@ namespace BehaviourAPI.SmartObjects
                 return Status.Failure;
             }
         }
+
+        public override void Pause()
+        {
+            if (m_CurrentInteraction != null) m_CurrentInteraction.Action.Pause();
+        }
+
+        public override void Unpause()
+        {
+            if (m_CurrentInteraction != null) m_CurrentInteraction.Action.Unpause();
+        }
     }
 }

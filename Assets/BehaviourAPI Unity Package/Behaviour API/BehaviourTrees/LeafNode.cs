@@ -89,6 +89,22 @@ namespace BehaviourAPI.BehaviourTrees
             Action.SetExecutionContext(context);
         }
 
+        public override void Pause()
+        {
+            if (Action == null)
+                throw new MissingActionException(this, "Leaf nodes need an action to work.");
+
+            Action.Pause();
+        }
+
+        public override void Unpause()
+        {
+            if (Action == null)
+                throw new MissingActionException(this, "Leaf nodes need an action to work.");
+
+            Action.Unpause();
+        }
+
         #endregion
     }
 }

@@ -36,6 +36,17 @@
             GetCurrentChild().Stop();
         }
 
+        public override void Pause()
+        {
+            GetCurrentChild().Pause();
+        }
+
+        public override void Unpause()
+        {
+            GetCurrentChild().Unpause();
+        }
+
+
         /// <summary>
         /// <inheritdoc/>
         /// Update the execution of the current child. If it returned status is not the final

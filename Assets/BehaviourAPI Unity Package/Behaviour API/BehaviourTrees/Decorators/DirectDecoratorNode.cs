@@ -35,6 +35,20 @@
             m_childNode.Stop();
         }
 
+        public override void Pause()
+        {
+            if (m_childNode == null) throw new MissingChildException(this, "This decorator has no child");
+
+            m_childNode.Pause();
+        }
+
+        public override void Unpause()
+        {
+            if (m_childNode == null) throw new MissingChildException(this, "This decorator has no child");
+
+            m_childNode.Unpause();
+        }
+
         /// <summary>
         /// <inheritdoc/>
         /// Updates the execution of its child and returns the value modified.

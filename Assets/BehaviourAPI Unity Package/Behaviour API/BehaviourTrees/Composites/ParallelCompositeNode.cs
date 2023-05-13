@@ -42,6 +42,16 @@ namespace BehaviourAPI.BehaviourTrees
             m_children.ForEach(c => c?.Stop());
         }
 
+        public override void Pause()
+        {
+            m_children.ForEach(c => c?.Pause());
+        }
+
+        public override void Unpause()
+        {
+            m_children.ForEach(c => c?.Unpause());
+        }
+
         /// <summary>
         /// <inheritdoc/>
         /// Update all its children node. The returned <see cref="Status"/> value depends on the children status and the value in <see cref="TriggerStatus"/>.

@@ -86,6 +86,22 @@ namespace BehaviourAPI.BehaviourTrees
             throw new NullReferenceException("ERROR: Perception is not defined.");
         }
 
+        public override void Pause()
+        {
+            if (_childExecutedLastFrame)
+            {
+                m_childNode.Pause();
+            }
+        }
+
+        public override void Unpause()
+        {
+            if (_childExecutedLastFrame)
+            {
+                m_childNode.Unpause();
+            }
+        }
+
         #endregion
     }
 }

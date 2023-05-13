@@ -24,6 +24,12 @@ namespace BehaviourAPI.Core
 
         public Action<Status> StatusChanged { get; set; }
 
+        /// <summary>
+        /// Gets if the behaviour is currently paused.
+        /// </summary>
+        /// <value>True if its paused, false otherwise.</value>
+        public bool IsPaused { get; private set; }
+
         #endregion
 
         #region -------------------------------------- Private variables -------------------------------------
@@ -62,10 +68,40 @@ namespace BehaviourAPI.Core
         /// <summary>
         /// Called every execution frame.
         /// </summary>
+        /// <exception cref="ExecutionStatusException">Throws if attempt to update when its paused.</exception>
         public void Update()
         {
+            if (IsPaused)
+                throw new ExecutionStatusException(this, "Behaviour engine cannot be updated if is paused");
+
             if (Status != Status.Running) return; // Graph already finished
             Execute();
+        }
+
+        /// <summary>
+        /// Call this method when its executing to pauses the execution temporally. When the behaviour is 
+        /// paused it can't be updated. Unpause the behaviour execution using the <see cref="Unpause"/> method.
+        /// </summary>
+        /// <exception cref="ExecutionStatusException">If the graph is not in execution.</exception>
+        public virtual void Pause()
+        {
+            if (IsPaused)
+                throw new ExecutionStatusException(this, "ERROR: Trying to pause a behaviour engine that is already been paused");
+
+            IsPaused = true;
+        }
+
+        /// <summary>
+        /// Call this method when its executing to pauses the execution temporally. When the behaviour is 
+        /// paused it can't be updated. Unpause the behaviour execution using the <see cref="Unpause"/> method.
+        /// </summary>
+        /// <exception cref="ExecutionStatusException">If the graph is not in execution.</exception>
+        public virtual void Unpause()
+        {
+            if (!IsPaused)
+                throw new ExecutionStatusException(this, "ERROR: Trying to unpause a behaviour engine that is not paused.");
+
+            IsPaused = true;
         }
 
         /// <summary>

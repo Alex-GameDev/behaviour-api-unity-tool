@@ -33,7 +33,7 @@ namespace BehaviourAPI.UtilitySystems
         public override object Clone()
         {
             UtilityAction action = (UtilityAction)base.Clone();
-            action.Action = (Action) Action?.Clone();
+            action.Action = (Action)Action?.Clone();
             return action;
         }
 
@@ -61,7 +61,7 @@ namespace BehaviourAPI.UtilitySystems
 
             Status = Action?.Update() ?? Status.Running;
 
-            if(FinishSystemOnComplete && Status != Status.Running)
+            if (FinishSystemOnComplete && Status != Status.Running)
             {
                 BehaviourGraph.Finish(Status);
             }
@@ -77,6 +77,8 @@ namespace BehaviourAPI.UtilitySystems
             Action?.Stop();
         }
 
+
+
         /// <summary>
         /// <inheritdoc/>
         /// Passes the context to <see cref="Action"/>.
@@ -85,6 +87,16 @@ namespace BehaviourAPI.UtilitySystems
         public override void SetExecutionContext(ExecutionContext context)
         {
             Action?.SetExecutionContext(context);
+        }
+
+        public override void Pause()
+        {
+            Action?.Pause();
+        }
+
+        public override void Unpause()
+        {
+            Action?.Unpause();
         }
 
         #endregion

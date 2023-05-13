@@ -28,7 +28,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 if (GUILayout.Button("Assign action"))
                 {
-                    SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)), 
+                    SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)),
                         ElementCreatorWindowProvider.Create<ActionCreationWindow>((aType) => AssignAction(property, aType)));
                 }
             }
@@ -65,20 +65,41 @@ namespace BehaviourAPI.Unity.Editor
             {
                 EditorGUI.BeginProperty(position, label, property);
 
-                var lineHeight = position.height / 8;
-                var space = lineHeight / 3;
+                var lineHeight = EditorGUIUtility.singleLineHeight;
+                var space = lineHeight * 0.33f;
+                var elemHeight = lineHeight + space;
 
                 int indent = EditorGUI.indentLevel;
                 EditorGUI.indentLevel = 0;
 
-                var labelRect = new Rect(position.x, position.y, position.width * 0.8f - 5, lineHeight);
-                var removeRect = new Rect(position.x + position.width * 0.8f, position.y, position.width * 0.2f, lineHeight);
-                var startComponentRect = new Rect(position.x, position.y + lineHeight + space, position.width, lineHeight);
-                var startMethodRect = new Rect(position.x, position.y + lineHeight * 2 + space, position.width, lineHeight);
-                var updateComponentRect = new Rect(position.x, position.y + lineHeight * 3 + space * 2, position.width, lineHeight);
-                var updateMethodRect = new Rect(position.x, position.y + lineHeight * 4 + space * 2, position.width, lineHeight);
-                var stopComponentRect = new Rect(position.x, position.y + lineHeight * 5 + space * 3, position.width, lineHeight);
-                var stopMethodRect = new Rect(position.x, position.y + lineHeight * 6 + space * 3, position.width, lineHeight);
+                float currentHeight = position.y;
+                var labelRect = new Rect(position.x, currentHeight, position.width * 0.8f - 5, lineHeight);
+                var removeRect = new Rect(position.x + position.width * 0.8f, currentHeight, position.width * 0.2f, lineHeight);
+
+                currentHeight += elemHeight;
+                var startComponentRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+                currentHeight += lineHeight;
+                var startMethodRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+
+                currentHeight += elemHeight;
+                var updateComponentRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+                currentHeight += lineHeight;
+                var updateMethodRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+
+                currentHeight += elemHeight;
+                var stopComponentRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+                currentHeight += lineHeight;
+                var stopMethodRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+
+                currentHeight += elemHeight;
+                var pauseComponentRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+                currentHeight += lineHeight;
+                var pauseMethodRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+
+                currentHeight += elemHeight;
+                var unpauseComponentRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+                currentHeight += lineHeight;
+                var unpauseMethodRect = new Rect(position.x, currentHeight, position.width, lineHeight);
 
                 SerializedProperty startComponentProp = property.FindPropertyRelative("start.componentName");
                 SerializedProperty startMethodProp = property.FindPropertyRelative("start.methodName");
@@ -86,6 +107,10 @@ namespace BehaviourAPI.Unity.Editor
                 SerializedProperty updateMethodProp = property.FindPropertyRelative("update.methodName");
                 SerializedProperty stopComponentProp = property.FindPropertyRelative("stop.componentName");
                 SerializedProperty stopMethodProp = property.FindPropertyRelative("stop.methodName");
+                SerializedProperty pauseComponentProp = property.FindPropertyRelative("pause.componentName");
+                SerializedProperty pauseMethodProp = property.FindPropertyRelative("pause.methodName");
+                SerializedProperty unpauseComponentProp = property.FindPropertyRelative("unpause.componentName");
+                SerializedProperty unpauseMethodProp = property.FindPropertyRelative("unpause.methodName");
 
                 EditorGUI.LabelField(labelRect, "Custom action", EditorStyles.boldLabel);
 
@@ -102,6 +127,10 @@ namespace BehaviourAPI.Unity.Editor
                     EditorGUI.PropertyField(updateMethodRect, updateMethodProp, new GUIContent("Update - Method"));
                     EditorGUI.PropertyField(stopComponentRect, stopComponentProp, new GUIContent("Stop - Component"));
                     EditorGUI.PropertyField(stopMethodRect, stopMethodProp, new GUIContent("Stop - Method"));
+                    EditorGUI.PropertyField(pauseComponentRect, pauseComponentProp, new GUIContent("Pause - Component"));
+                    EditorGUI.PropertyField(pauseMethodRect, pauseMethodProp, new GUIContent("Pause - Method"));
+                    EditorGUI.PropertyField(unpauseComponentRect, unpauseComponentProp, new GUIContent("Unpause - Component"));
+                    EditorGUI.PropertyField(unpauseMethodRect, unpauseMethodProp, new GUIContent("Unpause - Method"));
                 }
 
                 EditorGUI.EndProperty();
@@ -111,7 +140,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return base.GetPropertyHeight(property, label) * 8f;
+            return base.GetPropertyHeight(property, label) * 12f;
         }
     }
 
@@ -141,7 +170,7 @@ namespace BehaviourAPI.Unity.Editor
             EditorGUILayout.LabelField("Subgraph", EditorStyles.centeredGreyMiniLabel);
 
             var subGraphProperty = property.FindPropertyRelative("subgraphId");
-            if(string.IsNullOrEmpty(subGraphProperty.stringValue))
+            if (string.IsNullOrEmpty(subGraphProperty.stringValue))
             {
                 if (GUILayout.Button("Assign subgraph"))
                 {

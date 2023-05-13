@@ -24,9 +24,19 @@
         /// </summary>
         public override void Start()
         {
-            if(ExitStatus != Status.None) Status = ExitStatus;
+            if (ExitStatus != Status.None) Status = ExitStatus;
             else ExitStatus = Status.Running;
             BehaviourGraph.Finish(ExitStatus);
+        }
+
+        public override void Pause()
+        {
+            return;
+        }
+
+        public override void Unpause()
+        {
+            return;
         }
 
         /// <summary>
@@ -37,6 +47,8 @@
         {
             return;
         }
+
+
 
         #endregion
     }

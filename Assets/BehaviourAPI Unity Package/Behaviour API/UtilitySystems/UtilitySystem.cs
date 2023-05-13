@@ -473,6 +473,20 @@ namespace BehaviourAPI.UtilitySystems
             _currentBestElement = null;
         }
 
+        public override void Pause()
+        {
+            base.Pause();
+            _currentBestElement?.Unpause();
+        }
+
+        public override void Unpause()
+        {
+            base.Unpause();
+            _currentBestElement?.Unpause();
+        }
+
+
+
         #endregion
     }
 }

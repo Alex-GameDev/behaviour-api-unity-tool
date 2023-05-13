@@ -96,6 +96,7 @@ namespace BehaviourAPI.BehaviourTrees
             {
                 _timer.Enabled = false;
                 _timer.Stop();
+                _timer.Dispose();
             }
 
             if (_childExecuted)
@@ -107,10 +108,29 @@ namespace BehaviourAPI.BehaviourTrees
             }
         }
 
+        public override void Pause()
+        {
+            if (_isTimeout)
+                _timer.Stop();
+
+            if (_childExecuted)
+                m_childNode.Pause();
+        }
+
+        public override void Unpause()
+        {
+            if (_isTimeout)
+                _timer.Start();
+
+            if (_childExecuted)
+                m_childNode.Unpause();
+        }
+
         private void OnTimerElapsed(object sender, ElapsedEventArgs evt)
         {
             _isTimeout = true;
         }
+
 
         #endregion
     }

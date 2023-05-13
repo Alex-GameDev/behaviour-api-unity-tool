@@ -28,6 +28,16 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         public ContextualSerializedAction stop;
 
         /// <summary>
+        /// Method reference for update event.
+        /// </summary>
+        public ContextualSerializedAction pause;
+
+        /// <summary>
+        /// Method reference for stop event.
+        /// </summary>
+        public ContextualSerializedAction unpause;
+
+        /// <summary>
         /// <inheritdoc/>
         /// Build the delegates using <paramref name="context"/> and the method references.
         /// </summary>
@@ -40,6 +50,8 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
                 start.SetContext(unityContext);
                 update.SetContext(unityContext);
                 stop.SetContext(unityContext);
+                pause.SetContext(unityContext);
+                unpause.SetContext(unityContext);
             }
             else
             {
@@ -65,6 +77,10 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         /// </summary>
         public override Status Update() => update.GetFunction()?.Invoke() ?? Status.Running;
 
+        public override void Pause() => pause.GetFunction()?.Invoke();
+
+        public override void Unpause() => unpause.GetFunction()?.Invoke();
+
         /// <summary>
         /// <inheritdoc/>
         /// Copy the method references too.
@@ -76,6 +92,8 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
             copy.start = (ContextualSerializedAction)start?.Clone();
             copy.update = (ContextualSerializedStatusFunction)update?.Clone();
             copy.stop = (ContextualSerializedAction)stop?.Clone();
+            copy.pause = (ContextualSerializedAction)pause?.Clone();
+            copy.unpause = (ContextualSerializedAction)pause?.Clone();
             return copy;
         }
     }

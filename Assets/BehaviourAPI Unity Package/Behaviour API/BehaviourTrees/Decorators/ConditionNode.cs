@@ -69,6 +69,23 @@ namespace BehaviourAPI.BehaviourTrees
             }
         }
 
+        public override void Pause()
+        {
+            if (_executeChild)
+            {
+                m_childNode.Pause();
+            }
+        }
+
+        public override void Unpause()
+        {
+            if (_executeChild)
+            {
+                m_childNode.Unpause();
+            }
+        }
+
+
         protected override Status UpdateStatus()
         {
             if (_executeChild)

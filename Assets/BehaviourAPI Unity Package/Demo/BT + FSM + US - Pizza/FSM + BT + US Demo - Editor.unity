@@ -1002,6 +1002,12 @@ MonoBehaviour:
         stop:
           componentName: 
           methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
     - rid: 6537695503399780387
       type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
@@ -1014,6 +1020,12 @@ MonoBehaviour:
         stop:
           componentName: 
           methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
     - rid: 6537695503399780388
       type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
@@ -1024,6 +1036,12 @@ MonoBehaviour:
           componentName: 
           methodName: CheckToppings
         stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
           componentName: 
           methodName: 
     - rid: 6537695503399780389
@@ -1045,6 +1063,12 @@ MonoBehaviour:
         stop:
           componentName: 
           methodName: CreateRecipeCompleted
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
     - rid: 6537695503399780392
       type: {class: UtilityAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
@@ -1064,6 +1088,12 @@ MonoBehaviour:
         stop:
           componentName: 
           methodName: CreateRecipeCompleted
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
     - rid: 6537695503399780394
       type: {class: UtilityAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
@@ -1083,6 +1113,12 @@ MonoBehaviour:
         stop:
           componentName: 
           methodName: CreateRecipeCompleted
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
     - rid: 6537695503399780396
       type: {class: UnityCurveFactor, ns: BehaviourAPI.UnityExtensions, asm: BehaviourAPI.UnityExtensions}
       data:
@@ -1191,6 +1227,12 @@ MonoBehaviour:
         stop:
           componentName: 
           methodName: BakedActionCompleted
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
 --- !u!114 &1401791170
 MonoBehaviour:
   m_ObjectHideFlags: 0

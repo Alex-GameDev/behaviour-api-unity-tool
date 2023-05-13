@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace BehaviourAPI.UnityExtensions
 {
-    using Core;
     using BehaviourTrees;
+    using Core;
 
     /// <summary>
     /// Timer decorator that used unity time instead of system time..
@@ -59,6 +59,16 @@ namespace BehaviourAPI.UnityExtensions
         {
             base.Stop();
             if (_childExecuted) m_childNode?.Stop();
+        }
+
+        public override void Pause()
+        {
+            if (_childExecuted) m_childNode?.Pause();
+        }
+
+        public override void Unpause()
+        {
+            if (_childExecuted) m_childNode.Unpause();
         }
     }
 

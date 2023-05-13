@@ -118,6 +118,10 @@ namespace BehaviourAPI.BehaviourTrees
             Status = Status.None;
         }
 
+        public abstract void Pause();
+
+        public abstract void Unpause();
+
         /// <summary>
         /// Get the updated status of the node.
         /// </summary>

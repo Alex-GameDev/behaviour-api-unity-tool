@@ -90,7 +90,26 @@
         /// <param name="context"><inheritdoc/></param>
         public override void SetExecutionContext(ExecutionContext context)
         {
-            SubSystem?.SetExecutionContext(context);
+            if (SubSystem == null)
+                throw new MissingSubsystemException(this, "Subsystem cannot be null");
+
+            SubSystem.SetExecutionContext(context);
+        }
+
+        public override void Pause()
+        {
+            if (SubSystem == null)
+                throw new MissingSubsystemException(this, "Subsystem cannot be null");
+
+            SubSystem.Pause();
+        }
+
+        public override void Unpause()
+        {
+            if (SubSystem == null)
+                throw new MissingSubsystemException(this, "Subsystem cannot be null");
+
+            SubSystem.Unpause();
         }
     }
 }

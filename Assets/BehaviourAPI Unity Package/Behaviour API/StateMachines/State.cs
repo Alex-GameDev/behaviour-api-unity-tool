@@ -138,6 +138,17 @@ namespace BehaviourAPI.StateMachines
             _transitions.ForEach(t => t?.Stop());
         }
 
+
+        public virtual void Pause()
+        {
+            Action?.Pause();
+        }
+
+        public virtual void Unpause()
+        {
+            Action?.Unpause();
+        }
+
         /// <summary>
         /// Check the transitions until one of them is triggered.
         /// </summary>

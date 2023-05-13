@@ -270,6 +270,18 @@ namespace BehaviourAPI.StateMachines
             _currentState?.Stop();
         }
 
+
+        public override void Pause()
+        {
+            _currentState?.Pause();
+        }
+
+        public override void Unpause()
+        {
+            _currentState?.Unpause();
+        }
+
+
         /// <summary>
         /// Change the current state of the fsm.
         /// </summary>
@@ -292,6 +304,7 @@ namespace BehaviourAPI.StateMachines
         /// <param name="state">The state checked.</param>
         /// <returns>true if <paramref name="state"/> is the current state, false otherwise.</returns>
         public bool IsCurrentState(State state) => _currentState == state;
+
 
         #endregion
     }

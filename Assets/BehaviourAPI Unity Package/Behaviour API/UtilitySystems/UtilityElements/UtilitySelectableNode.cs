@@ -90,6 +90,10 @@ namespace BehaviourAPI.UtilitySystems
             Status = Status.None;
         }
 
+        public abstract void Pause();
+
+        public abstract void Unpause();
+
         #endregion
     }
 }
