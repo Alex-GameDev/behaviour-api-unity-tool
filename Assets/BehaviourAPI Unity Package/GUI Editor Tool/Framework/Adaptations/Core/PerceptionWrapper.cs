@@ -36,6 +36,10 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         /// </summary>
         public override void Reset() => perception.Reset();
 
+        public override void Pause() => perception.Pause();
+
+        public override void Unpause() => perception.Unpause();
+
         public override object Clone()
         {
             var copy = (PerceptionWrapper)base.Clone();
@@ -52,5 +56,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         {
             perception.SetExecutionContext(context);
         }
+
+
     }
 }

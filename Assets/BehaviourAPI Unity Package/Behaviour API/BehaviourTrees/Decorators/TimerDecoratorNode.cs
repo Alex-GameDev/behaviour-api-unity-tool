@@ -110,7 +110,7 @@ namespace BehaviourAPI.BehaviourTrees
 
         public override void Pause()
         {
-            if (_isTimeout)
+            if (!_isTimeout)
                 _timer.Stop();
 
             if (_childExecuted)
@@ -119,7 +119,7 @@ namespace BehaviourAPI.BehaviourTrees
 
         public override void Unpause()
         {
-            if (_isTimeout)
+            if (!_isTimeout)
                 _timer.Start();
 
             if (_childExecuted)

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace BehaviourAPI.StateMachines
 {
     using Core;
-    using Core.Perceptions;
     using Core.Actions;
+    using Core.Perceptions;
 
     /// <summary>
     /// Base class for transitions in fsm.
@@ -137,6 +137,16 @@ namespace BehaviourAPI.StateMachines
             return Perception?.Check() ?? true;
         }
 
+        public virtual void Pause()
+        {
+            Perception?.Pause();
+        }
+
+        public virtual void Unpause()
+        {
+            Perception.Unpause();
+        }
+
         /// <summary>
         /// If the source state is the current state of the fsm, executes the action.
         /// </summary>
@@ -160,7 +170,12 @@ namespace BehaviourAPI.StateMachines
         /// <summary>
         /// Perform the transition externally.
         /// </summary>
-        public void Fire(Status status) => Perform();
+        public void Fire(Status status)
+        {
+            if (BehaviourGraph.IsPaused) return;
+
+            Perform();
+        }
 
         public override void SetExecutionContext(ExecutionContext context)
         {

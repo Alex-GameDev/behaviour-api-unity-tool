@@ -57,6 +57,16 @@ namespace BehaviourAPI.Core.Perceptions
             Perceptions.ForEach(p => p.Reset());
         }
 
+        public override void Pause()
+        {
+            Perceptions.ForEach(p => p.Pause());
+        }
+
+        public override void Unpause()
+        {
+            Perceptions.ForEach(p => p.Unpause());
+        }
+
         /// <summary>
         /// Passes the execution context to the sub perceptions.
         /// </summary>

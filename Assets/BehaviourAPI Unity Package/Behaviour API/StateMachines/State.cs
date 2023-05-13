@@ -142,11 +142,13 @@ namespace BehaviourAPI.StateMachines
         public virtual void Pause()
         {
             Action?.Pause();
+            _transitions.ForEach(t => t?.Pause());
         }
 
         public virtual void Unpause()
         {
             Action?.Unpause();
+            _transitions.ForEach(t => t?.Unpause());
         }
 
         /// <summary>

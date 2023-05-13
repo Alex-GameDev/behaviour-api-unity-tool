@@ -57,6 +57,11 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         /// </summary>
         public override void Reset() => compoundPerception.Reset();
 
+
+        public override void Pause() => compoundPerception.Pause();
+
+        public override void Unpause() => compoundPerception.Unpause();
+
         public override object Clone()
         {
             var copy = (CompoundPerceptionWrapper)base.Clone();
@@ -84,7 +89,5 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         {
             compoundPerception.Perceptions = subPerceptions.Select(p => p.perception).ToList();
         }
-
-
     }
 }

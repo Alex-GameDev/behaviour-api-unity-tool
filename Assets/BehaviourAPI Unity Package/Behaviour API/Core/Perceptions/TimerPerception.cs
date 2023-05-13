@@ -58,6 +58,18 @@ namespace BehaviourAPI.Core.Perceptions
             _timer.Stop();
         }
 
+        public override void Pause()
+        {
+            if (!_isTimeout)
+                _timer.Stop();
+        }
+
+        public override void Unpause()
+        {
+            if (!_isTimeout)
+                _timer.Start();
+        }
+
         private void OnTimerElapsed(object sender, ElapsedEventArgs evt)
         {
             _isTimeout = true;

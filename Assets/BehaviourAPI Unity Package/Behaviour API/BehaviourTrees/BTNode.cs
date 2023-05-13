@@ -151,7 +151,7 @@ namespace BehaviourAPI.BehaviourTrees
         /// </summary>
         public void Fire(Status status)
         {
-            if (Status == Status.Running)
+            if (Status == Status.Running && !BehaviourGraph.IsPaused)
             {
                 if (status != Status.None)
                     Status = status;

@@ -28,6 +28,16 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         public ContextualSerializedAction reset;
 
         /// <summary>
+        /// Method reference for reset event.
+        /// </summary>
+        public ContextualSerializedAction pause;
+
+        /// <summary>
+        /// Method reference for reset event.
+        /// </summary>
+        public ContextualSerializedAction unpause;
+
+        /// <summary>
         /// <inheritdoc/>
         /// Build the delegates using <paramref name="context"/> and the method references.
         /// </summary>
@@ -40,6 +50,8 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
                 init.SetContext(unityContext);
                 check.SetContext(unityContext);
                 reset.SetContext(unityContext);
+                pause.SetContext(unityContext);
+                unpause.SetContext(unityContext);
             }
             else
             {
@@ -67,6 +79,18 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
 
         /// <summary>
         /// <inheritdoc/>
+        /// Invoke the method stored in <see cref="reset"/>.
+        /// </summary>
+        public override void Pause() => pause.GetFunction()?.Invoke();
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// Invoke the method stored in <see cref="check"/>.
+        /// </summary>
+        public override void Unpause() => unpause.GetFunction()?.Invoke();
+
+        /// <summary>
+        /// <inheritdoc/>
         /// Copy the method references too.
         /// </summary>
         /// <returns><inheritdoc/></returns>
@@ -76,6 +100,8 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
             copy.init = (ContextualSerializedAction)init?.Clone();
             copy.check = (ContextualSerializedBoolFunction)check?.Clone();
             copy.reset = (ContextualSerializedAction)reset?.Clone();
+            copy.pause = (ContextualSerializedAction)pause?.Clone();
+            copy.unpause = (ContextualSerializedAction)unpause?.Clone();
             return copy;
         }
     }

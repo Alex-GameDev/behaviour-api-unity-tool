@@ -7,7 +7,6 @@ using UnityEngine;
 namespace BehaviourAPI.Unity.Editor
 {
     using Core.Perceptions;
-    using Framework;
     using Framework.Adaptations;
 
     [CustomPropertyDrawer(typeof(Perception))]
@@ -30,9 +29,9 @@ namespace BehaviourAPI.Unity.Editor
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
 
-            if(property.managedReferenceValue == null)
+            if (property.managedReferenceValue == null)
             {
-                if(GUILayout.Button("Assign perception"))
+                if (GUILayout.Button("Assign perception"))
                 {
                     SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)), ElementCreatorWindowProvider.Create<PerceptionCreationWindow>((pType) => AssignPerception(property, pType)));
                 }
@@ -42,7 +41,7 @@ namespace BehaviourAPI.Unity.Editor
                 var labelRect = new Rect(position.x, position.y, position.width * 0.8f - 5, position.height);
                 var removeRect = new Rect(position.x + position.width * 0.8f, position.y, position.width * 0.2f, position.height);
                 EditorGUI.LabelField(labelRect, property.managedReferenceValue.TypeName());
-                if(GUI.Button(removeRect, "X"))
+                if (GUI.Button(removeRect, "X"))
                 {
                     property.managedReferenceValue = null;
                     property.serializedObject.ApplyModifiedProperties();
@@ -68,21 +67,41 @@ namespace BehaviourAPI.Unity.Editor
             {
                 EditorGUI.BeginProperty(position, label, property);
 
-                var lineHeight = position.height / 8;
-                var space = lineHeight / 3;
+                var lineHeight = EditorGUIUtility.singleLineHeight;
+                var space = lineHeight * 0.33f;
+                var elemHeight = lineHeight + space;
 
-                
                 int indent = EditorGUI.indentLevel;
                 EditorGUI.indentLevel = 0;
 
-                var labelRect = new Rect(position.x, position.y, position.width * 0.8f - 5, lineHeight);
-                var removeRect = new Rect(position.x + position.width * 0.8f, position.y, position.width * 0.2f, lineHeight);
-                var initComponentRect = new Rect(position.x, position.y + lineHeight + space, position.width, lineHeight);
-                var initMethodRect = new Rect(position.x, position.y + lineHeight * 2 + space, position.width, lineHeight);
-                var checkComponentRect = new Rect(position.x, position.y + lineHeight * 3 + space * 2, position.width, lineHeight);
-                var checkMethodRect = new Rect(position.x, position.y + lineHeight * 4 + space * 2, position.width, lineHeight);
-                var resetComponentRect = new Rect(position.x, position.y + lineHeight * 5 + space * 3, position.width, lineHeight);
-                var resetMethodRect = new Rect(position.x, position.y + lineHeight * 6 + space * 3, position.width, lineHeight);
+                float currentHeight = position.y;
+                var labelRect = new Rect(position.x, currentHeight, position.width * 0.8f - 5, lineHeight);
+                var removeRect = new Rect(position.x + position.width * 0.8f, currentHeight, position.width * 0.2f, lineHeight);
+
+                currentHeight += elemHeight;
+                var initComponentRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+                currentHeight += lineHeight;
+                var initMethodRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+
+                currentHeight += elemHeight;
+                var checkComponentRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+                currentHeight += lineHeight;
+                var checkMethodRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+
+                currentHeight += elemHeight;
+                var resetComponentRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+                currentHeight += lineHeight;
+                var resetMethodRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+
+                currentHeight += elemHeight;
+                var pauseComponentRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+                currentHeight += lineHeight;
+                var pauseMethodRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+
+                currentHeight += elemHeight;
+                var unpauseComponentRect = new Rect(position.x, currentHeight, position.width, lineHeight);
+                currentHeight += lineHeight;
+                var unpauseMethodRect = new Rect(position.x, currentHeight, position.width, lineHeight);
 
                 SerializedProperty initComponentProp = property.FindPropertyRelative("init.componentName");
                 SerializedProperty initMethodProp = property.FindPropertyRelative("init.methodName");
@@ -90,10 +109,14 @@ namespace BehaviourAPI.Unity.Editor
                 SerializedProperty checkMethodProp = property.FindPropertyRelative("check.methodName");
                 SerializedProperty resetComponentProp = property.FindPropertyRelative("reset.componentName");
                 SerializedProperty resetMethodProp = property.FindPropertyRelative("reset.methodName");
+                SerializedProperty pauseComponentProp = property.FindPropertyRelative("pause.componentName");
+                SerializedProperty pauseMethodProp = property.FindPropertyRelative("pause.methodName");
+                SerializedProperty unpauseComponentProp = property.FindPropertyRelative("unpause.componentName");
+                SerializedProperty unpauseMethodProp = property.FindPropertyRelative("unpause.methodName");
 
                 EditorGUI.LabelField(labelRect, "Custom perception", EditorStyles.boldLabel);
 
-                if(GUI.Button(removeRect, "X"))
+                if (GUI.Button(removeRect, "X"))
                 {
                     property.managedReferenceValue = null;
                     property.serializedObject.ApplyModifiedProperties();
@@ -106,6 +129,10 @@ namespace BehaviourAPI.Unity.Editor
                     EditorGUI.PropertyField(checkMethodRect, checkMethodProp, new GUIContent("Check - Method"));
                     EditorGUI.PropertyField(resetComponentRect, resetComponentProp, new GUIContent("Reset - Component"));
                     EditorGUI.PropertyField(resetMethodRect, resetMethodProp, new GUIContent("Reset - Method"));
+                    EditorGUI.PropertyField(pauseComponentRect, pauseComponentProp, new GUIContent("Pause - Component"));
+                    EditorGUI.PropertyField(pauseMethodRect, pauseMethodProp, new GUIContent("Pause - Method"));
+                    EditorGUI.PropertyField(unpauseComponentRect, unpauseComponentProp, new GUIContent("Unpause - Component"));
+                    EditorGUI.PropertyField(unpauseMethodRect, unpauseMethodProp, new GUIContent("Unpause - Method"));
                 }
 
                 EditorGUI.EndProperty();
@@ -115,7 +142,7 @@ namespace BehaviourAPI.Unity.Editor
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return base.GetPropertyHeight(property, label) * 8f;
+            return base.GetPropertyHeight(property, label) * 12f;
         }
     }
 
@@ -128,8 +155,8 @@ namespace BehaviourAPI.Unity.Editor
         {
             arrayProperty.arraySize++;
             var lastElementProperty = arrayProperty.GetArrayElementAtIndex(arrayProperty.arraySize - 1).FindPropertyRelative("perception");
-            
-            if(perceptionType.IsSubclassOf(typeof(CompoundPerception)))
+
+            if (perceptionType.IsSubclassOf(typeof(CompoundPerception)))
             {
                 var compound = (CompoundPerception)Activator.CreateInstance(perceptionType);
                 lastElementProperty.managedReferenceValue = new CompoundPerceptionWrapper(compound);
@@ -138,7 +165,7 @@ namespace BehaviourAPI.Unity.Editor
             {
                 lastElementProperty.managedReferenceValue = (Perception)Activator.CreateInstance(perceptionType);
             }
-           
+
             arrayProperty.serializedObject.ApplyModifiedProperties();
         }
 
@@ -158,7 +185,7 @@ namespace BehaviourAPI.Unity.Editor
                 EditorGUILayout.LabelField(compoundPerceptionProperty.managedReferenceValue?.TypeName(), GUILayout.Width(220));
 
                 bool removed = false;
-                if(GUILayout.Button("X"))
+                if (GUILayout.Button("X"))
                 {
                     property.managedReferenceValue = null;
                     property.serializedObject.ApplyModifiedProperties();
@@ -166,13 +193,13 @@ namespace BehaviourAPI.Unity.Editor
                 }
                 EditorGUILayout.EndHorizontal();
 
-                if(!removed)
+                if (!removed)
                 {
                     if (GUILayout.Button("Add element", EditorStyles.popup))
                     {
                         //subPerceptionProperty.arraySize++;
 
-                        SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)), 
+                        SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)),
                             ElementCreatorWindowProvider.Create<PerceptionCreationWindow>((pType) => AddSubPerception(subPerceptionProperty, pType)));
                         //subPerceptionProperty.GetArrayElementAtIndex(subPerceptionProperty.arraySize - 1).FindPropertyRelative("perception").managedReferenceValue = new CustomPerception();
                         //property.serializedObject.ApplyModifiedProperties();
@@ -183,7 +210,7 @@ namespace BehaviourAPI.Unity.Editor
                     EditorGUILayout.LabelField("Sub perceptions", centeredLabelstyle);
                     _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos, "window", GUILayout.MinHeight(300));
 
-                    if(subPerceptionProperty != null)
+                    if (subPerceptionProperty != null)
                     {
                         for (int i = 0; i < subPerceptionProperty.arraySize; i++)
                         {
@@ -203,7 +230,7 @@ namespace BehaviourAPI.Unity.Editor
 
                     EditorGUILayout.EndScrollView();
                 }
-                
+
                 //EditorGUI.BeginProperty(position, label, property);
 
                 //var lineHeight = position.height / lines;

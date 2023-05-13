@@ -10,7 +10,10 @@ namespace BehaviourAPI.Core.Perceptions
         /// <summary>
         /// Initialize the perception. 
         /// </summary>
-        public virtual void Initialize() { }
+        public virtual void Initialize()
+        {
+            return;
+        }
 
         /// <summary>
         /// Executes the perception. 
@@ -18,9 +21,28 @@ namespace BehaviourAPI.Core.Perceptions
         public abstract bool Check();
 
         /// <summary>
-        /// Reset the perception. 
+        /// Resets the perception. 
         /// </summary>
-        public virtual void Reset() { }
+        public virtual void Reset()
+        {
+            return;
+        }
+
+        /// <summary>
+        /// Pauses the perception. 
+        /// </summary>
+        public virtual void Pause()
+        {
+            return;
+        }
+
+        /// <summary>
+        /// Unpauses the perception. 
+        /// </summary>
+        public virtual void Unpause()
+        {
+            return;
+        }
 
         /// <summary>
         /// Specifies the perception execution context
