@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.UnityExtensions
 {
-    public interface IAgentMovement
+    public interface IMovementComponent
     {
         /// <summary>
         /// Get the position that the agent is currently moving.

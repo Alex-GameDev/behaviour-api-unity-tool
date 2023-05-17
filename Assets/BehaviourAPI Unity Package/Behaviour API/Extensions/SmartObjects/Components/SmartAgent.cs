@@ -8,8 +8,9 @@ namespace BehaviourAPI.UnityExtensions
     {
         [SerializeField] SmartAgentSettings _settings;
 
-        public IAgentMovement Movement { get; private set; }
+        public IMovementComponent Movement { get; private set; }
 
+        public ICustomTaskComponent CustomTasks { get; private set; }
 
         Dictionary<string, float> m_Needs;
 
@@ -17,10 +18,8 @@ namespace BehaviourAPI.UnityExtensions
         {
             m_Needs = new Dictionary<string, float>();
 
-            Movement = GetComponent<IAgentMovement>();
-
-            if (Movement == null)
-                Debug.LogWarning("This agent has no movement component", this);
+            Movement = GetComponent<IMovementComponent>();
+            CustomTasks = GetComponent<ICustomTaskComponent>();
         }
 
         public float GetNeed(string name)

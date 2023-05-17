@@ -54,8 +54,11 @@ namespace BehaviourAPI.UnityExtensions
         /// </summary>
         public CharacterController CharacterController { get; private set; }
 
+        public IMovementComponent Movement { get; private set; }
 
-        public IAgentMovement Movement { get; private set; }
+        public ITalkComponent Talk { get; private set; }
+
+        public ICustomTaskComponent CustomTasks { get; private set; }
 
         /// <summary>
         /// Create a new uniy execution context with a runner script component. Use this constructor
@@ -83,7 +86,10 @@ namespace BehaviourAPI.UnityExtensions
                 Collider = gameObject.GetComponent<Collider>();
                 Collider2D = gameObject.GetComponent<Collider2D>();
                 CharacterController = gameObject.GetComponent<CharacterController>();
-                Movement = gameObject.GetComponent<IAgentMovement>();
+
+                Movement = gameObject.GetComponent<IMovementComponent>();
+                CustomTasks = gameObject.GetComponent<ICustomTaskComponent>();
+                Talk = gameObject.GetComponent<ITalkComponent>();
             }
             else
             {

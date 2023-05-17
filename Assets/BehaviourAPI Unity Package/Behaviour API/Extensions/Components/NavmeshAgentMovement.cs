@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 namespace BehaviourAPI.UnityExtensions
 {
-    public class NavmeshAgentMovement : MonoBehaviour, IAgentMovement
+    public class NavmeshAgentMovement : MonoBehaviour, IMovementComponent
     {
         [SerializeField] float speed;
         [SerializeField] float targetThreshold = 1f;
