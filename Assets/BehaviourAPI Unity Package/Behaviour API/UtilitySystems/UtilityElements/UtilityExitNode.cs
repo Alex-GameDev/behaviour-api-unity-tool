@@ -22,19 +22,19 @@
         /// <inheritdoc/>
         /// Exit the utility system with <see cref="ExitStatus"/> value.
         /// </summary>
-        public override void Start()
+        public override void OnStarted()
         {
             if (ExitStatus != Status.None) Status = ExitStatus;
             else ExitStatus = Status.Running;
             BehaviourGraph.Finish(ExitStatus);
         }
 
-        public override void Pause()
+        public override void OnPaused()
         {
             return;
         }
 
-        public override void Unpause()
+        public override void OnUnpaused()
         {
             return;
         }
@@ -43,12 +43,10 @@
         /// <inheritdoc/>
         /// This method is empty because is only executed the frame the utility system exits.
         /// </summary>
-        public override void Update()
+        public override void OnUpdated()
         {
             return;
         }
-
-
 
         #endregion
     }

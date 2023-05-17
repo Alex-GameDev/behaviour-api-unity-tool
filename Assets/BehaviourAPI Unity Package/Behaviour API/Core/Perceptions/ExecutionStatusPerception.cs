@@ -8,7 +8,7 @@
         /// <summary>
         /// The status handler checked
         /// </summary>
-        public IStatusHandler StatusHandler;
+        public IStatusHandler? StatusHandler;
 
         /// <summary>
         /// The status flags that trigger the perception
@@ -39,19 +39,10 @@
         /// <returns></returns>
         public override bool Check()
         {
-            if(StatusHandler == null) return false;
+            if (StatusHandler == null) return false;
 
-            StatusFlags handlerStatusFlag = (StatusFlags) StatusHandler.Status;
+            StatusFlags handlerStatusFlag = (StatusFlags)StatusHandler.Status;
             return (handlerStatusFlag & StatusFlags) != 0;
         }
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// (The context in Execution status perceptions is not used).
-        /// </summary>
-        public override void SetExecutionContext(ExecutionContext context)
-        {
-            return;
-        }
-    }   
+    }
 }

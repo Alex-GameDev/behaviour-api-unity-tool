@@ -3,6 +3,7 @@
 namespace BehaviourAPI.BehaviourTrees
 {
     using Core;
+    using Core.Exceptions;
 
     /// <summary>
     /// Decorator that waits an amount of time to execute the child.
@@ -11,7 +12,7 @@ namespace BehaviourAPI.BehaviourTrees
     {
         #region --------------------------------------- Private fields ---------------------------------------
 
-        Timer _timer;
+        Timer? _timer;
 
         bool _isTimeout;
         bool _childExecuted;
@@ -48,9 +49,9 @@ namespace BehaviourAPI.BehaviourTrees
         /// <inheritdoc/>
         /// Starts the timer.
         /// </summary>
-        public override void Start()
+        public override void OnStarted()
         {
-            base.Start();
+            base.OnStarted();
             _childExecuted = false;
             _timer = new Timer(Time * 1000);
             _timer.Elapsed += OnTimerElapsed;
@@ -74,10 +75,10 @@ namespace BehaviourAPI.BehaviourTrees
             {
                 if (!_childExecuted)
                 {
-                    m_childNode.Start();
+                    m_childNode.OnStarted();
                     _childExecuted = true;
                 }
-                m_childNode.Update();
+                m_childNode.OnUpdated();
                 return m_childNode.Status;
             }
             throw new MissingChildException(this);
@@ -88,15 +89,14 @@ namespace BehaviourAPI.BehaviourTrees
         /// Reset the timer and stops the child if its executing.
         /// </summary>
         /// <exception cref="MissingChildException">If child is null.</exception>
-        public override void Stop()
+        public override void OnStopped()
         {
-            base.Stop();
+            base.OnStopped();
             _isTimeout = false;
             if (_timer != null)
             {
-                _timer.Enabled = false;
-                _timer.Stop();
                 _timer.Dispose();
+                _timer = null;
             }
 
             if (_childExecuted)
@@ -104,33 +104,56 @@ namespace BehaviourAPI.BehaviourTrees
                 if (m_childNode == null)
                     throw new MissingChildException(this);
 
-                m_childNode.Stop();
+                m_childNode.OnStopped();
             }
         }
 
-        public override void Pause()
+        /// <summary>
+        /// <inheritdoc/>
+        /// Stops the timer and pauses the child if its executing.
+        /// </summary>
+        /// <exception cref="MissingChildException">If child is null.</exception>
+        public override void OnPaused()
         {
-            if (!_isTimeout)
+            if (_timer != null && !_isTimeout)
+            {
                 _timer.Stop();
+            }
 
             if (_childExecuted)
-                m_childNode.Pause();
+            {
+                if (m_childNode == null)
+                    throw new MissingChildException(this);
+
+                m_childNode.OnPaused();
+            }
         }
 
-        public override void Unpause()
+        /// <summary>
+        /// <inheritdoc/>
+        /// Start the timer and unpauses the child if its executing.
+        /// </summary>
+        /// <exception cref="MissingChildException">If child is null.</exception>
+        public override void OnUnpaused()
         {
-            if (!_isTimeout)
+            if (_timer != null && _isTimeout)
+            {
                 _timer.Start();
+            }
 
             if (_childExecuted)
-                m_childNode.Unpause();
+            {
+                if (m_childNode == null)
+                    throw new MissingChildException(this);
+
+                m_childNode.OnUnpaused();
+            }
         }
 
         private void OnTimerElapsed(object sender, ElapsedEventArgs evt)
         {
             _isTimeout = true;
         }
-
 
         #endregion
     }

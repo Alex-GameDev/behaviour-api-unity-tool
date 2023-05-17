@@ -21,12 +21,12 @@ namespace BehaviourAPI.StateMachines
         /// <summary>
         /// Event triggered when the action is performed.
         /// </summary>
-        public System.Action TransitionTriggered { get; set; }
+        public System.Action TransitionTriggered { get; set; } = delegate { };
 
         /// <summary>
         /// Event triggered when source state's last status changed.
         /// </summary>
-        public Action<Status> SourceStateLastStatusChanged { get; set; }
+        public Action<Status> SourceStateLastStatusChanged { get; set; } = delegate { };
 
         /// <summary>
         /// The status that the source state had when this transition was triggered
@@ -48,12 +48,12 @@ namespace BehaviourAPI.StateMachines
         /// <summary>
         /// The perception checked by this transition.
         /// </summary>
-        public Perception Perception;
+        public Perception? Perception;
 
         /// <summary>
         /// The action executed by the transition when is performed.
         /// </summary>
-        public Action Action;
+        public Action? Action;
 
         /// <summary>
         /// The status flags that the source state must match to check the transition.
@@ -67,12 +67,12 @@ namespace BehaviourAPI.StateMachines
         /// <summary>
         /// The fsm of this transition.
         /// </summary>
-        protected FSM _fsm;
+        protected FSM? _fsm;
 
         /// <summary>
         /// The source state of this transition.
         /// </summary>
-        protected State _sourceState;
+        protected State? _sourceState;
 
         Status _sourceStateLastStatus;
 
@@ -107,10 +107,15 @@ namespace BehaviourAPI.StateMachines
         public override object Clone()
         {
             var node = (Transition)base.Clone();
-            node.Action = (Action)Action?.Clone();
-            node.Perception = (Perception)Perception?.Clone();
-            node.SourceStateLastStatusChanged = (Action<Status>)SourceStateLastStatusChanged?.Clone();
-            node.TransitionTriggered = (System.Action)TransitionTriggered?.Clone();
+            node.Action = (Action?)Action?.Clone();
+            node.Perception = (Perception?)Perception?.Clone();
+
+            if (SourceStateLastStatusChanged != null)
+                node.SourceStateLastStatusChanged = (Action<Status>)SourceStateLastStatusChanged.Clone();
+
+            if (TransitionTriggered != null)
+                node.TransitionTriggered = (System.Action)TransitionTriggered.Clone();
+
             return node;
         }
 
@@ -129,6 +134,15 @@ namespace BehaviourAPI.StateMachines
         public void Stop() => Perception?.Reset();
 
         /// <summary>
+        /// Pauses the perception
+        /// </summary>
+        public void OnPaused() => Perception?.Pause();
+
+        /// <summary>
+        /// Unpauses the perception
+        /// </summary>
+        public void OnUnpaused() => Perception?.Unpause();
+        /// <summary>
         /// Check the perception if exists.
         /// </summary>
         /// <returns>The value of the perception or true if doesn't exist.</returns>
@@ -137,23 +151,13 @@ namespace BehaviourAPI.StateMachines
             return Perception?.Check() ?? true;
         }
 
-        public virtual void Pause()
-        {
-            Perception?.Pause();
-        }
-
-        public virtual void Unpause()
-        {
-            Perception.Unpause();
-        }
-
         /// <summary>
         /// If the source state is the current state of the fsm, executes the action.
         /// </summary>
         /// <returns>True if the source state is the current state and the action is performed, false otherwise.</returns>
         public virtual bool Perform()
         {
-            if (!_fsm.IsCurrentState(_sourceState)) return false;
+            if (_fsm != null && !_fsm.IsCurrentState(_sourceState)) return false;
 
             if (Action != null)
             {
@@ -163,19 +167,17 @@ namespace BehaviourAPI.StateMachines
             }
 
             TransitionTriggered?.Invoke();
-            SourceStateLastStatus = _sourceState.Status;
+
+            if (_sourceState != null)
+                SourceStateLastStatus = _sourceState.Status;
+
             return true;
         }
 
         /// <summary>
         /// Perform the transition externally.
         /// </summary>
-        public void Fire(Status status)
-        {
-            if (BehaviourGraph.IsPaused) return;
-
-            Perform();
-        }
+        public void Fire(Status status) => Perform();
 
         public override void SetExecutionContext(ExecutionContext context)
         {

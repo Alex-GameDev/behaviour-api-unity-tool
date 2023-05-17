@@ -16,7 +16,7 @@ namespace BehaviourAPI.Unity.Demos
             return _fridge.ValidateAgent(agent);
         }
 
-        protected override Action GetRequestedAction(SmartAgent agent)
+        protected override Action GetRequestedAction(SmartAgent agent, string interactionName = null)
         {
             var bt = new BehaviourTree();
             bt.SetRootNode(

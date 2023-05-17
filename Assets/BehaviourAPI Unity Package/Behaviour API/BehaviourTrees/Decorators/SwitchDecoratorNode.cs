@@ -3,6 +3,7 @@
 namespace BehaviourAPI.BehaviourTrees
 {
     using Core;
+    using Core.Exceptions;
     using Core.Perceptions;
 
     /// <summary>
@@ -13,7 +14,7 @@ namespace BehaviourAPI.BehaviourTrees
     {
         #region ------------------------------------------ Properties -----------------------------------------
 
-        public Perception Perception;
+        public Perception? Perception;
 
         #endregion
 
@@ -42,22 +43,45 @@ namespace BehaviourAPI.BehaviourTrees
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
-        public override void Start()
+        public override void OnStarted()
         {
-            base.Start();
+            base.OnStarted();
             if (Perception != null) Perception.Initialize();
             else throw new NullReferenceException("ERROR: Perception is not defined.");
         }
 
-        public override void Stop()
+        public override void OnStopped()
         {
-            base.Stop();
+            base.OnStopped();
             if (_childExecutedLastFrame)
             {
-                m_childNode.Stop();
+                m_childNode.OnStopped();
                 _childExecutedLastFrame = false;
             }
+
             if (Perception != null) Perception.Reset();
+            else throw new NullReferenceException("ERROR: Perception is not defined.");
+        }
+
+        public override void OnPaused()
+        {
+            if (_childExecutedLastFrame)
+            {
+                m_childNode.OnPaused();
+            }
+
+            if (Perception != null) Perception.Pause();
+            else throw new NullReferenceException("ERROR: Perception is not defined.");
+        }
+
+        public override void OnUnpaused()
+        {
+            if (_childExecutedLastFrame)
+            {
+                m_childNode.OnUnpaused();
+            }
+
+            if (Perception != null) Perception.Unpause();
             else throw new NullReferenceException("ERROR: Perception is not defined.");
         }
 
@@ -69,14 +93,14 @@ namespace BehaviourAPI.BehaviourTrees
                 {
                     if (Perception.Check())
                     {
-                        if (!_childExecutedLastFrame) m_childNode.Start();
+                        if (!_childExecutedLastFrame) m_childNode.OnStarted();
                         _childExecutedLastFrame = true;
-                        m_childNode.Update();
+                        m_childNode.OnUpdated();
                         return m_childNode.Status;
                     }
                     else
                     {
-                        if (_childExecutedLastFrame) m_childNode.Stop();
+                        if (_childExecutedLastFrame) m_childNode.OnStopped();
                         _childExecutedLastFrame = false;
                         return Status.Running;
                     }
@@ -84,22 +108,6 @@ namespace BehaviourAPI.BehaviourTrees
                 throw new MissingChildException(this, "This decorator has no child");
             }
             throw new NullReferenceException("ERROR: Perception is not defined.");
-        }
-
-        public override void Pause()
-        {
-            if (_childExecutedLastFrame)
-            {
-                m_childNode.Pause();
-            }
-        }
-
-        public override void Unpause()
-        {
-            if (_childExecutedLastFrame)
-            {
-                m_childNode.Unpause();
-            }
         }
 
         #endregion

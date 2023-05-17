@@ -16,7 +16,7 @@ namespace BehaviourAPI.Unity.Demos
             return true;
         }
 
-        protected override Action GetRequestedAction(SmartAgent agent)
+        protected override Action GetRequestedAction(SmartAgent agent, string interactionName = null)
         {
             var seatRequestAction = new TVSeatRequestAction(agent, transform, maxDistance, useTime);
             return seatRequestAction;

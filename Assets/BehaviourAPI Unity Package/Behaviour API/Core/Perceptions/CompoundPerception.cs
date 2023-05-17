@@ -50,21 +50,29 @@ namespace BehaviourAPI.Core.Perceptions
 
         /// <summary>
         /// <inheritdoc/>
-        /// Reset all the subp perceptions.
+        /// Reset all the sub perceptions.
         /// </summary>
         public override void Reset()
         {
             Perceptions.ForEach(p => p.Reset());
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Pauses all the subp perceptions.
+        /// </summary>
         public override void Pause()
         {
-            Perceptions.ForEach(p => p.Pause());
+            Perceptions.ForEach(p => p.Reset());
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Unpauses all the subp perceptions.
+        /// </summary>
         public override void Unpause()
         {
-            Perceptions.ForEach(p => p.Unpause());
+            Perceptions.ForEach(p => p.Reset());
         }
 
         /// <summary>

@@ -3,6 +3,7 @@
 namespace BehaviourAPI.BehaviourTrees
 {
     using Core;
+    using Core.Exceptions;
     using Core.Perceptions;
 
     /// <summary>
@@ -42,9 +43,9 @@ namespace BehaviourAPI.BehaviourTrees
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
-        public override void Start()
+        public override void OnStarted()
         {
-            base.Start();
+            base.OnStarted();
             if (Perception != null)
             {
                 Perception.Initialize();
@@ -56,35 +57,9 @@ namespace BehaviourAPI.BehaviourTrees
 
             if (_executeChild)
             {
-                m_childNode.Start();
+                m_childNode.OnStarted();
             }
         }
-
-        public override void Stop()
-        {
-            base.Stop();
-            if (_executeChild)
-            {
-                m_childNode.Stop();
-            }
-        }
-
-        public override void Pause()
-        {
-            if (_executeChild)
-            {
-                m_childNode.Pause();
-            }
-        }
-
-        public override void Unpause()
-        {
-            if (_executeChild)
-            {
-                m_childNode.Unpause();
-            }
-        }
-
 
         protected override Status UpdateStatus()
         {
@@ -92,12 +67,46 @@ namespace BehaviourAPI.BehaviourTrees
             {
                 if (m_childNode == null) throw new MissingChildException(this, "This decorator has no child");
 
-                m_childNode.Update();
+                m_childNode.OnUpdated();
                 return m_childNode.Status;
             }
             else
             {
                 return Status.Failure;
+            }
+        }
+
+        public override void OnStopped()
+        {
+            base.OnStopped();
+            if (_executeChild)
+            {
+                m_childNode.OnStopped();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// Pauses the child node if it is running.
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        public override void OnPaused()
+        {
+            if (_executeChild)
+            {
+                m_childNode.OnPaused();
+            }
+        }
+
+        /// <summary>
+        /// Unpauses the child node if it is running.
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        public override void OnUnpaused()
+        {
+            if (_executeChild)
+            {
+                m_childNode.OnUnpaused();
             }
         }
 

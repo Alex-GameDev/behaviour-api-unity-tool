@@ -1,3 +1,4 @@
+using BehaviourAPI.SmartObjects;
 using BehaviourAPI.Unity.SmartObjects;
 
 namespace BehaviourAPI.UnityExtensions
@@ -10,7 +11,7 @@ namespace BehaviourAPI.UnityExtensions
         {
         }
 
-        public DirectRequestAction(SmartAgent agent, SmartObject smartObject) : base(agent)
+        public DirectRequestAction(SmartAgent agent, SmartObject smartObject, string interactionName = null) : base(agent)
         {
             this.smartObject = smartObject;
         }

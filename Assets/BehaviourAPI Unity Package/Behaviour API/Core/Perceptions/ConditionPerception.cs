@@ -7,11 +7,11 @@ namespace BehaviourAPI.Core.Perceptions
     /// </summary>
     public class ConditionPerception : Perception
     {
-        public Func<bool> onCheck;
-        public Action onInit;
-        public Action onReset;
-        public Action onPause;
-        public Action onUnpause;
+        public Func<bool>? onCheck;
+        public Action? onInit;
+        public Action? onReset;
+        public Action? onPause;
+        public Action? onUnpause;
 
         /// <summary>
         /// Create a <see cref="ConditionPerception"/> that execute a delegate on Init, Check and reset.
@@ -19,7 +19,7 @@ namespace BehaviourAPI.Core.Perceptions
         /// <param name="onInit">The delegate executed in <see cref="Initialize"/> event. </param>
         /// <param name="onCheck">The function executed in <see cref="Check"/> event. </param>
         /// <param name="onReset">The delegate executed in <see cref="Reset"/> event. </param>
-        public ConditionPerception(Action onInit, Func<bool> onCheck, Action onReset = null)
+        public ConditionPerception(Action? onInit, Func<bool>? onCheck, Action? onReset = null)
         {
             this.onInit = onInit;
             this.onCheck = onCheck;
@@ -27,16 +27,36 @@ namespace BehaviourAPI.Core.Perceptions
         }
 
         /// <summary>
+        /// Create a <see cref="ConditionPerception"/> that execute a delegate on Init, Check, reset, pause and unpause.
+        /// </summary>
+        /// <param name="onInit">The delegate executed in <see cref="Initialize"/> event. </param>
+        /// <param name="onCheck">The function executed in <see cref="Check"/> event. </param>
+        /// <param name="onReset">The delegate executed in <see cref="Reset"/> event. </param>
+        /// <param name="onPause">The function executed in <see cref="Check"/> event. </param>
+        /// <param name="onUnpause">The delegate executed in <see cref="Reset"/> event. </param>
+        public ConditionPerception(Action? onInit, Func<bool>? onCheck, Action? onReset, Action? onPause, Action? onUnpause)
+        {
+            this.onInit = onInit;
+            this.onCheck = onCheck;
+            this.onReset = onReset;
+            this.onPause = onPause;
+            this.onUnpause = onUnpause;
+        }
+
+        /// <summary>
         /// Create a <see cref="ConditionPerception"/> that execute a delegate on Check and, optionally on reset.
         /// </summary>
         /// <param name="onCheck">The function executed in <see cref="Check"/> event. </param>
         /// <param name="onReset">The delegate executed in <see cref="Reset"/> event. </param>
-        public ConditionPerception(Func<bool> onCheck, Action onReset = null)
+        public ConditionPerception(Func<bool>? check, Action? stop = null)
         {
-            this.onCheck = onCheck;
-            this.onReset = onReset;
+            onCheck = check;
+            onReset = stop;
         }
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public ConditionPerception()
         {
         }
@@ -51,7 +71,7 @@ namespace BehaviourAPI.Core.Perceptions
         /// <inheritdoc/>
         /// Invoke the check function and returns its returned value.
         /// </summary>
-        public override bool Check() => onCheck.Invoke();
+        public override bool Check() => onCheck?.Invoke() ?? false;
 
         /// <summary>
         /// <inheritdoc/>
@@ -59,18 +79,16 @@ namespace BehaviourAPI.Core.Perceptions
         /// </summary>
         public override void Reset() => onReset?.Invoke();
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Invoke the pause delegate.
+        /// </summary>
         public override void Pause() => onPause?.Invoke();
-
-        public override void Unpause() => onUnpause?.Invoke();
 
         /// <summary>
         /// <inheritdoc/>
-        /// (The context in Condition perceptions is not used).
+        /// Invoke the unpause delegate.
         /// </summary>
-        public override void SetExecutionContext(ExecutionContext context)
-        {
-            return;
-        }
-
+        public override void Unpause() => onUnpause?.Invoke();
     }
 }

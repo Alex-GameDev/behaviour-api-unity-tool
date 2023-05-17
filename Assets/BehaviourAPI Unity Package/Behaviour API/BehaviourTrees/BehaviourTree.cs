@@ -6,6 +6,7 @@ namespace BehaviourAPI.BehaviourTrees
 {
     using Core;
     using Core.Actions;
+    using Core.Exceptions;
 
     /// <summary>
     /// Decision system that consists of traversing a tree in depth depending on the result returned by its nodes.
@@ -159,38 +160,34 @@ namespace BehaviourAPI.BehaviourTrees
 
         #region --------------------------------------- Runtime methods --------------------------------------
 
-        public override void Start()
+        protected override void OnStarted()
         {
-            base.Start();
             if (Nodes.Count == 0)
                 throw new EmptyGraphException(this);
 
             m_rootNode = StartNode as BTNode;
-            m_rootNode.Start();
+            m_rootNode.OnStarted();
         }
 
-        protected override void Execute()
+        protected override void OnUpdated()
         {
-            m_rootNode.Update();
+            m_rootNode.OnUpdated();
             Status = m_rootNode.Status;
         }
 
-        public override void Stop()
+        protected override void OnStopped()
         {
-            base.Stop();
-            m_rootNode.Stop();
+            m_rootNode.OnStopped();
         }
 
-        public override void Pause()
+        protected override void OnPaused()
         {
-            base.Pause();
-            m_rootNode.Pause();
+            m_rootNode?.OnPaused();
         }
 
-        public override void Unpause()
+        protected override void OnUnpaused()
         {
-            base.Unpause();
-            m_rootNode.Unpause();
+            m_rootNode.OnUnpaused();
         }
 
         #endregion

@@ -1,52 +1,60 @@
-namespace BehaviourAPI.SmartObjects
+﻿namespace BehaviourAPI.SmartObjects
 {
     using Core;
     using Core.Actions;
-    using UnityEngine;
 
     /// <summary>   
     /// Action that request a behaviour to a smart object. 
     /// </summary>
-    public abstract class RequestAction<TAgent> : Action where TAgent : ISmartAgent
+    public abstract class RequestAction<T> : Action where T : ISmartAgent
     {
         /// <summary> 
         /// The current interaction that this action is executing. 
         /// </summary>
-        protected SmartInteraction<TAgent> m_CurrentInteraction;
+        SmartInteraction<T> m_CurrentInteraction;
 
         /// <summary> 
         /// The agent used in the interactions. 
         /// </summary>
-        protected TAgent m_Agent;
+        protected T m_Agent;
 
-
-        private ExecutionContext m_Context;
-        /// <summary> 
-        /// Specialized constructor for use only by derived class. 
+        /// <summary>
+        /// The context that the request action will propagate throught the provided actions.
         /// </summary>
-        /// <param name="agent"> The agent used in the interactions. </param>
-        protected RequestAction(TAgent agent)
-        {
-            m_Agent = agent;
-        }
+        protected ExecutionContext context;
 
-        /// <summary> 
-        /// Specialized default constructor for use only by derived class. 
+        /// <summary>
+        /// Default constructor
         /// </summary>
         protected RequestAction()
         {
         }
 
-        public override void SetExecutionContext(ExecutionContext context)
+        /// <summary> 
+        /// Specialized constructor for use only by derived class. 
+        /// </summary>
+        /// <param name="agent"> The agent used in the interactions. </param>
+        protected RequestAction(T agent)
         {
-            m_Context = context;
+            m_Agent = agent;
         }
 
         /// <summary>   
         /// Searches for a smart interaction to execute it. 
         /// </summary>
         /// <returns> The found interaction. </returns>
-        protected abstract ISmartObject<TAgent> FindSmartObject(TAgent agent);
+        protected abstract ISmartObject<T> FindSmartObject(T agent);
+
+        /// <summary> 
+        /// Request interaction. 
+        /// </summary>
+        /// <param name="smartObject"> The smart object. </param>
+        /// <param name="agent"> The agent used in the interactions. </param>
+        /// <returns> A SmartInteraction. </returns>
+        protected virtual string GetInteractionName()
+        {
+            return null;
+        }
 
         /// <summary>   
         /// <inheritdoc/>
@@ -54,21 +62,27 @@ namespace BehaviourAPI.SmartObjects
         ///  </summary>
         public override void Start()
         {
-            ISmartObject<TAgent> obj = FindSmartObject(m_Agent);
+            if (m_Agent == null)
+                throw new MissingAgentException<T>(this, "Can't send request to a smart object without smart agent");
+
+            ISmartObject<T> obj = FindSmartObject(m_Agent);
 
             if (obj != null && obj.ValidateAgent(m_Agent))
             {
-                m_CurrentInteraction = obj.RequestInteraction(m_Agent);
+                var interactionName = GetInteractionName();
+                m_CurrentInteraction = obj.RequestInteraction(m_Agent, interactionName);
 
                 if (m_CurrentInteraction != null)
                 {
-                    m_CurrentInteraction.SmartObject.InitInteraction(m_Agent);
-                    m_CurrentInteraction.Action.SetExecutionContext(m_Context);
+                    m_CurrentInteraction.SmartObject.OnInitInteraction(m_Agent);
+
+                    if (context != null)
+                    {
+                        m_CurrentInteraction.Action.SetExecutionContext(context);
+                    }
                     m_CurrentInteraction.Action.Start();
                 }
             }
-            else if (!obj.ValidateAgent(m_Agent))
-                Debug.Log("obj is null or validate is false");
         }
 
         /// <summary>   
@@ -77,11 +91,13 @@ namespace BehaviourAPI.SmartObjects
         ///  </summary>
         public override void Stop()
         {
+            if (m_Agent == null)
+                throw new MissingAgentException<T>(this, "Can't release interaction to a smart object without smart agent");
+
             if (m_CurrentInteraction != null)
             {
                 m_CurrentInteraction.Action.Stop();
-                //TODO: Notificar al objeto que el agente lo ha liberado.
-                m_CurrentInteraction.SmartObject.ReleaseInteraction(m_Agent);
+                m_CurrentInteraction.SmartObject.OnReleaseInteraction(m_Agent);
                 m_CurrentInteraction = null;
             }
         }
@@ -93,9 +109,13 @@ namespace BehaviourAPI.SmartObjects
         /// <returns><inheritdoc/></returns>
         public override Status Update()
         {
+            if (m_Agent == null)
+                throw new MissingAgentException<T>(this, "Can't update request to a smart object without smart agent");
+
             if (m_CurrentInteraction != null)
             {
                 var status = m_CurrentInteraction.Action.Update();
+
                 if (status == Status.Success)
                 {
                     foreach (var capabilityName in m_CurrentInteraction.SmartObject.GetCapabilities())
@@ -105,7 +125,7 @@ namespace BehaviourAPI.SmartObjects
                 }
 
                 if (status != Status.Running)
-                    m_CurrentInteraction.SmartObject.OnComplete(m_Agent, status);
+                    m_CurrentInteraction.SmartObject.OnCompleteInteraction(m_Agent, status);
 
                 return status;
             }
@@ -117,12 +137,31 @@ namespace BehaviourAPI.SmartObjects
 
         public override void Pause()
         {
-            if (m_CurrentInteraction != null) m_CurrentInteraction.Action.Pause();
+            if (m_CurrentInteraction != null)
+            {
+                if (m_Agent == null)
+                    throw new MissingAgentException<T>(this, "Can't pause interaction to a smart object without smart agent");
+
+                m_CurrentInteraction.Action.Pause();
+                m_CurrentInteraction.SmartObject.OnPauseInteraction(m_Agent);
+            }
         }
 
         public override void Unpause()
         {
-            if (m_CurrentInteraction != null) m_CurrentInteraction.Action.Unpause();
+            if (m_CurrentInteraction != null)
+            {
+                if (m_Agent == null)
+                    throw new MissingAgentException<T>(this, "Can't unpause interaction to a smart object without smart agent");
+
+                m_CurrentInteraction.Action.Unpause();
+                m_CurrentInteraction.SmartObject.OnUnpauseInteraction(m_Agent);
+            }
+        }
+
+        public override void SetExecutionContext(ExecutionContext context)
+        {
+            this.context = context;
         }
     }
 }

@@ -19,33 +19,40 @@
         /// <inheritdoc/>
         /// Starts the first node execution.
         /// </summary>
-        public override void Start()
+        public override void OnStarted()
         {
             currentChildIdx = 0;
-            base.Start();
-            GetCurrentChild().Start();
+            base.OnStarted();
+            GetCurrentChild().OnStarted();
         }
 
         /// <summary>
         /// <inheritdoc/>
-        /// Stop the current executed child.
+        /// Stops the current executed child.
         /// </summary>
-        public override void Stop()
+        public override void OnStopped()
         {
-            base.Stop();
-            GetCurrentChild().Stop();
+            base.OnStopped();
+            GetCurrentChild().OnStopped();
         }
 
-        public override void Pause()
+        /// <summary>
+        /// <inheritdoc/>
+        /// Pauses the current executed child.
+        /// </summary>
+        public override void OnPaused()
         {
-            GetCurrentChild().Pause();
+            GetCurrentChild().OnPaused();
         }
 
-        public override void Unpause()
+        /// <summary>
+        /// <inheritdoc/>
+        /// Unpauses the current executed child.
+        /// </summary>
+        public override void OnUnpaused()
         {
-            GetCurrentChild().Unpause();
+            GetCurrentChild().OnUnpaused();
         }
-
 
         /// <summary>
         /// <inheritdoc/>
@@ -56,7 +63,7 @@
         protected override Status UpdateStatus()
         {
             BTNode currentChild = GetCurrentChild();
-            currentChild.Update();
+            currentChild.OnUpdated();
             var status = currentChild.Status;
             if (KeepExecuting(status))
             {
@@ -95,9 +102,9 @@
         {
             if (currentChildIdx < ChildCount - 1)
             {
-                GetCurrentChild().Stop();
+                GetCurrentChild().OnStopped();
                 currentChildIdx++;
-                GetCurrentChild().Start();
+                GetCurrentChild().OnStarted();
                 return true;
             }
             else

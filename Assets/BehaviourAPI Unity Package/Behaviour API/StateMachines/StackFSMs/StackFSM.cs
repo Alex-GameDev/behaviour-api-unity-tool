@@ -135,9 +135,9 @@ namespace BehaviourAPI.StateMachines.StackFSMs
         /// <inheritdoc/>
         /// Clear the stack.
         /// </summary>
-        public override void Stop()
+        protected override void OnStopped()
         {
-            base.Stop();
+            base.OnStopped();
             _stateStack.Clear();
         }
 

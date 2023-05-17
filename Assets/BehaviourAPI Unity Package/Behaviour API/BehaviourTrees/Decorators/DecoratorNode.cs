@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace BehaviourAPI.BehaviourTrees
 {
     using Core;
-
+    using Core.Exceptions;    
 
     /// <summary>
     /// BTNode that alters the result returned by its child node or its execution.
@@ -22,7 +22,7 @@ namespace BehaviourAPI.BehaviourTrees
         #endregion
 
         #region ---------------------------------------- Build methods ---------------------------------------
-
+        
         /// <summary>
         /// Set the current child node (only used internally).
         /// </summary>
@@ -47,11 +47,11 @@ namespace BehaviourAPI.BehaviourTrees
         #endregion
 
         #region ------------------------------------- Runtime methods ------------------------------------
-
+        
         public override bool ResetLastStatus()
         {
             bool b = base.ResetLastStatus();
-            if (b) m_childNode.ResetLastStatus();
+            if(b) m_childNode.ResetLastStatus();
             return b;
         }
 

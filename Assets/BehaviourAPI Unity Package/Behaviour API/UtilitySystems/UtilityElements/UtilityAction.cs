@@ -45,17 +45,17 @@ namespace BehaviourAPI.UtilitySystems
         /// <inheritdoc/>
         /// Start the <see cref="Action"/> execution.
         /// </summary>
-        public override void Start()
+        public override void OnStarted()
         {
-            base.Start();
+            base.OnStarted();
             Action?.Start();
         }
 
         /// <summary>
         /// <inheritdoc/>.
-        /// Is called when the <see cref="UtilityAction"/> is selected and start the <see cref="Action"/> too.
+        /// Starts the Action.
         /// </summary>
-        public override void Update()
+        public override void OnUpdated()
         {
             if (Status != Status.Running) return;
 
@@ -69,7 +69,7 @@ namespace BehaviourAPI.UtilitySystems
 
         /// <summary>
         /// <inheritdoc/>
-        /// Is called when the utility action is no longer selected and Stop the action too.
+        /// Stops the action.
         /// </summary>
         public override void Stop()
         {
@@ -77,7 +77,25 @@ namespace BehaviourAPI.UtilitySystems
             Action?.Stop();
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Pauses the action.
+        /// </summary>
+        public override void OnPaused()
+        {
+            Action?.Pause();
+        }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Unpauses the action.
+        /// </summary>
+        public override void OnUnpaused()
+        {
+            Action?.Unpause();
+        }
+
+        #endregion
 
         /// <summary>
         /// <inheritdoc/>
@@ -88,17 +106,5 @@ namespace BehaviourAPI.UtilitySystems
         {
             Action?.SetExecutionContext(context);
         }
-
-        public override void Pause()
-        {
-            Action?.Pause();
-        }
-
-        public override void Unpause()
-        {
-            Action?.Unpause();
-        }
-
-        #endregion
     }
 }

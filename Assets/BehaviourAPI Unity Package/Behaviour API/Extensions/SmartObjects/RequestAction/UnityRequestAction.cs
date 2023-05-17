@@ -7,7 +7,7 @@ namespace BehaviourAPI.UnityExtensions
 {
     public abstract class UnityRequestAction : RequestAction<SmartAgent>
     {
-        protected UnityExecutionContext context;
+        protected new UnityExecutionContext context;
 
         protected UnityRequestAction()
         {

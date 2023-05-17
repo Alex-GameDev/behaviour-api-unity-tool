@@ -1,3 +1,4 @@
+using BehaviourAPI.Core.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -233,7 +234,6 @@ namespace BehaviourAPI.Core
         /// </summary>
         protected internal virtual void Build()
         {
-
             return;
         }
 

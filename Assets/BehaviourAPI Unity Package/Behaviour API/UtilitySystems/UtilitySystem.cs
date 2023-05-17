@@ -6,6 +6,7 @@ namespace BehaviourAPI.UtilitySystems
 {
     using Core;
     using Core.Actions;
+    using Core.Exceptions;
 
     /// <summary>
     /// Behaviour graph that choose between diferent <see cref="UtilitySelectableNode"/> items and executes.
@@ -33,7 +34,7 @@ namespace BehaviourAPI.UtilitySystems
         List<UtilitySelectableNode> _utilityCandidates;
         List<UtilityNode> _utilityNodes;
 
-        UtilitySelectableNode _currentBestElement;
+        UtilitySelectableNode? _currentBestElement;
 
         #region ---------------------------------------- Build methods ---------------------------------------
 
@@ -397,10 +398,8 @@ namespace BehaviourAPI.UtilitySystems
         /// Throws and error if there are no <see cref="UtilitySelectableNode"/> in the graph.
         /// </summary>
         /// <exception cref="EmptyGraphException">If the candidate list is empty.</exception>
-        public override void Start()
+        protected override void OnStarted()
         {
-            base.Start();
-
             if (_utilityCandidates.Count == 0)
                 throw new EmptyGraphException(this, "The list of utility candidates is empty.");
         }
@@ -410,7 +409,7 @@ namespace BehaviourAPI.UtilitySystems
         /// Recalculates the utilities of the nodes and selects the best candidate to run it.
         /// If the new candidate chosen is different from the one of the previous iteration, it stops its execution and starts the new one.
         /// </summary>
-        protected override void Execute()
+        protected override void OnUpdated()
         {
             foreach (UtilityNode node in _utilityNodes) node.MarkUtilityAsDirty();
 
@@ -420,10 +419,12 @@ namespace BehaviourAPI.UtilitySystems
             {
                 _currentBestElement?.Stop();
                 _currentBestElement = newBestAction;
-                _currentBestElement?.Start();
+                _currentBestElement?.OnStarted();
             }
-            _currentBestElement?.Update();
+            _currentBestElement?.OnUpdated();
         }
+
+
 
         private UtilitySelectableNode ComputeCurrentBestAction()
         {
@@ -464,28 +465,31 @@ namespace BehaviourAPI.UtilitySystems
 
         /// <summary>
         /// <inheritdoc/>
-        /// Also stops the current best element execution.
+        /// Stops the current best element execution.
         /// </summary>
-        public override void Stop()
+        protected override void OnStopped()
         {
-            base.Stop();
             _currentBestElement?.Stop();
             _currentBestElement = null;
         }
 
-        public override void Pause()
+        /// <summary>
+        /// <inheritdoc/>
+        /// Pauses the current best element execution.
+        /// </summary>
+        protected override void OnPaused()
         {
-            base.Pause();
-            _currentBestElement?.Unpause();
+            _currentBestElement?.OnPaused();
         }
 
-        public override void Unpause()
+        /// <summary>
+        /// <inheritdoc/>
+        /// Unpauses the current best element execution.
+        /// </summary>
+        protected override void OnUnpaused()
         {
-            base.Unpause();
-            _currentBestElement?.Unpause();
+            _currentBestElement?.OnUnpaused();
         }
-
-
 
         #endregion
     }

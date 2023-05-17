@@ -7,12 +7,12 @@ namespace BehaviourAPI.Core.Actions
     /// </summary>
     public class FunctionalAction : Action
     {
-        public Func<Status> onUpdate;
+        public Func<Status>? onUpdated;
 
-        public System.Action onStart;
-        public System.Action onStop;
-        public System.Action onPause;
-        public System.Action onUnpause;
+        public System.Action? onStarted;
+        public System.Action? onStopped;
+        public System.Action? onPaused;
+        public System.Action? onUnpaused;
 
         /// <summary>
         /// Create a <see cref="FunctionalAction"/> that executes a delegate on Start, Update and stop.
@@ -20,11 +20,28 @@ namespace BehaviourAPI.Core.Actions
         /// <param name="start">The delegate executed in <see cref="Start"/> event.</param>
         /// <param name="update">The function executed in <see cref="Update"/> event.</param>
         /// <param name="stop">The delegate executed in <see cref="Stop"/> event.</param>
-        public FunctionalAction(System.Action start, Func<Status> update, System.Action stop = null)
+        public FunctionalAction(System.Action? start, Func<Status>? update, System.Action? stop = null)
         {
-            onStart = start;
-            onUpdate = update;
-            onStop = stop;
+            onStarted = start;
+            onUpdated = update;
+            onStopped = stop;
+        }
+
+        /// <summary>
+        /// Create a <see cref="FunctionalAction"/> that executes a delegate on Start, Update and stop.
+        /// </summary>
+        /// <param name="onStarted">The delegate executed in <see cref="Start"/> event.</param>
+        /// <param name="onUpdated">The function executed in <see cref="Update"/> event.</param>
+        /// <param name="onStopped">The delegate executed in <see cref="Stop"/> event.</param>
+        /// <param name="onPaused">The delegate executed in <see cref="Pause"/> event.</param>
+        /// <param name="onUnpaused">The delegate executed in <see cref="Unpause"/> event.</param>
+        public FunctionalAction(System.Action? onStarted, Func<Status>? onUpdated, System.Action? onStopped, System.Action? onPaused, System.Action? onUnpaused)
+        {
+            this.onStarted = onStarted;
+            this.onUpdated = onUpdated;
+            this.onStopped = onStopped;
+            this.onPaused = onPaused;
+            this.onUnpaused = onUnpaused;
         }
 
         /// <summary>
@@ -32,51 +49,55 @@ namespace BehaviourAPI.Core.Actions
         /// </summary>
         /// <param name="update">The function executed in <see cref="Update"/> event.</param>
         /// <param name="stop">The delegate executed in <see cref="Stop"/> event.</param>
-        public FunctionalAction(Func<Status> update, System.Action stop = null)
+        public FunctionalAction(Func<Status>? update, System.Action? stop = null)
         {
-            onUpdate = update;
-            onStop = stop;
+            onUpdated = update;
+            onStopped = stop;
         }
 
         /// <summary>
         /// Create a <see cref="FunctionalAction"/> that executes a method when started and only returns <see cref="Status.Running"/> on Update.
         /// </summary>
         /// <param name="start">The delegate executed in <see cref="Start"/> event.</param>
-        public FunctionalAction(System.Action start)
+        public FunctionalAction(System.Action? start)
         {
-            onStart = start;
-            onUpdate = () => Status.Running;
+            onStarted = start;
         }
 
         /// <summary>
         /// <inheritdoc/>
-        /// Invoke the start delegate.
+        /// Invokes <see cref="onStarted"/>.
         /// </summary>
-        public override void Start() => onStart?.Invoke();
+        public override void Start() => onStarted?.Invoke();
 
         /// <summary>
         /// <inheritdoc/>
-        /// Invoke the update function and returns its returned value.
+        /// Invokes <see cref="onUpdated"/>.and returns its given value.
         /// </summary>
-        public override Status Update() => onUpdate.Invoke();
+        public override Status Update() => onUpdated?.Invoke() ?? Status.Running;
 
         /// <summary>
         /// <inheritdoc/>
-        /// Invoke the stop delegate.
+        /// Invokes <see cref="onStopped"/>.
         /// </summary>
-        public override void Stop() => onStop?.Invoke();
-
-        public override void Pause() => onPause?.Invoke();
-
-        public override void Unpause() => onUnpause?.Invoke();
+        public override void Stop() => onStopped?.Invoke();
 
         /// <summary>
         /// <inheritdoc/>
-        /// (The context in Functional actions is not used).
+        /// Invokes <see cref="onPaused"/>.
         /// </summary>
-        public override void SetExecutionContext(ExecutionContext context)
+        public override void Pause()
         {
-            return;
+            onPaused?.Invoke();
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// Invokes <see cref="onUnpaused"/>.
+        /// </summary>
+        public override void Unpause()
+        {
+            onUnpaused?.Invoke();
         }
     }
 }

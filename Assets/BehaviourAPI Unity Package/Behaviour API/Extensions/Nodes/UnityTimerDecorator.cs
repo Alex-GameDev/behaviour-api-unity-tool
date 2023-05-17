@@ -19,9 +19,9 @@ namespace BehaviourAPI.UnityExtensions
         float _currentTime;
         bool _childExecuted;
 
-        public override void Start()
+        public override void OnStarted()
         {
-            base.Start();
+            base.OnStarted();
             _currentTime = 0f;
             _childExecuted = false;
         }
@@ -46,29 +46,29 @@ namespace BehaviourAPI.UnityExtensions
             {
                 if (!_childExecuted)
                 {
-                    m_childNode.Start();
+                    m_childNode.OnStarted();
                     _childExecuted = true;
                 }
-                m_childNode.Update();
+                m_childNode.OnUpdated();
                 return m_childNode.Status;
             }
             throw new NullReferenceException("ERROR: Child node is not defined");
         }
 
-        public override void Stop()
+        public override void OnStopped()
         {
-            base.Stop();
-            if (_childExecuted) m_childNode?.Stop();
+            base.OnStopped();
+            if (_childExecuted) m_childNode?.OnStopped();
         }
 
-        public override void Pause()
+        public override void OnPaused()
         {
-            if (_childExecuted) m_childNode?.Pause();
+            if (_childExecuted) m_childNode?.OnPaused();
         }
 
-        public override void Unpause()
+        public override void OnUnpaused()
         {
-            if (_childExecuted) m_childNode.Unpause();
+            if (_childExecuted) m_childNode.OnUnpaused();
         }
     }
 

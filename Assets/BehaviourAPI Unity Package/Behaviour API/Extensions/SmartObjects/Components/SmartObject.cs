@@ -44,29 +44,39 @@ namespace BehaviourAPI.Unity.SmartObjects
             return _config.GetCapability(name);
         }
 
-        public virtual void OnComplete(SmartAgent agent, Status status)
+        public virtual void OnCompleteInteraction(SmartAgent agent, Status status)
         {
             return;
         }
 
-        public virtual void InitInteraction(SmartAgent agent)
+        public virtual void OnInitInteraction(SmartAgent agent)
         {
             return;
         }
 
-        public virtual void ReleaseInteraction(SmartAgent agent)
+        public virtual void OnReleaseInteraction(SmartAgent agent)
         {
             return;
         }
 
-        public SmartInteraction<SmartAgent> RequestInteraction(SmartAgent agent)
+        public virtual void OnPauseInteraction(SmartAgent agent)
         {
-            Action action = GetRequestedAction(agent);
+            return;
+        }
+
+        public virtual void OnUnpauseInteraction(SmartAgent agent)
+        {
+            return;
+        }
+
+        public SmartInteraction<SmartAgent> RequestInteraction(SmartAgent agent, string requestData)
+        {
+            Action action = GetRequestedAction(agent, requestData);
             return new SmartInteraction<SmartAgent>(this, action);
         }
 
         public abstract bool ValidateAgent(SmartAgent agent);
 
-        protected abstract Action GetRequestedAction(SmartAgent agent);
+        protected abstract Action GetRequestedAction(SmartAgent agent, string requestData = null);
     }
 }

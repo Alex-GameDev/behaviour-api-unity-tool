@@ -2,6 +2,7 @@ using System;
 
 namespace BehaviourAPI.UtilitySystems
 {
+    using BehaviourAPI.Core.Exceptions;
     using Core;
 
     /// <summary>
@@ -65,7 +66,7 @@ namespace BehaviourAPI.UtilitySystems
         /// Is called when the <see cref="UtilitySelectableNode"/> is selected. 
         /// </summary>
         /// <exception cref="ExecutionStatusException">If it's already running.</exception>
-        public virtual void Start()
+        public virtual void OnStarted()
         {
             if (Status != Status.None)
                 throw new ExecutionStatusException(this, "ERROR: This node is already been executed");
@@ -76,10 +77,10 @@ namespace BehaviourAPI.UtilitySystems
         /// <summary>
         /// Is called each frame the <see cref="UtilitySelectableNode"/> is selected.
         /// </summary>
-        public abstract void Update();
+        public abstract void OnUpdated();
 
         /// <summary>
-        /// Is called when the <see cref="UtilitySelectableNode"/> is no longer selected or the <see cref="UtilitySystem"/> was stopped.
+        /// Called when the <see cref="UtilitySelectableNode"/> is no longer selected or the <see cref="UtilitySystem"/> was stopped.
         /// </summary>
         /// <exception cref="ExecutionStatusException">If it's not running.</exception>
         public virtual void Stop()
@@ -90,10 +91,15 @@ namespace BehaviourAPI.UtilitySystems
             Status = Status.None;
         }
 
-        public abstract void Pause();
+        /// <summary>
+        /// Called when the node is being selected and the graph is paused.
+        /// </summary>
+        public abstract void OnPaused();
 
-        public abstract void Unpause();
-
+        /// <summary>
+        /// Called when the node is being selected and the graph is unpaused.
+        /// </summary>
+        public abstract void OnUnpaused();
         #endregion
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class AppleSmartObject : SmartObject
 {
-    //TODO: Crear clase FridgeItem que represente un smartObject que se usa cogiéndolo de la nevera y después usándolo.
+    //TODO: Crear clase FridgeItem que represente un smartObject que se usa cogiï¿½ndolo de la nevera y despuï¿½s usï¿½ndolo.
     [SerializeField] FridgeSmartObject _fridge;
 
     public override bool ValidateAgent(SmartAgent agent)
@@ -13,8 +13,8 @@ public class AppleSmartObject : SmartObject
         return true;
     }
 
-    protected override Action GetRequestedAction(SmartAgent agent)
+    protected override Action GetRequestedAction(SmartAgent agent, string interactionName = null)
     {
-        return _fridge.RequestInteraction(agent).Action;
+        return new DirectRequestAction(agent, _fridge, interactionName);
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 namespace BehaviourAPI.BehaviourTrees
 {
     using Core;
+    using Core.Exceptions;
 
     /// <summary>
     /// Composite node that executes all its children in all execution frames, until one of them returns the trigger value.
@@ -25,31 +26,39 @@ namespace BehaviourAPI.BehaviourTrees
         /// <inheritdoc/>
         /// Starts all its children.
         /// </summary>
-        public override void Start()
+        public override void OnStarted()
         {
-            base.Start();
-            m_children.ForEach(c => c?.Start());
+            base.OnStarted();
+            m_children.ForEach(c => c?.OnStarted());
         }
 
         /// <summary>
         /// <inheritdoc/>
         /// Stop all its children.
         /// </summary>
-        public override void Stop()
+        public override void OnStopped()
         {
-            base.Stop();
+            base.OnStopped();
 
-            m_children.ForEach(c => c?.Stop());
+            m_children.ForEach(c => c?.OnStopped());
         }
 
-        public override void Pause()
+        /// <summary>
+        /// <inheritdoc/>
+        /// Pauses all its children.
+        /// </summary>
+        public override void OnPaused()
         {
-            m_children.ForEach(c => c?.Pause());
+            m_children.ForEach(c => c?.OnPaused());
         }
 
-        public override void Unpause()
+        /// <summary>
+        /// <inheritdoc/>
+        /// Unpauses all its children.
+        /// </summary>
+        public override void OnUnpaused()
         {
-            m_children.ForEach(c => c?.Unpause());
+            m_children.ForEach(c => c?.OnUnpaused());
         }
 
         /// <summary>
@@ -62,7 +71,7 @@ namespace BehaviourAPI.BehaviourTrees
         {
             if (m_children.Count == 0) throw new MissingChildException(this, "This composite has no childs");
 
-            m_children.ForEach(c => c.Update());
+            m_children.ForEach(c => c.OnUpdated());
             List<Status> allStatus = m_children.Select(c => c.Status).ToList();
 
             // Check for trigger value
@@ -73,6 +82,8 @@ namespace BehaviourAPI.BehaviourTrees
 
             return Status.Running;
         }
+
+
         #endregion
     }
 }

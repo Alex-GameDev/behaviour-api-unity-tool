@@ -1,11 +1,12 @@
 ﻿namespace BehaviourAPI.BehaviourTrees
 {
     using Core;
+    using Core.Exceptions;
 
     /// <summary>
     /// Node that execute its child node the number of times determined by <see cref="Iterations"/>
     /// </summary>
-    public class LoopNode : DirectDecoratorNode
+    public  class LoopNode : DirectDecoratorNode
     {
         #region ----------------------------------------- Properties -----------------------------------------
 
@@ -32,7 +33,7 @@
         /// <returns>The <see cref="LoopNode"/> itself.</returns>
         public LoopNode SetIterations(int iterations)
         {
-            Iterations = iterations;
+            Iterations = iterations;  
             return this;
         }
 
@@ -44,9 +45,9 @@
         /// <inheritdoc/>
         /// Reset the current iterations.
         /// </summary>
-        public override void Start()
+        public override void OnStarted()
         {
-            base.Start();
+            base.OnStarted();
             _currentIterations = 0;
         }
 
@@ -65,8 +66,8 @@
                 if (Iterations == -1 || _currentIterations < Iterations)
                 {
                     childStatus = Status.Running;
-                    m_childNode.Stop();
-                    m_childNode.Start();
+                    m_childNode.OnStopped();
+                    m_childNode.OnStarted();
                 }
             }
             return childStatus;

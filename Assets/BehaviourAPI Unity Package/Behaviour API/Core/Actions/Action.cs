@@ -8,35 +8,35 @@ namespace BehaviourAPI.Core.Actions
     public abstract class Action : ICloneable
     {
         /// <summary>
-        /// Initialize the action. 
+        /// Starts the action. 
         /// </summary>
-        public abstract void Start();
+        public virtual void Start() { }
 
         /// <summary>
-        /// Executes the action. 
+        /// Updates the action. 
         /// </summary>
         public abstract Status Update();
 
         /// <summary>
-        /// Reset the action. 
+        /// Stops the action. 
         /// </summary>
-        public abstract void Stop();
+        public virtual void Stop() { }
 
         /// <summary>
-        /// Pause the action. 
+        /// Pauses the action. 
         /// </summary>
-        public abstract void Pause();
+        public virtual void Pause() { }
 
         /// <summary>
-        /// Resumes the action. 
+        /// Unpauses the action. 
         /// </summary>
-        public abstract void Unpause();
+        public virtual void Unpause() { }
 
         /// <summary>
         /// Specifies the action execution context
         /// </summary>
         /// <param name="context">The execution context.</param>
-        public abstract void SetExecutionContext(ExecutionContext context);
+        public virtual void SetExecutionContext(ExecutionContext context) { }
 
         /// <summary>
         /// Create a shallow copy of the action.

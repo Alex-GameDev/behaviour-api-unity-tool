@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18631649, g: 0.5225311, b: 0.8326769, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -271,14 +271,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 444282007}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.26651114, y: 0.10209189, z: 0.07160289, w: 0.9557312}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 29.657, y: 15.574, z: 12.716}
 --- !u!1 &465898652
 GameObject:
   m_ObjectHideFlags: 0
@@ -652,6 +652,10 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 922734696, guid: c9634289332e88d47979b90200e770ed, type: 3}
+      propertyPath: m_BaseOffset
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 922734696, guid: c9634289332e88d47979b90200e770ed, type: 3}
       propertyPath: m_AutoBraking
       value: 0
       objectReference: {fileID: 0}
@@ -677,7 +681,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4600201873981788853, guid: c9634289332e88d47979b90200e770ed, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4600201873981788853, guid: c9634289332e88d47979b90200e770ed, type: 3}
       propertyPath: m_LocalPosition.z
@@ -710,6 +714,10 @@ PrefabInstance:
     - target: {fileID: 4600201873981788853, guid: c9634289332e88d47979b90200e770ed, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5236131728996635054, guid: c9634289332e88d47979b90200e770ed, type: 3}
+      propertyPath: m_Center.y
+      value: 1.6
       objectReference: {fileID: 0}
     - target: {fileID: 7725259798827320625, guid: c9634289332e88d47979b90200e770ed, type: 3}
       propertyPath: drawGizmos

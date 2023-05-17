@@ -5,6 +5,7 @@ namespace BehaviourAPI.StateMachines
 {
     using Core;
     using Core.Actions;
+    using Core.Exceptions;
     /// <summary>
     /// Represents a state in a FSM graph.
     /// </summary>
@@ -34,7 +35,7 @@ namespace BehaviourAPI.StateMachines
         /// <summary>
         /// Event called when current status changed.
         /// </summary>
-        public Action<Status> StatusChanged { get; set; }
+        public Action<Status> StatusChanged { get; set; } = delegate { };
 
         #endregion
 
@@ -43,7 +44,7 @@ namespace BehaviourAPI.StateMachines
         /// <summary>
         /// The action that this state executes.
         /// </summary>
-        public Action Action;
+        public Action? Action;
 
         #endregion
 
@@ -88,8 +89,11 @@ namespace BehaviourAPI.StateMachines
         public override object Clone()
         {
             var node = (State)base.Clone();
-            node.Action = (Action)Action?.Clone();
-            node.StatusChanged = (Action<Status>)StatusChanged?.Clone();
+            node.Action = (Action?)Action?.Clone();
+
+            if (StatusChanged != null)
+                node.StatusChanged = (Action<Status>)StatusChanged.Clone();
+
             return node;
         }
 
@@ -102,7 +106,7 @@ namespace BehaviourAPI.StateMachines
         /// Starts the action execution and initialize the transitions.
         /// </summary>
         /// <exception cref="ExecutionStatusException">If the node execution already started. </exception>
-        public virtual void Start()
+        public virtual void OnStarted()
         {
             if (Status != Status.None)
                 throw new ExecutionStatusException(this, "ERROR: This node is already been executed");
@@ -115,7 +119,7 @@ namespace BehaviourAPI.StateMachines
         /// <summary>
         /// Update the action and check the transitions.
         /// </summary>
-        public virtual void Update()
+        public virtual void OnUpdated()
         {
             if (Status == Status.Running)
                 Status = Action?.Update() ?? Status.Running;
@@ -127,28 +131,35 @@ namespace BehaviourAPI.StateMachines
         /// Change status to none.
         /// Stop the action and reset the transitions
         /// </summary>
-        /// <exception cref="Exception">If was already stopped.</exception>
-        public virtual void Stop()
+        /// <exception cref="ExecutionStatusException">If was already stopped.</exception>
+        public virtual void OnStopped()
         {
             if (Status == Status.None)
-                throw new Exception("ERROR: This node is already been stopped");
+                throw new ExecutionStatusException(this, "ERROR: This node is already been stopped");
 
             Status = Status.None;
             Action?.Stop();
             _transitions.ForEach(t => t?.Stop());
         }
 
-
-        public virtual void Pause()
+        /// <summary>
+        /// Change status to none.
+        /// Pauses the action and the transitions
+        /// </summary>
+        public virtual void OnPaused()
         {
             Action?.Pause();
-            _transitions.ForEach(t => t?.Pause());
+            _transitions.ForEach(t => t?.OnPaused());
         }
 
-        public virtual void Unpause()
+        /// <summary>
+        /// Change status to none.
+        /// Unpauses the action and the transitions
+        /// </summary>
+        public virtual void OnUnpaused()
         {
             Action?.Unpause();
-            _transitions.ForEach(t => t?.Unpause());
+            _transitions.ForEach(t => t?.OnUnpaused());
         }
 
         /// <summary>

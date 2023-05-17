@@ -2,6 +2,7 @@ using System;
 
 namespace BehaviourAPI.BehaviourTrees
 {
+    using BehaviourAPI.Core.Exceptions;
     using BehaviourAPI.Core.Perceptions;
     using Core;
 
@@ -81,7 +82,7 @@ namespace BehaviourAPI.BehaviourTrees
         /// Reset the <see cref="LastExecutionStatus"/> value if its necessary.
         /// </summary>
         /// <exception cref="ExecutionStatusException">If the node execution already started. </exception>
-        public virtual void Start()
+        public virtual void OnStarted()
         {
             if (Status != Status.None)
                 throw new ExecutionStatusException(this, "ERROR: This node is already been executed");
@@ -94,7 +95,7 @@ namespace BehaviourAPI.BehaviourTrees
         /// Update the execution of the node.
         /// </summary>
         /// <exception cref="ExecutionStatusException">If the node is not executing.</exception>
-        public void Update()
+        public void OnUpdated()
         {
             if (Status == Status.None)
                 throw new ExecutionStatusException(this, "ERROR: This node must be started before update.");
@@ -109,7 +110,7 @@ namespace BehaviourAPI.BehaviourTrees
         /// Save the final execution status in <see cref="LastExecutionStatus"/>
         /// </summary>
         /// <exception cref="Exception">If was already stopped.</exception>
-        public virtual void Stop()
+        public virtual void OnStopped()
         {
             if (Status == Status.None)
                 throw new ExecutionStatusException(this, "ERROR: This node is already been stopped");
@@ -118,9 +119,15 @@ namespace BehaviourAPI.BehaviourTrees
             Status = Status.None;
         }
 
-        public abstract void Pause();
+        /// <summary>
+        /// Called when the node is in the running branch and the graph is paused.
+        /// </summary>
+        public abstract void OnPaused();
 
-        public abstract void Unpause();
+        /// <summary>
+        /// Called when the node is in the running branch and the graph is unpaused.
+        /// </summary>
+        public abstract void OnUnpaused();
 
         /// <summary>
         /// Get the updated status of the node.
@@ -151,7 +158,7 @@ namespace BehaviourAPI.BehaviourTrees
         /// </summary>
         public void Fire(Status status)
         {
-            if (Status == Status.Running && !BehaviourGraph.IsPaused)
+            if (Status == Status.Running)
             {
                 if (status != Status.None)
                     Status = status;

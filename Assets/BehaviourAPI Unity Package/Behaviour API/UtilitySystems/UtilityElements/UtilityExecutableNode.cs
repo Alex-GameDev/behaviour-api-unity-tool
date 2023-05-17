@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace BehaviourAPI.UtilitySystems
 {
+    using Core.Exceptions;
     using Core;
 
     /// <summary>
@@ -32,14 +33,14 @@ namespace BehaviourAPI.UtilitySystems
         /// <exception cref="MissingChildException">If factor is null.</exception>
         protected internal void SetFactor(Factor factor)
         {
-            if (factor != null)
+            if(factor != null)
             {
                 _factor = factor;
             }
             else
             {
                 throw new MissingChildException(this, "The child factor can't be null.");
-            }
+            }            
         }
 
         protected override void BuildConnections(List<Node> parents, List<Node> children)

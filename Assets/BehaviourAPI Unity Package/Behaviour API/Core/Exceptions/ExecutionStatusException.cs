@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BehaviourAPI.Core
+namespace BehaviourAPI.Core.Exceptions
 {
     /// <summary>
     /// Exception that is thrown when a <see cref="IStatusHandler"/> tries to change 

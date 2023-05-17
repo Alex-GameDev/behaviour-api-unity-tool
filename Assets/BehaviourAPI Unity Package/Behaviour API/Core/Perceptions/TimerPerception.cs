@@ -12,7 +12,7 @@ namespace BehaviourAPI.Core.Perceptions
         /// </summary>
         public float Time;
 
-        Timer _timer;
+        Timer? _timer;
 
         bool _isTimeout;
 
@@ -23,8 +23,6 @@ namespace BehaviourAPI.Core.Perceptions
         public TimerPerception(float time)
         {
             Time = time;
-            _timer = new Timer(time * 1000);
-            _timer.Elapsed += OnTimerElapsed;
         }
 
         /// <summary>
@@ -34,6 +32,8 @@ namespace BehaviourAPI.Core.Perceptions
         public override void Initialize()
         {
             _isTimeout = false;
+            _timer = new Timer(Time * 1000);
+            _timer.Elapsed += OnTimerElapsed;
             _timer.Enabled = true;
             _timer.Start();
         }
@@ -49,40 +49,36 @@ namespace BehaviourAPI.Core.Perceptions
 
         /// <summary>
         /// <inheritdoc/>
-        /// Reset the timer.
+        /// Dispose the timer.
         /// </summary>
         public override void Reset()
         {
             _isTimeout = false;
-            _timer.Enabled = false;
-            _timer.Stop();
+            _timer?.Dispose();
+            _timer = null;
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Pauses the timer.
+        /// </summary>
         public override void Pause()
         {
-            if (!_isTimeout)
-                _timer.Stop();
+            _timer?.Stop();
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Resumes the timer.
+        /// </summary>
         public override void Unpause()
         {
-            if (!_isTimeout)
-                _timer.Start();
+            _timer?.Start();
         }
 
         private void OnTimerElapsed(object sender, ElapsedEventArgs evt)
         {
             _isTimeout = true;
-        }
-
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// (The context in Timer perceptions is not used).
-        /// </summary>
-        public override void SetExecutionContext(ExecutionContext context)
-        {
-            return;
         }
     }
 }

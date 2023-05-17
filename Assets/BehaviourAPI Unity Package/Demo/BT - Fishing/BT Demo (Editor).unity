@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -198,6 +198,7 @@ PrefabInstance:
     - {fileID: 3666773261512135958, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
     - {fileID: 8335097774737004306, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
     - {fileID: 922734696, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+    - {fileID: 8275284379017087738, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
 --- !u!1 &90416562 stripped
 GameObject:
@@ -225,8 +226,8 @@ MonoBehaviour:
   DontStopOnDisable: 0
   data:
     graphs:
-    - id: 9e7a0e64-9663-4dd5-9d1e-076f10c7e687
-      name: BehaviourTree
+    - name: BehaviourTree
+      id: 9e7a0e64-9663-4dd5-9d1e-076f10c7e687
       graph:
         rid: 6537695503399780352
       nodes:
@@ -374,6 +375,12 @@ MonoBehaviour:
         stop:
           componentName: 
           methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
     - rid: 6537695503399780363
       type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
@@ -384,6 +391,12 @@ MonoBehaviour:
           componentName: 
           methodName: RodPickedStatus
         stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
           componentName: 
           methodName: 
     - rid: 6537695503399780364
@@ -398,6 +411,12 @@ MonoBehaviour:
         reset:
           componentName: 
           methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
     - rid: 6537695503399780365
       type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
@@ -410,6 +429,12 @@ MonoBehaviour:
         stop:
           componentName: 
           methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
     - rid: 6537695503399780366
       type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
@@ -420,6 +445,12 @@ MonoBehaviour:
           componentName: 
           methodName: CompleteOnSuccess
         stop:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
           componentName: 
           methodName: 
 --- !u!114 &90416568
@@ -1025,7 +1056,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
 --- !u!95 &1026007598
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1042,7 +1073,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1294133889
 GameObject:
   m_ObjectHideFlags: 0

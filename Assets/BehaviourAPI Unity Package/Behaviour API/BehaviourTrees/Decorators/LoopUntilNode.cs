@@ -60,9 +60,9 @@ namespace BehaviourAPI.BehaviourTrees
         /// <inheritdoc/>
         /// Reset the current iterations.
         /// </summary>
-        public override void Start()
+        public override void OnStarted()
         {
-            base.Start();
+            base.OnStarted();
             _currentIterations = 0;
         }
 
@@ -82,8 +82,8 @@ namespace BehaviourAPI.BehaviourTrees
                 {
                     // Restart the node execution
                     childStatus = Status.Running;
-                    m_childNode.Stop();
-                    m_childNode.Start();
+                    m_childNode.OnStopped();
+                    m_childNode.OnStarted();
                 }
             }
             return childStatus;

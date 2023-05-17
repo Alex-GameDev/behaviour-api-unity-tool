@@ -12,9 +12,9 @@ public class DrinkSmartObject : SmartObject
         return _fridge.ValidateAgent(agent);
     }
 
-    protected override Action GetRequestedAction(SmartAgent agent)
+    protected override Action GetRequestedAction(SmartAgent agent, string interactionName = null)
     {
-        return _fridge.RequestInteraction(agent).Action;
+        return new DirectRequestAction(agent, _fridge, interactionName);
 
     }
 }

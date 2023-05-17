@@ -14,8 +14,8 @@ public class ComputerDesktopSmartObject : SmartObject
         return seat.ValidateAgent(agent);
     }
 
-    protected override Action GetRequestedAction(SmartAgent agent)
+    protected override Action GetRequestedAction(SmartAgent agent, string interactionName = null)
     {
-        return seat.RequestInteraction(agent).Action;
+        return new DirectRequestAction(agent, seat, interactionName);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace BehaviourAPI.Core.Actions
+﻿using BehaviourAPI.Core.Exceptions;
+
+namespace BehaviourAPI.Core.Actions
 {
     /// <summary>
     /// Represents an action that executes a sub behaviour engine.
@@ -35,7 +37,9 @@
 
         /// <summary>
         /// <inheritdoc/>
-        /// Starts the <see cref="SubSystem"/> execution.
+        /// Starts the <see cref="SubSystem"/> execution. 
+        /// If <see cref="DontStopOnInterrupt"/> is true and the execution already started, unpauses the subgraph instead of starts it.
+        /// to success or failure, the subsystem is restarted.
         /// </summary>
         /// <exception cref="MissingSubsystemException">If subsystem is null.</exception>
         public override void Start()
@@ -43,9 +47,14 @@
             if (SubSystem == null)
                 throw new MissingSubsystemException(this, "Subsystem cannot be null");
 
-            if (DontStopOnInterrupt && SubSystem.Status == Status.None) return;
-
-            SubSystem?.Start();
+            if (DontStopOnInterrupt && SubSystem.Status == Status.Running)
+            {
+                SubSystem.Unpause();
+            }
+            else
+            {
+                SubSystem.Start();
+            }
         }
 
         /// <summary>
@@ -72,6 +81,7 @@
         /// <summary>
         /// <inheritdoc/>
         /// Stop the <see cref="SubSystem"/> execution.
+        /// If <see cref="DontStopOnInterrupt"/> is true and the execution not finished, pauses the subgraph instead of stops it.
         /// </summary>
         /// <exception cref="MissingSubsystemException">If subsystem is null.</exception>
         public override void Stop()
@@ -79,9 +89,15 @@
             if (SubSystem == null)
                 throw new MissingSubsystemException(this, "Subsystem cannot be null");
 
-            if (DontStopOnInterrupt && SubSystem.Status == Status.Running) return;
+            if (DontStopOnInterrupt && SubSystem.Status == Status.Running)
+            {
+                SubSystem.Pause();
+            }
+            else
+            {
+                SubSystem.Stop();
+            }
 
-            SubSystem?.Stop();
         }
 
         /// <summary>
@@ -90,26 +106,33 @@
         /// <param name="context"><inheritdoc/></param>
         public override void SetExecutionContext(ExecutionContext context)
         {
-            if (SubSystem == null)
-                throw new MissingSubsystemException(this, "Subsystem cannot be null");
-
-            SubSystem.SetExecutionContext(context);
+            SubSystem?.SetExecutionContext(context);
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Pauses the <see cref="SubSystem"/> execution.
+        /// </summary>
+        /// <exception cref="MissingSubsystemException">If subsystem is null.</exception>
         public override void Pause()
         {
             if (SubSystem == null)
                 throw new MissingSubsystemException(this, "Subsystem cannot be null");
 
-            SubSystem.Pause();
+            SubSystem?.Pause();
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Unpauses the <see cref="SubSystem"/> execution.
+        /// </summary>
+        /// <exception cref="MissingSubsystemException">If subsystem is null.</exception>
         public override void Unpause()
         {
             if (SubSystem == null)
                 throw new MissingSubsystemException(this, "Subsystem cannot be null");
 
-            SubSystem.Unpause();
+            SubSystem?.Unpause();
         }
     }
 }

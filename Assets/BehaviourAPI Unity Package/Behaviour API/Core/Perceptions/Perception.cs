@@ -10,10 +10,7 @@ namespace BehaviourAPI.Core.Perceptions
         /// <summary>
         /// Initialize the perception. 
         /// </summary>
-        public virtual void Initialize()
-        {
-            return;
-        }
+        public virtual void Initialize() { }
 
         /// <summary>
         /// Executes the perception. 
@@ -21,34 +18,28 @@ namespace BehaviourAPI.Core.Perceptions
         public abstract bool Check();
 
         /// <summary>
-        /// Resets the perception. 
+        /// Reset the perception. 
         /// </summary>
-        public virtual void Reset()
-        {
-            return;
-        }
+        public virtual void Reset() { }
 
         /// <summary>
-        /// Pauses the perception. 
+        /// Reset the perception. 
         /// </summary>
-        public virtual void Pause()
-        {
-            return;
-        }
+        public virtual void Pause() { }
 
         /// <summary>
-        /// Unpauses the perception. 
+        /// Reset the perception. 
         /// </summary>
-        public virtual void Unpause()
-        {
-            return;
-        }
+        public virtual void Unpause() { }
 
         /// <summary>
         /// Specifies the perception execution context
         /// </summary>
         /// <param name="context">The execution context.</param>
-        public abstract void SetExecutionContext(ExecutionContext context);
+        public virtual void SetExecutionContext(ExecutionContext context)
+        {
+            return;
+        }
 
         /// <summary>
         /// Create a shallow copy of the action.

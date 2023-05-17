@@ -1,9 +1,10 @@
-﻿using System;
+﻿using BehaviourAPI.Core;
+using BehaviourAPI.Core.Exceptions;
+using System;
 using System.Collections.Generic;
 
 namespace BehaviourAPI.StateMachines
 {
-    using Core;
     /// <summary>
     /// Transition between two states.
     /// </summary>

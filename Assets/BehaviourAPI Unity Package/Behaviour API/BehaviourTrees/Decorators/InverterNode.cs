@@ -1,6 +1,7 @@
 namespace BehaviourAPI.BehaviourTrees
 {
     using Core;
+    using Core.Exceptions;
 
     /// <summary>
     /// Node that inverts the result returned by its child node (Success/Failure).

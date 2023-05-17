@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1093,6 +1093,10 @@ PrefabInstance:
     - target: {fileID: 9193852243837980920, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 9193852243837980920, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9193852243837980921, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
       propertyPath: m_RootOrder
@@ -8322,6 +8326,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 9193852243837980920, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9193852243837980921, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
       propertyPath: m_RootOrder
       value: 9
@@ -13834,29 +13842,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a9d72079bb82a0a429e18e45fdc7c0ed, type: 3}
   m_PrefabInstance: {fileID: 1701526598}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1702526391 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9193852243837980920, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
-  m_PrefabInstance: {fileID: 9193852245490570428}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1702526400
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1702526391}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 513a4d6576418964a8f856ac85c723ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data:
-    graphs: []
-    pushPerceptions: []
-  references:
-    version: 2
-    RefIds: []
 --- !u!1001 &1709517130
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18190,6 +18175,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 9193852243837980920, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9193852243837980921, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -19968,6 +19957,14 @@ PrefabInstance:
       propertyPath: _tfModel
       value: 
       objectReference: {fileID: 1869656780}
+    - target: {fileID: 9193852243837980918, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
+      propertyPath: drawGizmos
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9193852243837980918, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
+      propertyPath: minDistanceToTarget
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 9193852243837980920, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
       propertyPath: m_Name
       value: Player

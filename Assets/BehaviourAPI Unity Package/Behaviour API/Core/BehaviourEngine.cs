@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BehaviourAPI.Core.Exceptions;
+using System;
 
 namespace BehaviourAPI.Core
 {
@@ -22,12 +23,12 @@ namespace BehaviourAPI.Core
             }
         }
 
-        public Action<Status> StatusChanged { get; set; }
+        public Action<Status> StatusChanged { get; set; } = delegate { };
 
         /// <summary>
-        /// Gets if the behaviour is currently paused.
+        /// Gets if the graph is paused.
         /// </summary>
-        /// <value>True if its paused, false otherwise.</value>
+        /// <value>True if the graph is paused, false otherwise.</value>
         public bool IsPaused { get; private set; }
 
         #endregion
@@ -41,67 +42,62 @@ namespace BehaviourAPI.Core
         #region --------------------------------------- Runtime methods --------------------------------------
 
         /// <summary>
-        /// Call this method at the beginning of the execution (before calling Update) 
-        /// to set <see cref="Status"/> to Running. Use only if its not a subsystem.
+        /// Starts the execution and set the status value to Running.
         /// </summary>
         /// <exception cref="ExecutionStatusException">If the graph is already in execution.</exception>
-        public virtual void Start()
+        public void Start()
         {
             if (Status != Status.None)
                 throw new ExecutionStatusException(this, "ERROR: This behaviour engine is already been executed");
 
             Status = Status.Running;
+            OnStarted();
         }
 
         /// <summary>
-        /// Call this method at the end of the execution to restart it <see cref="Status"/>.
+        /// Stops the execution and sets the status value to None.
         /// </summary>
         /// <exception cref="ExecutionStatusException">If the graph is not in execution.</exception>
-        public virtual void Stop()
+        public void Stop()
         {
             if (Status == Status.None)
                 throw new ExecutionStatusException(this, "ERROR: This behaviour engine is already been stopped");
 
             Status = Status.None;
+            OnStopped();
         }
 
         /// <summary>
-        /// Called every execution frame.
+        /// Update the execution if not finished yet.
         /// </summary>
-        /// <exception cref="ExecutionStatusException">Throws if attempt to update when its paused.</exception>
         public void Update()
         {
-            if (IsPaused)
-                throw new ExecutionStatusException(this, "Behaviour engine cannot be updated if is paused");
-
-            if (Status != Status.Running) return; // Graph already finished
-            Execute();
+            if (Status != Status.Running || IsPaused) return; // Graph already finished
+            OnUpdated();
         }
 
         /// <summary>
-        /// Call this method when its executing to pauses the execution temporally. When the behaviour is 
-        /// paused it can't be updated. Unpause the behaviour execution using the <see cref="Unpause"/> method.
+        /// Pauses the execution of the graph if is not paused yet.
         /// </summary>
-        /// <exception cref="ExecutionStatusException">If the graph is not in execution.</exception>
-        public virtual void Pause()
-        {
-            if (IsPaused)
-                throw new ExecutionStatusException(this, "ERROR: Trying to pause a behaviour engine that is already been paused");
-
-            IsPaused = true;
-        }
-
-        /// <summary>
-        /// Call this method when its executing to pauses the execution temporally. When the behaviour is 
-        /// paused it can't be updated. Unpause the behaviour execution using the <see cref="Unpause"/> method.
-        /// </summary>
-        /// <exception cref="ExecutionStatusException">If the graph is not in execution.</exception>
-        public virtual void Unpause()
+        public void Pause()
         {
             if (!IsPaused)
-                throw new ExecutionStatusException(this, "ERROR: Trying to unpause a behaviour engine that is not paused.");
+            {
+                IsPaused = true;
+                OnPaused();
+            }
+        }
 
-            IsPaused = true;
+        /// <summary>
+        /// Unpauses the execution of the graph is was paused before.
+        /// </summary>
+        public void Unpause()
+        {
+            if (IsPaused)
+            {
+                IsPaused = false;
+                OnUnpaused();
+            }
         }
 
         /// <summary>
@@ -133,9 +129,29 @@ namespace BehaviourAPI.Core
         }
 
         /// <summary>
-        /// Executes every frame if the execution has not finished yet. 
+        /// Called when the graph starts the execution. 
         /// </summary>
-        protected abstract void Execute();
+        protected abstract void OnStarted();
+
+        /// <summary>
+        /// Called every frame while the graph is executing, until its finished or stopped. 
+        /// </summary>
+        protected abstract void OnUpdated();
+
+        /// <summary>
+        /// Called when the graph is stopped. 
+        /// </summary>
+        protected abstract void OnStopped();
+
+        /// <summary>
+        /// Called when the graph is paused. 
+        /// </summary>
+        protected abstract void OnPaused();
+
+        /// <summary>
+        /// Called when the graph is unpaused. 
+        /// </summary>
+        protected abstract void OnUnpaused();
 
         #endregion
     }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace BehaviourAPI.UtilitySystems
 {
     using Core;
+    using Core.Exceptions;
 
     /// <summary>
     /// Utility element that handle multiple <see cref="UtilitySelectableNode"/> itself and
@@ -36,8 +37,8 @@ namespace BehaviourAPI.UtilitySystems
 
         List<UtilitySelectableNode> _utilityCandidates = new List<UtilitySelectableNode>();
 
-        UtilitySelectableNode _currentBestElement;
-        UtilitySelectableNode _lastExecutedElement;
+        UtilitySelectableNode? _currentBestElement;
+        UtilitySelectableNode? _lastExecutedElement;
 
         #endregion       
 
@@ -81,9 +82,9 @@ namespace BehaviourAPI.UtilitySystems
         /// <inheritdoc/>
         /// </summary>
         /// <exception cref="MissingChildException">If utility candidate list is empty.</exception>
-        public override void Start()
+        public override void OnStarted()
         {
-            base.Start();
+            base.OnStarted();
 
             if (_utilityCandidates.Count == 0)
                 throw new MissingChildException(this, "The list of utility candidates of this bucket is empty.");
@@ -104,11 +105,11 @@ namespace BehaviourAPI.UtilitySystems
             return maxUtility;
         }
 
-        private UtilitySelectableNode ComputeCurrentBestAction()
+        private UtilitySelectableNode? ComputeCurrentBestAction()
         {
             float currentHigherUtility = -1f; // If value starts in 0, elems with Utility == 0 couldn't be executed
 
-            UtilitySelectableNode newBestElement = null;
+            UtilitySelectableNode? newBestElement = null;
 
             int i = 0;
             var currentElementIsLocked = false; // Set to true when a the current element is a locked bucket
@@ -146,18 +147,18 @@ namespace BehaviourAPI.UtilitySystems
         /// Execute the current best action. If the best action changes, stops the last
         /// best action and starts the new one.
         /// </summary>
-        public override void Update()
+        public override void OnUpdated()
         {
             if (_currentBestElement != _lastExecutedElement)
             {
                 _lastExecutedElement?.Stop();
                 _lastExecutedElement = _currentBestElement;
-                _lastExecutedElement?.Start();
+                _lastExecutedElement?.OnStarted();
             }
 
             if (_lastExecutedElement != null)
             {
-                _lastExecutedElement.Update();
+                _lastExecutedElement.OnUpdated();
                 Status = _lastExecutedElement.Status;
             }
         }
@@ -175,14 +176,14 @@ namespace BehaviourAPI.UtilitySystems
             _currentBestElement = null;
         }
 
-        public override void Pause()
+        public override void OnPaused()
         {
-            _lastExecutedElement?.Pause();
+            _lastExecutedElement?.OnPaused();
         }
 
-        public override void Unpause()
+        public override void OnUnpaused()
         {
-            _lastExecutedElement?.Unpause();
+            _lastExecutedElement?.OnUnpaused();
         }
 
         #endregion

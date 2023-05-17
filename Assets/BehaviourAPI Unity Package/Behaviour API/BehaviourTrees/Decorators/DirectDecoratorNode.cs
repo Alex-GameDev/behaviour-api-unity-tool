@@ -1,6 +1,7 @@
 ﻿namespace BehaviourAPI.BehaviourTrees
 {
     using BehaviourAPI.Core;
+    using Core.Exceptions;
 
     /// <summary>
     /// Decorator that always execute its child.
@@ -12,13 +13,13 @@
         /// Starts the execution of its child.
         /// </summary>
         /// <exception cref="MissingChildException">If child is null.</exception>
-        public override void Start()
+        public override void OnStarted()
         {
-            base.Start();
+            base.OnStarted();
 
             if (m_childNode == null) throw new MissingChildException(this, "This decorator has no child");
 
-            m_childNode.Start();
+            m_childNode.OnStarted();
         }
 
         /// <summary>
@@ -26,27 +27,13 @@
         /// Stops the execution of its child.
         /// </summary>
         /// <exception cref="MissingChildException">If child is null.</exception>
-        public override void Stop()
+        public override void OnStopped()
         {
-            base.Stop();
+            base.OnStopped();
 
             if (m_childNode == null) throw new MissingChildException(this, "This decorator has no child");
 
-            m_childNode.Stop();
-        }
-
-        public override void Pause()
-        {
-            if (m_childNode == null) throw new MissingChildException(this, "This decorator has no child");
-
-            m_childNode.Pause();
-        }
-
-        public override void Unpause()
-        {
-            if (m_childNode == null) throw new MissingChildException(this, "This decorator has no child");
-
-            m_childNode.Unpause();
+            m_childNode.OnStopped();
         }
 
         /// <summary>
@@ -58,7 +45,7 @@
         {
             if (m_childNode == null) throw new MissingChildException(this, "This decorator has no child");
 
-            m_childNode.Update();
+            m_childNode.OnUpdated();
             var status = m_childNode.Status;
             return ModifyStatus(status);
         }
@@ -69,5 +56,29 @@
         /// <param name="childStatus">The child current status.</param>
         /// <returns>The child status modified.</returns>
         protected abstract Status ModifyStatus(Status childStatus);
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// Pauses the child node.
+        /// </summary>
+        /// <exception cref="MissingChildException">If child is null.</exception>
+        public override void OnPaused()
+        {
+            if (m_childNode == null) throw new MissingChildException(this, "This decorator has no child");
+
+            m_childNode.OnPaused();
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// Unpauses the child node.
+        /// </summary>
+        /// <exception cref="MissingChildException">If child is null.</exception>
+        public override void OnUnpaused()
+        {
+            if (m_childNode == null) throw new MissingChildException(this, "This decorator has no child");
+
+            m_childNode.OnUnpaused();
+        }
     }
 }

@@ -31,11 +31,11 @@ namespace BehaviourAPI.Unity.Demos
             return Owner == null;
         }
 
-        protected sealed override Action GetRequestedAction(SmartAgent agent)
+        protected sealed override Action GetRequestedAction(SmartAgent agent, string interactionName = null)
         {
             BehaviourTree bt = new BehaviourTree();
 
-            Action placeAction = new FunctionalAction(() => agent.Movement.SetTarget(_placeTarget.position));
+            Action placeAction = new WalkAction(_placeTarget.position);
             var movementNode = bt.CreateLeafNode(placeAction);
 
             Action useAction = GetUseAction(agent);
@@ -48,7 +48,7 @@ namespace BehaviourAPI.Unity.Demos
 
         protected abstract Action GetUseAction(SmartAgent agent);
 
-        public override void InitInteraction(SmartAgent agent)
+        public override void OnInitInteraction(SmartAgent agent)
         {
             if (_registerOnManager)
                 SmartObjectManager.Instance?.UnregisterSmartObject(this);
@@ -60,7 +60,7 @@ namespace BehaviourAPI.Unity.Demos
         }
 
 
-        public override void ReleaseInteraction(SmartAgent agent)
+        public override void OnReleaseInteraction(SmartAgent agent)
         {
             if (_registerOnManager)
                 SmartObjectManager.Instance?.RegisterSmartObject(this);
