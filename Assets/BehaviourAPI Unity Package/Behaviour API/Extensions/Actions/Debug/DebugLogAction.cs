@@ -7,7 +7,8 @@ namespace BehaviourAPI.UnityExtensions
     /// <summary>
     /// Action to print a message in the debug console.
     /// </summary>
-    public class DebugAction : UnityAction
+    [SelectionGroup("DEBUG")]
+    public class DebugLogAction : UnityAction
     {
         /// <summary>
         /// The message printed
@@ -21,14 +22,18 @@ namespace BehaviourAPI.UnityExtensions
         /// Create a DebugAction
         /// </summary>
         /// <param name="message">The message printed</param>
-        public DebugAction(string message)
+        public DebugLogAction(string message)
         {
             this.message = message;
         }
 
-        public override Status Update()
+        public override void Start()
         {
             Debug.Log(message, context.GameObject);
+        }
+
+        public override Status Update()
+        {
             return Status.Success;
         }
     }
