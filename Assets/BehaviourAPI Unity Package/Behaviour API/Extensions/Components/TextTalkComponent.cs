@@ -19,8 +19,11 @@ namespace BehaviourAPI.UnityExtensions
 
         string m_currentText;
 
+        bool isPaused;
+
         public void CancelTalk()
         {
+            textComponent.text = "";
             StopCoroutine(m_currentCoroutine);
             m_currentCoroutine = null;
         }
@@ -29,7 +32,6 @@ namespace BehaviourAPI.UnityExtensions
         {
             textComponent.text = m_currentText;
             StopCoroutine(m_currentCoroutine);
-            m_currentCoroutine = null;
         }
 
         public bool IsTalking()
@@ -52,12 +54,38 @@ namespace BehaviourAPI.UnityExtensions
             if (_textSpeed <= 0) _textSpeed = 1f;
             float delay = 1f / _textSpeed;
 
-            for (int i = 0; i < text.Length; i++)
+            int i = 0;
+            while (i < text.Length)
             {
-                textComponent.text += text[i];
-                yield return new WaitForSeconds(delay);
+                if (isPaused)
+                {
+                    yield return null;
+                }
+                else
+                {
+                    textComponent.text += text[i];
+                    i++;
+                    yield return new WaitForSeconds(delay);
+                }
             }
             isTalking = false;
+        }
+
+        private void OnDisable()
+        {
+            Debug.Log("Disable component");
+        }
+
+        public void PauseTalk()
+        {
+            Debug.Log("Pause task");
+            isPaused = true;
+        }
+
+        public void ResumeTalk()
+        {
+            Debug.Log("Unpause task");
+            isPaused = false;
         }
     }
 }

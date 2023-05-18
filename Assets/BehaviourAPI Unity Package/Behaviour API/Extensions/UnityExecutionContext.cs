@@ -22,12 +22,22 @@ namespace BehaviourAPI.UnityExtensions
         /// <summary>
         /// The transform of the agent.
         /// </summary>
-        public Transform Transform { get; private set; }
+        public Transform Transform => GameObject.transform;
 
         /// <summary>
-        /// The NavMewshAgent component.
+        /// The NavMeshAgent component.
         /// </summary>
         public NavMeshAgent NavMeshAgent { get; private set; }
+
+        /// <summary>
+        /// The animator component.
+        /// </summary>
+        public Animator Animator { get; private set; }
+
+        /// <summary>
+        /// The animator component.
+        /// </summary>
+        public AudioSource AudioSource { get; private set; }
 
         /// <summary>
         /// The Rigidbody component.
@@ -50,18 +60,27 @@ namespace BehaviourAPI.UnityExtensions
         public Collider2D Collider2D { get; private set; }
 
         /// <summary>
+        /// The component used to interact with smart objects.
+        /// </summary>
+        public SmartAgent SmartAgent { get; private set; }
+
+        /// <summary>
         /// The characterController component.
         /// </summary>
         public CharacterController CharacterController { get; private set; }
 
+        /// <summary>
+        /// The component used by movement actions.
+        /// </summary>
         public IMovementComponent Movement { get; private set; }
 
+        /// <summary>
+        /// The component used by talk actions.
+        /// </summary>
         public ITalkComponent Talk { get; private set; }
 
-        public ICustomTaskComponent CustomTasks { get; private set; }
-
         /// <summary>
-        /// Create a new uniy execution context with a runner script component. Use this constructor
+        /// Create a new unity execution context with a runner script component. Use this constructor
         /// to access methods in the runner component with custom actions or perceptions.
         /// </summary>
         /// <param name="runnerComponent">The runner component.</param>
@@ -79,21 +98,22 @@ namespace BehaviourAPI.UnityExtensions
             GameObject = gameObject;
             if (gameObject != null)
             {
-                Transform = gameObject.transform;
                 NavMeshAgent = gameObject.GetComponent<NavMeshAgent>();
                 Rigidbody = gameObject.GetComponent<Rigidbody>();
                 Rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
                 Collider = gameObject.GetComponent<Collider>();
                 Collider2D = gameObject.GetComponent<Collider2D>();
                 CharacterController = gameObject.GetComponent<CharacterController>();
+                AudioSource = gameObject.GetComponent<AudioSource>();
+                Animator = gameObject.GetComponent<Animator>();
+                SmartAgent = gameObject.GetComponent<SmartAgent>();
 
                 Movement = gameObject.GetComponent<IMovementComponent>();
-                CustomTasks = gameObject.GetComponent<ICustomTaskComponent>();
                 Talk = gameObject.GetComponent<ITalkComponent>();
             }
             else
             {
-                Debug.LogWarning("Context was created with a null gameobject");
+                Debug.LogError("Context was created with a null gameobject reference");
             }
         }
     }

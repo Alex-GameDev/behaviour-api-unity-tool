@@ -4,13 +4,26 @@ using UnityEngine;
 
 namespace BehaviourAPI.UnityExtensions
 {
+    /// <summary>
+    /// Unity component that implements the ISmartAgent interface.
+    /// </summary>
     public class SmartAgent : MonoBehaviour, ISmartAgent
     {
         [SerializeField] SmartAgentSettings _settings;
 
+        /// <summary>
+        /// Component used for the agent movement.
+        /// </summary>
         public IMovementComponent Movement { get; private set; }
 
-        public ICustomTaskComponent CustomTasks { get; private set; }
+        /// <summary>
+        /// Component used for the agent to talk.
+        /// </summary>
+        public ITalkComponent Talk { get; set; }
+
+        /// <summary>
+        /// Component used fot the agent 
+        /// </summary>
 
         Dictionary<string, float> m_Needs;
 
@@ -19,7 +32,6 @@ namespace BehaviourAPI.UnityExtensions
             m_Needs = new Dictionary<string, float>();
 
             Movement = GetComponent<IMovementComponent>();
-            CustomTasks = GetComponent<ICustomTaskComponent>();
         }
 
         public float GetNeed(string name)
@@ -32,14 +44,7 @@ namespace BehaviourAPI.UnityExtensions
             if (m_Needs.ContainsKey(name))
             {
                 m_Needs[name] += value;
-                OnNeedCovered(name, value);
             }
         }
-
-        protected virtual void OnNeedCovered(string name, float value)
-        {
-        }
-
-        //TODO: Animaciones, Texto, audio, sprites
     }
 }

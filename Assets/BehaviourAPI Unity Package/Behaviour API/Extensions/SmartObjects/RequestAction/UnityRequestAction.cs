@@ -23,7 +23,7 @@ namespace BehaviourAPI.UnityExtensions
             context = (UnityExecutionContext)ctx;
 
             if (m_Agent == null)
-                m_Agent = context.GameObject.GetComponent<SmartAgent>();
+                m_Agent = context.SmartAgent;
 
             OnSetContext(context);
         }

@@ -17,6 +17,10 @@ namespace BehaviourAPI.UnityExtensions
 
         void FinishCurrentTalkLine();
 
+        void PauseTalk();
+
+        void ResumeTalk();
+
         void CancelTalk();
     }
 }
