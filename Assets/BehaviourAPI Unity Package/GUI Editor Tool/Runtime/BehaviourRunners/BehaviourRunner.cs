@@ -59,7 +59,7 @@ namespace BehaviourAPI.Unity.Runtime
 
             if (_executionGraph != null)
             {
-                UnityExecutionContext context = new UnityExecutionContext(this);
+                UnityExecutionContext context = CreateContext();
                 _executionGraph.SetExecutionContext(context);
             }
         }
@@ -107,12 +107,16 @@ namespace BehaviourAPI.Unity.Runtime
         /// </summary>
         protected virtual void OnEnableSystem()
         {
-            if (!DontStopOnDisable && _systemRunning)
+            if (!_systemRunning || _executionGraph == null)
+                return;
+
+            if (DontStopOnDisable)
             {
-                if (_executionGraph != null)
-                {
-                    _executionGraph.Start();
-                }
+                _executionGraph.Unpause();
+            }
+            else
+            {
+                _executionGraph.Start();
             }
         }
 
@@ -121,15 +125,24 @@ namespace BehaviourAPI.Unity.Runtime
         /// </summary>
         protected virtual void OnDisableSystem()
         {
-            if (Object.ReferenceEquals(gameObject, null)) return;
-
-            if (!DontStopOnDisable && _systemRunning)
+            if (DontStopOnDisable && _executionGraph.Status == Status.Running)
             {
-                if (_executionGraph != null)
-                {
-                    _executionGraph.Stop();
-                }
+                _executionGraph.Pause();
             }
+            else
+            {
+                _executionGraph.Stop();
+            }
+        }
+
+        /// <summary>
+        /// Create the execution context used by unity actions to get the runner component references.
+        /// </summary>
+        /// <returns>The context created.</returns>
+        protected virtual UnityExecutionContext CreateContext()
+        {
+            UnityExecutionContext context = new UnityExecutionContext(this);
+            return context;
         }
 
         /// <summary>
