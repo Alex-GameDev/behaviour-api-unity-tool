@@ -83,7 +83,7 @@ namespace BehaviourAPI.Unity.Editor
 
                 for (int j = 0; j < types.Length; j++)
                 {
-                    if (types[j].IsAbstract) continue;
+                    if (!IsValidType(types[j])) continue;
 
                     if (typeof(Node).IsAssignableFrom(types[j]))
                     {
@@ -102,7 +102,7 @@ namespace BehaviourAPI.Unity.Editor
                     {
                         graphTypes.Add(types[j]);
                     }
-                    else if (typeof(UnityAction).IsAssignableFrom(types[j]))
+                    else if (typeof(UnityAction).IsAssignableFrom(types[j]) || typeof(UnityRequestAction).IsAssignableFrom(types[j]))
                     {
                         actionTypes.Add(types[j]);
                     }
@@ -163,6 +163,19 @@ namespace BehaviourAPI.Unity.Editor
             //  Debug.Log((DateTime.Now - time).TotalMilliseconds);
         }
 
+        private bool IsValidType(Type type)
+        {
+            if (type.IsAbstract || type.IsGenericType) return false;
+
+            foreach (var constructor in type.GetConstructors())
+            {
+                if(constructor.GetParameters().Length == 0) 
+                    return true;
+            }
+
+            return false;
+        }
+
         private Dictionary<Type, Type> BuildFullGraphTypeMap(IEnumerable<Type> graphTypes, Dictionary<Type, Type> graphCodeGeneratorMainTypeMap)
         {
             var dict = new Dictionary<Type, Type>();
@@ -220,30 +233,41 @@ namespace BehaviourAPI.Unity.Editor
             Dictionary<string, EditorHierarchyNode> groups = new Dictionary<string, EditorHierarchyNode>();
             List<EditorHierarchyNode> ungroupedActionNodes = new List<EditorHierarchyNode>();
 
+            EditorHierarchyNode requestActionHierarchyNode = new EditorHierarchyNode("Request actions", typeof(UnityRequestAction));
+
             for (int i = 0; i < actionTypes.Count; i++)
             {
-                var groupAttributes = actionTypes[i].GetCustomAttributes<SelectionGroupAttribute>();
-                EditorHierarchyNode actionTypeNode = new EditorHierarchyNode(actionTypes[i]);
-
-                foreach (var groupAttribute in groupAttributes)
+                if (actionTypes[i].IsSubclassOf(typeof(UnityRequestAction)))
                 {
-                    if (!groups.TryGetValue(groupAttribute.name, out EditorHierarchyNode groupNode))
-                    {
-                        groupNode = new EditorHierarchyNode(groupAttribute.name, null);
-                        groups[groupAttribute.name] = groupNode;
-                    }
-                    groupNode.Childs.Add(actionTypeNode);
+                    requestActionHierarchyNode.Childs.Add(new EditorHierarchyNode(actionTypes[i]));
                 }
-
-                if (groupAttributes.Count() == 0)
+                else
                 {
-                    ungroupedActionNodes.Add(actionTypeNode);
+                    var groupAttributes = actionTypes[i].GetCustomAttributes<SelectionGroupAttribute>();
+                    EditorHierarchyNode actionTypeNode = new EditorHierarchyNode(actionTypes[i]);
+
+                    foreach (var groupAttribute in groupAttributes)
+                    {
+                        if (!groups.TryGetValue(groupAttribute.name, out EditorHierarchyNode groupNode))
+                        {
+                            groupNode = new EditorHierarchyNode(groupAttribute.name, null);
+                            groups[groupAttribute.name] = groupNode;
+                        }
+                        groupNode.Childs.Add(actionTypeNode);
+                    }
+
+                    if (groupAttributes.Count() == 0)
+                    {
+                        ungroupedActionNodes.Add(actionTypeNode);
+                    }
                 }
             }
+
             EditorHierarchyNode unityActionHierarchyNode = new EditorHierarchyNode("Unity Actions", typeof(UnityAction));
             unityActionHierarchyNode.Childs.AddRange(groups.Values);
             unityActionHierarchyNode.Childs.AddRange(ungroupedActionNodes);
             ActionHierarchy.Childs.Add(unityActionHierarchyNode);
+            ActionHierarchy.Childs.Add(requestActionHierarchyNode);
         }
 
         private void BuildPerceptionHierarchy(List<Type> perceptionTypes, List<Type> compoundPerceptionTypes)

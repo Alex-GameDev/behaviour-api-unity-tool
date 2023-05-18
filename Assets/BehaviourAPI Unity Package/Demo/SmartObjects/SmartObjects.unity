@@ -1096,7 +1096,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9193852243837980920, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9193852243837980921, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
       propertyPath: m_RootOrder
@@ -8328,7 +8328,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9193852243837980920, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9193852243837980921, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
       propertyPath: m_RootOrder
@@ -16432,6 +16432,56 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a9d72079bb82a0a429e18e45fdc7c0ed, type: 3}
   m_PrefabInstance: {fileID: 1928883017}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1935003282 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9193852243837980920, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
+  m_PrefabInstance: {fileID: 9193852245490570428}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1935003291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1935003282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f41b6d9c849e88a48b3b7969466f4749, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ExecuteOnLoop: 0
+  DontStopOnDisable: 0
+  data:
+    graphs:
+    - name: newbehaviourgraph
+      id: 63277de6-0888-43d2-8b18-16a6398be4b9
+      graph:
+        rid: 5274389586028265523
+      nodes:
+      - name: 
+        id: c54cecf5-5595-4ede-8cd2-8aad9b1bc97d
+        position: {x: 705, y: 380}
+        node:
+          rid: 5274389586028265524
+        parentIds: []
+        childIds: []
+    pushPerceptions: []
+  keyFoundClip: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5274389586028265523
+      type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
+    - rid: 5274389586028265524
+      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      data:
+        action:
+          rid: 5274389586028265528
+    - rid: 5274389586028265528
+      type: {class: TalkAction, ns: BehaviourAPI.UnityExtensions, asm: BehaviourAPI.UnityExtensions}
+      data:
+        text: 
+        delay: 0
 --- !u!1001 &1941922076
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18177,7 +18227,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9193852243837980920, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9193852243837980921, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
       propertyPath: m_RootOrder
@@ -19968,6 +20018,10 @@ PrefabInstance:
     - target: {fileID: 9193852243837980920, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 9193852243837980920, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9193852243837980921, guid: a7391f03eb010ef49a962ef50863581c, type: 3}
       propertyPath: m_RootOrder
