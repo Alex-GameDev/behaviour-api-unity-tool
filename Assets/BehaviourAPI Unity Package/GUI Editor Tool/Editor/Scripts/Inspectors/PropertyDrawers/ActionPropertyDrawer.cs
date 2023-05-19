@@ -6,19 +6,28 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
+    using System.Linq;
+    using BehaviourAPI.Core.Actions;
     using Framework;
     using Framework.Adaptations;
-    using Action = Core.Actions.Action;
+
     /// <summary>
     /// Default property drawer for actions
     /// </summary>
     [CustomPropertyDrawer(typeof(Action))]
-
     public class ActionPropertyDrawer : PropertyDrawer
     {
         private void AssignAction(SerializedProperty property, Type actionType)
         {
-            property.managedReferenceValue = (Action)Activator.CreateInstance(actionType);
+            if (actionType.IsSubclassOf(typeof(CompoundAction)))
+            {
+                var compound = (CompoundAction)Activator.CreateInstance(actionType);
+                property.managedReferenceValue = new CompoundActionWrapper(compound);
+            }
+            else
+            {
+                property.managedReferenceValue = (Action)Activator.CreateInstance(actionType);
+            }
             property.serializedObject.ApplyModifiedProperties();
         }
 
@@ -40,107 +49,102 @@ namespace BehaviourAPI.Unity.Editor
                 if (GUI.Button(removeRect, "X"))
                 {
                     property.managedReferenceValue = null;
-                    property.serializedObject.ApplyModifiedProperties();
                 }
                 else
                 {
-                    EditorGUILayout.PropertyField(property, true);
+                    int deep = property.propertyPath.Count(c => c == '.');
+                    foreach (SerializedProperty p in property)
+                    {
+                        if (p.propertyPath.Count(c => c == '.') == deep + 1)
+                        {
+                            EditorGUILayout.PropertyField(p, true);
+                        }
+                    }
                 }
+                property.serializedObject.ApplyModifiedProperties();
             }
         }
     }
 
-    /// <summary>
-    /// Property drawer for custom actions
-    /// </summary>
-    [CustomPropertyDrawer(typeof(CustomAction))]
-    public class CustomActionPropertyDrawer : ActionPropertyDrawer
+    [CustomPropertyDrawer(typeof(CompoundActionWrapper))]
+    public class CompoundActionWrapperDrawer : PropertyDrawer
     {
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        Vector2 _scrollPos;
+
+        private void AddSubAction(SerializedProperty arrayProperty, Type perceptionType)
         {
-            if (property.managedReferenceValue == null)
+            arrayProperty.arraySize++;
+            var lastElementProperty = arrayProperty.GetArrayElementAtIndex(arrayProperty.arraySize - 1).FindPropertyRelative("action");
+
+            if (perceptionType.IsSubclassOf(typeof(CompoundAction)))
             {
+                var compound = (CompoundAction)Activator.CreateInstance(perceptionType);
+                lastElementProperty.managedReferenceValue = new CompoundActionWrapper(compound);
             }
             else
             {
-                EditorGUI.BeginProperty(position, label, property);
-
-                var lineHeight = EditorGUIUtility.singleLineHeight;
-                var space = lineHeight * 0.33f;
-                var elemHeight = lineHeight + space;
-
-                int indent = EditorGUI.indentLevel;
-                EditorGUI.indentLevel = 0;
-
-                float currentHeight = position.y;
-                var labelRect = new Rect(position.x, currentHeight, position.width * 0.8f - 5, lineHeight);
-                var removeRect = new Rect(position.x + position.width * 0.8f, currentHeight, position.width * 0.2f, lineHeight);
-
-                currentHeight += elemHeight;
-                var startComponentRect = new Rect(position.x, currentHeight, position.width, lineHeight);
-                currentHeight += lineHeight;
-                var startMethodRect = new Rect(position.x, currentHeight, position.width, lineHeight);
-
-                currentHeight += elemHeight;
-                var updateComponentRect = new Rect(position.x, currentHeight, position.width, lineHeight);
-                currentHeight += lineHeight;
-                var updateMethodRect = new Rect(position.x, currentHeight, position.width, lineHeight);
-
-                currentHeight += elemHeight;
-                var stopComponentRect = new Rect(position.x, currentHeight, position.width, lineHeight);
-                currentHeight += lineHeight;
-                var stopMethodRect = new Rect(position.x, currentHeight, position.width, lineHeight);
-
-                currentHeight += elemHeight;
-                var pauseComponentRect = new Rect(position.x, currentHeight, position.width, lineHeight);
-                currentHeight += lineHeight;
-                var pauseMethodRect = new Rect(position.x, currentHeight, position.width, lineHeight);
-
-                currentHeight += elemHeight;
-                var unpauseComponentRect = new Rect(position.x, currentHeight, position.width, lineHeight);
-                currentHeight += lineHeight;
-                var unpauseMethodRect = new Rect(position.x, currentHeight, position.width, lineHeight);
-
-                SerializedProperty startComponentProp = property.FindPropertyRelative("start.componentName");
-                SerializedProperty startMethodProp = property.FindPropertyRelative("start.methodName");
-                SerializedProperty updateComponentProp = property.FindPropertyRelative("update.componentName");
-                SerializedProperty updateMethodProp = property.FindPropertyRelative("update.methodName");
-                SerializedProperty stopComponentProp = property.FindPropertyRelative("stop.componentName");
-                SerializedProperty stopMethodProp = property.FindPropertyRelative("stop.methodName");
-                SerializedProperty pauseComponentProp = property.FindPropertyRelative("pause.componentName");
-                SerializedProperty pauseMethodProp = property.FindPropertyRelative("pause.methodName");
-                SerializedProperty unpauseComponentProp = property.FindPropertyRelative("unpause.componentName");
-                SerializedProperty unpauseMethodProp = property.FindPropertyRelative("unpause.methodName");
-
-                EditorGUI.LabelField(labelRect, "Custom action", EditorStyles.boldLabel);
-
-                if (GUI.Button(removeRect, "X"))
-                {
-                    property.managedReferenceValue = null;
-                    property.serializedObject.ApplyModifiedProperties();
-                }
-                else
-                {
-                    EditorGUI.PropertyField(startComponentRect, startComponentProp, new GUIContent("Start - Component"));
-                    EditorGUI.PropertyField(startMethodRect, startMethodProp, new GUIContent("Start - Method"));
-                    EditorGUI.PropertyField(updateComponentRect, updateComponentProp, new GUIContent("Update - Component"));
-                    EditorGUI.PropertyField(updateMethodRect, updateMethodProp, new GUIContent("Update - Method"));
-                    EditorGUI.PropertyField(stopComponentRect, stopComponentProp, new GUIContent("Stop - Component"));
-                    EditorGUI.PropertyField(stopMethodRect, stopMethodProp, new GUIContent("Stop - Method"));
-                    EditorGUI.PropertyField(pauseComponentRect, pauseComponentProp, new GUIContent("Pause - Component"));
-                    EditorGUI.PropertyField(pauseMethodRect, pauseMethodProp, new GUIContent("Pause - Method"));
-                    EditorGUI.PropertyField(unpauseComponentRect, unpauseComponentProp, new GUIContent("Unpause - Component"));
-                    EditorGUI.PropertyField(unpauseMethodRect, unpauseMethodProp, new GUIContent("Unpause - Method"));
-                }
-
-                EditorGUI.EndProperty();
-                EditorGUI.indentLevel = indent;
+                lastElementProperty.managedReferenceValue = (Action)Activator.CreateInstance(perceptionType);
             }
+
+            arrayProperty.serializedObject.ApplyModifiedProperties();
         }
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            return base.GetPropertyHeight(property, label) * 12f;
+            if (property.managedReferenceValue == null) return;
+
+            var compoundActionProperty = property.FindPropertyRelative("compoundAction");
+
+            var subActionProperty = property.FindPropertyRelative("subActions");
+
+            EditorGUILayout.BeginHorizontal(GUILayout.Width(position.width));
+            var labelsize = position.width - 50;
+
+            EditorGUILayout.LabelField(compoundActionProperty.managedReferenceValue?.TypeName(), GUILayout.Width(220));
+
+            if (GUILayout.Button("X"))
+            {
+                property.managedReferenceValue = null;
+                property.serializedObject.ApplyModifiedProperties();
+                return;
+            }
+            EditorGUILayout.EndHorizontal();
+
+            foreach (SerializedProperty childProp in compoundActionProperty)
+            {
+                EditorGUILayout.PropertyField(childProp, true);
+            }
+
+            if (GUILayout.Button("Add element", EditorStyles.popup))
+            {
+                SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)),
+                    ElementCreatorWindowProvider.Create<ActionCreationWindow>((pType) => AddSubAction(subActionProperty, pType)));
+            }
+
+            GUIStyle centeredLabelstyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
+
+            EditorGUILayout.LabelField("Sub actions", centeredLabelstyle);
+            _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos, "window", GUILayout.MinHeight(300));
+
+            if (subActionProperty != null)
+            {
+                for (int i = 0; i < subActionProperty.arraySize; i++)
+                {
+                    var subperception = subActionProperty.GetArrayElementAtIndex(i);
+                    var p = subperception.FindPropertyRelative("action");
+
+                    EditorGUILayout.PropertyField(p);
+                    if (GUILayout.Button("Remove"))
+                    {
+                        subActionProperty.DeleteArrayElementAtIndex(i);
+                        property.serializedObject.ApplyModifiedProperties();
+                        break;
+                    }
+                    EditorGUILayout.Space(5);
+                }
+            }
+
+            EditorGUILayout.EndScrollView();
         }
     }
 

@@ -62,6 +62,7 @@ namespace BehaviourAPI.Unity.Editor
             var time = DateTime.Now;
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
+            List<Type> compoundActionTypes = new List<Type>();
             List<Type> actionTypes = new List<Type>();
             List<Type> compoundPerceptionTypes = new List<Type>();
             List<Type> perceptionTypes = new List<Type>();
@@ -105,6 +106,10 @@ namespace BehaviourAPI.Unity.Editor
                     else if (typeof(UnityAction).IsAssignableFrom(types[j]) || typeof(UnityRequestAction).IsAssignableFrom(types[j]))
                     {
                         actionTypes.Add(types[j]);
+                    }
+                    else if (typeof(CompoundAction).IsAssignableFrom(types[j]))
+                    {
+                        compoundActionTypes.Add(types[j]);
                     }
                     else if (typeof(UnityPerception).IsAssignableFrom(types[j]))
                     {
@@ -157,7 +162,7 @@ namespace BehaviourAPI.Unity.Editor
             GraphAdapterMap = BuildFullGraphTypeMap(graphTypes, graphAdapterMainTypeMap);
             CodeGeneratorMap = BuildFullGraphTypeMap(graphTypes, graphCodeGeneratorMainTypeMap);
 
-            BuildActionHierarchy(actionTypes);
+            BuildActionHierarchy(actionTypes, compoundActionTypes);
             BuildPerceptionHierarchy(perceptionTypes, compoundPerceptionTypes);
 
             //  Debug.Log((DateTime.Now - time).TotalMilliseconds);
@@ -169,7 +174,7 @@ namespace BehaviourAPI.Unity.Editor
 
             foreach (var constructor in type.GetConstructors())
             {
-                if(constructor.GetParameters().Length == 0) 
+                if (constructor.GetParameters().Length == 0)
                     return true;
             }
 
@@ -224,10 +229,10 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
-        private void BuildActionHierarchy(List<Type> actionTypes)
+        private void BuildActionHierarchy(List<Type> actionTypes, List<Type> compoundActionTypes)
         {
             ActionHierarchy = new EditorHierarchyNode("Actions", typeof(Action));
-            ActionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(CustomAction)));
+            ActionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(Framework.Adaptations.CustomAction)));
             ActionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(SubgraphAction)));
 
             Dictionary<string, EditorHierarchyNode> groups = new Dictionary<string, EditorHierarchyNode>();
@@ -263,6 +268,11 @@ namespace BehaviourAPI.Unity.Editor
                 }
             }
 
+            EditorHierarchyNode compoundActionHierarchyNode = new EditorHierarchyNode("Compound perceptions", null);
+            compoundActionHierarchyNode.Childs = compoundActionTypes.FindAll(typeof(CompoundAction).IsAssignableFrom)
+                .Select(compoundPerceptionType => new EditorHierarchyNode(compoundPerceptionType)).ToList();
+
+            ActionHierarchy.Childs.Add(compoundActionHierarchyNode);
             EditorHierarchyNode unityActionHierarchyNode = new EditorHierarchyNode("Unity Actions", typeof(UnityAction));
             unityActionHierarchyNode.Childs.AddRange(groups.Values);
             unityActionHierarchyNode.Childs.AddRange(ungroupedActionNodes);
