@@ -13,7 +13,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         /// <summary>
         /// The guid of the subgraph in the system data.
         /// </summary>
-        [HideInInspector] public string subgraphId;
+        [GraphIdentificator] public string subgraphId;
 
         /// <summary>
         /// Reflection constructor.
