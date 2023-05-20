@@ -5,6 +5,7 @@ using UnityEngine;
 namespace BehaviourAPI.Unity.Framework
 {
     using Core;
+    using System.Linq;
 
     /// <summary>
     /// Class that serialize node data.
@@ -12,7 +13,6 @@ namespace BehaviourAPI.Unity.Framework
     [Serializable]
     public class NodeData
     {
-
         /// <summary>
         /// The name of the node.
         /// </summary>
@@ -34,6 +34,16 @@ namespace BehaviourAPI.Unity.Framework
         [SerializeReference] public Node node;
 
         /// <summary>
+        /// List that allows unity to serialize the action(s) of the node if necessary.
+        /// </summary>
+        [SerializeField] public List<ActionData> actions = new List<ActionData>();
+
+        /// <summary>
+        /// List that allows unity to serialize the perceptions(s) of the node if necessary.
+        /// </summary>
+        [SerializeField] public List<PerceptionData> perceptions = new List<PerceptionData>();
+
+        /// <summary>
         /// List of parent nodes referenced by id.
         /// </summary>
         [HideInInspector] public List<string> parentIds = new List<string>();
@@ -49,6 +59,50 @@ namespace BehaviourAPI.Unity.Framework
             node = (Node)Activator.CreateInstance(type);
             name = "";
             id = Guid.NewGuid().ToString();
+
+            ValidateReferences(type);
+        }
+
+        public void Validate() => ValidateReferences(node.GetType());
+
+        void ValidateReferences(Type type)
+        {
+            var actionDict = this.actions.ToDictionary(k => k.Name, k => k.action);
+            var perceptionDict = this.perceptions.ToDictionary(k => k.Name, k => k.perception);
+
+            List<ActionData> actions = new List<ActionData>();
+            List<PerceptionData> perceptions = new List<PerceptionData>();
+
+            foreach (var fieldInfo in type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.FlattenHierarchy | System.Reflection.BindingFlags.Instance))
+            {
+                if (fieldInfo.FieldType == typeof(Core.Actions.Action))
+                {
+                    actions.Add(new ActionData(fieldInfo.Name));
+                }
+                else if (fieldInfo.FieldType == typeof(Core.Perceptions.Perception))
+                {
+                    perceptions.Add(new PerceptionData(fieldInfo.Name));
+                }
+            }
+
+            foreach (var actionData in actions)
+            {
+                if(actionDict.TryGetValue(actionData.Name, out Core.Actions.Action a))
+                {
+                    actionData.action = a;
+                }
+            }
+
+            foreach (var perceptionData in perceptions)
+            {
+                if (perceptionDict.TryGetValue(perceptionData.Name, out Core.Perceptions.Perception p))
+                {
+                    perceptionData.perception = p;
+                }
+            }
+
+            this.actions = actions;
+            this.perceptions = perceptions;
         }
 
         /// <summary>
@@ -81,6 +135,12 @@ namespace BehaviourAPI.Unity.Framework
             duplicate.position = position + UnityEngine.Vector2.one * 50;
             duplicate.node = (Node)node.Clone();
             return duplicate;
+        }
+
+        public void BuildReferences()
+        {
+            actions.ForEach(a => a.Build(node));
+            perceptions.ForEach(p => p.Build(node));
         }
     }
 }

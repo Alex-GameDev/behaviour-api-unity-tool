@@ -9,7 +9,7 @@ namespace BehaviourAPI.Unity.Runtime
     public abstract class AssetBehaviourRunner : DataBehaviourRunner
     {
         public BehaviourSystem System;
-        SystemData _executionSystem;
+        SystemData _runtimeSystem;
 
         /// <summary>
         /// Returns the system asset data to generate a runtime copy
@@ -19,10 +19,10 @@ namespace BehaviourAPI.Unity.Runtime
             string json = JsonUtility.ToJson(System);
             BehaviourSystem copy = ScriptableObject.CreateInstance<BehaviourSystem>();
             JsonUtility.FromJsonOverwrite(json, copy);
-            _executionSystem = copy.Data;
-            return _executionSystem;
+            _runtimeSystem = copy.Data;
+            return _runtimeSystem;
         }
 
-        public sealed override SystemData GetBehaviourSystemAsset() => _executionSystem;
+        public sealed override SystemData GetBehaviourSystemAsset() => _runtimeSystem;
     }
 }

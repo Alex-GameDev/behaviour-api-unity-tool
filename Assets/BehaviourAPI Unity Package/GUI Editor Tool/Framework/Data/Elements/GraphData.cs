@@ -227,13 +227,12 @@ namespace BehaviourAPI.Unity.Framework
             FixNodeNames();
             for (int i = 0; i < nodes.Count; i++)
             {
+                nodes[i].BuildReferences();
                 if (nodes[i].node is IBuildable buildable) buildable.Build(data);
-                {
-                    builder.AddNode(nodes[i].name, nodes[i].node,
-                        nodes[i].parentIds.Select(id => nodeIdMap[id].node).ToList(),
-                        nodes[i].childIds.Select(id => nodeIdMap[id].node).ToList()
-                    );
-                }
+                builder.AddNode(nodes[i].name, nodes[i].node,
+                    nodes[i].parentIds.Select(id => nodeIdMap[id].node).ToList(),
+                    nodes[i].childIds.Select(id => nodeIdMap[id].node).ToList()
+                );
             }
             builder.Build();
         }
