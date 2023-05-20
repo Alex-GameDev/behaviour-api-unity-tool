@@ -12,7 +12,7 @@ namespace BehaviourAPI.Unity.Framework
     /// Clas that serializes a push perception
     /// </summary>
     [Serializable]
-    public class PushPerceptionData : ICloneable, IBuildable
+    public class PushPerceptionData
     {
         /// <summary>
         /// The name of the push perception.
@@ -37,15 +37,6 @@ namespace BehaviourAPI.Unity.Framework
         }
 
         /// <summary>
-        /// Create a new 
-        /// </summary>
-        /// <param name="name"></param>
-        public PushPerceptionData(string name)
-        {
-            this.name = name;
-        }
-
-        /// <summary>
         /// <inheritdoc/>
         /// Set the <see cref="pushPerception"/> target nodes searching the nodes in system data by id.
         /// </summary>
@@ -54,7 +45,7 @@ namespace BehaviourAPI.Unity.Framework
         {
             pushPerception = new PushPerception();
 
-            if(targetNodeIds.Count > 0)
+            if (targetNodeIds.Count > 0)
             {
                 var allNodes = data.graphs.SelectMany(g => g.nodes).ToList();
                 for (int i = 0; i < targetNodeIds.Count; i++)
@@ -64,19 +55,6 @@ namespace BehaviourAPI.Unity.Framework
                     pushPerception.PushListeners.Add(pushTarget);
                 }
             }
-        }
-
-        /// <summary>
-        /// Create a copy of the push perception data. 
-        /// Used to create a runtime copy.
-        /// </summary>
-        /// <returns>A deep copy of the data.</returns>
-        public object Clone()
-        {
-            PushPerceptionData copy = new PushPerceptionData();
-            copy.name = name;
-            copy.targetNodeIds = new List<string>(targetNodeIds);
-            return copy;
         }
     }
 }

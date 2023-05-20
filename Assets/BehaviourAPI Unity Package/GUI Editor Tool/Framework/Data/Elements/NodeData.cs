@@ -10,7 +10,7 @@ namespace BehaviourAPI.Unity.Framework
     /// Class that serialize node data.
     /// </summary>
     [Serializable]
-    public class NodeData : ICloneable
+    public class NodeData
     {
 
         /// <summary>
@@ -81,23 +81,6 @@ namespace BehaviourAPI.Unity.Framework
             duplicate.position = position + UnityEngine.Vector2.one * 50;
             duplicate.node = (Node)node.Clone();
             return duplicate;
-        }
-
-        /// <summary>
-        /// Create a copy of the node data. 
-        /// Used to create a runtime copy.
-        /// </summary>
-        /// <returns>A deep copy of the data.</returns>
-        public object Clone()
-        {
-            NodeData copy = new NodeData();
-            copy.name = name;
-            copy.id = id;
-            copy.position = position;
-            copy.node = (Node)node.Clone();
-            copy.parentIds = new List<string>(parentIds);
-            copy.childIds = new List<string>(childIds);
-            return copy;
         }
     }
 }

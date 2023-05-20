@@ -35,9 +35,7 @@ namespace BehaviourAPI.Unity.Runtime
 
         protected sealed override BehaviourGraph GetExecutionGraph()
         {
-            var system = GetEditorSystemData();
-            _executionSystem = system.GetRuntimeCopy();
-
+            _executionSystem = GetEditorSystemData();
             _executionSystem.BuildSystem();
 
             BuildDictionaries();
@@ -45,11 +43,6 @@ namespace BehaviourAPI.Unity.Runtime
 
             ModifyGraphs();
             return BuildedGraph;
-        }
-
-        public sealed override SystemData GetBehaviourSystemAsset()
-        {
-            return _executionSystem;
         }
 
         /// <summary>

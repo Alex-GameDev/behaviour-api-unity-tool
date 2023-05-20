@@ -12,7 +12,7 @@ namespace BehaviourAPI.Unity.Framework
     /// Class that serializes graph data
     /// </summary>
     [Serializable]
-    public class GraphData : ICloneable
+    public class GraphData
     {
         /// <summary>
         /// The name of the graph.
@@ -142,7 +142,7 @@ namespace BehaviourAPI.Unity.Framework
         public HashSet<NodeData> GetDirectChilds(NodeData data)
         {
             var nodeIdMap = GetNodeIdMap();
-            return data.childIds.Select(id => nodeIdMap[id]).ToHashSet();   
+            return data.childIds.Select(id => nodeIdMap[id]).ToHashSet();
         }
 
         public HashSet<NodeData> GetDirectParents(NodeData data)
@@ -256,27 +256,6 @@ namespace BehaviourAPI.Unity.Framework
                     usedNames.Add(fixedName);
                 }
             }
-        }
-
-        /// <summary>
-        /// Create a copy of the graph data. 
-        /// Used to create a runtime copy.
-        /// </summary>
-        /// <returns>A deep copy of the data.</returns>
-        public object Clone()
-        {
-            GraphData copy = new GraphData();
-            copy.id = id;
-            copy.name = name;
-            copy.nodes = new List<NodeData>(nodes.Count);
-
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                copy.nodes.Add((NodeData)nodes[i].Clone());
-            }
-
-            copy.graph = (BehaviourGraph)graph.Clone();
-            return copy;
         }
     }
 }
