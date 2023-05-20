@@ -18,6 +18,8 @@ namespace BehaviourAPI.UnityExtensions
         public override string DisplayInfo => "Debug Log \"$message\"";
 
 
+
+
         /// <summary>
         /// Create a DebugAction
         /// </summary>
@@ -25,6 +27,13 @@ namespace BehaviourAPI.UnityExtensions
         public DebugLogAction(string message)
         {
             this.message = message;
+        }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public DebugLogAction()
+        {
         }
 
         public override void Start()
