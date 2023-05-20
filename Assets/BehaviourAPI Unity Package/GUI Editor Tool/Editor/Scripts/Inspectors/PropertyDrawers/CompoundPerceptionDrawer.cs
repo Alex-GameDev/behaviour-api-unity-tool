@@ -10,6 +10,8 @@ namespace BehaviourAPI.Unity.Editor
     [CustomPropertyDrawer(typeof(CompoundPerceptionWrapper))]
     public class CompoundPerceptionPropertyDrawer : PropertyDrawer
     {
+        private static readonly float k_RemoveGraphBtnWidth = 40;
+        private static readonly float k_SpaceWidth = 10;
         Vector2 _scrollPos;
 
         private void AddSubPerception(SerializedProperty arrayProperty, System.Type perceptionType)
@@ -32,63 +34,62 @@ namespace BehaviourAPI.Unity.Editor
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            if (property.managedReferenceValue != null)
+            if (property.managedReferenceValue == null) return;
+
+            var compoundPerceptionProperty = property.FindPropertyRelative("compoundPerception");
+
+            var subPerceptionProperty = property.FindPropertyRelative("subPerceptions");
+
+            EditorGUILayout.BeginHorizontal(GUILayout.Width(position.width));
+
+            var labelRect = new Rect(position.x, position.y, position.width - (k_RemoveGraphBtnWidth + k_SpaceWidth), position.height);
+            var removeRect = new Rect(position.x + position.width - k_RemoveGraphBtnWidth, position.y, k_RemoveGraphBtnWidth, position.height);
+            EditorGUI.LabelField(labelRect, compoundPerceptionProperty.managedReferenceValue.TypeName());
+
+            if (GUI.Button(removeRect, "X"))
             {
-                var compoundPerceptionProperty = property.FindPropertyRelative("compoundPerception");
-                var subPerceptionProperty = property.FindPropertyRelative("subPerceptions");
+                property.managedReferenceValue = null;
+                property.serializedObject.ApplyModifiedProperties();
+                return;
+            }
 
-                EditorGUILayout.BeginHorizontal(GUILayout.Width(position.width));
-                var labelsize = position.width - 50;
+            EditorGUILayout.EndHorizontal();
 
-                EditorGUILayout.LabelField(compoundPerceptionProperty.managedReferenceValue?.TypeName(), GUILayout.Width(220));
+            foreach (SerializedProperty childProp in compoundPerceptionProperty)
+            {
+                EditorGUILayout.PropertyField(childProp, true);
+            }
 
-                bool removed = false;
-                if (GUILayout.Button("X"))
+            if (GUILayout.Button("Add element", EditorStyles.popup))
+            {
+                SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)),
+                    ElementCreatorWindowProvider.Create<PerceptionCreationWindow>((pType) => AddSubPerception(subPerceptionProperty, pType)));
+            }
+
+            GUIStyle centeredLabelstyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
+
+            EditorGUILayout.LabelField("Sub perceptions", centeredLabelstyle);
+            _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos, "window", GUILayout.MinHeight(300));
+
+            if (subPerceptionProperty != null)
+            {
+                for (int i = 0; i < subPerceptionProperty.arraySize; i++)
                 {
-                    property.managedReferenceValue = null;
-                    property.serializedObject.ApplyModifiedProperties();
-                    removed = true;
-                }
-                EditorGUILayout.EndHorizontal();
+                    var subperception = subPerceptionProperty.GetArrayElementAtIndex(i);
+                    var p = subperception.FindPropertyRelative("perception");
 
-                if (!removed)
-                {
-                    if (GUILayout.Button("Add element", EditorStyles.popup))
+                    EditorGUILayout.PropertyField(p);
+                    if (GUILayout.Button("Remove"))
                     {
-                        //subPerceptionProperty.arraySize++;
-
-                        SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)),
-                            ElementCreatorWindowProvider.Create<PerceptionCreationWindow>((pType) => AddSubPerception(subPerceptionProperty, pType)));
-                        //subPerceptionProperty.GetArrayElementAtIndex(subPerceptionProperty.arraySize - 1).FindPropertyRelative("perception").managedReferenceValue = new CustomPerception();
-                        //property.serializedObject.ApplyModifiedProperties();
+                        subPerceptionProperty.DeleteArrayElementAtIndex(i);
+                        property.serializedObject.ApplyModifiedProperties();
+                        break;
                     }
-
-                    GUIStyle centeredLabelstyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
-
-                    EditorGUILayout.LabelField("Sub perceptions", centeredLabelstyle);
-                    _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos, "window", GUILayout.MinHeight(300));
-
-                    if (subPerceptionProperty != null)
-                    {
-                        for (int i = 0; i < subPerceptionProperty.arraySize; i++)
-                        {
-                            var subperception = subPerceptionProperty.GetArrayElementAtIndex(i);
-                            var p = subperception.FindPropertyRelative("perception");
-
-                            EditorGUILayout.PropertyField(p);
-                            if (GUILayout.Button("Remove"))
-                            {
-                                subPerceptionProperty.DeleteArrayElementAtIndex(i);
-                                property.serializedObject.ApplyModifiedProperties();
-                                break;
-                            }
-                            EditorGUILayout.Space(5);
-                        }
-                    }
-
-                    EditorGUILayout.EndScrollView();
+                    EditorGUILayout.Space(5);
                 }
             }
+
+            EditorGUILayout.EndScrollView();
         }
     }
 }

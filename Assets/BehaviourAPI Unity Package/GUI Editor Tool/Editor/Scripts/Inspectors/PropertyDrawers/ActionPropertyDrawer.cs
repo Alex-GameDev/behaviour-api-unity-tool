@@ -14,6 +14,9 @@ namespace BehaviourAPI.Unity.Editor
     [CustomPropertyDrawer(typeof(Action))]
     public class ActionPropertyDrawer : PropertyDrawer
     {
+        private static readonly float k_RemoveGraphBtnWidth = 40;
+        private static readonly float k_SpaceWidth = 10;
+
         private void AssignAction(SerializedProperty property, System.Type actionType)
         {
             if (actionType.IsSubclassOf(typeof(CompoundAction)))
@@ -40,8 +43,8 @@ namespace BehaviourAPI.Unity.Editor
             }
             else
             {
-                var labelRect = new Rect(position.x, position.y, position.width * 0.8f - 5, position.height);
-                var removeRect = new Rect(position.x + position.width * 0.8f, position.y, position.width * 0.2f, position.height);
+                var labelRect = new Rect(position.x, position.y, position.width - (k_RemoveGraphBtnWidth + k_SpaceWidth), position.height);
+                var removeRect = new Rect(position.x + position.width - k_RemoveGraphBtnWidth, position.y, k_RemoveGraphBtnWidth, position.height);
                 EditorGUI.LabelField(labelRect, property.managedReferenceValue.TypeName());
                 if (GUI.Button(removeRect, "X"))
                 {
