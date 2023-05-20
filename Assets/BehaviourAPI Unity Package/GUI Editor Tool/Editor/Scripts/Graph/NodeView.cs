@@ -385,7 +385,6 @@ namespace BehaviourAPI.Unity.Editor.Graph
         /// </summary>
         public void RefreshDisplay()
         {
-            var t = DateTime.Now;
             foreach (var actionData in data.actions)
             {
                 var actionTaskDisplay = m_taskViews[actionData.Name];
@@ -398,7 +397,6 @@ namespace BehaviourAPI.Unity.Editor.Graph
             }
 
             drawer.OnRefreshDisplay();
-            Debug.Log((DateTime.Now - t).TotalMilliseconds);
         }
 
         /// <summary>

@@ -36,7 +36,7 @@ namespace BehaviourAPI.Unity.Runtime
         protected sealed override BehaviourGraph GetExecutionGraph()
         {
             _executionSystem = GetEditorSystemData();
-            _executionSystem.BuildSystem();
+            _executionSystem.BuildSystem(this);
 
             BuildDictionaries();
             BuildedGraph = _executionSystem.graphs[0].graph;

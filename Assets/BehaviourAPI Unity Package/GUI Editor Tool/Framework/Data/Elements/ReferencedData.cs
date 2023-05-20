@@ -1,29 +1,45 @@
-using BehaviourAPI.Core;
+using System;
+using System.Reflection;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework
 {
+    using Core;
+
     [System.Serializable]
-    public class TaskInfo<T>
+    public class FunctionData
     {
         [SerializeField] string fieldName;
-        [SerializeReference] protected T task;
+        public SerializedContextMethod method;
 
-        public TaskInfo(string fieldName)
+        public string Name => fieldName;
+
+        public FunctionData(string fieldName)
         {
             this.fieldName = fieldName;
         }
 
-        public string FieldName => fieldName;
-        public T Task => task;
-
-        public void Build(Node node)
+        public void Build(Node node, Component runner)
         {
-            var type = node.GetType();
-            var field = type.GetField(fieldName);
-            if (field.FieldType.IsAssignableFrom(task.GetType()))
+            Type classType = string.IsNullOrEmpty(method.componentName) ? runner.GetType() : Type.GetType(method.componentName);
+            FieldInfo field = node.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+
+            if (field != null && field.FieldType.IsSubclassOf(typeof(Delegate)))
             {
-                field.SetValue(node, task);
+                MethodInfo methodInfo = classType.GetMethod(method.methodName);
+
+                if (method != null && methodInfo.CreateDelegate(field.FieldType, node) is Delegate del)
+                {
+                    field.SetValue(node, del);
+                }
+                else
+                {
+                    Debug.LogWarning($"The serialized method data does not correspond to the signature of the referenced delegate field \"{fieldName}\", the value was not set properly.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"The field \"{fieldName}\" does not exist or is not a delegate reference, the value was not set properly.");
             }
         }
     }

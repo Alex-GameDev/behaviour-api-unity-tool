@@ -45,14 +45,14 @@ namespace BehaviourAPI.Unity.Framework
         /// Build the main <see cref="BehaviourGraph"/> using the serialized data.
         /// </summary>
         /// <returns>The main <see cref="BehaviourGraph"/> that will be executed.</returns>
-        public BehaviourGraph BuildSystem()
+        public BehaviourGraph BuildSystem(Component runner)
         {
             BehaviourGraph maingraph;
             if (graphs.Count > 0)
             {
                 for (int i = 0; i < graphs.Count; i++)
                 {
-                    graphs[i].Build(this);
+                    graphs[i].Build(this, runner);
                 }
 
                 maingraph = graphs[0].graph;

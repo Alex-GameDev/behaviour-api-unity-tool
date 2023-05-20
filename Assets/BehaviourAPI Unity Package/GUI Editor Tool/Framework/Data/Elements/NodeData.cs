@@ -6,6 +6,7 @@ namespace BehaviourAPI.Unity.Framework
 {
     using Core;
     using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     /// Class that serialize node data.
@@ -44,6 +45,11 @@ namespace BehaviourAPI.Unity.Framework
         [SerializeField] public List<PerceptionData> perceptions = new List<PerceptionData>();
 
         /// <summary>
+        /// List that allows unity to serialize delegates of the node if necessary.
+        /// </summary>
+        [SerializeField] public List<FunctionData> functions = new List<FunctionData>();
+
+        /// <summary>
         /// List of parent nodes referenced by id.
         /// </summary>
         [HideInInspector] public List<string> parentIds = new List<string>();
@@ -69,11 +75,13 @@ namespace BehaviourAPI.Unity.Framework
         {
             var actionDict = this.actions.ToDictionary(k => k.Name, k => k.action);
             var perceptionDict = this.perceptions.ToDictionary(k => k.Name, k => k.perception);
+            var functionDict = this.functions.ToDictionary(k => k.Name, k => k.method);
 
             List<ActionData> actions = new List<ActionData>();
             List<PerceptionData> perceptions = new List<PerceptionData>();
+            List<FunctionData> functions = new List<FunctionData>();
 
-            foreach (var fieldInfo in type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.FlattenHierarchy | System.Reflection.BindingFlags.Instance))
+            foreach (var fieldInfo in type.GetFields(BindingFlags.Public | BindingFlags.FlattenHierarchy | BindingFlags.Instance))
             {
                 if (fieldInfo.FieldType == typeof(Core.Actions.Action))
                 {
@@ -82,6 +90,16 @@ namespace BehaviourAPI.Unity.Framework
                 else if (fieldInfo.FieldType == typeof(Core.Perceptions.Perception))
                 {
                     perceptions.Add(new PerceptionData(fieldInfo.Name));
+                }
+                else if (fieldInfo.FieldType.IsSubclassOf(typeof(Delegate)))
+                {
+                    Type delegateType = fieldInfo.FieldType;
+                    //TODO: Guardar parámetros?
+
+                    MethodInfo invokeMethod = delegateType.GetMethod("Invoke");
+                    ParameterInfo[] parameters = invokeMethod.GetParameters();
+                    Type returnType = invokeMethod.ReturnType;
+                    functions.Add(new FunctionData(fieldInfo.Name));
                 }
             }
 
@@ -101,8 +119,17 @@ namespace BehaviourAPI.Unity.Framework
                 }
             }
 
+            foreach (var functionData in functions)
+            {
+                if (functionDict.TryGetValue(functionData.Name, out SerializedContextMethod m))
+                {
+                    functionData.method = m;
+                }
+            }
+
             this.actions = actions;
             this.perceptions = perceptions;
+            this.functions = functions;
         }
 
         /// <summary>
@@ -137,10 +164,11 @@ namespace BehaviourAPI.Unity.Framework
             return duplicate;
         }
 
-        public void BuildReferences()
+        public void BuildReferences(Component runner)
         {
             actions.ForEach(a => a.Build(node));
             perceptions.ForEach(p => p.Build(node));
+            functions.ForEach(f => f.Build(node, runner));
         }
     }
 }

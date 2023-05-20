@@ -219,7 +219,7 @@ namespace BehaviourAPI.Unity.Framework
         /// Build the internal references.
         /// </summary>
         /// <param name="data"></param>
-        public void Build(SystemData data)
+        public void Build(SystemData data, Component runner)
         {
             var builder = new BehaviourGraphBuilder(graph);
             var nodeIdMap = GetNodeIdMap();
@@ -227,7 +227,7 @@ namespace BehaviourAPI.Unity.Framework
             FixNodeNames();
             for (int i = 0; i < nodes.Count; i++)
             {
-                nodes[i].BuildReferences();
+                nodes[i].BuildReferences(runner);
                 if (nodes[i].node is IBuildable buildable) buildable.Build(data);
                 builder.AddNode(nodes[i].name, nodes[i].node,
                     nodes[i].parentIds.Select(id => nodeIdMap[id].node).ToList(),
