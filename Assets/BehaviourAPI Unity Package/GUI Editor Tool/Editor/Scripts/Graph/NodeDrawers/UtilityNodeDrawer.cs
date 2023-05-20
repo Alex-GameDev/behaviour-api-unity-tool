@@ -20,7 +20,7 @@ namespace BehaviourAPI.Unity.Editor.Graph
         {
             switch (node)
             {
-                case Framework.Adaptations.VariableFactor:
+                case VariableFactor:
                 case ConstantFactor:
                     view.SetColor(BehaviourAPISettings.instance.LeafFactorColor);
                     var functionTaskView = view.AddExtensionView("leaffactor");
@@ -88,13 +88,13 @@ namespace BehaviourAPI.Unity.Editor.Graph
 
         public override void SetUpPorts()
         {
-            if (node != null || node.MaxInputConnections != 0)
+            if (node == null || node.MaxInputConnections != 0)
             {
                 InputPort = view.InstantiatePort(Direction.Input, EPortOrientation.Right);
             }
             else view.inputContainer.Disable();
 
-            if (node != null || node.MaxOutputConnections != 0)
+            if (node == null || node.MaxOutputConnections != 0)
             {
                 OutputPort = view.InstantiatePort(Direction.Output, EPortOrientation.Left);
             }
@@ -115,8 +115,8 @@ namespace BehaviourAPI.Unity.Editor.Graph
         {
             switch (node)
             {
-                case Framework.Adaptations.VariableFactor variableFactor:
-                    var methodDisplay = variableFactor.variableFunction.GetSerializedMethodText();
+                case VariableFactor variableFactor:
+                    var methodDisplay = view.data.functions[0].method.GetSerializedMethodText();
                     var functionTaskView = view.GetTaskView("leaffactor");
                     if (methodDisplay != null)
                     {
@@ -133,8 +133,8 @@ namespace BehaviourAPI.Unity.Editor.Graph
                     functionTaskView.Update(constant.value.ToString());
                     break;
 
-                case Framework.Adaptations.CustomCurveFactor customCurve:
-                    methodDisplay = customCurve.function.GetSerializedMethodText();
+                case CustomCurveFactor customCurve:
+                    methodDisplay = view.data.functions[0].method.GetSerializedMethodText();
                     functionTaskView = view.GetTaskView("function");
                     if (methodDisplay != null)
                     {

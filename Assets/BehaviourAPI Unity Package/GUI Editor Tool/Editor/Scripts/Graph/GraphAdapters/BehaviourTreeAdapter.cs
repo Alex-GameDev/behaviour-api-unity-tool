@@ -22,7 +22,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             EditorHierarchyNode mainNode = new EditorHierarchyNode("BT Nodes");
 
-            EditorHierarchyNode leafNode = new EditorHierarchyNode(typeof(Framework.Adaptations.LeafNode));
+            EditorHierarchyNode leafNode = new EditorHierarchyNode(typeof(LeafNode));
             EditorHierarchyNode compositeNode = new EditorHierarchyNode("Composite nodes");
             EditorHierarchyNode decoratorNode = new EditorHierarchyNode("Decorator nodes");
 

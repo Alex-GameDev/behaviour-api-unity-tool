@@ -4,7 +4,6 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 {
     using BehaviourTrees;
     using Framework;
-    using LeafNode = Framework.Adaptations.LeafNode;
 
     [CustomGraphCodeGenerator(typeof(BehaviourTree))]
     public class BehaviourTreeCodeGenerator : GraphCodeGenerator
@@ -56,7 +55,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             initMethod.nodeName = data.name;
             initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_LeafMethod);
 
-            initMethod.Add(template.GetActionExpression(leafNode.ActionReference, template.GetSystemElementIdentifier(data.id) + "_action"));
+            initMethod.Add(template.GetActionExpression(data.actions[0].action, template.GetSystemElementIdentifier(data.id) + "_action"));
 
             return initMethod;
         }

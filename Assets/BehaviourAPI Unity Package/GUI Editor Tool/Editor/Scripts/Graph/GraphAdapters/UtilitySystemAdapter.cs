@@ -22,7 +22,7 @@ namespace BehaviourAPI.Unity.Editor
             EditorHierarchyNode fusionFactorNode = new EditorHierarchyNode("Fusion factors");
             EditorHierarchyNode curveFactor = new EditorHierarchyNode("Curve factors");
 
-            EditorHierarchyNode actionNode = new EditorHierarchyNode(typeof(Framework.Adaptations.UtilityAction));
+            EditorHierarchyNode actionNode = new EditorHierarchyNode(typeof(UtilityAction));
             EditorHierarchyNode exitNode = new EditorHierarchyNode(typeof(UtilityExitNode));
             EditorHierarchyNode bucketNode = new EditorHierarchyNode(typeof(UtilityBucket));
 

@@ -73,10 +73,6 @@ namespace BehaviourAPI.Unity.Editor
             Dictionary<Type, Type> graphAdapterMainTypeMap = new Dictionary<Type, Type>();
             Dictionary<Type, Type> graphCodeGeneratorMainTypeMap = new Dictionary<Type, Type>();
 
-            HashSet<Type> nodeAdaptedTypes = new HashSet<Type>();
-            HashSet<Type> nodeAdapterTypes = new HashSet<Type>();
-
-
             int c = 0;
             for (int i = 0; i < assemblies.Length; i++)
             {
@@ -88,16 +84,7 @@ namespace BehaviourAPI.Unity.Editor
 
                     if (typeof(Node).IsAssignableFrom(types[j]))
                     {
-                        var adapterAttribute = types[j].GetCustomAttribute<NodeAdapterAttribute>();
-                        if (adapterAttribute != null && typeof(Node).IsAssignableFrom(adapterAttribute.NodeType))
-                        {
-                            nodeAdapterTypes.Add(types[j]);
-                            nodeAdaptedTypes.Add(adapterAttribute.NodeType);
-                        }
-                        else
-                        {
-                            nodeTypes.Add(types[j]);
-                        }
+                         nodeTypes.Add(types[j]);
                     }
                     else if (typeof(BehaviourGraph).IsAssignableFrom(types[j]))
                     {
@@ -153,10 +140,6 @@ namespace BehaviourAPI.Unity.Editor
             }
 
             BuildNodeDrawerMap(nodeTypes, nodeDrawerMainTypeMap);
-            BuildNodeDrawerMap(nodeAdapterTypes, nodeDrawerMainTypeMap);
-
-            nodeTypes.RemoveWhere((t) => nodeAdaptedTypes.Any(tb => tb.IsAssignableFrom(t)));
-            nodeTypes.UnionWith(nodeAdapterTypes);
 
             NodeTypes = nodeTypes.ToList();
             GraphAdapterMap = BuildFullGraphTypeMap(graphTypes, graphAdapterMainTypeMap);

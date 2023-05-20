@@ -5,10 +5,6 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
     using Framework;
     using UtilitySystems;
 
-    using UtilityAction = Framework.Adaptations.UtilityAction;
-    using VariableFactor = Framework.Adaptations.VariableFactor;
-
-
     [CustomGraphCodeGenerator(typeof(UtilitySystem))]
     public class UtilitySystemCodeGenerator : GraphCodeGenerator
     {
@@ -125,7 +121,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                 initMethod.Add(new CodeCustomExpression("null /* missing node */"));
             }
 
-            initMethod.Add(template.GetActionExpression(utilityAction.ActionReference, template.GetSystemElementIdentifier(data.id) + "_action"));
+            initMethod.Add(template.GetActionExpression(data.actions[0].action, template.GetSystemElementIdentifier(data.id) + "_action"));
             initMethod.Add(new CodeCustomExpression(utilityAction.FinishSystemOnComplete.ToCodeFormat()));
 
             if (data.parentIds.Count == 1)
@@ -191,7 +187,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             initMethod.nodeName = data.name;
             initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_VariableFactorMethod);
 
-            initMethod.Add(template.GenerateMethodCodeExpression(variableFactor.variableFunction, null, typeof(float)));
+            initMethod.Add(template.GenerateMethodCodeExpression(data.functions[0].method, null, typeof(float)));
             initMethod.Add(new CodeCustomExpression(variableFactor.min.ToCodeFormat()));
             initMethod.Add(new CodeCustomExpression(variableFactor.max.ToCodeFormat()));
 

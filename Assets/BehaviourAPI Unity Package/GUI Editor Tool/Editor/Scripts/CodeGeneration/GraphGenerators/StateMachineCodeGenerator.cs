@@ -2,16 +2,11 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor.CodeGenerator
 {
-    using BehaviourAPI.Core;
-    using BehaviourAPI.Core.Actions;
-    using BehaviourAPI.Core.Perceptions;
+    using Core;
+    using Core.Actions;
+    using Core.Perceptions;
     using Framework;
     using StateMachines;
-    using ExitTransition = Framework.Adaptations.ExitTransition;
-    using ProbabilisticState = Framework.Adaptations.ProbabilisticState;
-    using State = Framework.Adaptations.State;
-    using StateTransition = Framework.Adaptations.StateTransition;
-
     [CustomGraphCodeGenerator(typeof(FSM))]
     public class StateMachineCodeGenerator : GraphCodeGenerator
     {
@@ -45,10 +40,10 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
             switch (data.node)
             {
-                case State state:
-                    nodeDeclaration.RightExpression = GenerateStateCode(state, data, template); break;
                 case ProbabilisticState pState:
                     nodeDeclaration.RightExpression = GenerateProbabilisticStateCode(pState, data, template); break;
+                case State state:
+                    nodeDeclaration.RightExpression = GenerateStateCode(state, data, template); break;
                 case StateTransition stateTransition:
                     nodeDeclaration.RightExpression = GenerateStateTransitionCode(stateTransition, data, template); break;
                 case ExitTransition exitTransition:
@@ -65,7 +60,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             initMethod.nodeName = data.name;
             initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_StateMethod);
 
-            initMethod.Add(template.GetActionExpression(state.ActionReference, template.GetSystemElementIdentifier(data.id) + "_action"));
+            initMethod.Add(template.GetActionExpression(data.actions[0].action, template.GetSystemElementIdentifier(data.id) + "_action"));
 
             return initMethod;
         }
@@ -76,14 +71,14 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             initMethod.nodeName = data.name;
             initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_ProbabilisticStateMethod);
 
-            initMethod.Add(template.GetActionExpression(state.ActionReference, template.GetSystemElementIdentifier(data.id) + "_action"));
+            initMethod.Add(template.GetActionExpression(data.actions[0].action, template.GetSystemElementIdentifier(data.id) + "_action"));
 
             var probNum = Mathf.Max(data.childIds.Count, state.probabilities.Count);
 
             for (int i = 0; i < probNum; i++)
             {
                 var id = template.GetSystemElementIdentifier(data.childIds[i]);
-                if (id != null && state.probabilities[i] > 0)
+                if (id != null && state.probabilities.Count > i && state.probabilities[i] > 0)
                 {
                     var nodeId = template.GetSystemElementIdentifier(data.id);
                     CodeCustomStatement probAssignation = new CodeCustomStatement($"{nodeId}.SetProbability({state.probabilities[i]});");
@@ -122,7 +117,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                 initMethod.Add(new CodeCustomExpression("null /* missing node */"));
             }
 
-            CreateTransitionArguments(initMethod, template.GetSystemElementIdentifier(data.id), stateTransition.ActionReference, stateTransition.PerceptionReference, stateTransition.StatusFlags, template);
+            CreateTransitionArguments(initMethod, template.GetSystemElementIdentifier(data.id), data.actions[0].action, data.perceptions[0].perception, stateTransition.StatusFlags, template);
 
             return initMethod;
         }
@@ -146,7 +141,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
             initMethod.Add(new CodeCustomExpression(exitTransition.ExitStatus.ToCodeFormat()));
 
-            CreateTransitionArguments(initMethod, template.GetSystemElementIdentifier(data.id), exitTransition.ActionReference, exitTransition.PerceptionReference, exitTransition.StatusFlags, template);
+            CreateTransitionArguments(initMethod, template.GetSystemElementIdentifier(data.id), data.actions[0].action, data.perceptions[0].perception, exitTransition.StatusFlags, template);
 
             return initMethod;
         }
