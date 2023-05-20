@@ -23,21 +23,20 @@ namespace BehaviourAPI.Unity.Editor.Graph
         public override void DrawNodeDetails()
         {
             rootIcon = view.Q("node-root");
-            switch (node)
+
+            if (node is State)
             {
-                case State:
-                    view.SetColor(BehaviourAPISettings.instance.StateColor);
-                    break;
-                case StateTransition:
-                    view.SetColor(BehaviourAPISettings.instance.TransitionColor);
-                    view.AddExtensionView("statusFlags");
-                    break;
-                case ExitTransition:
-                    view.SetColor(BehaviourAPISettings.instance.TransitionColor);
+                view.SetColor(BehaviourAPISettings.instance.StateColor);
+            }
+            else if (node is Transition)
+            {
+                view.SetColor(BehaviourAPISettings.instance.TransitionColor);
+                view.AddExtensionView("statusFlags");
+                if (node is ExitTransition)
+                {
                     rootIcon.Enable();
-                    view.AddExtensionView("statusFlags");
                     rootLabel = view.Q<Label>("node-root-label");
-                    break;
+                }
             }
 
             RecomputeEntryNode();
