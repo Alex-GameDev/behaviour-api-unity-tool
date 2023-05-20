@@ -142,8 +142,15 @@ namespace BehaviourAPI.Unity.Editor.Graph
                 }
             }
 
-            if (data.node is IActionAssignable actionAssignable) AddExtensionView("action");
-            if (data.node is IPerceptionAssignable perceptionAssignable) AddExtensionView("perception");
+            foreach (var actionData in data.actions)
+            {
+                AddExtensionView(actionData.Name);
+            }
+
+            foreach (var perceptionData in data.perceptions)
+            {
+                AddExtensionView(perceptionData.Name);
+            }
 
             drawer.DrawNodeDetails();
 
@@ -378,19 +385,20 @@ namespace BehaviourAPI.Unity.Editor.Graph
         /// </summary>
         public void RefreshDisplay()
         {
-            //var t = DateTime.Now;
-            if (data.node is IActionAssignable actionAssignable)
+            var t = DateTime.Now;
+            foreach (var actionData in data.actions)
             {
-                var actionTaskDisplay = m_taskViews["action"];
-                actionTaskDisplay.Update(actionAssignable.ActionReference.GetActionInfo());
+                var actionTaskDisplay = m_taskViews[actionData.Name];
+                actionTaskDisplay.Update(actionData.action.GetActionInfo());
             }
-            if (data.node is IPerceptionAssignable perceptionAssignable)
+            foreach (var perceptionData in data.perceptions)
             {
-                var perceptionTaskDisplay = m_taskViews["perception"];
-                perceptionTaskDisplay.Update(perceptionAssignable.PerceptionReference.GetPerceptionInfo());
+                var perceptionTaskDisplay = m_taskViews[perceptionData.Name];
+                perceptionTaskDisplay.Update(perceptionData.perception.GetPerceptionInfo());
             }
+
             drawer.OnRefreshDisplay();
-            //Debug.Log((DateTime.Now - t).TotalMilliseconds);
+            Debug.Log((DateTime.Now - t).TotalMilliseconds);
         }
 
         /// <summary>
