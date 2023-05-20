@@ -513,10 +513,26 @@ namespace BehaviourAPI.Unity.Editor
                     var selectedGraphProperty = graphsProperty.GetArrayElementAtIndex(selectedGraphIndex);
                     var selectedNodeProperty = selectedGraphProperty.FindPropertyRelative("nodes").GetArrayElementAtIndex(nodeIndex);
                     var nodeProperty = selectedNodeProperty.FindPropertyRelative("node");
+
+                    var actionsProperty = selectedNodeProperty.FindPropertyRelative("actions");
+                    var perceptionsProperty = selectedNodeProperty.FindPropertyRelative("perceptions");
+
                     var nodeType = nodeProperty.managedReferenceValue.TypeName();
                     EditorGUILayout.LabelField("Type", nodeType, EditorStyles.wordWrappedLabel);
                     DrawPropertyField(selectedNodeProperty, "name");
                     DrawAllFieldsWithoutFoldout(nodeProperty);
+
+                    for (int i = 0; i < actionsProperty.arraySize; i++)
+                    {
+                        var subProp = actionsProperty.GetArrayElementAtIndex(i);
+                        DrawPropertyField(subProp, "action");
+                    }
+
+                    for (int i = 0; i < perceptionsProperty.arraySize; i++)
+                    {
+                        var subProp = perceptionsProperty.GetArrayElementAtIndex(i);
+                        DrawPropertyField(subProp, "perception");
+                    }
                 }
                 else
                 {
