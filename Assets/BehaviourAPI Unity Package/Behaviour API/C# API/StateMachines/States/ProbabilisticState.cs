@@ -16,13 +16,13 @@ namespace BehaviourAPI.StateMachines
         /// </summary>
         public double RandomValue { get; private set; }
 
+        public List<float> probabilities = new List<float>();
+
         #endregion
 
         #region -------------------------------------- Private variables -------------------------------------
 
         static Random Random = new Random();
-
-        Dictionary<Transition, float> _probabilities = new Dictionary<Transition, float>();
 
         #endregion
 
@@ -36,23 +36,9 @@ namespace BehaviourAPI.StateMachines
         /// <param name="probability">The new probablity of the transition.</param>
         public void SetProbability(Transition transition, float probability)
         {
-            if (_transitions.Contains(transition))
-            {
-                if (probability > 0)
-                {
-                    _probabilities[transition] = probability;                    
-                }
-                else
-                {
-                    _probabilities.Remove(transition);
-                }
-            }
-        }
-        public override object Clone()
-        {
-            ProbabilisticState state = (ProbabilisticState)base.Clone();
-            state._probabilities = new Dictionary<Transition, float>();
-            return state;
+            int index = Children.IndexOf(transition);
+            for (int i = index; i < probabilities.Count; i++) probabilities.Add(0);
+            probabilities[index] = probability;
         }
 
         #endregion
@@ -66,7 +52,7 @@ namespace BehaviourAPI.StateMachines
         /// </summary>
         protected override void CheckTransitions()
         {
-            var totalProbability = Math.Max(_probabilities.Sum(p => p.Value), 1f);
+            var totalProbability = Math.Max(probabilities.Sum(), 1f);
             var probability = Random.NextDouble() * totalProbability;
             RandomValue = probability;
             var currentProbSum = 0f;
@@ -78,11 +64,11 @@ namespace BehaviourAPI.StateMachines
                 Transition transition = _transitions[i];
                 if (transition == null) break;
 
-                if (_probabilities.TryGetValue(transition, out float value))
+                if (probabilities.Count > i && probabilities[i] > 0f)
                 {
                     if (selectedTransition == null)
                     {
-                        currentProbSum += value;
+                        currentProbSum += probabilities[i];
                         if (currentProbSum > probability)
                         {
                             selectedTransition = transition;
@@ -116,11 +102,11 @@ namespace BehaviourAPI.StateMachines
         /// <returns>The probability assigned to the transition.</returns>
         public float GetProbability(Transition t)
         {
-            if(_probabilities.TryGetValue(t, out float value))
-            {
-                return value;
-            }
-            return 0f;
+            int index = Children.IndexOf(t);
+            if (probabilities.Count > index)
+                return probabilities[index];
+            else
+                return 0f;
         }
         
         #endregion
