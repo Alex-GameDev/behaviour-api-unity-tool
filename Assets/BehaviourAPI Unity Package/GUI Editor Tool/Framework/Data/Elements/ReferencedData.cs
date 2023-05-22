@@ -69,7 +69,6 @@ namespace BehaviourAPI.Unity.Framework
             {
                 Debug.LogWarning($"The field \"{fieldName}\" does not exist or does not correspond to a property of type Action, the value was not set properly.\n" +
                     $"nodeType: {node.GetType().Name}\nfieldType: {field?.FieldType.Name}");
-                Debug.Log(data.graphs.SelectMany(g => g.nodes).First(n => n.node == node).id);
             }
 
             if(action is IBuildable buildable)

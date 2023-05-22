@@ -82,27 +82,23 @@ namespace BehaviourAPI.Unity.Framework
             this.id = id;
         }
 
-        public void Validate() => ValidateReferences(node.GetType());
+        public bool Validate() => ValidateReferences(node.GetType());
 
-        void ValidateReferences(Type type)
+        bool ValidateReferences(Type type)
         {
-            var actionDict = this.actions.ToDictionary(k => k.Name, k => k.action);
-            var perceptionDict = this.perceptions.ToDictionary(k => k.Name, k => k.perception);
-            var functionDict = this.functions.ToDictionary(k => k.Name, k => k.method);
-
-            List<ActionData> actions = new List<ActionData>();
-            List<PerceptionData> perceptions = new List<PerceptionData>();
-            List<FunctionData> functions = new List<FunctionData>();
+            List<ActionData> currentActions = new List<ActionData>();
+            List<PerceptionData> currentPerceptions = new List<PerceptionData>();
+            List<FunctionData> currentFunctions = new List<FunctionData>();
 
             foreach (var fieldInfo in type.GetFields(BindingFlags.Public | BindingFlags.FlattenHierarchy | BindingFlags.Instance))
             {
                 if (fieldInfo.FieldType == typeof(Core.Actions.Action))
                 {
-                    actions.Add(new ActionData(fieldInfo.Name));
+                    currentActions.Add(new ActionData(fieldInfo.Name));
                 }
                 else if (fieldInfo.FieldType == typeof(Core.Perceptions.Perception))
                 {
-                    perceptions.Add(new PerceptionData(fieldInfo.Name));
+                    currentPerceptions.Add(new PerceptionData(fieldInfo.Name));
                 }
                 else if (fieldInfo.FieldType.IsSubclassOf(typeof(Delegate)))
                 {
@@ -111,37 +107,69 @@ namespace BehaviourAPI.Unity.Framework
                     MethodInfo invokeMethod = delegateType.GetMethod("Invoke");
                     ParameterInfo[] parameters = invokeMethod.GetParameters();
                     Type returnType = invokeMethod.ReturnType;
-                    functions.Add(new FunctionData(fieldInfo.Name));
+                    currentFunctions.Add(new FunctionData(fieldInfo.Name));
                 }
             }
 
             foreach (var actionData in actions)
             {
-                if(actionDict.TryGetValue(actionData.Name, out Core.Actions.Action a))
+                bool actionReferenceFound = false;
+                foreach(var currentActionData in currentActions)
                 {
-                    actionData.action = a;
+                    if(actionData.Name == currentActionData.Name)
+                    {
+                        currentActionData.action = actionData.action;
+                        actionReferenceFound = true;
+                        break;
+                    }
+                }
+                if(!actionReferenceFound)
+                {
+                    Debug.LogWarning($"VALIDATION ERROR: Action field called \"{actionData.Name}\" was not found. The reference will be deleted.");
                 }
             }
 
             foreach (var perceptionData in perceptions)
             {
-                if (perceptionDict.TryGetValue(perceptionData.Name, out Core.Perceptions.Perception p))
+                bool perceptionReferenceFound = false;
+                foreach (var currentActionData in currentPerceptions)
                 {
-                    perceptionData.perception = p;
+                    if (perceptionData.Name == currentActionData.Name)
+                    {
+                        currentActionData.perception = perceptionData.perception;
+                        perceptionReferenceFound = true;
+                        break;
+                    }
+                }
+                if (!perceptionReferenceFound)
+                {
+                    Debug.LogWarning($"VALIDATION ERROR: Perception field called \"{perceptionData.Name}\" was not found. The reference will be deleted.");
                 }
             }
 
             foreach (var functionData in functions)
             {
-                if (functionDict.TryGetValue(functionData.Name, out SerializedContextMethod m))
+                bool actionReferenceFound = false;
+                foreach (var currentFunctionData in currentFunctions)
                 {
-                    functionData.method = m;
+                    if (currentFunctionData.Name == currentFunctionData.Name)
+                    {
+                        currentFunctionData.method = functionData.method;
+                        actionReferenceFound = true;
+                        break;
+                    }
+                }
+                if (!actionReferenceFound)
+                {
+                    Debug.LogWarning($"VALIDATION ERROR: Function field called \"{functionData.Name}\" was not found. The reference will be deleted.");
                 }
             }
 
-            this.actions = actions;
-            this.perceptions = perceptions;
-            this.functions = functions;
+            actions = currentActions;
+            perceptions = currentPerceptions;
+            functions = currentFunctions;
+
+            return true;
         }
 
         /// <summary>

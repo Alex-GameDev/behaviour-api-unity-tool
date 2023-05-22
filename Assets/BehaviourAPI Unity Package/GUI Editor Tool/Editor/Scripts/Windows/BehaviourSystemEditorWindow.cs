@@ -233,6 +233,7 @@ namespace BehaviourAPI.Unity.Editor
 
             if (system != null && !runtime)
             {
+                if (system.Data.ValidateReferences()) EditorUtility.SetDirty(system.ObjectReference);
                 m_ModeLabel.text = runtime ? "Runtime" : "Editor";
 
                 if (system.ObjectReference != null)

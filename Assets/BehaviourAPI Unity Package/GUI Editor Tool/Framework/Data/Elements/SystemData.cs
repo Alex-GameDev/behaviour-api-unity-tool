@@ -82,5 +82,15 @@ namespace BehaviourAPI.Unity.Framework
             }
             return dict;
         }
+
+        public bool ValidateReferences()
+        {
+            bool referencesChanged = false;
+            foreach(GraphData graphData in graphs)
+            {
+                referencesChanged |= graphData.ValidateReferences();
+            }
+            return referencesChanged;
+        }
     }
 }

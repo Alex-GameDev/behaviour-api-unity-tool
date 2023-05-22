@@ -232,6 +232,16 @@ namespace BehaviourAPI.Unity.Framework
             builder.Build();
         }
 
+        public bool ValidateReferences()
+        {
+            bool referencesChanged = false;
+            foreach (NodeData nodeData in nodes)
+            {
+                referencesChanged |= nodeData.Validate();
+            }
+            return referencesChanged;
+        }
+
         private void FixNodeNames()
         {
             HashSet<string> usedNames = new HashSet<string>();
