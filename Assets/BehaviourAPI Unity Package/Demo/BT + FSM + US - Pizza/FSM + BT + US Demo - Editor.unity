@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -723,7 +723,7 @@ MonoBehaviour:
         position: {x: -300, y: 400}
         node:
           rid: 6537695503399780371
-        actions: 
+        actions:
         - fieldName: Action
           action:
             rid: 6537695503399780376
@@ -737,7 +737,7 @@ MonoBehaviour:
         position: {x: 0, y: 400}
         node:
           rid: 6537695503399780372
-        actions: 
+        actions:
         - fieldName: Action
           action:
             rid: 6537695503399780377
@@ -770,7 +770,7 @@ MonoBehaviour:
         position: {x: 600, y: 233.33333}
         node:
           rid: 6537695503399780389
-        actions: 
+        actions:
         - fieldName: Action
           action:
             rid: 6537695503399780391
@@ -798,7 +798,7 @@ MonoBehaviour:
         position: {x: 631, y: 40}
         node:
           rid: 6537695503399780394
-        actions: 
+        actions:
         - fieldName: Action
           action:
             rid: 6537695503399780395
@@ -838,7 +838,7 @@ MonoBehaviour:
           rid: 6537695503399780398
         actions: []
         perceptions: []
-        functions: 
+        functions:
         - fieldName: Variable
           method:
             componentName: 
@@ -855,7 +855,7 @@ MonoBehaviour:
           rid: 6537695503399780400
         actions: []
         perceptions: []
-        functions: 
+        functions:
         - fieldName: Variable
           method:
             componentName: 
@@ -886,7 +886,7 @@ MonoBehaviour:
         position: {x: -301, y: 324}
         node:
           rid: 6537695503399780379
-        actions: 
+        actions:
         - fieldName: Action
           action:
             rid: 6537695503399780386
@@ -900,7 +900,7 @@ MonoBehaviour:
         position: {x: 258, y: 306}
         node:
           rid: 6537695503399780380
-        actions: 
+        actions:
         - fieldName: Action
           action:
             rid: 6537695503399780387
@@ -915,8 +915,14 @@ MonoBehaviour:
         position: {x: 1087, y: 311}
         node:
           rid: 6537695503399780381
-        actions: []
-        perceptions: []
+        actions:
+        - fieldName: Action
+          action:
+            rid: -2
+        perceptions:
+        - fieldName: Perception
+          perception:
+            rid: -2
         functions: []
         parentIds:
         - 559b49e5-6888-4fd2-83cb-9ed5ada701a2
@@ -926,7 +932,7 @@ MonoBehaviour:
         position: {x: 738, y: 324}
         node:
           rid: 6537695503399780382
-        actions: 
+        actions:
         - fieldName: Action
           action:
             rid: 6537695503399780388
@@ -943,8 +949,14 @@ MonoBehaviour:
         position: {x: -21.5, y: 315}
         node:
           rid: 6537695503399780383
-        actions: []
-        perceptions: []
+        actions:
+        - fieldName: Action
+          action:
+            rid: -2
+        perceptions:
+        - fieldName: Perception
+          perception:
+            rid: -2
         functions: []
         parentIds:
         - f180aa8c-c95d-4066-88a5-2a9d02f9dfeb
@@ -955,8 +967,14 @@ MonoBehaviour:
         position: {x: 490.5, y: 308}
         node:
           rid: 6537695503399780384
-        actions: []
-        perceptions: []
+        actions:
+        - fieldName: Action
+          action:
+            rid: -2
+        perceptions:
+        - fieldName: Perception
+          perception:
+            rid: -2
         functions: []
         parentIds:
         - 8fe50bac-3f7c-412f-9341-f31dc39514eb
@@ -967,8 +985,14 @@ MonoBehaviour:
         position: {x: 739, y: 64}
         node:
           rid: 6537695503399780385
-        actions: []
-        perceptions: []
+        actions:
+        - fieldName: Action
+          action:
+            rid: -2
+        perceptions:
+        - fieldName: Perception
+          perception:
+            rid: -2
         functions: []
         parentIds:
         - 559b49e5-6888-4fd2-83cb-9ed5ada701a2
@@ -1005,9 +1029,9 @@ MonoBehaviour:
       data:
         IsRandomized: 0
     - rid: 6537695503399780371
-      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}      
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
     - rid: 6537695503399780372
-      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}      
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
     - rid: 6537695503399780373
       type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
     - rid: 6537695503399780374
@@ -1031,7 +1055,7 @@ MonoBehaviour:
     - rid: 6537695503399780379
       type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
     - rid: 6537695503399780380
-      type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}     
+      type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
     - rid: 6537695503399780381
       type: {class: ExitTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
@@ -1256,7 +1280,7 @@ MonoBehaviour:
       data:
         PullingEnabled: 1
         min: 0
-        max: 4        
+        max: 4
     - rid: 6537695503399780401
       type: {class: WeightedFusionFactor, ns: BehaviourAPI.UtilitySystems, asm: BehaviourAPI.UtilitySystems}
       data:
@@ -1799,7 +1823,7 @@ MonoBehaviour:
   _ingredientText: {fileID: 900355733}
 --- !u!95 &1993031430
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1816,7 +1840,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!64 &1993031431
 MeshCollider:
   m_ObjectHideFlags: 0

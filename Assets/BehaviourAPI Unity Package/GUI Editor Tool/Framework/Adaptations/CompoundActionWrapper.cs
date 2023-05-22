@@ -48,6 +48,9 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
 
         public void Build(SystemData data)
         {
+            foreach(var subAction in subActions)
+                if (subAction.action is IBuildable buildable) buildable.Build(data);
+
             compoundAction.SubActions = subActions.Select(p => p.action).ToList();
         }
     }

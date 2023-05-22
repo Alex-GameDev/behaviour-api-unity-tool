@@ -3,6 +3,7 @@ using UnityEngine;
 namespace BehaviourAPI.Unity.Editor.CodeGenerator
 {
     using Framework;
+    using System.Linq;
     using UtilitySystems;
 
     [CustomGraphCodeGenerator(typeof(UtilitySystem))]
@@ -31,180 +32,97 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
             template.AddNamespace("BehaviourAPI.UtilitySystems");
             template.AddGraphCreationStatement(graphStatement);
+            template.CurrentGraphIdentifier = GraphIdentifier;
 
-            foreach (var data in graphData.nodes)
+            foreach (var nodeData in graphData.nodes)
             {
-                GenerateNodeCode(data, template);
+                GenerateCode(nodeData, template);
             }
         }
 
-        private void GenerateNodeCode(NodeData data, CodeTemplate template)
+        private void GenerateCode(NodeData nodeData, CodeTemplate template)
         {
-            if (data == null) return;
-            if (IsGenerated(data.id)) return;
+            if (nodeData == null || IsGenerated(nodeData.id)) return;
+            CodeNodeStatementGroup nodeCode = new CodeNodeStatementGroup(nodeData, template);
+            GenerateNodeCode(nodeData, nodeCode, template);
+            MarkGenerated(nodeData.id);
+            nodeCode.Commit();
+        }
 
-            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement(data.node.GetType(), template.GetSystemElementIdentifier(data.id));
-            switch (data.node)
+        private void GenerateNodeCode(NodeData nodeData, CodeNodeStatementGroup code, CodeTemplate template)
+        {          
+            switch (nodeData.node)
             {
                 case VariableFactor variableFactor:
-                    nodeDeclaration.RightExpression = GenerateVariableFactorCode(data, variableFactor, template); break;
+                    code.SetMethod(k_VariableFactorMethod);
+                    code.AddFirstFunction();
+                    code.AddFloat(variableFactor.min);
+                    code.AddFloat(variableFactor.max);
+                    break;
+
                 case ConstantFactor constantFactor:
-                    nodeDeclaration.RightExpression = GenerateConstantFactorCode(data, constantFactor, template); break;
-                case FusionFactor fusionFactor:
-                    nodeDeclaration.RightExpression = GenerateFusionFactorCode(data, fusionFactor, template); break;
-                case CurveFactor curveFactor:
-                    nodeDeclaration.RightExpression = GenerateCurveFactorCode(data, curveFactor, template); break;
-                case UtilityAction utilityAction:
-                    nodeDeclaration.RightExpression = GenerateutilityActionCode(data, utilityAction, template); break;
+                    code.SetMethod(k_ConstantFactorMethod);
+                    code.AddFloat(constantFactor.value);
+                    break;
+
+                case FusionFactor:
+                    code.SetMethod(k_FusionFactorMethod + "<" + nodeData.node.TypeName() + ">");
+
+                    for (int i = 0; i < nodeData.childIds.Count; i++)
+                        GenerateCode(GetNodeById(nodeData.childIds[i]), template);
+
+                    code.AddChildList();
+                    break;
+
+                case CurveFactor:
+                    code.SetMethod(k_CurveFactorMethod + "<" + nodeData.node.TypeName() + ">");
+
+                    if(nodeData.childIds.Count > 0)
+                        GenerateCode(GetNodeById(nodeData.childIds[0]), template);
+
+                    code.AddFirstChild();
+                    break;
+
+                case UtilityAction:
+                    code.SetMethod(k_UtilityActionMethod);
+
+                    if (nodeData.childIds.Count > 0)
+                        GenerateCode(GetNodeById(nodeData.childIds[0]), template);
+
+                    code.AddFirstChild();
+                    code.AddFirstAction();
+
+                    if (nodeData.parentIds.Count > 0)
+                        GenerateCode(GetNodeById(nodeData.parentIds[0]), template);
+
+                    code.AddFirstParent(true);
+                    break;
+
                 case UtilityExitNode utilityExitNode:
-                    nodeDeclaration.RightExpression = GenerateutilityExitNodeCode(data, utilityExitNode, template); break;
+                    code.SetMethod(k_UtilityExitNodeMethod);
+
+                    if (nodeData.childIds.Count > 0)
+                        GenerateCode(GetNodeById(nodeData.childIds[0]), template);
+
+                    code.AddFirstChild();
+                    code.AddStatus(utilityExitNode.ExitStatus);
+
+                    if (nodeData.parentIds.Count > 0)
+                        GenerateCode(GetNodeById(nodeData.parentIds[0]), template);
+
+                    code.AddFirstParent(true);
+                    break;
                 case UtilityBucket utilityBucket:
-                    nodeDeclaration.RightExpression = GenerateutilityBucketCode(data, utilityBucket, template); break;
+                    code.SetMethod(k_UtilityBucketMethod);
+                    code.AddFloat(utilityBucket.Inertia);
+                    code.AddFloat(utilityBucket.BucketThreshold);
+
+                    if (nodeData.parentIds.Count > 0)
+                        GenerateCode(GetNodeById(nodeData.parentIds[0]), template);
+
+                    code.AddFirstParent(true);
+                    break;
             }
-            template.AddStatement(nodeDeclaration);
-            MarkGenerated(data.id);
-        }
-
-        private CodeNodeCreationMethodExpression GenerateutilityBucketCode(NodeData data, UtilityBucket utilityBucket, CodeTemplate template)
-        {
-            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
-            initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_UtilityBucketMethod);
-
-            initMethod.Add(new CodeCustomExpression(utilityBucket.Inertia.ToCodeFormat()));
-            initMethod.Add(new CodeCustomExpression(utilityBucket.BucketThreshold.ToCodeFormat()));
-            return initMethod;
-        }
-
-        private CodeNodeCreationMethodExpression GenerateutilityExitNodeCode(NodeData data, UtilityExitNode utilityExitNode, CodeTemplate template)
-        {
-            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
-            initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_UtilityExitNodeMethod);
-
-            if (data.childIds.Count == 1)
-            {
-                GenerateNodeCode(GetNodeById(data.childIds[0]), template);
-                initMethod.Add(GetChildExpression(data.childIds[0], template));
-            }
-            else
-            {
-                Debug.LogWarning("CodeGenError: The number of children is wrong.");
-                initMethod.Add(new CodeCustomExpression("null /* missing node */"));
-            }
-
-            initMethod.Add(new CodeCustomExpression(utilityExitNode.ExitStatus.ToCodeFormat()));
-
-            if (data.parentIds.Count == 1)
-            {
-                GenerateNodeCode(GetNodeById(data.parentIds[0]), template);
-                initMethod.Add(GetChildExpression(data.parentIds[0], template));
-            }
-
-            return initMethod;
-        }
-
-        private CodeNodeCreationMethodExpression GenerateutilityActionCode(NodeData data, UtilityAction utilityAction, CodeTemplate template)
-        {
-            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
-            initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_UtilityActionMethod);
-
-            if (data.childIds.Count == 1)
-            {
-                GenerateNodeCode(GetNodeById(data.childIds[0]), template);
-                initMethod.Add(GetChildExpression(data.childIds[0], template));
-            }
-            else
-            {
-                Debug.LogWarning("CodeGenError: The number of children is wrong.");
-                initMethod.Add(new CodeCustomExpression("null /* missing node */"));
-            }
-
-            initMethod.Add(template.GetActionExpression(data.actions[0].action, template.GetSystemElementIdentifier(data.id) + "_action"));
-            initMethod.Add(new CodeCustomExpression(utilityAction.FinishSystemOnComplete.ToCodeFormat()));
-
-            if (data.parentIds.Count == 1)
-            {
-                GenerateNodeCode(GetNodeById(data.parentIds[0]), template);
-                initMethod.Add(GetChildExpression(data.parentIds[0], template));
-            }
-
-            return initMethod;
-
-        }
-
-        private CodeNodeCreationMethodExpression GenerateCurveFactorCode(NodeData data, CurveFactor curveFactor, CodeTemplate template)
-        {
-            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
-            initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_CurveFactorMethod + "<" + data.node.TypeName() + ">");
-
-            if (data.childIds.Count == 1)
-            {
-                GenerateNodeCode(GetNodeById(data.childIds[0]), template);
-                initMethod.Add(GetChildExpression(data.childIds[0], template));
-            }
-            else
-            {
-                initMethod.Add(new CodeCustomExpression("null"));
-                Debug.LogWarning("CodeGenError: The number of children is wrong.");
-            }
-            GenerateUtilityNodeProperties(data.node as UtilityNode, template.GetSystemElementIdentifier(data.id), template);
-            return initMethod;
-        }
-
-        private CodeNodeCreationMethodExpression GenerateFusionFactorCode(NodeData data, FusionFactor fusionFactor, CodeTemplate template)
-        {
-            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
-            initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_FusionFactorMethod + "<" + data.node.TypeName() + ">");
-
-            for (int i = 0; i < data.childIds.Count; i++)
-            {
-                GenerateNodeCode(GetNodeById(data.childIds[i]), template);
-                initMethod.Add(GetChildExpression(data.childIds[i], template));
-            }
-
-            GenerateUtilityNodeProperties(data.node as UtilityNode, template.GetSystemElementIdentifier(data.id), template);
-            return initMethod;
-        }
-
-        private CodeNodeCreationMethodExpression GenerateConstantFactorCode(NodeData data, ConstantFactor constantFactor, CodeTemplate template)
-        {
-            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
-            initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_ConstantFactorMethod);
-
-            initMethod.Add(new CodeCustomExpression(constantFactor.value.ToCodeFormat()));
-
-            return initMethod;
-        }
-
-        private CodeNodeCreationMethodExpression GenerateVariableFactorCode(NodeData data, VariableFactor variableFactor, CodeTemplate template)
-        {
-            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
-            initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_VariableFactorMethod);
-
-            initMethod.Add(template.GenerateMethodCodeExpression(data.functions[0].method, null, typeof(float)));
-            initMethod.Add(new CodeCustomExpression(variableFactor.min.ToCodeFormat()));
-            initMethod.Add(new CodeCustomExpression(variableFactor.max.ToCodeFormat()));
-
-            return initMethod;
-        }
-        private void GenerateUtilityNodeProperties(UtilityNode obj, string identifier, CodeTemplate template)
-        {
-            var type = obj.GetType();
-            var fields = type.GetFields();
-
-            foreach (var field in fields)
-            {
-                if (field.Name == "PullingEnabled") continue;
-
-                template.AddPropertyStatement(field.GetValue(obj), identifier, field.Name);
-            }
-        }
-
+        }      
     }
 }

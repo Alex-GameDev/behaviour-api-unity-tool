@@ -232,7 +232,6 @@ MonoBehaviour:
         actions: []
         perceptions: []
         functions: []
-        actions: []
         parentIds: []
         childIds:
         - ac92051b-f575-4429-baff-3c6f0b0d16ef

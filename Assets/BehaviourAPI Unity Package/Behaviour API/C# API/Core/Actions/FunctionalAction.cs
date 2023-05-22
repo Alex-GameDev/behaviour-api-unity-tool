@@ -65,6 +65,13 @@ namespace BehaviourAPI.Core.Actions
         }
 
         /// <summary>
+        /// Default constructor
+        /// </summary>
+        public FunctionalAction()
+        {
+        }
+
+        /// <summary>
         /// <inheritdoc/>
         /// Invokes <see cref="onStarted"/>.
         /// </summary>

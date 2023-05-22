@@ -176,7 +176,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         }
     }
 
-    public class CodeMMethodInvokeExpression : CodeExpression
+    public class CodeMethodInvokeExpression : CodeExpression
     {
         public CodeMethodReferenceExpression methodReferenceExpression;
         public List<CodeExpression> parameters = new List<CodeExpression>();
@@ -199,7 +199,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         }
     }
 
-    public class CodeNodeCreationMethodExpression : CodeMMethodInvokeExpression
+    public class CodeNodeCreationMethodExpression : CodeMethodInvokeExpression
     {
         public string nodeName;
 

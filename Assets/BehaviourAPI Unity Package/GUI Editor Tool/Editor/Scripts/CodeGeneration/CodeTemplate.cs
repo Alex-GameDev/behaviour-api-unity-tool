@@ -2,6 +2,7 @@ using BehaviourAPI.Unity.Framework;
 
 namespace BehaviourAPI.Unity.Editor.CodeGenerator
 {
+    using BehaviourAPI.Core;
     using BehaviourAPI.Core.Actions;
     using BehaviourAPI.Core.Perceptions;
     using BehaviourAPI.Unity.Framework.Adaptations;
@@ -13,6 +14,191 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
     using System.Text.RegularExpressions;
     using UnityEngine;
     using Action = Core.Actions.Action;
+
+    /// <summary>
+    /// Class that represents the set of instructions needed to instantiate a node.
+    /// </summary>
+    public class CodeNodeStatementGroup
+    {
+        NodeData m_NodeData;
+
+        CodeTemplate m_Template;
+
+        List<CodeStatement> m_argumentStatements;
+        CodeVariableDeclarationStatement m_NodeCreationStatement;
+        CodeMethodInvokeExpression m_MethodInvoke;
+        List<CodeStatement> m_PropertyStatements;
+
+
+        public CodeNodeStatementGroup(NodeData nodeData, CodeTemplate template)
+        {
+            m_NodeData = nodeData;
+            m_Template = template;
+            string identifier = template.GetSystemElementIdentifier(nodeData.id);
+
+            m_NodeCreationStatement = new CodeVariableDeclarationStatement(nodeData.node.GetType(), identifier);
+            m_MethodInvoke = new CodeMethodInvokeExpression();
+            m_NodeCreationStatement.RightExpression = m_MethodInvoke;
+
+            m_argumentStatements = new List<CodeStatement>();
+            m_PropertyStatements = new List<CodeStatement>();
+        }
+
+        public void Commit() => m_Template.AddNodeStatement(this);
+
+        public void SetMethod(string k_method)
+        {
+            string graphIdentifier = m_Template.CurrentGraphIdentifier;
+            m_MethodInvoke.methodReferenceExpression = new CodeMethodReferenceExpression(graphIdentifier, k_method);
+        }
+
+        public void AddFloat(float value)
+        {
+            m_MethodInvoke.parameters.Add(new CodeCustomExpression(value.ToCodeFormat()));
+        }
+
+        public void AddChildList()
+        {
+            for(int i = 0; i < m_NodeData.childIds.Count; i++)
+            {
+                string childIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.childIds[i]);
+                var childExpression = new CodeCustomExpression(childIdentifier);
+                m_MethodInvoke.parameters.Add(childExpression);
+            }
+        }
+
+        public void AddFirstChild()
+        {
+            if(m_NodeData.childIds.Count > 0)
+            {
+                string childIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.childIds[0]);
+                var childExpression = new CodeCustomExpression(childIdentifier);
+                m_MethodInvoke.parameters.Add(childExpression);
+            }
+            else
+            {
+                var childExpression = new CodeCustomExpression("null /* missing child */");
+                m_MethodInvoke.parameters.Add(childExpression);
+            }
+        }
+
+        internal void AddFirstAction(bool isNotMandatory = false, string paramName = null)
+        {
+            if (m_NodeData.actions.Count > 0 && m_NodeData.actions[0].action != null)
+            {
+                var actionIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.id) + "_action";
+                var actionExpression = m_Template.GetActionExpression(m_NodeData.actions[0].action, actionIdentifier, m_argumentStatements);
+                m_MethodInvoke.parameters.Add(actionExpression);
+            }
+            else if(!isNotMandatory)
+            {
+                var childExpression = new CodeCustomExpression("null /* missing action */");
+                m_MethodInvoke.parameters.Add(childExpression);
+            }
+        }
+
+        internal void AddFirstPerception(bool isNotMandatory = false, string paramName = null)
+        {
+            string paramPrefix = string.IsNullOrEmpty(paramName) ? "" : paramName + ": ";
+            if (m_NodeData.perceptions.Count > 0 && m_NodeData.perceptions[0].perception != null)
+            {
+                var perceptionIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.id) + "_perception";
+                var perceptionExpression = m_Template.GetPerceptionExpression(m_NodeData.perceptions[0].perception, perceptionIdentifier, m_argumentStatements);
+                m_MethodInvoke.parameters.Add(perceptionExpression);
+            }
+            else if (!isNotMandatory)
+            {
+                var childExpression = new CodeCustomExpression("null /* missing perception */");
+                m_MethodInvoke.parameters.Add(childExpression);
+            }
+        }
+
+        public void AddStatusFlags(StatusFlags statusFlags, bool isNotMandatory = false, string paramName = null)
+        {
+            if ((int)statusFlags == -1 || statusFlags == StatusFlags.Active)
+            {
+                if (isNotMandatory) return;
+                else statusFlags = StatusFlags.Active;
+            }
+            string paramPrefix = string.IsNullOrEmpty(paramName) ? "" : paramName + ": ";
+            var statusExpression = new CodeCustomExpression(paramPrefix + "StatusFlags." + statusFlags);
+            m_MethodInvoke.parameters.Add(statusExpression);
+        }
+
+
+        public void AddFirstParent(bool isNotMandatory = false)
+        {
+            if (m_NodeData.parentIds.Count > 0)
+            {
+                string parentIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.parentIds[0]);
+                var parentExpression = new CodeCustomExpression(parentIdentifier);
+                m_MethodInvoke.parameters.Add(parentExpression);
+            }
+            else if(!isNotMandatory)
+            {
+                var childExpression = new CodeCustomExpression("null /* missing parent */");
+                m_MethodInvoke.parameters.Add(childExpression);
+            }
+        }
+
+        public void AddStatus(Status exitStatus)
+        {
+            var statusExpression = new CodeCustomExpression("Status." + exitStatus);
+            m_MethodInvoke.parameters.Add(statusExpression);
+        }
+
+        public void AddFirstFunction(bool isNotMandatory = false)
+        {
+            if (m_NodeData.functions.Count > 0 && m_NodeData.functions[0].method != null)
+            {
+                var fieldInfo = m_NodeData.node.GetType().GetField(m_NodeData.functions[0].Name);
+
+                if (fieldInfo == null || !fieldInfo.FieldType.IsSubclassOf(typeof(Delegate))) return;
+
+                var methodInfo = fieldInfo.FieldType.GetMethod("Invoke");
+                var returnParam = methodInfo.ReturnParameter.ParameterType;
+                var args = methodInfo.GetParameters().Select(p => p.GetType()).ToArray();
+
+                var functionIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.id) + "_function";
+                var functionExpression = m_Template.GenerateMethodCodeExpression(m_NodeData.functions[0].method, args, returnParam);
+                m_MethodInvoke.parameters.Add(functionExpression);
+            }
+            else if (!isNotMandatory)
+            {
+                var childExpression = new CodeCustomExpression("null /* missing action */");
+                m_MethodInvoke.parameters.Add(childExpression);
+            }
+        }
+
+        public void AddBool(bool b)
+        {
+            var boolExpression = new CodeCustomExpression(b.ToCodeFormat());
+            m_MethodInvoke.parameters.Add(boolExpression);
+        }
+
+        public void AddPropertyAssignations()
+        {
+            string nodeIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.id);
+            foreach(var field in m_NodeData.node.GetType().GetFields(System.Reflection.BindingFlags.Public | 
+                System.Reflection.BindingFlags.FlattenHierarchy | System.Reflection.BindingFlags.Instance))
+            {
+                var value = field.GetValue(m_NodeData.node);
+                if(value != null)
+                {
+                    var statement = m_Template.GetPropertyStatement(field.GetValue(m_NodeData.node), nodeIdentifier, field.Name, m_PropertyStatements);
+                    m_PropertyStatements.Add(statement);
+                }
+            }  
+        }
+
+        public void GenerateCode(CodeWriter codeWriter, CodeGenerationOptions options)
+        {
+            m_argumentStatements.ForEach(s => s.GenerateCode(codeWriter, options));
+            m_NodeCreationStatement.GenerateCode(codeWriter, options);
+            m_PropertyStatements.ForEach(s => s.GenerateCode(codeWriter, options));
+            codeWriter.AppendLine("");
+        }
+    }
 
     public class CodeTemplate
     {
@@ -31,6 +217,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
         private static readonly string[] k_BaseNamespaces = new string[]
         {
+            "System",
             "System.Collections.Generic",
             "UnityEngine",
             "BehaviourAPI.Core",
@@ -42,22 +229,30 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
         SystemData m_SystemData;
 
+        // Used to get the node and graph identifiers
         Dictionary<string, string> m_SystemElementIdentifierMap = new Dictionary<string, string>();
 
+        // Used to get the identifiers of the local components
         Dictionary<Type, string> m_ComponentReferenceIdentifierMap = new Dictionary<Type, string>();
 
-        List<CodeFieldMember> m_FieldMembers = new List<CodeFieldMember>();
-
-        List<CodeStatement> m_CodeGraphStatements = new List<CodeStatement>();
-        List<CodeStatement> m_CodePropertiesStatements = new List<CodeStatement>();
-        List<CodeStatement> m_CodeStatements = new List<CodeStatement>();
-
+        // Used to get the local method names
         Dictionary<string, CodeMethodMember> m_MethodMembers = new Dictionary<string, CodeMethodMember>();
 
+        // List of the imported namespaces
         HashSet<string> m_UsingNamespaces = new HashSet<string>();
 
+        // Set of used variable names
         HashSet<string> m_UsedIdentifiers = new HashSet<string>();
 
+        // Used to get the identifier used for an specified object
+        Dictionary<object, string> m_FieldIdentifierMap = new Dictionary<object, string>();
+
+        List<CodeFieldMember> m_FieldMembers = new List<CodeFieldMember>();
+        List<CodeStatement> m_CodeGraphStatements = new List<CodeStatement>();
+        List<CodeNodeStatementGroup> m_CodeNodeStatementList = new List<CodeNodeStatementGroup>();
+        List<CodeStatement> m_CodeStatements = new List<CodeStatement>();
+
+        public string CurrentGraphIdentifier { get; set; }
 
         #endregion
 
@@ -80,7 +275,6 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             {
                 GraphCodeGenerator codeGenerator = GraphCodeGenerator.GetGenerator(graphData);
                 codeGenerator.GenerateCode(this);
-                m_CodeStatements.Add(new CodeCustomStatement(""));
             }
 
             foreach (PushPerceptionData pushPerceptionData in systemData.pushPerceptions)
@@ -116,14 +310,9 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         /// Add a new node creation line in the graph creation method.
         /// </summary>
         /// <param name="statement">The statement added</param>
-        public void AddStatement(CodeStatement statement)
+        public void AddNodeStatement(CodeNodeStatementGroup statement)
         {
-            m_CodeStatements.Add(statement);
-            foreach (var st in m_CodePropertiesStatements)
-            {
-                m_CodeStatements.Add(st);
-            }
-            m_CodePropertiesStatements.Clear();
+            m_CodeNodeStatementList.Add(statement);
         }
 
         /// <summary>
@@ -139,139 +328,222 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         /// Generates a code expression for an action.
         /// </summary>
         /// <param name="action">The action converted to code.</param>
-        /// <param name="Identifier">The base Identifier for the action.</param>
+        /// <param name="identifier">The base Identifier for the action.</param>
         /// <returns>A code expression with the identifier of the action created</returns>
-        public CodeExpression GetActionExpression(Action action, string Identifier)
+        public CodeExpression GetActionExpression(Action action, string identifier, List<CodeStatement> statements)
         {
-            if (action != null)
+            if (action == null) return new CodeCustomExpression("null /*missing action*/");
+
+            identifier = GenerateIdentifier(identifier);
+            switch (action)
             {
-                var id = GenerateIdentifier(Identifier);
-                CodeVariableDeclarationStatement statement;
-                switch (action)
-                {
-                    case CustomAction custom:
-                        var expression = new CodeObjectCreationExpression(typeof(FunctionalAction));
-                        CodeExpression startMethodArg = GenerateMethodCodeExpression(custom.start, null);
-                        CodeExpression updateMethodArg = GenerateMethodCodeExpression(custom.update, null, typeof(Core.Status));
-                        CodeExpression stopMethodArg = GenerateMethodCodeExpression(custom.stop, null);
-                        if (startMethodArg != null) expression.Add(startMethodArg);
-                        if (updateMethodArg != null) expression.Add(updateMethodArg);
-                        else expression.Add(new CodeCustomExpression("() => Status.Running"));
-                        if (stopMethodArg != null) expression.Add(stopMethodArg);
-                        statement = new CodeVariableDeclarationStatement(typeof(FunctionalAction), id);
-                        statement.RightExpression = expression;
-                        break;
+                case CustomAction custom:
 
-                    case UnityAction unityAction:
-                        var type = unityAction.GetType();
-                        expression = new CodeObjectCreationExpression(type);
-                        var fields = type.GetFields();
-                        foreach (var field in fields) AddPropertyStatement(field.GetValue(action), id, field.Name);
-                        statement = new CodeVariableDeclarationStatement(type, id);
-                        statement.RightExpression = expression;
-                        break;
+                    var statement = new CodeVariableDeclarationStatement(typeof(FunctionalAction), identifier);
+                    var expression = new CodeObjectCreationExpression(typeof(FunctionalAction));
+                    statement.RightExpression = expression;
+                    statements.Add(statement);
 
-                    case SubgraphAction subgraphAction:
-                        expression = new CodeObjectCreationExpression(typeof(SubsystemAction));
-                        var subgraphId = GetSystemElementIdentifier(subgraphAction.subgraphId);
+                    CodeExpression startMethodArg = GenerateMethodCodeExpression(custom.start, null);
+                    CodeExpression updateMethodArg = GenerateMethodCodeExpression(custom.update, null, typeof(Status));
+                    CodeExpression stopMethodArg = GenerateMethodCodeExpression(custom.stop, null);
+                    CodeExpression pauseMethodArg = GenerateMethodCodeExpression(custom.pause, null);
+                    CodeExpression unpauseMethodArg = GenerateMethodCodeExpression(custom.unpause, null);
 
-                        if (subgraphId != null)
+                    if (startMethodArg != null)
+                    {
+                        var startStatement = new CodeAssignationStatement();
+                        startStatement.LeftExpression = new CodeMethodReferenceExpression(identifier, "onStarted");
+                        startStatement.RightExpression = startMethodArg;
+                        statements.Add(startStatement);
+                    }
+
+                    var updateStatement = new CodeAssignationStatement();
+                    updateStatement.LeftExpression = new CodeMethodReferenceExpression(identifier, "onUpdated");
+                    if (updateMethodArg != null) updateStatement.RightExpression = updateMethodArg;
+                    else updateStatement.RightExpression = new CodeCustomExpression("() => Status.Running");
+                    statements.Add(updateStatement);
+
+                    if (stopMethodArg != null)
+                    {
+                        var stopStatement = new CodeAssignationStatement();
+                        stopStatement.LeftExpression = new CodeMethodReferenceExpression(identifier, "onStopped");
+                        stopStatement.RightExpression = stopMethodArg;
+                        statements.Add(stopStatement);
+                    }
+
+                    if (pauseMethodArg != null)
+                    {
+                        var pauseStatement = new CodeAssignationStatement();
+                        pauseStatement.LeftExpression = new CodeMethodReferenceExpression(identifier, "onPause");
+                        pauseStatement.RightExpression = pauseMethodArg;
+                        statements.Add(pauseStatement);
+                    }
+
+                    if (unpauseMethodArg != null)
+                    {
+                        var unpauseStatement = new CodeAssignationStatement();
+                        unpauseStatement.LeftExpression = new CodeMethodReferenceExpression(identifier, "onUnpause");
+                        unpauseStatement.RightExpression = unpauseMethodArg;
+                        statements.Add(unpauseStatement);
+                    }
+
+                    return new CodeCustomExpression(identifier);
+
+                case UnityAction unityAction:
+                    var type = unityAction.GetType();
+                    m_UsingNamespaces.Add(type.Namespace);
+                    expression = new CodeObjectCreationExpression(type);
+
+                    statement = new CodeVariableDeclarationStatement(type, identifier);
+                    statement.RightExpression = expression;
+                    statements.Add(statement);
+
+                    var fields = type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.FlattenHierarchy);
+                    foreach (var field in fields)
+                    {
+                        var value = field.GetValue(unityAction);
+                        if (value != null)
                         {
-                            expression.Add(new CodeCustomExpression(subgraphId));
+                            var st = GetPropertyStatement(field.GetValue(unityAction), identifier, field.Name, statements);
+                            statements.Add(st);
                         }
-                        else
-                        {
-                            expression.Add(new CodeCustomExpression("null /*missing subgraph*/"));
-                        }
+                    }
 
-                        if (subgraphAction.ExecuteOnLoop || subgraphAction.DontStopOnInterrupt)
-                        {
-                            expression.Add(new CodeCustomExpression(subgraphAction.DontStopOnInterrupt.ToCodeFormat()));
-                            expression.Add(new CodeCustomExpression(subgraphAction.ExecuteOnLoop.ToCodeFormat()));
-                        }
-                        statement = new CodeVariableDeclarationStatement(typeof(SubsystemAction), id);
-                        statement.RightExpression = expression;
-                        break;
-                    default:
-                        statement = null;
-                        break;
+                    return new CodeCustomExpression(identifier);
 
-                }
-                if (statement != null)
-                {
-                    AddStatement(statement);
-                    return new CodeCustomExpression(id);
-                }
-                else
-                {
+                case SubgraphAction subgraphAction:
+                    expression = new CodeObjectCreationExpression(typeof(SubsystemAction));
+                    var subgraphId = GetSystemElementIdentifier(subgraphAction.subgraphId);
+
+                    if (subgraphId != null)
+                    {
+                        expression.Add(new CodeCustomExpression(subgraphId));
+                    }
+                    else
+                    {
+                        expression.Add(new CodeCustomExpression("null /*missing subgraph*/"));
+                    }
+
+                    if (subgraphAction.ExecuteOnLoop || subgraphAction.DontStopOnInterrupt)
+                    {
+                        expression.Add(new CodeCustomExpression(subgraphAction.DontStopOnInterrupt.ToCodeFormat()));
+                        expression.Add(new CodeCustomExpression(subgraphAction.ExecuteOnLoop.ToCodeFormat()));
+                    }
+                    statement = new CodeVariableDeclarationStatement(typeof(SubsystemAction), identifier);
+                    statement.RightExpression = expression;
+                    statements.Add(statement);
+
+                    return new CodeCustomExpression(identifier);
+                default:
                     return new CodeCustomExpression("null /*missing perception*/");
-                }
             }
-            return new CodeCustomExpression("null /*missing action*/");
-
         }
 
         /// <summary>
         /// Generates a code expression for a perception
         /// </summary>
         /// <param name="action">The perception converted to code.</param>
-        /// <param name="Identifier">The base Identifier for the perception.</param>
+        /// <param name="identifier">The base Identifier for the perception.</param>
         /// <returns>A code expression with the identifier of the perception created</returns>
-        public CodeExpression GetPerceptionExpression(Perception perception, string Identifier)
+        public CodeExpression GetPerceptionExpression(Perception perception, string identifier, List<CodeStatement> statements)
         {
-            if (perception != null)
+            if (perception == null) new CodeCustomExpression("null /*missing perception*/");
+
+            identifier = GenerateIdentifier(identifier);
+            switch (perception)
             {
-                var id = GenerateIdentifier(Identifier);
-                CodeVariableDeclarationStatement statement;
-                switch (perception)
-                {
-                    case CustomPerception custom:
-                        var expression = new CodeObjectCreationExpression(typeof(ConditionPerception));
-                        CodeExpression startMethodArg = GenerateMethodCodeExpression(custom.init, null);
-                        CodeExpression updateMethodArg = GenerateMethodCodeExpression(custom.check, null, typeof(bool));
-                        CodeExpression stopMethodArg = GenerateMethodCodeExpression(custom.reset, null);
-                        if (startMethodArg != null) expression.Add(startMethodArg);
-                        if (updateMethodArg != null) expression.Add(updateMethodArg);
-                        else expression.Add(new CodeCustomExpression("() => Status.Running"));
-                        if (stopMethodArg != null) expression.Add(stopMethodArg);
-                        statement = new CodeVariableDeclarationStatement(typeof(ConditionPerception), id);
-                        statement.RightExpression = expression;
-                        break;
+                case CustomPerception custom:
+                    var statement = new CodeVariableDeclarationStatement(typeof(ConditionPerception), identifier);
+                    var expression = new CodeObjectCreationExpression(typeof(ConditionPerception));
+                    statement.RightExpression = expression;
+                    statements.Add(statement);    
+                        
+                    CodeExpression startMethodArg = GenerateMethodCodeExpression(custom.init, null);
+                    CodeExpression updateMethodArg = GenerateMethodCodeExpression(custom.check, null, typeof(bool));
+                    CodeExpression stopMethodArg = GenerateMethodCodeExpression(custom.reset, null);
+                    CodeExpression pauseMethodArg = GenerateMethodCodeExpression(custom.pause, null);
+                    CodeExpression unpauseMethodArg = GenerateMethodCodeExpression(custom.unpause, null);
 
-                    case UnityPerception unityPerception:
-                        var type = unityPerception.GetType();
-                        expression = new CodeObjectCreationExpression(type);
-                        var fields = type.GetFields();
-                        foreach (var field in fields) AddPropertyStatement(field.GetValue(perception), id, field.Name);
-                        statement = new CodeVariableDeclarationStatement(type, id);
-                        statement.RightExpression = expression;
-                        break;
+                    if (startMethodArg != null)
+                    {
+                        var startStatement = new CodeAssignationStatement();
+                        startStatement.LeftExpression = new CodeMethodReferenceExpression(identifier, "onInit");
+                        startStatement.RightExpression = startMethodArg;
+                        statements.Add(startStatement);
+                    }
 
-                    case CompoundPerceptionWrapper compoundPerception:
-                        expression = new CodeObjectCreationExpression(compoundPerception.compoundPerception.GetType());
-                        for (int i = 0; i < compoundPerception.subPerceptions.Count; i++)
+                    var updateStatement = new CodeAssignationStatement();
+                    updateStatement.LeftExpression = new CodeMethodReferenceExpression(identifier, "onCheck");
+                    if (updateMethodArg != null) updateStatement.RightExpression = updateMethodArg;
+                    else updateStatement.RightExpression = new CodeCustomExpression("() => false");
+                    statements.Add(updateStatement);
+
+                    if (stopMethodArg != null)
+                    {
+                        var stopStatement = new CodeAssignationStatement();
+                        stopStatement.LeftExpression = new CodeMethodReferenceExpression(identifier, "onReset");
+                        stopStatement.RightExpression = stopMethodArg;
+                        statements.Add(stopStatement);
+                    }
+
+                    if (pauseMethodArg != null)
+                    {
+                        var pauseStatement = new CodeAssignationStatement();
+                        pauseStatement.LeftExpression = new CodeMethodReferenceExpression(identifier, "onPause");
+                        pauseStatement.RightExpression = pauseMethodArg;
+                        statements.Add(pauseStatement);
+                    }
+
+                    if (unpauseMethodArg != null)
+                    {
+                        var unpauseStatement = new CodeAssignationStatement();
+                        unpauseStatement.LeftExpression = new CodeMethodReferenceExpression(identifier, "onUnpause");
+                        unpauseStatement.RightExpression = unpauseMethodArg;
+                        statements.Add(unpauseStatement);
+                    }
+
+                    return new CodeCustomExpression(identifier);
+
+                case UnityPerception unityPerception:
+                    var type = unityPerception.GetType();
+                    m_UsingNamespaces.Add(type.Namespace);
+                    expression = new CodeObjectCreationExpression(type);
+
+                    statement = new CodeVariableDeclarationStatement(type, identifier);
+                    statement.RightExpression = expression;
+                    statements.Add(statement);
+
+                    var fields = type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.FlattenHierarchy);
+                    foreach (var field in fields)
+                    {
+                        var value = field.GetValue(unityPerception);
+                        if (value != null)
                         {
-                            var subperception = compoundPerception.subPerceptions[i];
-                            expression.Add(GetPerceptionExpression(subperception.perception, Identifier + "_sub" + (i + 1)));
+                            var st = GetPropertyStatement(field.GetValue(perception), identifier, field.Name, statements);
+                            statements.Add(st);
                         }
-                        statement = new CodeVariableDeclarationStatement(compoundPerception.compoundPerception.GetType(), id);
-                        statement.RightExpression = expression;
-                        break;
+                    }
 
-                    default:
-                        statement = null;
-                        break;
-                }
+                    return new CodeCustomExpression(identifier);
 
-                if (statement != null)
-                {
-                    AddStatement(statement);
-                    return new CodeCustomExpression(id);
-                }
-                else
-                {
-                    return new CodeCustomExpression("null /*missing perception*/");
-                }
+                case CompoundPerceptionWrapper compoundPerception:
+                    m_UsingNamespaces.Add(compoundPerception.GetType().Namespace);
+                    expression = new CodeObjectCreationExpression(compoundPerception.compoundPerception.GetType());
+                    for (int i = 0; i < compoundPerception.subPerceptions.Count; i++)
+                    {
+                        var subperception = compoundPerception.subPerceptions[i];
+                        expression.Add(GetPerceptionExpression(subperception.perception, identifier + "_sub" + (i + 1), statements));
+                    }
+                    statement = new CodeVariableDeclarationStatement(compoundPerception.compoundPerception.GetType(), identifier);
+                    statement.RightExpression = expression;
+                    statements.Add(statement);
+
+                    return new CodeCustomExpression(identifier);
+
+                default:
+                    break;
+
             }
             return new CodeCustomExpression("null /*missing perception*/");
         }
@@ -328,22 +600,22 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         /// <param name="obj">The reference of the element assigned to the property</param>
         /// <param name="identifier">The node identifier</param>
         /// <param name="name">The property name</param>
-        public void AddPropertyStatement(object obj, string identifier, string name)
+        public CodeStatement GetPropertyStatement(object obj, string identifier, string name, List<CodeStatement> statements)
         {
+            if (obj == null) return null;
             var statement = new CodeAssignationStatement();
             statement.LeftExpression = new CodeMethodReferenceExpression(identifier, name);
 
             switch (obj)
             {
                 case Action action:
-                    statement.RightExpression = GetActionExpression(action, identifier); break;
+                    statement.RightExpression = GetActionExpression(action, identifier, statements); break;
                 case Perception perception:
-                    statement.RightExpression = GetPerceptionExpression(perception, identifier); break;
+                    statement.RightExpression = GetPerceptionExpression(perception, identifier, statements); break;
                 default:
                     statement.RightExpression = CreateGenericExpression(obj, identifier + "_" + name); break;
             }
-
-            m_CodePropertiesStatements.Add(statement);
+            return statement;
         }
 
         /// <summary>
@@ -357,7 +629,6 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             using (new DebugTimer())
             {
                 CodeWriter codeWriter = new CodeWriter();
-
                 foreach (var usingNamespace in m_UsingNamespaces)
                 {
                     codeWriter.AppendLine($"using {usingNamespace};");
@@ -407,8 +678,10 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
                 codeWriter.IdentationLevel++;
 
-                m_CodeGraphStatements.ForEach(c => c.GenerateCode(codeWriter, options));
+                m_CodeGraphStatements.ForEach(c => c.GenerateCode(codeWriter, options));               
                 codeWriter.AppendLine("");
+                m_CodeNodeStatementList.ForEach(c => c.GenerateCode(codeWriter, options));
+
                 m_CodeStatements.ForEach(c => c.GenerateCode(codeWriter, options));
 
                 var firstGraphId = m_SystemData.graphs.FirstOrDefault()?.id;
@@ -551,7 +824,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                         expression.Add(new CodeCustomExpression(v3.z.ToCodeFormat()));
                         return expression;
                     case Color color:
-                        expression = new CodeObjectCreationExpression(typeof(Vector3));
+                        expression = new CodeObjectCreationExpression(typeof(Color));
                         expression.Add(new CodeCustomExpression(color.r.ToCodeFormat()));
                         expression.Add(new CodeCustomExpression(color.g.ToCodeFormat()));
                         expression.Add(new CodeCustomExpression(color.b.ToCodeFormat()));
@@ -576,9 +849,18 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                 }
             }
 
-            var Identifier = GenerateIdentifier(defaultIdentifierName);
-            m_FieldMembers.Add(new CodeFieldMember(Identifier, type));
-            return new CodeCustomExpression(Identifier);
+            if(m_FieldIdentifierMap.TryGetValue(obj, out string id))
+            {
+                return new CodeCustomExpression(id);
+            }
+            else
+            {
+                m_UsingNamespaces.Add(type.Namespace);
+                var Identifier = GenerateIdentifier(defaultIdentifierName);
+                m_FieldMembers.Add(new CodeFieldMember(Identifier, type));
+                m_FieldIdentifierMap[obj] = Identifier;
+                return new CodeCustomExpression(Identifier);
+            }
         }
 
         private string GenerateIdentifier(string defaultName)

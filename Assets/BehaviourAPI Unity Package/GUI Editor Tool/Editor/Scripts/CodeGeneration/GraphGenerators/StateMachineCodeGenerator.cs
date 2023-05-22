@@ -7,6 +7,8 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
     using Core.Perceptions;
     using Framework;
     using StateMachines;
+    using System.Linq;
+
     [CustomGraphCodeGenerator(typeof(FSM))]
     public class StateMachineCodeGenerator : GraphCodeGenerator
     {
@@ -25,152 +27,95 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             template.AddNamespace("BehaviourAPI.StateMachines");
             template.AddGraphCreationStatement(graphStatement);
 
+            template.CurrentGraphIdentifier = GraphIdentifier;
+
             foreach (var nodeData in graphData.nodes)
             {
-                GenerateNodeCode(nodeData, template);
+                GenerateCode(nodeData, template);
             }
         }
 
-        private void GenerateNodeCode(NodeData data, CodeTemplate template)
+        private void GenerateCode(NodeData nodeData, CodeTemplate template)
         {
-            if (data == null) return;
-            if (IsGenerated(data.id)) return;
+            if (nodeData == null || IsGenerated(nodeData.id)) return;
+            CodeNodeStatementGroup nodeCode = new CodeNodeStatementGroup(nodeData, template);
+            GenerateNodeCode(nodeData, nodeCode, template);
+            MarkGenerated(nodeData.id);
+            nodeCode.Commit();
+        }
 
-            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement(data.node.GetType(), template.GetSystemElementIdentifier(data.id));
-
-            switch (data.node)
+        private void GenerateNodeCode(NodeData nodeData, CodeNodeStatementGroup code, CodeTemplate template)
+        {
+            switch (nodeData.node)
             {
                 case ProbabilisticState pState:
-                    nodeDeclaration.RightExpression = GenerateProbabilisticStateCode(pState, data, template); break;
+                    code.SetMethod(k_ProbabilisticStateMethod);
+                    code.AddFirstAction(true);
+                    code.AddPropertyAssignations();
+                    //TODO: Probabilities
+                    break;
+
                 case State state:
-                    nodeDeclaration.RightExpression = GenerateStateCode(state, data, template); break;
+                    code.SetMethod(k_StateMethod);
+                    code.AddFirstAction(true);
+                    break;
+
                 case StateTransition stateTransition:
-                    nodeDeclaration.RightExpression = GenerateStateTransitionCode(stateTransition, data, template); break;
+                    code.SetMethod(k_StateTransitionMethod);
+
+                    if (nodeData.parentIds.Count > 0)
+                        GenerateCode(GetNodeById(nodeData.parentIds[0]), template);
+
+                    code.AddFirstParent();
+
+                    if (nodeData.childIds.Count > 0)
+                        GenerateCode(GetNodeById(nodeData.childIds[0]), template);
+
+                    code.AddFirstChild();
+                    code.AddFirstPerception(true, "perception");
+                    code.AddFirstAction(true, "action");
+                    code.AddStatusFlags(stateTransition.StatusFlags, true, "statusFlags");
+                    break;
+                   
+                
                 case ExitTransition exitTransition:
-                    nodeDeclaration.RightExpression = GenerateExitTransitionCode(exitTransition, data, template); break;
-            }
-            template.AddStatement(nodeDeclaration);
-            MarkGenerated(data.id);
-        }
+                    code.SetMethod(k_ExitTransitionMethod);
 
+                    if (nodeData.parentIds.Count > 0)
+                        GenerateCode(GetNodeById(nodeData.parentIds[0]), template);
 
-        private CodeNodeCreationMethodExpression GenerateStateCode(State state, NodeData data, CodeTemplate template)
-        {
-            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
-            initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_StateMethod);
-
-            initMethod.Add(template.GetActionExpression(data.actions[0].action, template.GetSystemElementIdentifier(data.id) + "_action"));
-
-            return initMethod;
-        }
-
-        private CodeNodeCreationMethodExpression GenerateProbabilisticStateCode(ProbabilisticState state, NodeData data, CodeTemplate template)
-        {
-            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
-            initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_ProbabilisticStateMethod);
-
-            initMethod.Add(template.GetActionExpression(data.actions[0].action, template.GetSystemElementIdentifier(data.id) + "_action"));
-
-            var probNum = Mathf.Max(data.childIds.Count, state.probabilities.Count);
-
-            for (int i = 0; i < probNum; i++)
-            {
-                var id = template.GetSystemElementIdentifier(data.childIds[i]);
-                if (id != null && state.probabilities.Count > i && state.probabilities[i] > 0)
-                {
-                    var nodeId = template.GetSystemElementIdentifier(data.id);
-                    CodeCustomStatement probAssignation = new CodeCustomStatement($"{nodeId}.SetProbability({state.probabilities[i]});");
-                    template.AddStatement(probAssignation);
-                }
-            }
-
-            return initMethod;
-        }
-
-        private CodeNodeCreationMethodExpression GenerateStateTransitionCode(StateTransition stateTransition, NodeData data, CodeTemplate template)
-        {
-            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
-            initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_StateTransitionMethod);
-
-            if (data.parentIds.Count == 1)
-            {
-                GenerateNodeCode(GetNodeById(data.parentIds[0]), template);
-                initMethod.Add(GetChildExpression(data.parentIds[0], template));
-            }
-            else
-            {
-                Debug.LogWarning("CodeGenError: The number of parents is wrong.");
-                initMethod.Add(new CodeCustomExpression("null /* missing node */"));
-            }
-
-            if (data.childIds.Count == 1)
-            {
-                GenerateNodeCode(GetNodeById(data.childIds[0]), template);
-                initMethod.Add(GetChildExpression(data.childIds[0], template));
-            }
-            else
-            {
-                Debug.LogWarning("CodeGenError: The number of children is wrong.");
-                initMethod.Add(new CodeCustomExpression("null /* missing node */"));
-            }
-
-            CreateTransitionArguments(initMethod, template.GetSystemElementIdentifier(data.id), data.actions[0].action, data.perceptions[0].perception, stateTransition.StatusFlags, template);
-
-            return initMethod;
-        }
-
-        private CodeNodeCreationMethodExpression GenerateExitTransitionCode(ExitTransition exitTransition, NodeData data, CodeTemplate template)
-        {
-            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
-            initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_ExitTransitionMethod);
-
-            if (data.parentIds.Count == 1)
-            {
-                GenerateNodeCode(GetNodeById(data.parentIds[0]), template);
-                initMethod.Add(GetChildExpression(data.parentIds[0], template));
-            }
-            else
-            {
-                Debug.LogWarning("CodeGenError: The number of parents is wrong.");
-                initMethod.Add(new CodeCustomExpression("null /* missing node */"));
-            }
-
-            initMethod.Add(new CodeCustomExpression(exitTransition.ExitStatus.ToCodeFormat()));
-
-            CreateTransitionArguments(initMethod, template.GetSystemElementIdentifier(data.id), data.actions[0].action, data.perceptions[0].perception, exitTransition.StatusFlags, template);
-
-            return initMethod;
-        }
-
-        protected void CreateTransitionArguments(CodeNodeCreationMethodExpression expression, string identifier, Action action, Perception perception, StatusFlags flags, CodeTemplate template)
-        {
-            bool lastArgumentAdded = true;
-
-            if (action != null)
-            {
-                expression.Add(template.GetActionExpression(action, identifier + "_action"));
-            }
-            else
-            {
-                lastArgumentAdded = false;
-            }
-
-            if (perception != null)
-            {
-                expression.Add(new CodeNamedExpression(lastArgumentAdded ? null : "action", template.GetPerceptionExpression(perception, identifier + "_perception")));
-            }
-            else
-            {
-                lastArgumentAdded = false;
-            }
-            if (flags != Core.StatusFlags.Active)
-            {
-                expression.Add(new CodeNamedExpression(lastArgumentAdded ? null : "statusFlags", new CodeCustomExpression(flags.ToCodeFormat())));
+                    code.AddFirstParent();
+                    code.AddStatus(exitTransition.ExitStatus);
+                    code.AddFirstPerception(true, "perception");
+                    code.AddFirstAction(true, "action");
+                    code.AddStatusFlags(exitTransition.StatusFlags, true, "statusFlags");
+                    break;
             }
         }
+
+
+        //private CodeNodeCreationMethodExpression GenerateProbabilisticStateCode(ProbabilisticState state, NodeData data, CodeTemplate template)
+        //{
+        //    CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
+        //    initMethod.nodeName = data.name;
+        //    initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_ProbabilisticStateMethod);
+
+        //    initMethod.Add(template.GetActionExpression(data.actions[0].action, template.GetSystemElementIdentifier(data.id) + "_action"));
+
+        //    var probNum = Mathf.Max(data.childIds.Count, state.probabilities.Count);
+
+        //    for (int i = 0; i < probNum; i++)
+        //    {
+        //        var id = template.GetSystemElementIdentifier(data.childIds[i]);
+        //        if (id != null && state.probabilities.Count > i && state.probabilities[i] > 0)
+        //        {
+        //            var nodeId = template.GetSystemElementIdentifier(data.id);
+        //            CodeCustomStatement probAssignation = new CodeCustomStatement($"{nodeId}.SetProbability({state.probabilities[i]});");
+        //            template.AddStatement(probAssignation);
+        //        }
+        //    }
+
+        //    return initMethod;
+        //}
     }
 }

@@ -4,6 +4,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 {
     using BehaviourTrees;
     using Framework;
+    using System.Linq;
 
     [CustomGraphCodeGenerator(typeof(BehaviourTree))]
     public class BehaviourTreeCodeGenerator : GraphCodeGenerator
@@ -22,106 +23,53 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             template.AddNamespace("BehaviourAPI.BehaviourTrees");
             template.AddGraphCreationStatement(graphStatement);
 
+            template.CurrentGraphIdentifier = GraphIdentifier;
+
             foreach (NodeData nodeData in graphData.nodes)
             {
-                GenerateNodeCode(nodeData, template);
+                GenerateCode(nodeData, template);
             }
         }
 
-        private void GenerateNodeCode(NodeData data, CodeTemplate template)
+        private void GenerateCode(NodeData nodeData, CodeTemplate template)
         {
-            if (data == null) return;
-            if (IsGenerated(data.id)) return;
-
-            CodeVariableDeclarationStatement nodeDeclaration = new CodeVariableDeclarationStatement(data.node.GetType(), template.GetSystemElementIdentifier(data.id));
-
-            switch (data.node)
-            {
-                case LeafNode leafNode:
-                    nodeDeclaration.RightExpression = GenerateLeafNodeCode(leafNode, data, template); break;
-                case DecoratorNode decoratorNode:
-                    nodeDeclaration.RightExpression = GenerateDecoratorCode(decoratorNode, data, template); break;
-                case CompositeNode compositeNode:
-                    nodeDeclaration.RightExpression = GenerateCompositeCode(compositeNode, data, template); break;
-            }
-            template.AddStatement(nodeDeclaration);
-
-            MarkGenerated(data.id);
-        }
-
-        private CodeNodeCreationMethodExpression GenerateLeafNodeCode(LeafNode leafNode, NodeData data, CodeTemplate template)
-        {
-            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
-            initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_LeafMethod);
-
-            initMethod.Add(template.GetActionExpression(data.actions[0].action, template.GetSystemElementIdentifier(data.id) + "_action"));
-
-            return initMethod;
-        }
-
-        private CodeNodeCreationMethodExpression GenerateDecoratorCode(DecoratorNode decoratorNode, NodeData data, CodeTemplate template)
-        {
-            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
-            initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_DecoratorMethod + "<" + decoratorNode.TypeName() + ">");
-
-            if (data.childIds.Count != 1)
-            {
-                Debug.LogWarning("CodeGenError: The number of children is wrong.");
-                initMethod.Add(new CodeCustomExpression("null /* missing node */"));
-            }
-            else
-            {
-                GenerateNodeCode(GetNodeById(data.childIds[0]), template);
-                initMethod.Add(GetChildExpression(data.childIds[0], template));
-            }
-
-            GenerateDecoratorProperties(decoratorNode, template.GetSystemElementIdentifier(data.id), template);
-            return initMethod;
+            if (nodeData == null || IsGenerated(nodeData.id)) return;
+            CodeNodeStatementGroup nodeCode = new CodeNodeStatementGroup(nodeData, template);
+            GenerateNodeCode(nodeData, nodeCode, template);
+            MarkGenerated(nodeData.id);
+            nodeCode.Commit();
         }
 
 
-        private CodeNodeCreationMethodExpression GenerateCompositeCode(CompositeNode compositeNode, NodeData data, CodeTemplate template)
+        private void GenerateNodeCode(NodeData nodeData, CodeNodeStatementGroup code, CodeTemplate template)
         {
-            CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
-            initMethod.nodeName = data.name;
-            initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_CompositeMethod + "<" + compositeNode.TypeName() + ">");
-
-            initMethod.Add(new CodeCustomExpression(compositeNode.IsRandomized.ToCodeFormat()));
-
-            for (int i = 0; i < data.childIds.Count; i++)
+            switch(nodeData.node)
             {
-                GenerateNodeCode(GetNodeById(data.childIds[i]), template);
-                initMethod.Add(GetChildExpression(data.childIds[0], template));
-            }
+                case LeafNode:
+                    code.SetMethod(k_LeafMethod);
+                    code.AddFirstAction();
+                    break;
 
-            GenerateCompositeProperties(compositeNode, template.GetSystemElementIdentifier(data.id), template);
+                case DecoratorNode:
+                    code.SetMethod(k_DecoratorMethod + "<" + nodeData.node.TypeName() + ">");
 
-            return initMethod;
-        }
+                    if (nodeData.childIds.Count > 0)
+                        GenerateCode(GetNodeById(nodeData.childIds[0]), template);
 
-        private void GenerateDecoratorProperties(DecoratorNode obj, string identifier, CodeTemplate template)
-        {
-            var type = obj.GetType();
-            var fields = type.GetFields();
+                    code.AddFirstChild();
+                    code.AddPropertyAssignations();
+                    break;
 
-            foreach (var field in fields)
-            {
-                template.AddPropertyStatement(field.GetValue(obj), identifier, field.Name);
-            }
-        }
+                case CompositeNode comp:
+                    code.SetMethod(k_CompositeMethod + "<" + nodeData.node.TypeName() + ">");
+                    code.AddBool(comp.IsRandomized);
 
-        private void GenerateCompositeProperties(CompositeNode obj, string identifier, CodeTemplate template)
-        {
-            var type = obj.GetType();
-            var fields = type.GetFields();
+                    for(int i = 0; i < nodeData.childIds.Count; i++)
+                        GenerateCode(GetNodeById(nodeData.childIds[i]), template);
 
-            foreach (var field in fields)
-            {
-                if (field.Name == "IsRandomized") continue;
-
-                template.AddPropertyStatement(field.GetValue(obj), identifier, field.Name);
+                    code.AddChildList();
+                    code.AddPropertyAssignations();
+                    break;
             }
         }
     }
