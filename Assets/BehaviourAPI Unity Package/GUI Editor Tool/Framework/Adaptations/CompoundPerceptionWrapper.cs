@@ -87,6 +87,9 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         /// <param name="data"></param>
         public void Build(SystemData data)
         {
+            foreach (var subPerception in subPerceptions)
+                if (subPerception.perception is IBuildable buildable) buildable.Build(data);
+
             compoundPerception.Perceptions = subPerceptions.Select(p => p.perception).ToList();
         }
     }

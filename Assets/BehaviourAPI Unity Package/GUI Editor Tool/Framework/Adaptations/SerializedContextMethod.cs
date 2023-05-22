@@ -6,6 +6,7 @@ using UnityEngine;
 namespace BehaviourAPI.Unity.Framework
 {
     using Core;
+    using System.Reflection;
     using UnityExtensions;
 
     /// <summary>
@@ -28,6 +29,26 @@ namespace BehaviourAPI.Unity.Framework
         public object Clone()
         {
             return MemberwiseClone();
+        }
+
+        public Delegate GetDelegate(Component defaultComponent, Type[] arguments, Type delegateType)
+        {
+            if (string.IsNullOrWhiteSpace(methodName) || defaultComponent == null) return null;
+            if (!delegateType.IsSubclassOf(typeof(Delegate))) return null;
+
+            Component component = string.IsNullOrWhiteSpace(componentName) ? defaultComponent : defaultComponent.gameObject.GetComponent(componentName);
+
+            if (component == null)
+            {
+                Debug.LogWarning($"BUILD ERROR: The specified component ({componentName}) does not exist or is not attached to runner.", defaultComponent.gameObject);
+                return null;
+            }
+
+            MethodInfo methodInfo = component.GetType().GetMethod(methodName, arguments);
+
+            if (methodInfo == null) Debug.LogWarning("Custom function error: The specified method or component name is not valid.", defaultComponent.gameObject);
+
+            return methodInfo.CreateDelegate(delegateType, component);
         }
     }
 
@@ -55,31 +76,9 @@ namespace BehaviourAPI.Unity.Framework
         /// <param name="context">The context used to get the component reference.</param>
         public void SetContext(UnityExecutionContext context)
         {
-            if (string.IsNullOrWhiteSpace(methodName)) return;
-
-            Component component = string.IsNullOrWhiteSpace(componentName) ? context.RunnerComponent : context.GameObject.GetComponent(componentName);
-
-            if (component != null)
-            {
-                if (component != null)
-                {
-                    Type[] arguments = FunctionArgs;
-                    var method = component.GetType().GetMethod(methodName, arguments);
-                    ParameterExpression[] parameters = arguments.Select(type => Expression.Parameter(type)).ToArray();
-                    if (method != null)
-                    {
-                        ConstantExpression componentExpression = Expression.Constant(component);
-                        MethodCallExpression methodCall = Expression.Call(componentExpression, method, parameters);
-                        Expression<T> exp = Expression.Lambda<T>(methodCall, parameters);
-                        _function = exp.Compile();
-                    }
-                    else
-                    {
-                        Debug.LogWarning("Custom function error: The specified method or component name is not valid.", context.GameObject);
-                    }
-                }
-            }
-        }
+            var del = GetDelegate(context.RunnerComponent, FunctionArgs, typeof(T));
+            if (del is T typedDelegate) _function = typedDelegate;
+        }       
     }
 
     /// <summary>

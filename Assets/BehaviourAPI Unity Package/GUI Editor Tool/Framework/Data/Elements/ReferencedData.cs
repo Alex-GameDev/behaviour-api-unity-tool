@@ -5,6 +5,7 @@ using UnityEngine;
 namespace BehaviourAPI.Unity.Framework
 {
     using Core;
+    using System.Linq;
 
     [System.Serializable]
     public class FunctionData
@@ -21,26 +22,22 @@ namespace BehaviourAPI.Unity.Framework
 
         public void Build(Node node, Component runner)
         {
+            Component component = string.IsNullOrEmpty(method.componentName) ? runner : runner.gameObject.GetComponent(method.componentName);
+
             Type classType = string.IsNullOrEmpty(method.componentName) ? runner.GetType() : Type.GetType(method.componentName);
             FieldInfo field = node.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
 
-            if (field != null && field.FieldType.IsSubclassOf(typeof(Delegate)))
-            {
-                MethodInfo methodInfo = classType.GetMethod(method.methodName);
+            if (!field.FieldType.IsSubclassOf(typeof(Delegate))) return;
 
-                if (method != null && methodInfo.CreateDelegate(field.FieldType, node) is Delegate del)
-                {
-                    field.SetValue(node, del);
-                }
-                else
-                {
-                    Debug.LogWarning($"The serialized method data does not correspond to the signature of the referenced delegate field \"{fieldName}\", the value was not set properly.");
-                }
-            }
-            else
-            {
-                Debug.LogWarning($"The field \"{fieldName}\" does not exist or is not a delegate reference, the value was not set properly.");
-            }
+            MethodInfo delegateMethod = field.FieldType.GetMethod("Invoke");
+            ParameterInfo[] parameters = delegateMethod.GetParameters();
+            Type[] parameterTypes = parameters.Select(p => p.ParameterType).ToArray();
+
+            var del = method.GetDelegate(runner, new Type[0], field.FieldType);
+
+            if (del != null)
+                field.SetValue(node, del);                   
+
         }
     }
 
@@ -58,8 +55,10 @@ namespace BehaviourAPI.Unity.Framework
             this.fieldName = fieldName;
         }
 
-        public void Build(Node node)
+        public void Build(Node node, SystemData data)
         {
+            if (action == null) return;
+
             var type = node.GetType();
             var field = type.GetField(fieldName);
             if (field != null && field.FieldType.IsAssignableFrom(action.GetType()))
@@ -68,7 +67,14 @@ namespace BehaviourAPI.Unity.Framework
             }
             else
             {
-                Debug.LogWarning($"The field \"{fieldName}\" does not exist or does not correspond to a property of type Action, the value was not set properly.");
+                Debug.LogWarning($"The field \"{fieldName}\" does not exist or does not correspond to a property of type Action, the value was not set properly.\n" +
+                    $"nodeType: {node.GetType().Name}\nfieldType: {field?.FieldType.Name}");
+                Debug.Log(data.graphs.SelectMany(g => g.nodes).First(n => n.node == node).id);
+            }
+
+            if(action is IBuildable buildable)
+            {
+                buildable.Build(data);
             }
         }
     }
@@ -89,6 +95,7 @@ namespace BehaviourAPI.Unity.Framework
 
         public void Build(Node node)
         {
+            if (perception == null) return;
             var type = node.GetType();
             var field = type.GetField(fieldName);
             if (field != null && field.FieldType.IsAssignableFrom(perception.GetType()))

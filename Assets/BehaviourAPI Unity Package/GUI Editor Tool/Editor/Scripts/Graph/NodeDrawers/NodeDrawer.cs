@@ -97,13 +97,13 @@ namespace BehaviourAPI.Unity.Editor.Graph
         /// <returns>The drawer created.</returns>
         public static NodeDrawer Create(Node node)
         {
-            if (BehaviourAPISettings.instance.Metadata.NodeDrawerTypeMap.TryGetValue(node.GetType(), out Type drawerType))
+            if (node != null && BehaviourAPISettings.instance.Metadata.NodeDrawerTypeMap.TryGetValue(node.GetType(), out Type drawerType))
             {
                 return (NodeDrawer)Activator.CreateInstance(drawerType);
             }
             else
             {
-                return new BTNodeDrawer();
+                return null;
             }
 
         }

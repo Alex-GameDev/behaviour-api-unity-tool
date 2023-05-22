@@ -331,6 +331,12 @@ MonoBehaviour:
         position: {x: 143, y: 208}
         node:
           rid: 6537695503399780403
+        actions:
+        - fieldName: Action
+          action:
+            rid: 6537695503399780405
+        perceptions: []
+        functions: []
         parentIds:
         - b43f5331-9d14-4117-9f32-1961c3554c6d
         childIds:
@@ -340,6 +346,12 @@ MonoBehaviour:
         position: {x: 719, y: 193}
         node:
           rid: 6537695503399780404
+        actions:
+        - fieldName: Action
+          action:
+            rid: 6537695503399780410
+        perceptions: []
+        functions: []
         parentIds:
         - 04cb793c-9c09-4101-ae64-4db724a90fb2
         childIds:
@@ -349,15 +361,33 @@ MonoBehaviour:
         position: {x: 449, y: -16}
         node:
           rid: 6537695503399780406
+        actions:
+        - fieldName: Action
+          action:
+            rid: -2
+        perceptions:
+        - fieldName: Perception
+          perception:
+            rid: 6537695503399780408
+        functions: []
         parentIds:
         - 904f368f-1ce1-43b0-98c0-630e5603a366
         childIds:
         - 5b8e22ac-b99b-4fc1-91ce-0d92e16628e2
       - name: fix
         id: b43f5331-9d14-4117-9f32-1961c3554c6d
-        position: {x: 424, y: 380}
+        position: {x: 440, y: 404}
         node:
           rid: 6537695503399780407
+        actions:
+        - fieldName: Action
+          action:
+            rid: -2
+        perceptions:
+        - fieldName: Perception
+          perception:
+            rid: 6537695503399780409
+        functions: []
         parentIds:
         - 5b8e22ac-b99b-4fc1-91ce-0d92e16628e2
         childIds:
@@ -372,6 +402,12 @@ MonoBehaviour:
         position: {x: 377, y: 167}
         node:
           rid: 6537695503399780412
+        actions:
+        - fieldName: Action
+          action:
+            rid: 6537695503399780431
+        perceptions: []
+        functions: []
         parentIds:
         - 67f09970-554f-4b21-8c97-9a2c675917c1
         - fc77abd5-7255-463f-acbb-021fd0fd9da2
@@ -383,6 +419,12 @@ MonoBehaviour:
         position: {x: 1012, y: 200}
         node:
           rid: 6537695503399780414
+        actions:
+        - fieldName: Action
+          action:
+            rid: 6537695503399780421
+        perceptions: []
+        functions: []
         parentIds:
         - bb51ab5e-702e-45b1-a3e4-bf2e5bd223e4
         childIds:
@@ -392,6 +434,12 @@ MonoBehaviour:
         position: {x: -215, y: 184}
         node:
           rid: 6537695503399780413
+        actions:
+        - fieldName: Action
+          action:
+            rid: 6537695503399780420
+        perceptions: []
+        functions: []
         parentIds:
         - b3d53275-8cbb-4cef-bf18-83b826601f6a
         childIds:
@@ -401,6 +449,15 @@ MonoBehaviour:
         position: {x: 85, y: -46}
         node:
           rid: 6537695503399780415
+        actions:
+        - fieldName: Action
+          action:
+            rid: -2
+        perceptions:
+        - fieldName: Perception
+          perception:
+            rid: -2
+        functions: []
         parentIds:
         - a4a73fc8-913d-4968-b39d-74ae65d0425d
         childIds:
@@ -410,6 +467,15 @@ MonoBehaviour:
         position: {x: 77, y: 449}
         node:
           rid: 6537695503399780416
+        actions:
+        - fieldName: Action
+          action:
+            rid: -2
+        perceptions:
+        - fieldName: Perception
+          perception:
+            rid: 6537695503399780422
+        functions: []
         parentIds:
         - d2e71371-70f4-4acf-8209-81757d7714a7
         childIds:
@@ -419,6 +485,15 @@ MonoBehaviour:
         position: {x: 677, y: -54}
         node:
           rid: 6537695503399780417
+        actions:
+        - fieldName: Action
+          action:
+            rid: -2
+        perceptions:
+        - fieldName: Perception
+          perception:
+            rid: 6537695503399780423
+        functions: []
         parentIds:
         - d2e71371-70f4-4acf-8209-81757d7714a7
         childIds:
@@ -428,6 +503,15 @@ MonoBehaviour:
         position: {x: 669, y: 456}
         node:
           rid: 6537695503399780418
+        actions:
+        - fieldName: Action
+          action:
+            rid: -2
+        perceptions:
+        - fieldName: Perception
+          perception:
+            rid: -2
+        functions: []
         parentIds:
         - c12b422f-faea-42a0-bb2e-56cb0314ede2
         childIds:
@@ -441,15 +525,9 @@ MonoBehaviour:
     - rid: 6537695503399780402
       type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
     - rid: 6537695503399780403
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
-      data:
-        action:
-          rid: 6537695503399780405
+      type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
     - rid: 6537695503399780404
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
-      data:
-        action:
-          rid: 6537695503399780410
+      type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
     - rid: 6537695503399780405
       type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
@@ -457,21 +535,13 @@ MonoBehaviour:
         DontStopOnInterrupt: 0
         subgraphId: 63682773-28e3-43c0-9b7b-ec24fc9a8df2
     - rid: 6537695503399780406
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
         StatusFlags: -1
-        action:
-          rid: -2
-        perception:
-          rid: 6537695503399780408
     - rid: 6537695503399780407
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
         StatusFlags: -1
-        action:
-          rid: -2
-        perception:
-          rid: 6537695503399780409
     - rid: 6537695503399780408
       type: {class: UnityTimePerception, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: Assembly-CSharp}
       data:
@@ -489,52 +559,27 @@ MonoBehaviour:
     - rid: 6537695503399780411
       type: {class: FSM, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
     - rid: 6537695503399780412
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
-      data:
-        action:
-          rid: 6537695503399780431
+      type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
     - rid: 6537695503399780413
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
-      data:
-        action:
-          rid: 6537695503399780420
+      type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
     - rid: 6537695503399780414
-      type: {class: State, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
-      data:
-        action:
-          rid: 6537695503399780421
+      type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
     - rid: 6537695503399780415
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
         StatusFlags: 6
-        action:
-          rid: -2
-        perception:
-          rid: -2
     - rid: 6537695503399780416
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
         StatusFlags: 7
-        action:
-          rid: -2
-        perception:
-          rid: 6537695503399780422
     - rid: 6537695503399780417
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
         StatusFlags: 7
-        action:
-          rid: -2
-        perception:
-          rid: 6537695503399780423
     - rid: 6537695503399780418
-      type: {class: StateTransition, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: StateTransition, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}
       data:
         StatusFlags: 6
-        action:
-          rid: -2
-        perception:
-          rid: -2
     - rid: 6537695503399780420
       type: {class: LightAction, ns: BehaviourAPI.Unity.Demos, asm: Assembly-CSharp}
       data:
@@ -559,6 +604,12 @@ MonoBehaviour:
         reset:
           componentName: 
           methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
+          componentName: 
+          methodName: 
     - rid: 6537695503399780423
       type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
@@ -569,6 +620,12 @@ MonoBehaviour:
           componentName: 
           methodName: CheckRadarForOverSpeed
         reset:
+          componentName: 
+          methodName: 
+        pause:
+          componentName: 
+          methodName: 
+        unpause:
           componentName: 
           methodName: 
     - rid: 6537695503399780431

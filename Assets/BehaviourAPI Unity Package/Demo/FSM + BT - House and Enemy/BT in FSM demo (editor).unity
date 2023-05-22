@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18631649, g: 0.5225311, b: 0.8326769, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -726,14 +726,22 @@ MonoBehaviour:
         position: {x: 272, y: 110}
         node:
           rid: 6537695503399780486
-        parentIds: []
+        actions: []
+        perceptions: []
+        functions: []
         childIds:
-        - 551d6625-e39c-45eb-9b99-c374ca602976
+        - e9509c5e-a9b1-47b1-ab6b-fab0aef93658
       - name: patrol
-        id: 551d6625-e39c-45eb-9b99-c374ca602976
-        position: {x: 270, y: 320}
+        id: e9509c5e-a9b1-47b1-ab6b-fab0aef93658
+        position: {x: 277, y: 354}
         node:
-          rid: 6537695503399780487
+          rid: 5274389672861106182
+        actions:
+        - fieldName: Action
+          action:
+            rid: -2
+        perceptions: []
+        functions: []
         parentIds:
         - 1fc0f671-e0e8-4a87-b8bf-846ca6557355
         childIds: []
@@ -750,17 +758,14 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 5274389672861106182
+      type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
     - rid: 6537695503399780485
       type: {class: BehaviourTree, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
     - rid: 6537695503399780486
       type: {class: LoopNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
       data:
         Iterations: -1
-    - rid: 6537695503399780487
-      type: {class: LeafNode, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
-      data:
-        action:
-          rid: -2
 --- !u!114 &1072078562
 MonoBehaviour:
   m_ObjectHideFlags: 0

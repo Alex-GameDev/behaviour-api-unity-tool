@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework
 {
+    using BehaviourAPI.Core.Serialization;
     using Core;
     using System.Linq;
     using System.Reflection;
@@ -69,6 +70,18 @@ namespace BehaviourAPI.Unity.Framework
             ValidateReferences(type);
         }
 
+        /// <summary>
+        /// Create a new node data by a node and id.
+        /// Used to create data from a graph created directly in code.
+        /// </summary>
+        /// <param name="node">The <see cref="Node"/> reference</param>
+        /// <param name="id">The id of the element.</param>
+        public NodeData(Node node, string id)
+        {
+            this.node = node;
+            this.id = id;
+        }
+
         public void Validate() => ValidateReferences(node.GetType());
 
         void ValidateReferences(Type type)
@@ -94,7 +107,6 @@ namespace BehaviourAPI.Unity.Framework
                 else if (fieldInfo.FieldType.IsSubclassOf(typeof(Delegate)))
                 {
                     Type delegateType = fieldInfo.FieldType;
-                    //TODO: Guardar parámetros?
 
                     MethodInfo invokeMethod = delegateType.GetMethod("Invoke");
                     ParameterInfo[] parameters = invokeMethod.GetParameters();
@@ -140,33 +152,26 @@ namespace BehaviourAPI.Unity.Framework
         }
 
         /// <summary>
-        /// Create a new node data by a node and id.
+        /// Build the references that are not serialized directly in node.
+        /// These are node connections, actions, perceptions and functions.
         /// </summary>
-        /// <param name="node">The <see cref="Node"/> reference</param>
-        /// <param name="id">The id of the element.</param>
-        public NodeData(Node node, string id)
+        /// <param name="builder">The builder used to set the connections.</param>
+        /// <param name="nodeIdMap">A dictionary used to get the nodes by its id.</param>
+        /// <param name="runner">The script that will run the graph.</param>
+        /// <param name="systemData">The system data used to create the subgraph action references.</param>
+        public void BuildReferences(BehaviourGraphBuilder builder, Dictionary<string, NodeData> nodeIdMap, Component runner, SystemData systemData)
         {
-            this.node = node;
-            this.id = id;
-        }
+            if (node == null)
+            {
+                Debug.Log("Error");
+                return;
+            }
 
-        /// <summary>
-        /// Creates a copy in the same graph, with a new id and name.
-        /// </summary>
-        /// <returns>The duplicated node.</returns>
-        public NodeData Duplicate()
-        {
-            NodeData duplicate = new NodeData();
-            duplicate.name = name + " (copy)";
-            duplicate.id = Guid.NewGuid().ToString();
-            duplicate.position = position + UnityEngine.Vector2.one * 50;
-            duplicate.node = (Node)node.Clone();
-            return duplicate;
-        }
-
-        public void BuildReferences(Component runner)
-        {
-            actions.ForEach(a => a.Build(node));
+            builder.AddNode(name, node,
+                parentIds.Select(id => nodeIdMap[id].node).ToList(),
+                childIds.Select(id => nodeIdMap[id].node).ToList()
+            );
+            actions.ForEach(a => a.Build(node, systemData));
             perceptions.ForEach(p => p.Build(node));
             functions.ForEach(f => f.Build(node, runner));
         }
