@@ -77,6 +77,15 @@ namespace BehaviourAPI.Unity.Editor
             }
         }
 
+        public static string GetInfo(this ReferenceData referenceData) 
+        {
+            if (referenceData.Value == null) return "-";
+            else if (referenceData.Value is Action action) return action.GetActionInfo();
+            else if (referenceData.Value is Perception perception) return perception.GetPerceptionInfo();
+            else if (referenceData.Value is SerializedContextMethod method) return method.GetSerializedMethodText();
+            else return "-";
+        }
+
         public static string GetActionInfo(this Action action)
         {
             switch (action)

@@ -24,12 +24,12 @@ MonoBehaviour:
         position: {x: 79, y: 272}
         node:
           rid: 6537695503399780426
-        actions:
+        references:
         - fieldName: Action
-          action: 
+          value:
             rid: 6537695503399780429
-        perceptions: []
-        functions: []
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - 1be7f69b-1e11-4014-bf40-6e2f8ebdf13b
         childIds:
@@ -39,12 +39,12 @@ MonoBehaviour:
         position: {x: 504, y: 383}
         node:
           rid: 6537695503399780425
-        actions:
+        references:
         - fieldName: Action
-          action: 
+          value:
             rid: -2
-        perceptions: []
-        functions: []
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - 4e4c9770-fc62-4f4a-a265-08be4f1e8fc6
         childIds:
@@ -54,12 +54,12 @@ MonoBehaviour:
         position: {x: 856, y: 288}
         node:
           rid: 6537695503399780427
-        actions:
+        references:
         - fieldName: Action
-          action: 
+          value:
             rid: 6537695503399780430
-        perceptions: []
-        functions: []
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - 27818b20-f611-47a5-a59c-7592b4459e9b
         childIds:
@@ -69,12 +69,12 @@ MonoBehaviour:
         position: {x: 488, y: 158}
         node:
           rid: 6537695503399780428
-        actions:
+        references:
         - fieldName: Action
-          action: 
+          value:
             rid: -2
-        perceptions: []
-        functions: []
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - 3cd3d795-02c1-4f25-a1f2-29f982fbae56
         childIds:

@@ -6,6 +6,7 @@ using System.Linq;
 namespace BehaviourAPI.Unity.Editor
 {
     using BehaviourAPI.Core.Actions;
+    using BehaviourAPI.UnityExtensions;
     using Framework.Adaptations;
 
     /// <summary>

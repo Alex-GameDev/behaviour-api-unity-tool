@@ -4,8 +4,11 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Framework
 {
-    using BehaviourAPI.Core.Serialization;
     using Core;
+    using Core.Actions;
+    using Core.Perceptions;
+    using Core.Serialization;
+    using log4net.Filter;
     using System.Linq;
     using System.Reflection;
 
@@ -36,19 +39,9 @@ namespace BehaviourAPI.Unity.Framework
         [SerializeReference] public Node node;
 
         /// <summary>
-        /// List that allows unity to serialize the action(s) of the node if necessary.
+        /// List that allows unity to serialize elements.
         /// </summary>
-        [SerializeField] public List<ActionData> actions = new List<ActionData>();
-
-        /// <summary>
-        /// List that allows unity to serialize the perceptions(s) of the node if necessary.
-        /// </summary>
-        [SerializeField] public List<PerceptionData> perceptions = new List<PerceptionData>();
-
-        /// <summary>
-        /// List that allows unity to serialize delegates of the node if necessary.
-        /// </summary>
-        [SerializeField] public List<FunctionData> functions = new List<FunctionData>();
+        [SerializeField] public List<ReferenceData> references = new List<ReferenceData>(); 
 
         /// <summary>
         /// List of parent nodes referenced by id.
@@ -86,88 +79,32 @@ namespace BehaviourAPI.Unity.Framework
 
         bool ValidateReferences(Type type)
         {
-            List<ActionData> currentActions = new List<ActionData>();
-            List<PerceptionData> currentPerceptions = new List<PerceptionData>();
-            List<FunctionData> currentFunctions = new List<FunctionData>();
+            List<ReferenceData> currentReferences = new List<ReferenceData>();
+            Dictionary<string, ReferenceData> referenceMap = references.ToDictionary(r => r.FieldName, r => r);
 
             foreach (var fieldInfo in type.GetFields(BindingFlags.Public | BindingFlags.FlattenHierarchy | BindingFlags.Instance))
             {
-                if (fieldInfo.FieldType == typeof(Core.Actions.Action))
+                if (typeof(Action).IsAssignableFrom(fieldInfo.FieldType) || 
+                    typeof(Perception).IsAssignableFrom(fieldInfo.FieldType) ||
+                    typeof(Delegate).IsAssignableFrom(fieldInfo.FieldType))
                 {
-                    currentActions.Add(new ActionData(fieldInfo.Name));
-                }
-                else if (fieldInfo.FieldType == typeof(Core.Perceptions.Perception))
-                {
-                    currentPerceptions.Add(new PerceptionData(fieldInfo.Name));
-                }
-                else if (fieldInfo.FieldType.IsSubclassOf(typeof(Delegate)))
-                {
-                    Type delegateType = fieldInfo.FieldType;
-
-                    MethodInfo invokeMethod = delegateType.GetMethod("Invoke");
-                    ParameterInfo[] parameters = invokeMethod.GetParameters();
-                    Type returnType = invokeMethod.ReturnType;
-                    currentFunctions.Add(new FunctionData(fieldInfo.Name));
-                }
-            }
-
-            foreach (var actionData in actions)
-            {
-                bool actionReferenceFound = false;
-                foreach(var currentActionData in currentActions)
-                {
-                    if(actionData.Name == currentActionData.Name)
+                    var refData = new ReferenceData(fieldInfo.Name, fieldInfo.FieldType);
+                    currentReferences.Add(refData);
+                    if(referenceMap.TryGetValue(fieldInfo.Name, out ReferenceData oldReferenceData))
                     {
-                        currentActionData.action = actionData.action;
-                        actionReferenceFound = true;
-                        break;
+                        string currentFullType = fieldInfo.FieldType.AssemblyQualifiedName;
+                        if(currentFullType == oldReferenceData.FieldType)
+                        {
+                            refData.Value = oldReferenceData.Value;
+                        }
+                    }
+                    else if(typeof(Delegate).IsAssignableFrom(fieldInfo.FieldType))
+                    {
+                        refData.Value = new SerializedContextMethod();
                     }
                 }
-                if(!actionReferenceFound)
-                {
-                    Debug.LogWarning($"VALIDATION ERROR: Action field called \"{actionData.Name}\" was not found. The reference will be deleted.");
-                }
             }
-
-            foreach (var perceptionData in perceptions)
-            {
-                bool perceptionReferenceFound = false;
-                foreach (var currentActionData in currentPerceptions)
-                {
-                    if (perceptionData.Name == currentActionData.Name)
-                    {
-                        currentActionData.perception = perceptionData.perception;
-                        perceptionReferenceFound = true;
-                        break;
-                    }
-                }
-                if (!perceptionReferenceFound)
-                {
-                    Debug.LogWarning($"VALIDATION ERROR: Perception field called \"{perceptionData.Name}\" was not found. The reference will be deleted.");
-                }
-            }
-
-            foreach (var functionData in functions)
-            {
-                bool actionReferenceFound = false;
-                foreach (var currentFunctionData in currentFunctions)
-                {
-                    if (currentFunctionData.Name == currentFunctionData.Name)
-                    {
-                        currentFunctionData.method = functionData.method;
-                        actionReferenceFound = true;
-                        break;
-                    }
-                }
-                if (!actionReferenceFound)
-                {
-                    Debug.LogWarning($"VALIDATION ERROR: Function field called \"{functionData.Name}\" was not found. The reference will be deleted.");
-                }
-            }
-
-            actions = currentActions;
-            perceptions = currentPerceptions;
-            functions = currentFunctions;
+            references = currentReferences;
 
             return true;
         }
@@ -189,19 +126,13 @@ namespace BehaviourAPI.Unity.Framework
         /// <param name="systemData">The system data used to create the subgraph action references.</param>
         public void BuildReferences(BehaviourGraphBuilder builder, Dictionary<string, NodeData> nodeIdMap, Component runner, SystemData systemData)
         {
-            if (node == null)
-            {
-                Debug.Log("Error");
-                return;
-            }
+            if (node == null) Debug.LogWarning("BUILD ERROR: The referenced node is null");
 
             builder.AddNode(name, node,
                 parentIds.Select(id => nodeIdMap[id].node).ToList(),
                 childIds.Select(id => nodeIdMap[id].node).ToList()
             );
-            actions.ForEach(a => a.Build(node, systemData));
-            perceptions.ForEach(p => p.Build(node));
-            functions.ForEach(f => f.Build(node, runner));
+            references.ForEach(r => r.Build(node, systemData, runner));
         }
     }
 }

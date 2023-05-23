@@ -7,17 +7,33 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     using Core;
     using Core.Actions;
 
+    /// <summary>
+    /// Adaptation wrapper class for use <see cref="CompoundAction"/> in editor tools. 
+    /// <para>! -- Don't use this class directly in code.</para>
+    /// </summary>
     public class CompoundActionWrapper : Action, IBuildable
     {
-        [SerializeField] string a;
+        /// <summary>
+        /// The wrapped compound action.
+        /// </summary>
         [SerializeReference] public CompoundAction compoundAction;
 
+        /// <summary>
+        /// The subactiopn serializable list.
+        /// </summary>
         public List<SubActionWrapper> subActions = new List<SubActionWrapper>();
 
+        /// <summary>
+        /// Parameterless constructor for reflection.
+        /// </summary>
         public CompoundActionWrapper()
         {
         }
 
+        /// <summary>
+        /// Create a new <see cref="CompoundActionWrapper"></see> by a <see cref="CompoundAction"/>. 
+        /// </summary>
+        /// <param name="compoundPerception">The compound action.</param>
         public CompoundActionWrapper(CompoundAction compoundAction)
         {
             this.compoundAction = compoundAction;
@@ -41,11 +57,21 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
             return copy;
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Passes the context to <see cref="compoundPerception"/>.
+        /// </summary>
+        /// <param name="context">The execution contect.</param>
         public override void SetExecutionContext(ExecutionContext context)
         {
             compoundAction.SetExecutionContext(context);
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// Set <see cref="compoundAction"/> subperceptions from <see cref="subActions"/> list.
+        /// </summary>
+        /// <param name="data">The system data that contains the action.</param>
         public void Build(SystemData data)
         {
             foreach(var subAction in subActions)

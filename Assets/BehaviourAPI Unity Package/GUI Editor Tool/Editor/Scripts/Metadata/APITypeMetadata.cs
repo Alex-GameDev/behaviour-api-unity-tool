@@ -265,7 +265,7 @@ namespace BehaviourAPI.Unity.Editor
 
         private void BuildPerceptionHierarchy(List<Type> perceptionTypes, List<Type> compoundPerceptionTypes)
         {
-            PerceptionHierarchy = new EditorHierarchyNode("Actions", typeof(Perception));
+            PerceptionHierarchy = new EditorHierarchyNode("Perceptions", typeof(Perception));
             PerceptionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(CustomPerception)));
 
             EditorHierarchyNode compoundPerceptionHierarchyNode = new EditorHierarchyNode("Compound perceptions", null);
@@ -301,6 +301,54 @@ namespace BehaviourAPI.Unity.Editor
             unityPerceptionHierarchyNode.Childs.AddRange(groups.Values);
             unityPerceptionHierarchyNode.Childs.AddRange(ungroupedPerceptionsNodes);
             PerceptionHierarchy.Childs.Add(unityPerceptionHierarchyNode);
+        }
+
+        public EditorHierarchyNode GetActionHierarchy(Type m_RootType)
+        {
+            if (m_RootType == null || m_RootType == typeof(Action)) return ActionHierarchy;
+
+            if (!typeof(Action).IsAssignableFrom(m_RootType)) return null;
+
+            Stack<Type> typeStack = new Stack<Type>();
+            var baseType = m_RootType;
+            while(baseType != typeof(Action))
+            {
+                typeStack.Push(baseType);
+                baseType = baseType.BaseType;
+            }
+
+            EditorHierarchyNode currentHierarchyNode = ActionHierarchy;
+            while(currentHierarchyNode.Type != m_RootType)
+            {
+                var type = typeStack.Pop();
+                currentHierarchyNode = currentHierarchyNode.FindSubNode(type);
+            }
+
+            return currentHierarchyNode;
+        }    
+
+        public EditorHierarchyNode GetPerceptionHierarchy(Type m_RootType)
+        {
+            if (m_RootType == null || m_RootType == typeof(Perception)) return PerceptionHierarchy;
+
+            if (!typeof(Perception).IsAssignableFrom(m_RootType)) return null;
+
+            Stack<Type> typeStack = new Stack<Type>();
+            var baseType = m_RootType;
+            while (baseType != typeof(Perception))
+            {
+                typeStack.Push(baseType);
+                baseType = baseType.BaseType;
+            }
+
+            EditorHierarchyNode currentHierarchyNode = PerceptionHierarchy;
+            while (currentHierarchyNode.Type != m_RootType)
+            {
+                var type = typeStack.Pop();
+                currentHierarchyNode = currentHierarchyNode.FindSubNode(type);
+            }
+
+            return currentHierarchyNode;
         }
     }
 }

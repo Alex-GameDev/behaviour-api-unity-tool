@@ -726,9 +726,8 @@ MonoBehaviour:
         position: {x: 272, y: 110}
         node:
           rid: 6537695503399780486
-        actions: []
-        perceptions: []
-        functions: []
+        references: []
+        parentIds: []
         childIds:
         - e9509c5e-a9b1-47b1-ab6b-fab0aef93658
       - name: patrol
@@ -736,12 +735,12 @@ MonoBehaviour:
         position: {x: 277, y: 354}
         node:
           rid: 5274389672861106182
-        actions:
+        references:
         - fieldName: Action
-          action:
+          value:
             rid: -2
-        perceptions: []
-        functions: []
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - 1fc0f671-e0e8-4a87-b8bf-846ca6557355
         childIds: []

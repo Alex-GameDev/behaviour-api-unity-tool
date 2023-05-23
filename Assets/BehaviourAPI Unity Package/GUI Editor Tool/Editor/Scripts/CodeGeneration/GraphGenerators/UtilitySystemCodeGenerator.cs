@@ -55,7 +55,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             {
                 case VariableFactor variableFactor:
                     code.SetMethod(k_VariableFactorMethod);
-                    code.AddFirstFunction();
+                    code.AddFunction("Variable");
                     code.AddFloat(variableFactor.min);
                     code.AddFloat(variableFactor.max);
                     break;
@@ -90,7 +90,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                         GenerateCode(GetNodeById(nodeData.childIds[0]), template);
 
                     code.AddFirstChild();
-                    code.AddFirstAction();
+                    code.AddAction("Action");
 
                     if (nodeData.parentIds.Count > 0)
                         GenerateCode(GetNodeById(nodeData.parentIds[0]), template);

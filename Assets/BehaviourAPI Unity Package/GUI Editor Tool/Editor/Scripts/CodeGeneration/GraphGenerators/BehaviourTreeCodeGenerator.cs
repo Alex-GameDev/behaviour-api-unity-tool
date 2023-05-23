@@ -47,7 +47,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             {
                 case LeafNode:
                     code.SetMethod(k_LeafMethod);
-                    code.AddFirstAction();
+                    code.AddAction("Action");
                     break;
 
                 case DecoratorNode:

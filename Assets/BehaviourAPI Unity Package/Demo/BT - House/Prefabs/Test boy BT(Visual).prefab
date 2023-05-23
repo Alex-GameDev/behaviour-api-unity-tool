@@ -229,9 +229,7 @@ MonoBehaviour:
         position: {x: 0, y: 0}
         node:
           rid: 6537695503399780468
-        actions: []
-        perceptions: []
-        functions: []
+        references: []
         parentIds: []
         childIds:
         - ac92051b-f575-4429-baff-3c6f0b0d16ef
@@ -242,9 +240,7 @@ MonoBehaviour:
         position: {x: 0, y: 200}
         node:
           rid: 6537695503399780469
-        actions: []
-        perceptions: []
-        functions: []
+        references: []
         parentIds:
         - 3a80d56d-4e32-49dc-a8b4-ff987c7807c9
         childIds:
@@ -256,9 +252,7 @@ MonoBehaviour:
         position: {x: 0, y: 400}
         node:
           rid: 6537695503399780470
-        actions: []
-        perceptions: []
-        functions: []
+        references: []
         parentIds:
         - bfc6eabe-5136-44db-89f6-2de5cb10a4a5
         childIds:
@@ -270,12 +264,12 @@ MonoBehaviour:
         position: {x: -300, y: 200}
         node:
           rid: 6537695503399780471
-        actions:
+        references:
         - fieldName: Action
-          action:
+          value:
             rid: -2
-        perceptions: []
-        functions: []
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - 3a80d56d-4e32-49dc-a8b4-ff987c7807c9
         childIds: []
@@ -284,12 +278,12 @@ MonoBehaviour:
         position: {x: 316, y: 216}
         node:
           rid: 6537695503399780472
-        actions:
+        references:
         - fieldName: Action
-          action:
+          value:
             rid: 6537695503399780479
-        perceptions: []
-        functions: []
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - 3a80d56d-4e32-49dc-a8b4-ff987c7807c9
         childIds: []
@@ -298,12 +292,12 @@ MonoBehaviour:
         position: {x: -293, y: 416}
         node:
           rid: 6537695503399780474
-        actions:
+        references:
         - fieldName: Action
-          action:
+          value:
             rid: 6537695503399780481
-        perceptions: []
-        functions: []
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - bfc6eabe-5136-44db-89f6-2de5cb10a4a5
         childIds: []
@@ -312,12 +306,12 @@ MonoBehaviour:
         position: {x: 316, y: 416}
         node:
           rid: 6537695503399780475
-        actions:
+        references:
         - fieldName: Action
-          action:
+          value:
             rid: 6537695503399780483
-        perceptions: []
-        functions: []
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - bfc6eabe-5136-44db-89f6-2de5cb10a4a5
         childIds: []
@@ -326,12 +320,12 @@ MonoBehaviour:
         position: {x: -300, y: 600}
         node:
           rid: 6537695503399780476
-        actions:
+        references:
         - fieldName: Action
-          action:
+          value:
             rid: 6537695503399780484
-        perceptions: []
-        functions: []
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - 2a941e77-9028-4f6d-a4e0-15d9da5e5dcc
         childIds: []
@@ -340,12 +334,12 @@ MonoBehaviour:
         position: {x: 0, y: 600}
         node:
           rid: 6537695503399780477
-        actions:
+        references:
         - fieldName: Action
-          action:
+          value:
             rid: 6537695503399780482
-        perceptions: []
-        functions: []
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - 2a941e77-9028-4f6d-a4e0-15d9da5e5dcc
         childIds: []
@@ -354,12 +348,12 @@ MonoBehaviour:
         position: {x: 300, y: 600}
         node:
           rid: 6537695503399780478
-        actions:
+        references:
         - fieldName: Action
-          action:
+          value:
             rid: 6537695503399780480
-        perceptions: []
-        functions: []
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - 2a941e77-9028-4f6d-a4e0-15d9da5e5dcc
         childIds: []

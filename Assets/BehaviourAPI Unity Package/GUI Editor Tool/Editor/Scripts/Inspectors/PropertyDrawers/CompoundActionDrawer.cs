@@ -6,6 +6,7 @@ namespace BehaviourAPI.Unity.Editor
 {
     using Core.Actions;
     using Framework.Adaptations;
+    using System.Linq;
 
     [CustomPropertyDrawer(typeof(CompoundActionWrapper))]
     public class CompoundActionDrawer : PropertyDrawer
@@ -40,8 +41,6 @@ namespace BehaviourAPI.Unity.Editor
 
             var subActionProperty = property.FindPropertyRelative("subActions");
 
-            EditorGUILayout.BeginHorizontal(GUILayout.Width(position.width));
-
             var labelRect = new Rect(position.x, position.y, position.width - (k_RemoveGraphBtnWidth + k_SpaceWidth), position.height);
             var removeRect = new Rect(position.x + position.width - k_RemoveGraphBtnWidth, position.y, k_RemoveGraphBtnWidth, position.height);
             EditorGUI.LabelField(labelRect, compoundActionProperty.managedReferenceValue.TypeName());
@@ -53,11 +52,13 @@ namespace BehaviourAPI.Unity.Editor
                 return;
             }
 
-            EditorGUILayout.EndHorizontal();
-
-            foreach (SerializedProperty childProp in compoundActionProperty)
+            int deep = compoundActionProperty.propertyPath.Count(c => c == '.');
+            foreach (SerializedProperty p in compoundActionProperty)
             {
-                EditorGUILayout.PropertyField(childProp, true);
+                if (p.propertyPath.Count(c => c == '.') == deep + 1)
+                {
+                    EditorGUILayout.PropertyField(p, true);
+                }
             }
 
             if (GUILayout.Button("Add element", EditorStyles.popup))

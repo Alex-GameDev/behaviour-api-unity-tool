@@ -142,14 +142,9 @@ namespace BehaviourAPI.Unity.Editor.Graph
                 }
             }
 
-            foreach (var actionData in data.actions)
+            foreach(var referencedData in data.references)
             {
-                AddExtensionView(actionData.Name);
-            }
-
-            foreach (var perceptionData in data.perceptions)
-            {
-                AddExtensionView(perceptionData.Name);
+                AddExtensionView(referencedData.FieldName);
             }
 
             drawer.DrawNodeDetails();
@@ -385,17 +380,11 @@ namespace BehaviourAPI.Unity.Editor.Graph
         /// </summary>
         public void RefreshDisplay()
         {
-            foreach (var actionData in data.actions)
+            foreach(var referencedData in data.references)
             {
-                var actionTaskDisplay = m_taskViews[actionData.Name];
-                actionTaskDisplay.Update(actionData.action.GetActionInfo());
+                var display = m_taskViews[referencedData.FieldName];
+                display.Update(referencedData.GetInfo());
             }
-            foreach (var perceptionData in data.perceptions)
-            {
-                var perceptionTaskDisplay = m_taskViews[perceptionData.Name];
-                perceptionTaskDisplay.Update(perceptionData.perception.GetPerceptionInfo());
-            }
-
             drawer.OnRefreshDisplay();
         }
 

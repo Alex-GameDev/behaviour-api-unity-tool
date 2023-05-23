@@ -21,9 +21,12 @@ namespace BehaviourAPI.Unity.Editor.Graph
             switch (node)
             {
                 case VariableFactor:
+                    view.SetColor(BehaviourAPISettings.instance.LeafFactorColor);
+                    var functionTaskView = view.AddExtensionView("$VariableFactor");
+                    break;
                 case ConstantFactor:
                     view.SetColor(BehaviourAPISettings.instance.LeafFactorColor);
-                    var functionTaskView = view.AddExtensionView("leaffactor");
+                    functionTaskView = view.AddExtensionView("$ConstantFactor");
                     break;
                 case FusionFactor:
                     view.SetColor(BehaviourAPISettings.instance.FusionFactorColor);
@@ -33,7 +36,8 @@ namespace BehaviourAPI.Unity.Editor.Graph
                 case CurveFactor curve:
                     view.SetColor(BehaviourAPISettings.instance.CurveFactorColor);
                     view.SetIconText(node.TypeName().RemoveTermination("Factor").CamelCaseToSpaced());
-                    functionTaskView = view.AddExtensionView("function");
+                    functionTaskView = view.AddExtensionView("$CurveFactor");
+                    functionTaskView.Label.Disable();
                     m_FunctionDisplay = new FunctionDisplay(curve.TestEvaluate);
                     functionTaskView.AddElement(m_FunctionDisplay);
                     break;
@@ -116,43 +120,21 @@ namespace BehaviourAPI.Unity.Editor.Graph
             switch (node)
             {
                 case VariableFactor variableFactor:
-                    var methodDisplay = view.data.functions[0].method.GetSerializedMethodText();
-                    var functionTaskView = view.GetTaskView("leaffactor");
-                    if (methodDisplay != null)
-                    {
-                        functionTaskView.Update($"{methodDisplay}\n[{variableFactor.min} - {variableFactor.max}]");
-                    }
-                    else
-                    {
-                        functionTaskView.Disable();
-                    }
+                    var functionTaskView = view.GetTaskView("$VariableFactor");
+                    functionTaskView.Update($"[{variableFactor.min} - {variableFactor.max}]");
                     break;
 
                 case ConstantFactor constant:
-                    functionTaskView = view.GetTaskView("leaffactor");
+                    functionTaskView = view.GetTaskView("%ConstantFactor");
                     functionTaskView.Update(constant.value.ToString());
                     break;
 
-                case CustomCurveFactor customCurve:
-                    methodDisplay = view.data.functions[0].method.GetSerializedMethodText();
-                    functionTaskView = view.GetTaskView("function");
-                    if (methodDisplay != null)
-                    {
-                        functionTaskView.Update(methodDisplay);
-                    }
-                    else
-                    {
-                        functionTaskView.Disable();
-                    }
+                case CustomCurveFactor:
+                    m_FunctionDisplay?.Disable();
                     break;
 
-                case CurveFactor curveFactor:
-
-                    if (m_FunctionDisplay != null)
-                    {
-                        m_FunctionDisplay.Update();
-                    }
-
+                case CurveFactor:
+                    m_FunctionDisplay?.Update();
                     break;
             }
         }

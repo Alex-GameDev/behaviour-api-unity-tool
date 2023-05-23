@@ -82,12 +82,14 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             }
         }
 
-        internal void AddFirstAction(bool isNotMandatory = false, string paramName = null)
+        public void AddAction(string fieldName, bool isNotMandatory = false, string paramName = null)
         {
-            if (m_NodeData.actions.Count > 0 && m_NodeData.actions[0].action != null)
+            var actionData = m_NodeData.references.Find((r) => r.FieldName == fieldName);
+
+            if (actionData != null && actionData.Value is Action action)
             {
                 var actionIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.id) + "_action";
-                var actionExpression = m_Template.GetActionExpression(m_NodeData.actions[0].action, actionIdentifier, m_argumentStatements);
+                var actionExpression = m_Template.GetActionExpression(action, actionIdentifier, m_argumentStatements);
                 m_MethodInvoke.parameters.Add(actionExpression);
             }
             else if(!isNotMandatory)
@@ -97,13 +99,14 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             }
         }
 
-        internal void AddFirstPerception(bool isNotMandatory = false, string paramName = null)
+        public void AddPerception(string fieldName, bool isNotMandatory = false, string paramName = null)
         {
-            string paramPrefix = string.IsNullOrEmpty(paramName) ? "" : paramName + ": ";
-            if (m_NodeData.perceptions.Count > 0 && m_NodeData.perceptions[0].perception != null)
+            var perceptionData = m_NodeData.references.Find((r) => r.FieldName == fieldName);
+
+            if (perceptionData != null && perceptionData.Value is Perception perception)
             {
                 var perceptionIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.id) + "_perception";
-                var perceptionExpression = m_Template.GetPerceptionExpression(m_NodeData.perceptions[0].perception, perceptionIdentifier, m_argumentStatements);
+                var perceptionExpression = m_Template.GetPerceptionExpression(perception, perceptionIdentifier, m_argumentStatements);
                 m_MethodInvoke.parameters.Add(perceptionExpression);
             }
             else if (!isNotMandatory)
@@ -147,11 +150,13 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             m_MethodInvoke.parameters.Add(statusExpression);
         }
 
-        public void AddFirstFunction(bool isNotMandatory = false)
+        public void AddFunction(string fieldName, bool isNotMandatory = false)
         {
-            if (m_NodeData.functions.Count > 0 && m_NodeData.functions[0].method != null)
+            var methodData = m_NodeData.references.Find((r) => r.FieldName == fieldName);
+
+            if (methodData != null && methodData.Value is SerializedContextMethod contextMethod)
             {
-                var fieldInfo = m_NodeData.node.GetType().GetField(m_NodeData.functions[0].Name);
+                var fieldInfo = m_NodeData.node.GetType().GetField(methodData.FieldName);
 
                 if (fieldInfo == null || !fieldInfo.FieldType.IsSubclassOf(typeof(Delegate))) return;
 
@@ -160,7 +165,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                 var args = methodInfo.GetParameters().Select(p => p.GetType()).ToArray();
 
                 var functionIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.id) + "_function";
-                var functionExpression = m_Template.GenerateMethodCodeExpression(m_NodeData.functions[0].method, args, returnParam);
+                var functionExpression = m_Template.GenerateMethodCodeExpression(contextMethod, args, returnParam);
                 m_MethodInvoke.parameters.Add(functionExpression);
             }
             else if (!isNotMandatory)

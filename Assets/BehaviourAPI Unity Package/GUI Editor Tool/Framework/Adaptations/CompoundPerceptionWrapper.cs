@@ -8,7 +8,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
     using Core.Perceptions;
 
     /// <summary>
-    /// Adaptation wrapper class for use <see cref="ConditionPerception"/> in editor tools. 
+    /// Adaptation wrapper class for use <see cref="CompoundPerception"/> in editor tools. 
     /// <para>! -- Don't use this class directly in code.</para>
     /// </summary>
     public class CompoundPerceptionWrapper : Perception, IBuildable
@@ -33,30 +33,17 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         /// <summary>
         /// Create a new <see cref="CompoundPerceptionWrapper"></see> by a <see cref="CompoundPerception"/>. 
         /// </summary>
-        /// <param name="compoundPerception"></param>
+        /// <param name="compoundPerception">The compound perception.</param>
         public CompoundPerceptionWrapper(CompoundPerception compoundPerception)
         {
             this.compoundPerception = compoundPerception;
         }
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// Call <see cref="compoundPerception"/> initialize event.
-        /// </summary>
         public override void Initialize() => compoundPerception.Initialize();
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// Call <see cref="compoundPerception"/> check event.
-        /// </summary>
         public override bool Check() => compoundPerception.Check();
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// Call <see cref="compoundPerception"/> reset event.
-        /// </summary>
         public override void Reset() => compoundPerception.Reset();
-
 
         public override void Pause() => compoundPerception.Pause();
 
@@ -66,7 +53,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         {
             var copy = (CompoundPerceptionWrapper)base.Clone();
             copy.compoundPerception = (CompoundPerception)compoundPerception.Clone();
-            copy.subPerceptions = subPerceptions.Select(p => (PerceptionWrapper)p.Clone()).ToList();
+            copy.subPerceptions = subPerceptions.Select(p => (PerceptionWrapper)p.perception.Clone()).ToList();
             return copy;
         }
 
@@ -74,7 +61,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         /// <inheritdoc/>
         /// Passes the context to <see cref="compoundPerception"/>.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="context">The execution contect.</param>
         public override void SetExecutionContext(ExecutionContext context)
         {
             compoundPerception.SetExecutionContext(context);
@@ -84,7 +71,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         /// <inheritdoc/>
         /// Set <see cref="compoundPerception"/> subperceptions from <see cref="subPerceptions"/> list.
         /// </summary>
-        /// <param name="data"></param>
+        /// <param name="data">The system data that contains the perception.</param>
         public void Build(SystemData data)
         {
             foreach (var subPerception in subPerceptions)

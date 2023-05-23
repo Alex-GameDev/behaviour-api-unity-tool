@@ -12,7 +12,7 @@ namespace BehaviourAPI.UnityExtensions
         /// <summary>
         /// The curve that represents the function.
         /// </summary>
-        public AnimationCurve curve;
+        public AnimationCurve curve = new AnimationCurve();
 
         protected override float Evaluate(float childUtility)
         {

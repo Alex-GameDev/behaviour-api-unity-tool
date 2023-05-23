@@ -103,5 +103,10 @@ namespace BehaviourAPI.Unity.Editor
                 !t.IsAbstract &&
                 t.GetConstructors().Any(c => c.GetParameters().Length == 0));
         }
+
+        public EditorHierarchyNode FindSubNode(Type type)
+        {
+            return Childs.Find(e => e.Type == type);
+        }
     }
 }

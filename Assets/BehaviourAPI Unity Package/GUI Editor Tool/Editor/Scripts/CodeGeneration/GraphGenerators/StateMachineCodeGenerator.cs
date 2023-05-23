@@ -50,14 +50,14 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             {
                 case ProbabilisticState pState:
                     code.SetMethod(k_ProbabilisticStateMethod);
-                    code.AddFirstAction(true);
+                    code.AddAction("Action", true);
                     code.AddPropertyAssignations();
                     //TODO: Probabilities
                     break;
 
                 case State state:
                     code.SetMethod(k_StateMethod);
-                    code.AddFirstAction(true);
+                    code.AddAction("Action", true);
                     break;
 
                 case StateTransition stateTransition:
@@ -72,8 +72,8 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                         GenerateCode(GetNodeById(nodeData.childIds[0]), template);
 
                     code.AddFirstChild();
-                    code.AddFirstPerception(true, "perception");
-                    code.AddFirstAction(true, "action");
+                    code.AddPerception("Perception", true, "perception");
+                    code.AddAction("Action", true, "action");
                     code.AddStatusFlags(stateTransition.StatusFlags, true, "statusFlags");
                     break;
                    
@@ -86,8 +86,8 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
                     code.AddFirstParent();
                     code.AddStatus(exitTransition.ExitStatus);
-                    code.AddFirstPerception(true, "perception");
-                    code.AddFirstAction(true, "action");
+                    code.AddPerception("Perception", true, "perception");
+                    code.AddAction("Action", true, "action");
                     code.AddStatusFlags(exitTransition.StatusFlags, true, "statusFlags");
                     break;
             }

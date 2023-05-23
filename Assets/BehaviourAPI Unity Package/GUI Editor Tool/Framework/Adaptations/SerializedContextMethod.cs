@@ -46,9 +46,23 @@ namespace BehaviourAPI.Unity.Framework
 
             MethodInfo methodInfo = component.GetType().GetMethod(methodName, arguments);
 
-            if (methodInfo == null) Debug.LogWarning("Custom function error: The specified method or component name is not valid.", defaultComponent.gameObject);
+            if (methodInfo == null)
+            {
+                Debug.LogWarning($"BUILD ERROR: The method called {methodName} was not found. Can't create a delegate.", defaultComponent.gameObject);
+                return null;
+            }
 
-            return methodInfo.CreateDelegate(delegateType, component);
+            try
+            {
+                var del = methodInfo.CreateDelegate(delegateType, component);
+                return del;
+            }
+            catch
+            {
+                Debug.LogWarning("BUILD ERROR: The method don't match the required parameters. Can't create a delegate.", defaultComponent.gameObject);
+                return null;
+            }
+            
         }
     }
 

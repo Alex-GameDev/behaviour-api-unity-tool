@@ -518,6 +518,7 @@ namespace BehaviourAPI.Unity.Editor
                     var actionsProperty = selectedNodeProperty.FindPropertyRelative("actions");
                     var perceptionsProperty = selectedNodeProperty.FindPropertyRelative("perceptions");
                     var functionsProperty = selectedNodeProperty.FindPropertyRelative("functions");
+                    var referencesProperty = selectedNodeProperty.FindPropertyRelative("references");
 
                     var nodeType = nodeProperty.managedReferenceValue.TypeName();
                     EditorGUILayout.LabelField("Type", nodeType, EditorStyles.wordWrappedLabel);
@@ -540,6 +541,12 @@ namespace BehaviourAPI.Unity.Editor
                     {
                         var subProp = functionsProperty.GetArrayElementAtIndex(i);
                         DrawPropertyField(subProp, "method");
+                    }
+
+                    for(int i = 0;i < referencesProperty.arraySize; i++)
+                    {
+                        var subProp = referencesProperty.GetArrayElementAtIndex(i);
+                        EditorGUILayout.PropertyField(subProp);
                     }
                 }
                 else

@@ -10,15 +10,25 @@ namespace BehaviourAPI.Unity.Editor
     public abstract class ElementCreatorWindowProvider : ScriptableObject, ISearchWindowProvider
     {
         Action<Type> _callback;
+
+        protected Type m_RootType;
+
         public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
         {
             List<SearchTreeEntry> searchTreeEntries = new List<SearchTreeEntry>();
             var hierarchyNode = GetHierarchyNode();
 
-            searchTreeEntries.AddGroup(hierarchyNode.name, 0);
-            foreach (var subNode in hierarchyNode.Childs)
+            if(hierarchyNode == null)
             {
-                GetSubSearchTreeEntry(subNode, searchTreeEntries, 1);
+                searchTreeEntries.AddGroup("No elements found", 0);
+            }
+            else
+            {
+                searchTreeEntries.AddGroup(hierarchyNode.name, 0);
+                foreach (var subNode in hierarchyNode.Childs)
+                {
+                    GetSubSearchTreeEntry(subNode, searchTreeEntries, 1);
+                }
             }
             return searchTreeEntries;
         }
@@ -47,10 +57,11 @@ namespace BehaviourAPI.Unity.Editor
 
         protected abstract EditorHierarchyNode GetHierarchyNode();
 
-        public static T Create<T>(Action<Type> callback) where T : ElementCreatorWindowProvider
+        public static T Create<T>(Action<Type> callback, Type baseType = null) where T : ElementCreatorWindowProvider
         {
             T window = CreateInstance<T>();
             window._callback = callback;
+            window.m_RootType = baseType;
             return window;
         }
     }
@@ -62,7 +73,7 @@ namespace BehaviourAPI.Unity.Editor
     {
         protected override EditorHierarchyNode GetHierarchyNode()
         {
-            return BehaviourAPISettings.instance.Metadata.ActionHierarchy;
+            return BehaviourAPISettings.instance.Metadata.GetActionHierarchy(m_RootType);
         }
     }
 
@@ -73,7 +84,7 @@ namespace BehaviourAPI.Unity.Editor
     {
         protected override EditorHierarchyNode GetHierarchyNode()
         {
-            return BehaviourAPISettings.instance.Metadata.PerceptionHierarchy;
+            return BehaviourAPISettings.instance.Metadata.GetPerceptionHierarchy(m_RootType);
         }
     }
 
