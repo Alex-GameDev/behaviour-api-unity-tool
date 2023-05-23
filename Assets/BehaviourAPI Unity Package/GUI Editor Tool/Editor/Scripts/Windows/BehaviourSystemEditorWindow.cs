@@ -515,33 +515,12 @@ namespace BehaviourAPI.Unity.Editor
                     var selectedNodeProperty = selectedGraphProperty.FindPropertyRelative("nodes").GetArrayElementAtIndex(nodeIndex);
                     var nodeProperty = selectedNodeProperty.FindPropertyRelative("node");
 
-                    var actionsProperty = selectedNodeProperty.FindPropertyRelative("actions");
-                    var perceptionsProperty = selectedNodeProperty.FindPropertyRelative("perceptions");
-                    var functionsProperty = selectedNodeProperty.FindPropertyRelative("functions");
                     var referencesProperty = selectedNodeProperty.FindPropertyRelative("references");
 
                     var nodeType = nodeProperty.managedReferenceValue.TypeName();
                     EditorGUILayout.LabelField("Type", nodeType, EditorStyles.wordWrappedLabel);
                     DrawPropertyField(selectedNodeProperty, "name");
                     DrawAllFieldsWithoutFoldout(nodeProperty);
-
-                    for (int i = 0; i < actionsProperty.arraySize; i++)
-                    {
-                        var subProp = actionsProperty.GetArrayElementAtIndex(i);
-                        DrawPropertyField(subProp, "action");
-                    }
-
-                    for (int i = 0; i < perceptionsProperty.arraySize; i++)
-                    {
-                        var subProp = perceptionsProperty.GetArrayElementAtIndex(i);
-                        DrawPropertyField(subProp, "perception");
-                    }
-
-                    for (int i = 0; i < functionsProperty.arraySize; i++)
-                    {
-                        var subProp = functionsProperty.GetArrayElementAtIndex(i);
-                        DrawPropertyField(subProp, "method");
-                    }
 
                     for(int i = 0;i < referencesProperty.arraySize; i++)
                     {
