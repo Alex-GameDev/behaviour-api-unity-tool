@@ -3,7 +3,7 @@ using BehaviourAPI.Core.Actions;
 
 namespace BehaviourAPI.UnityExtensions
 {
-    public abstract class UnityAction : Action
+    public abstract class UnityAction : Action, ITaskDisplayable
     {
         protected UnityExecutionContext context;
         public virtual string DisplayInfo => "Unity Action";

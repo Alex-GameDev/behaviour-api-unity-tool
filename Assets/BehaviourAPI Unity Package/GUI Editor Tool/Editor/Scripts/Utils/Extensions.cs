@@ -1,4 +1,5 @@
 ﻿using BehaviourAPI.Core;
+using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Framework;
 using BehaviourAPI.Unity.Framework.Adaptations;
@@ -90,6 +91,19 @@ namespace BehaviourAPI.Unity.Editor
         {
             switch (action)
             {
+                case ITaskDisplayable taskDisplayable:
+                    string info = taskDisplayable.DisplayInfo;
+
+                    var type = taskDisplayable.GetType();
+                    var properties = type.GetFields();
+
+                    for (int i = 0; i < properties.Length; i++)
+                    {
+                        string value = GetPropertyDisplay(properties[i].GetValue(taskDisplayable));
+                        info = info.Replace($"${properties[i].Name}", value);
+                    }
+                    return info;
+
                 case CustomAction customAction:
 
                     var actionMethodLines = new List<string>();
@@ -104,20 +118,13 @@ namespace BehaviourAPI.Unity.Editor
                     code = customAction.stop.GetSerializedMethodText();
                     if (code != null) actionMethodLines.Add(code);
 
-                    return actionMethodLines.Join("\n");
+                    return actionMethodLines.Join("\n");               
 
-                case UnityAction unityAction:
-                    string info = unityAction.DisplayInfo;
-
-                    var type = unityAction.GetType();
-                    var properties = type.GetFields();
-
-                    for (int i = 0; i < properties.Length; i++)
-                    {
-                        string value = GetPropertyDisplay(properties[i].GetValue(unityAction));
-                        info = info.Replace($"${properties[i].Name}", value);
-                    }
-                    return info;
+                case CompoundActionWrapper compoundAction:
+                    var compoundType = compoundAction.compoundAction.GetType();
+                    var logicCharacter = compoundType == typeof(SequenceAction) ? " >> " :
+                      compoundType == typeof(ParallelAction) ? " | " : " - ";
+                    return "(" + compoundAction.subActions.Select(sub => GetActionInfo(sub.action)).Join(logicCharacter) + ")";
 
                 case SubgraphAction subgraphAction:
                     if (string.IsNullOrEmpty(subgraphAction.subgraphId))
@@ -141,6 +148,20 @@ namespace BehaviourAPI.Unity.Editor
         {
             switch (perception)
             {
+
+                case ITaskDisplayable taskDisplayable:
+                    string info = taskDisplayable.DisplayInfo;
+
+                    var type = taskDisplayable.GetType();
+                    var properties = type.GetFields();
+
+                    for (int i = 0; i < properties.Length; i++)
+                    {
+                        string value = GetPropertyDisplay(properties[i].GetValue(taskDisplayable));
+                        info = info.Replace($"${properties[i].Name}", value);
+                    }
+                    return info;
+
                 case CustomPerception customPerception:
                     var perceptionMethodLines = new List<string>();
 
@@ -155,21 +176,6 @@ namespace BehaviourAPI.Unity.Editor
                     if (code != null) perceptionMethodLines.Add(code);
 
                     return perceptionMethodLines.Join("\n");
-
-
-                case UnityPerception unityPerception:
-
-                    string info = unityPerception.DisplayInfo;
-
-                    var type = unityPerception.GetType();
-                    var properties = type.GetFields();
-
-                    for (int i = 0; i < properties.Length; i++)
-                    {
-                        string value = GetPropertyDisplay(properties[i].GetValue(unityPerception));
-                        info = info.Replace($"${properties[i].Name}", value);
-                    }
-                    return info;
 
                 case CompoundPerceptionWrapper compoundPerception:
                     var compoundType = compoundPerception.compoundPerception.GetType();

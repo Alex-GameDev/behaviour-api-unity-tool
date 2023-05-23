@@ -5,9 +5,11 @@ using UnityEngine;
 
 namespace BehaviourAPI.UnityExtensions
 {
-    public abstract class UnityRequestAction : RequestAction<SmartAgent>
+    public abstract class UnityRequestAction : RequestAction<SmartAgent>, ITaskDisplayable
     {
         protected new UnityExecutionContext context;
+
+        public virtual string DisplayInfo => "Request action";
 
         protected UnityRequestAction()
         {

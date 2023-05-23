@@ -7,6 +7,8 @@ namespace BehaviourAPI.UnityExtensions
     {
         public SmartObject smartObject;
 
+        public override string DisplayInfo => "Request to $smartObject";
+
         public DirectRequestAction() : base()
         {
         }

@@ -699,9 +699,6 @@ MonoBehaviour:
         node:
           rid: 6537695503399780369
         references: []
-        actions: []
-        perceptions: []
-        functions: []
         parentIds: []
         childIds:
         - 89ee794c-bb88-44f0-953a-e1d8f1cede30
@@ -711,9 +708,6 @@ MonoBehaviour:
         node:
           rid: 6537695503399780370
         references: []
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - cc469a5d-59e2-4fab-a68a-eabf50574363
         childIds:
@@ -731,9 +725,6 @@ MonoBehaviour:
             rid: 6537695503399780376
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 89ee794c-bb88-44f0-953a-e1d8f1cede30
         childIds: []
@@ -748,9 +739,6 @@ MonoBehaviour:
             rid: 6537695503399780377
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 89ee794c-bb88-44f0-953a-e1d8f1cede30
         childIds: []
@@ -765,9 +753,6 @@ MonoBehaviour:
             rid: 8223533443065315330
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 89ee794c-bb88-44f0-953a-e1d8f1cede30
         childIds: []
@@ -787,9 +772,6 @@ MonoBehaviour:
             rid: 6537695503399780391
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds: []
         childIds:
         - e00dbb6d-4f6c-46cb-ac72-fb44e9d8d7f8
@@ -804,9 +786,6 @@ MonoBehaviour:
             rid: 6537695503399780393
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds: []
         childIds:
         - 51e76747-a01a-4d08-9ffe-446c0613ee4f
@@ -821,9 +800,6 @@ MonoBehaviour:
             rid: 6537695503399780395
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds: []
         childIds:
         - e066c888-223e-4d62-b93f-d9e139b6f694
@@ -833,9 +809,6 @@ MonoBehaviour:
         node:
           rid: 6537695503399780396
         references: []
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - d14f4053-078a-4324-b310-ee414c6b23cd
         childIds:
@@ -846,9 +819,6 @@ MonoBehaviour:
         node:
           rid: 6537695503399780397
         references: []
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 75222d57-418b-4fb2-bac1-430f77823547
         childIds:
@@ -865,9 +835,6 @@ MonoBehaviour:
           fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - e00dbb6d-4f6c-46cb-ac72-fb44e9d8d7f8
         - e066c888-223e-4d62-b93f-d9e139b6f694
@@ -885,9 +852,6 @@ MonoBehaviour:
           fieldType: System.Func`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - e00dbb6d-4f6c-46cb-ac72-fb44e9d8d7f8
         childIds: []
@@ -897,9 +861,6 @@ MonoBehaviour:
         node:
           rid: 6537695503399780401
         references: []
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 95ca99fb-d874-42c2-b0e0-bff4b4c534ed
         childIds:
@@ -921,9 +882,6 @@ MonoBehaviour:
             rid: 6537695503399780386
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds: []
         childIds:
         - 8f55bd72-b2a7-4fe4-ab01-aa3c7cd2989e
@@ -938,9 +896,6 @@ MonoBehaviour:
             rid: 6537695503399780387
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 8f55bd72-b2a7-4fe4-ab01-aa3c7cd2989e
         childIds:
@@ -961,9 +916,6 @@ MonoBehaviour:
             rid: -2
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 559b49e5-6888-4fd2-83cb-9ed5ada701a2
         childIds: []
@@ -978,9 +930,6 @@ MonoBehaviour:
             rid: 6537695503399780388
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - b14e88cd-13fe-4dc8-aee5-51509dded391
         - f761050e-74b8-4a0a-9043-60504df64506
@@ -1003,9 +952,6 @@ MonoBehaviour:
             rid: -2
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - f180aa8c-c95d-4066-88a5-2a9d02f9dfeb
         childIds:
@@ -1026,9 +972,6 @@ MonoBehaviour:
             rid: -2
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 8fe50bac-3f7c-412f-9341-f31dc39514eb
         childIds:
@@ -1049,9 +992,6 @@ MonoBehaviour:
             rid: -2
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 559b49e5-6888-4fd2-83cb-9ed5ada701a2
         childIds:

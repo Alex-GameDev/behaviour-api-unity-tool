@@ -251,7 +251,7 @@ namespace BehaviourAPI.Unity.Editor
                 }
             }
 
-            EditorHierarchyNode compoundActionHierarchyNode = new EditorHierarchyNode("Compound perceptions", null);
+            EditorHierarchyNode compoundActionHierarchyNode = new EditorHierarchyNode("Compound actions", null);
             compoundActionHierarchyNode.Childs = compoundActionTypes.FindAll(typeof(CompoundAction).IsAssignableFrom)
                 .Select(compoundPerceptionType => new EditorHierarchyNode(compoundPerceptionType)).ToList();
 

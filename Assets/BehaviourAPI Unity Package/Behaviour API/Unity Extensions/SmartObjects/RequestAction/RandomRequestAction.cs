@@ -8,6 +8,7 @@ namespace BehaviourAPI.UnityExtensions
     /// </summary>
     public class RandomRequestAction : UnityRequestAction
     {
+
         public RandomRequestAction()
         {
         }
@@ -15,6 +16,8 @@ namespace BehaviourAPI.UnityExtensions
         public RandomRequestAction(SmartAgent agent) : base(agent)
         {
         }
+
+        public override string DisplayInfo => "Request to random SO";
 
         protected override SmartObject GetSmartObject(SmartAgent agent)
         {
