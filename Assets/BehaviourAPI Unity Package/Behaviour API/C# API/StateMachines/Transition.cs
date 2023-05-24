@@ -48,12 +48,12 @@ namespace BehaviourAPI.StateMachines
         /// <summary>
         /// The perception checked by this transition.
         /// </summary>
-        public Perception? Perception;
+        public Perception Perception;
 
         /// <summary>
         /// The action executed by the transition when is performed.
         /// </summary>
-        public Action? Action;
+        public Action Action;
 
         /// <summary>
         /// The status flags that the source state must match to check the transition.
@@ -67,12 +67,12 @@ namespace BehaviourAPI.StateMachines
         /// <summary>
         /// The fsm of this transition.
         /// </summary>
-        protected FSM? _fsm;
+        protected FSM _fsm;
 
         /// <summary>
         /// The source state of this transition.
         /// </summary>
-        protected State? _sourceState;
+        protected State _sourceState;
 
         Status _sourceStateLastStatus;
 
@@ -107,8 +107,8 @@ namespace BehaviourAPI.StateMachines
         public override object Clone()
         {
             var node = (Transition)base.Clone();
-            node.Action = (Action?)Action?.Clone();
-            node.Perception = (Perception?)Perception?.Clone();
+            node.Action = (Action)Action?.Clone();
+            node.Perception = (Perception)Perception?.Clone();
 
             if (SourceStateLastStatusChanged != null)
                 node.SourceStateLastStatusChanged = (Action<Status>)SourceStateLastStatusChanged.Clone();

@@ -7,11 +7,11 @@ namespace BehaviourAPI.Core.Perceptions
     /// </summary>
     public class ConditionPerception : Perception
     {
-        public Func<bool>? onCheck;
-        public Action? onInit;
-        public Action? onReset;
-        public Action? onPause;
-        public Action? onUnpause;
+        public Func<bool> onCheck;
+        public Action onInit;
+        public Action onReset;
+        public Action onPause;
+        public Action onUnpause;
 
         /// <summary>
         /// Create a <see cref="ConditionPerception"/> that execute a delegate on Init, Check and reset.
@@ -19,7 +19,7 @@ namespace BehaviourAPI.Core.Perceptions
         /// <param name="onInit">The delegate executed in <see cref="Initialize"/> event. </param>
         /// <param name="onCheck">The function executed in <see cref="Check"/> event. </param>
         /// <param name="onReset">The delegate executed in <see cref="Reset"/> event. </param>
-        public ConditionPerception(Action? onInit, Func<bool>? onCheck, Action? onReset = null)
+        public ConditionPerception(Action onInit, Func<bool> onCheck, Action onReset = null)
         {
             this.onInit = onInit;
             this.onCheck = onCheck;
@@ -34,7 +34,7 @@ namespace BehaviourAPI.Core.Perceptions
         /// <param name="onReset">The delegate executed in <see cref="Reset"/> event. </param>
         /// <param name="onPause">The function executed in <see cref="Check"/> event. </param>
         /// <param name="onUnpause">The delegate executed in <see cref="Reset"/> event. </param>
-        public ConditionPerception(Action? onInit, Func<bool>? onCheck, Action? onReset, Action? onPause, Action? onUnpause)
+        public ConditionPerception(Action onInit, Func<bool> onCheck, Action onReset, Action onPause, Action onUnpause)
         {
             this.onInit = onInit;
             this.onCheck = onCheck;
@@ -48,7 +48,7 @@ namespace BehaviourAPI.Core.Perceptions
         /// </summary>
         /// <param name="onCheck">The function executed in <see cref="Check"/> event. </param>
         /// <param name="onReset">The delegate executed in <see cref="Reset"/> event. </param>
-        public ConditionPerception(Func<bool>? check, Action? stop = null)
+        public ConditionPerception(Func<bool> check, Action stop = null)
         {
             onCheck = check;
             onReset = stop;

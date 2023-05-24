@@ -12,7 +12,7 @@ namespace BehaviourAPI.BehaviourTrees
     {
         #region --------------------------------------- Private fields ---------------------------------------
 
-        Timer? _timer;
+        Timer _timer;
 
         bool _isTimeout;
         bool _childExecuted;

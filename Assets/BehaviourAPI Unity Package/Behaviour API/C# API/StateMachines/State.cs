@@ -44,7 +44,7 @@ namespace BehaviourAPI.StateMachines
         /// <summary>
         /// The action that this state executes.
         /// </summary>
-        public Action? Action;
+        public Action Action;
 
         #endregion
 
@@ -89,7 +89,7 @@ namespace BehaviourAPI.StateMachines
         public override object Clone()
         {
             var node = (State)base.Clone();
-            node.Action = (Action?)Action?.Clone();
+            node.Action = (Action)Action?.Clone();
 
             if (StatusChanged != null)
                 node.StatusChanged = (Action<Status>)StatusChanged.Clone();

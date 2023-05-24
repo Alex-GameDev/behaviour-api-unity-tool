@@ -20,7 +20,7 @@ namespace BehaviourAPI.Core.Actions
         /// <summary>
         /// True if the subsystem won't restart if is interrupted.
         /// </summary>
-        public bool DontStopOnInterrupt;
+        public ExecutionInterruptOptions InterruptOptions;
 
         /// <summary>
         /// Create a new <see cref="SubsystemAction"/> with the specified subsystem and configuration flags.
@@ -28,11 +28,11 @@ namespace BehaviourAPI.Core.Actions
         /// <param name="subSystem">The subsystem executed by the action.</param>
         /// <param name="executeOnLoop">True if the subsystem will restart after finish.</param>
         /// <param name="dontStopOnInterrupt">True if the subsystem won't restart if is interrupted</param>
-        public SubsystemAction(BehaviourEngine subSystem, bool executeOnLoop = false, bool dontStopOnInterrupt = false)
+        public SubsystemAction(BehaviourEngine subSystem, bool executeOnLoop = false, ExecutionInterruptOptions interruptOptions = ExecutionInterruptOptions.Stop)
         {
             SubSystem = subSystem;
             ExecuteOnLoop = executeOnLoop;
-            DontStopOnInterrupt = dontStopOnInterrupt;
+            InterruptOptions = interruptOptions;
         }
 
         /// <summary>
@@ -47,14 +47,19 @@ namespace BehaviourAPI.Core.Actions
             if (SubSystem == null)
                 throw new MissingSubsystemException(this, "Subsystem cannot be null");
 
-            if (DontStopOnInterrupt && SubSystem.Status == Status.Running)
+            bool interrupted = SubSystem.Status == Status.Running;
+
+            if(interrupted)
             {
-                SubSystem.Unpause();
+                if (InterruptOptions == ExecutionInterruptOptions.Pause)
+                {
+                    SubSystem.Unpause();
+                }
             }
             else
             {
                 SubSystem.Start();
-            }
+            }            
         }
 
         /// <summary>
@@ -89,15 +94,23 @@ namespace BehaviourAPI.Core.Actions
             if (SubSystem == null)
                 throw new MissingSubsystemException(this, "Subsystem cannot be null");
 
-            if (DontStopOnInterrupt && SubSystem.Status == Status.Running)
+            bool interrupted = SubSystem.Status == Status.Running;
+
+            if (interrupted)
             {
-                SubSystem.Pause();
+                if (InterruptOptions == ExecutionInterruptOptions.Pause && SubSystem.Status == Status.Running)
+                {
+                    SubSystem.Pause();
+                }
+                else if (InterruptOptions == ExecutionInterruptOptions.Stop)
+                {
+                    SubSystem.Stop();
+                }
             }
             else
             {
                 SubSystem.Stop();
             }
-
         }
 
         /// <summary>

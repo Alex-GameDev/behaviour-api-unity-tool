@@ -1,18 +1,21 @@
-using BehaviourAPI.Core;
-using System;
 using UnityEngine;
 
 namespace BehaviourAPI.UnityExtensions
 {
+    using BehaviourAPI.Core;
+
     /// <summary>
     /// Base class for all behaviour system runners
     /// </summary>
     /// 
     public abstract class BehaviourRunner : MonoBehaviour
     {
+
+        [Tooltip("Restart execution when finished?")]
         public bool executeOnLoop;
 
-        public bool dontStopOnDisable;
+        [Tooltip("What method execute when the runner is disabled/enabled?")]
+        public ExecutionInterruptOptions interruptOptions;
 
         bool _systemRunning;
 
@@ -125,9 +128,18 @@ namespace BehaviourAPI.UnityExtensions
             if (!_systemRunning || _executionGraph == null)
                 return;
 
-            if (dontStopOnDisable && _executionGraph.Status == Status.Running)
+            bool interrupted = _executionGraph.Status == Status.Running;
+
+            if (interrupted)
             {
-                _executionGraph.Pause();
+                if (interruptOptions == ExecutionInterruptOptions.Pause && _executionGraph.Status == Status.Running)
+                {
+                    _executionGraph.Pause();
+                }
+                else if (interruptOptions == ExecutionInterruptOptions.Stop)
+                {
+                    _executionGraph.Stop();
+                }
             }
             else
             {
@@ -143,10 +155,14 @@ namespace BehaviourAPI.UnityExtensions
         {
             if (!_systemRunning || _executionGraph == null)
                 return;
+            bool interrupted = _executionGraph.Status == Status.Running;
 
-            if (dontStopOnDisable && _executionGraph.Status == Status.Running)
+            if (interrupted)
             {
-                _executionGraph.Unpause();
+                if (interruptOptions == ExecutionInterruptOptions.Pause)
+                {
+                    _executionGraph.Unpause();
+                }
             }
             else
             {

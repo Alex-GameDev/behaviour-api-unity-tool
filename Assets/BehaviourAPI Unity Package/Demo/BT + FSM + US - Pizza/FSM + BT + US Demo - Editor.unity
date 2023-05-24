@@ -1032,13 +1032,13 @@ MonoBehaviour:
       type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
         ExecuteOnLoop: 0
-        DontStopOnInterrupt: 0
+        InterruptOptions: 1
         subgraphId: 83a6a2f6-d924-4743-9c35-444504d0c2d9
     - rid: 6537695503399780377
       type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
       data:
         ExecuteOnLoop: 0
-        DontStopOnInterrupt: 0
+        InterruptOptions: 2
         subgraphId: b883ab31-3023-488a-bbb4-50ff2a25b066
     - rid: 6537695503399780379
       type: {class: State, ns: BehaviourAPI.StateMachines, asm: BehaviourAPI.StateMachines}

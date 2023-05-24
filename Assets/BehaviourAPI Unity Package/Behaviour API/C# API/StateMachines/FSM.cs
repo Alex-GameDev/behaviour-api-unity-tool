@@ -24,7 +24,7 @@ namespace BehaviourAPI.StateMachines
         /// <summary>
         /// The last triggered transition in the state machine.
         /// </summary>
-        public Transition? LastPerformedTransition { get; private set; }
+        public Transition LastPerformedTransition { get; private set; }
 
         #endregion
 
@@ -33,7 +33,7 @@ namespace BehaviourAPI.StateMachines
         /// <summary>
         /// The current active state of the graph
         /// </summary>
-        protected State? _currentState;
+        protected State _currentState;
 
         #endregion
 
@@ -52,7 +52,7 @@ namespace BehaviourAPI.StateMachines
         /// <param name="action">The action performed by the transition.</param>
         /// <param name="flags">The status flags that <paramref name="from"/> must match to check the transition.</param>
         /// <returns>The created <typeparamref name="T"/>.</returns>
-        protected T CreateInternalTransition<T>(string name, State from, Perception? perception, Action? action, StatusFlags flags) where T : Transition, new()
+        protected T CreateInternalTransition<T>(string name, State from, Perception perception, Action action, StatusFlags flags) where T : Transition, new()
         {
             T transition = CreateNode<T>(name);
             transition.SetFSM(this);
@@ -77,7 +77,7 @@ namespace BehaviourAPI.StateMachines
         /// <param name="action">The action performed by the transition.</param>
         /// <param name="flags">The status flags that <paramref name="from"/> must match to check the transition.</param>
         /// <returns>The created <typeparamref name="T"/>.</returns>
-        protected T CreateInternalTransition<T>(State from, Perception? perception, Action? action, StatusFlags flags) where T : Transition, new()
+        protected T CreateInternalTransition<T>(State from, Perception perception, Action action, StatusFlags flags) where T : Transition, new()
         {
             T transition = CreateNode<T>();
             transition.SetFSM(this);
@@ -95,7 +95,7 @@ namespace BehaviourAPI.StateMachines
         /// </summary>
         /// <param name="action">The action this state executes.</param>
         /// <returns>The <see cref="State"/> created.</returns>
-        public State CreateState(Action? action = null)
+        public State CreateState(Action action = null)
         {
             State state = CreateNode<State>();
             state.Action = action;
@@ -108,7 +108,7 @@ namespace BehaviourAPI.StateMachines
         /// <param name="name">The name of this node.</param>
         /// <param name="action">The action executed by the state.</param>
         /// <returns>The <see cref="State"/> created.</returns>
-        public State CreateState(string name, Action? action = null)
+        public State CreateState(string name, Action action = null)
         {
             State state = CreateNode<State>(name);
             state.Action = action;
@@ -122,7 +122,7 @@ namespace BehaviourAPI.StateMachines
         /// </summary>
         /// <param name="action">The action executed by the state.</param>
         /// <returns>The <see cref="ProbabilisticState"/> created.</returns>
-        public ProbabilisticState CreateProbabilisticState(Action? action = null)
+        public ProbabilisticState CreateProbabilisticState(Action action = null)
         {
             ProbabilisticState state = CreateNode<ProbabilisticState>();
             state.Action = action;
@@ -135,7 +135,7 @@ namespace BehaviourAPI.StateMachines
         /// <param name="name">The name of this node.</param>
         /// <param name="action">The action executed by the state.</param>
         /// <returns>The <see cref="ProbabilisticState"/> created.</returns>
-        public ProbabilisticState CreateProbabilisticState(string name, Action? action = null)
+        public ProbabilisticState CreateProbabilisticState(string name, Action action = null)
         {
             ProbabilisticState state = CreateNode<ProbabilisticState>(name);
             state.Action = action;
@@ -157,7 +157,7 @@ namespace BehaviourAPI.StateMachines
         /// <param name="statusFlags">The status that the source state can have to check the perception. If none, the transition will never be checked.</param>
         /// <returns>The <see cref="StateTransition"/> created.</returns>
 
-        public StateTransition CreateTransition(string name, State from, State to, Perception? perception = null, Action? action = null, StatusFlags statusFlags = StatusFlags.Active)
+        public StateTransition CreateTransition(string name, State from, State to, Perception perception = null, Action action = null, StatusFlags statusFlags = StatusFlags.Active)
         {
             StateTransition transition = CreateInternalTransition<StateTransition>(name, from, perception, action, statusFlags);
             Connect(transition, to);
@@ -177,7 +177,7 @@ namespace BehaviourAPI.StateMachines
         /// <param name="action">The action executed by the transition.</param>
         /// <param name="statusFlags">The status that the source state can have to check the perception. If none, the transition will never be checked.</param>
         /// <returns>The <see cref="StateTransition"/> created.</returns>
-        public StateTransition CreateTransition(State from, State to, Perception? perception = null, Action? action = null, StatusFlags statusFlags = StatusFlags.Active)
+        public StateTransition CreateTransition(State from, State to, Perception perception = null, Action action = null, StatusFlags statusFlags = StatusFlags.Active)
         {
             StateTransition transition = CreateInternalTransition<StateTransition>(from, perception, action, statusFlags);
             Connect(transition, to);
@@ -199,7 +199,7 @@ namespace BehaviourAPI.StateMachines
         /// <param name="action">The action executed by the transition.</param>
         /// <param name="statusFlags">The status that the source state can have to check the perception. If none, the transition will never be checked.</param>
         /// <returns>The <see cref="ExitTransition"/> created.</returns>
-        public ExitTransition CreateExitTransition(string name, State from, Status exitStatus, Perception? perception = null, Action? action = null, StatusFlags statusFlags = StatusFlags.Active)
+        public ExitTransition CreateExitTransition(string name, State from, Status exitStatus, Perception perception = null, Action action = null, StatusFlags statusFlags = StatusFlags.Active)
         {
             ExitTransition transition = CreateInternalTransition<ExitTransition>(name, from, perception, action, statusFlags);
             transition.ExitStatus = exitStatus;
@@ -217,7 +217,7 @@ namespace BehaviourAPI.StateMachines
         /// <param name="action">The action executed by the transition.</param>
         /// <param name="statusFlags">The status that the source state can have to check the perception. If none, the transition will never be checked.</param>
         /// <returns>The <see cref="ExitTransition"/> created.</returns>
-        public ExitTransition CreateExitTransition(State from, Status exitStatus, Perception? perception = null, Action? action = null, StatusFlags statusFlags = StatusFlags.Active)
+        public ExitTransition CreateExitTransition(State from, Status exitStatus, Perception perception = null, Action action = null, StatusFlags statusFlags = StatusFlags.Active)
         {
             ExitTransition transition = CreateInternalTransition<ExitTransition>(from, perception, action, statusFlags);
             transition.ExitStatus = exitStatus;
@@ -300,7 +300,7 @@ namespace BehaviourAPI.StateMachines
         /// </summary>
         /// <param name="state">The state checked.</param>
         /// <returns>true if <paramref name="state"/> is the current state, false otherwise.</returns>
-        public bool IsCurrentState(State? state) => state != null && _currentState == state;
+        public bool IsCurrentState(State state) => state != null && _currentState == state;
 
         #endregion
     }

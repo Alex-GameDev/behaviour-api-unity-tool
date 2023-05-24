@@ -14,7 +14,7 @@ namespace BehaviourAPI.BehaviourTrees
     {
         #region ------------------------------------------ Properties -----------------------------------------
 
-        public Perception? Perception;
+        public Perception Perception;
 
         #endregion
 

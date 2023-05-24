@@ -430,9 +430,9 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                         expression.Add(new CodeCustomExpression("null /*missing subgraph*/"));
                     }
 
-                    if (subgraphAction.ExecuteOnLoop || subgraphAction.DontStopOnInterrupt)
+                    if (subgraphAction.ExecuteOnLoop || subgraphAction.InterruptOptions != ExecutionInterruptOptions.Stop)
                     {
-                        expression.Add(new CodeCustomExpression(subgraphAction.DontStopOnInterrupt.ToCodeFormat()));
+                        expression.Add(new CodeCustomExpression(subgraphAction.InterruptOptions.ToCodeFormat()));
                         expression.Add(new CodeCustomExpression(subgraphAction.ExecuteOnLoop.ToCodeFormat()));
                     }
                     statement = new CodeVariableDeclarationStatement(typeof(SubsystemAction), identifier);

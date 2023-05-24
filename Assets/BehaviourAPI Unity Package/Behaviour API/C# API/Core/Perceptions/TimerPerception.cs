@@ -12,7 +12,7 @@ namespace BehaviourAPI.Core.Perceptions
         /// </summary>
         public float Time;
 
-        Timer? _timer;
+        Timer _timer;
 
         bool _isTimeout;
 

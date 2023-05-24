@@ -7,12 +7,12 @@ namespace BehaviourAPI.Core.Actions
     /// </summary>
     public class FunctionalAction : Action
     {
-        public Func<Status>? onUpdated;
+        public Func<Status> onUpdated;
 
-        public System.Action? onStarted;
-        public System.Action? onStopped;
-        public System.Action? onPaused;
-        public System.Action? onUnpaused;
+        public System.Action onStarted;
+        public System.Action onStopped;
+        public System.Action onPaused;
+        public System.Action onUnpaused;
 
         /// <summary>
         /// Create a <see cref="FunctionalAction"/> that executes a delegate on Start, Update and stop.
@@ -20,7 +20,7 @@ namespace BehaviourAPI.Core.Actions
         /// <param name="start">The delegate executed in <see cref="Start"/> event.</param>
         /// <param name="update">The function executed in <see cref="Update"/> event.</param>
         /// <param name="stop">The delegate executed in <see cref="Stop"/> event.</param>
-        public FunctionalAction(System.Action? start, Func<Status>? update, System.Action? stop = null)
+        public FunctionalAction(System.Action start, Func<Status> update, System.Action stop = null)
         {
             onStarted = start;
             onUpdated = update;
@@ -35,7 +35,7 @@ namespace BehaviourAPI.Core.Actions
         /// <param name="onStopped">The delegate executed in <see cref="Stop"/> event.</param>
         /// <param name="onPaused">The delegate executed in <see cref="Pause"/> event.</param>
         /// <param name="onUnpaused">The delegate executed in <see cref="Unpause"/> event.</param>
-        public FunctionalAction(System.Action? onStarted, Func<Status>? onUpdated, System.Action? onStopped, System.Action? onPaused, System.Action? onUnpaused)
+        public FunctionalAction(System.Action onStarted, Func<Status> onUpdated, System.Action onStopped, System.Action onPaused, System.Action onUnpaused)
         {
             this.onStarted = onStarted;
             this.onUpdated = onUpdated;
@@ -49,7 +49,7 @@ namespace BehaviourAPI.Core.Actions
         /// </summary>
         /// <param name="update">The function executed in <see cref="Update"/> event.</param>
         /// <param name="stop">The delegate executed in <see cref="Stop"/> event.</param>
-        public FunctionalAction(Func<Status>? update, System.Action? stop = null)
+        public FunctionalAction(Func<Status> update, System.Action stop = null)
         {
             onUpdated = update;
             onStopped = stop;
@@ -59,7 +59,7 @@ namespace BehaviourAPI.Core.Actions
         /// Create a <see cref="FunctionalAction"/> that executes a method when started and only returns <see cref="Status.Running"/> on Update.
         /// </summary>
         /// <param name="start">The delegate executed in <see cref="Start"/> event.</param>
-        public FunctionalAction(System.Action? start)
+        public FunctionalAction(System.Action start)
         {
             onStarted = start;
         }

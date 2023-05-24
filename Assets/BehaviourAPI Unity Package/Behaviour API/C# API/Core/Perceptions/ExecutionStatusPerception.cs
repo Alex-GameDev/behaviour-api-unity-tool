@@ -8,7 +8,7 @@
         /// <summary>
         /// The status handler checked
         /// </summary>
-        public IStatusHandler? StatusHandler;
+        public IStatusHandler StatusHandler;
 
         /// <summary>
         /// The status flags that trigger the perception
