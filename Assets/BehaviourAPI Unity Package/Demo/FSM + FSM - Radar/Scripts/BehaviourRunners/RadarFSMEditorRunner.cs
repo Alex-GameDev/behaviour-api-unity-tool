@@ -7,10 +7,10 @@ namespace BehaviourAPI.Unity.Demos
     {
         RadarDisplay _radarDisplay;
 
-        protected override void OnAwake()
+        protected override void Init()
         {
             _radarDisplay = GetComponent<RadarDisplay>();
-            base.OnAwake();
+            base.Init();
         }
 
 

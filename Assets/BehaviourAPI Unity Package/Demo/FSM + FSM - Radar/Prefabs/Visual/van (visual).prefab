@@ -57,6 +57,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -2649318550987652409, guid: a738edc9ca3ffc04e94dd976b713e291, type: 3}
+    - {fileID: -3665432661960610899, guid: a738edc9ca3ffc04e94dd976b713e291, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a738edc9ca3ffc04e94dd976b713e291, type: 3}
 --- !u!1 &6887476403304765594 stripped
 GameObject:
@@ -75,6 +76,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c52e40fea89e22a4d962f06c613bf54e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExecuteOnLoop: 0
-  DontStopOnDisable: 0
+  executeOnLoop: 0
+  dontStopOnDisable: 0
+  _eventHandler:
+    debugStatusChanges: 0
+    identifier: 
   System: {fileID: 11400000, guid: 6d534a20583df114383f152d5945ceb0, type: 2}

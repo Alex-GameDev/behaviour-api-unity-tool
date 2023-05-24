@@ -6,15 +6,19 @@ namespace BehaviourAPI.Unity.Runtime
     /// <summary>
     /// Subclass of  <see cref="BehaviourRunner"/> that executes a reusable <see cref="BehaviourSystem"/> 
     /// </summary>
-    public abstract class AssetBehaviourRunner : DataBehaviourRunner
+    public abstract class AssetBehaviourRunner : DataBehaviourRunner, IBehaviourSystem
     {
         public BehaviourSystem System;
-        SystemData _runtimeSystem;
+        SystemData _runtimeSystem = null;
+
+        public SystemData Data => _runtimeSystem;
+
+        public Object ObjectReference => this;
 
         /// <summary>
         /// Returns the system asset data to generate a runtime copy
         /// </summary>
-        protected sealed override SystemData GetEditorSystemData()
+        protected sealed override SystemData GetEditedSystemData()
         {
             string json = JsonUtility.ToJson(System);
             BehaviourSystem copy = ScriptableObject.CreateInstance<BehaviourSystem>();
@@ -22,7 +26,5 @@ namespace BehaviourAPI.Unity.Runtime
             _runtimeSystem = copy.Data;
             return _runtimeSystem;
         }
-
-        public sealed override SystemData GetBehaviourSystemAsset() => _runtimeSystem;
     }
 }

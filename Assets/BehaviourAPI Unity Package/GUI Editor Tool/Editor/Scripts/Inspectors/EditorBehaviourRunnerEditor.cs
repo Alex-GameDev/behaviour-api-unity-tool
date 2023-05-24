@@ -11,29 +11,7 @@ namespace BehaviourAPI.Unity.Editor
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-
             EditorBehaviourRunner runner = (EditorBehaviourRunner)target;
-
-            EditorGUILayout.Space(10f, true);
-            GUIStyle centeredLabelstyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
-
-            GUILayout.BeginVertical("- BEHAVIOUR SYSTEM -", "window");
-
-            if (runner.Data != null && runner.Data.graphs.Count != 0)
-            {
-                EditorGUILayout.LabelField($"Graphs: \t {runner.Data.graphs.Count}");
-                EditorGUILayout.Space(5f);
-                foreach (var graph in runner.Data.graphs)
-                {
-                    EditorGUILayout.LabelField($"\t- {(string.IsNullOrWhiteSpace(graph.name) ? "unnamed" : graph.name)}({graph.graph?.TypeName() ?? "null"}, {graph.nodes.Count} node(s))");
-                }
-                EditorGUILayout.Space(5f);
-                EditorGUILayout.LabelField($"Push Perceptions: \t {runner.Data.pushPerceptions.Count}");
-            }
-            else
-            {
-                EditorGUILayout.LabelField($"Empty", centeredLabelstyle);
-            }
 
             bool isPartOfAPrefab = PrefabUtility.IsPartOfAnyPrefab(runner);
             bool isOnScene = runner.gameObject.scene.name != null;
@@ -41,16 +19,10 @@ namespace BehaviourAPI.Unity.Editor
 
             if (isOnScene)
             {
-                if (GUILayout.Button("EDIT"))
+                string btnText = Application.isPlaying ? "OPEN DEBUGGER" : "OPEN EDITOR";
+                if (GUILayout.Button(btnText))
                 {
-                    if (Application.isPlaying)
-                    {
-                        EditorWindow.GetWindow<BehaviourSystemEditorWindow>().ShowNotification(new GUIContent("Cannot edit binded behaviour system on runtime"));
-                        return;
-                    }
-
-                    //Debug.Log("OpenWindow editor");
-                    BehaviourSystemEditorWindow.Create(runner);
+                    BehaviourSystemEditorWindow.Create(runner, runtime: Application.isPlaying);
                 }
             }
             else
@@ -62,10 +34,6 @@ namespace BehaviourAPI.Unity.Editor
 
             if (isPartOfAPrefab && !isOnPreviewScene)
                 EditorGUILayout.HelpBox("If you edit the behaviourSystem in a prefab instance, the original system will be override", MessageType.Info);
-
-
-
-            GUILayout.EndVertical();
         }
     }
 }

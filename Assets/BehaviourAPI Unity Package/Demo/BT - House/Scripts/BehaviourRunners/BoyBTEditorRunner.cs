@@ -19,19 +19,19 @@ namespace BehaviourAPI.Unity.Demos
         private bool _hasKey, _keyFound;
         NavMeshAgent _meshAgent;
 
-        protected override void OnAwake()
+        protected override void Init()
         {
             _door = FindObjectOfType<Door>();
             _audioSource = GetComponent<AudioSource>();
             _meshAgent = GetComponent<NavMeshAgent>();
-            base.OnAwake();
+            base.Init();
         }
 
         protected override void ModifyGraphs()
         {
             var doorPos = new Vector3(_door.transform.position.x, transform.position.y, _door.transform.position.z);
-            BuildedGraph.FindNode<LeafNode>("go to door").Action = new WalkAction(doorPos);
-            BuildedGraph.FindNode<LeafNode>("return to door").Action = new WalkAction(doorPos);
+            MainGraph.FindNode<LeafNode>("go to door").Action = new WalkAction(doorPos);
+            MainGraph.FindNode<LeafNode>("return to door").Action = new WalkAction(doorPos);
         }
 
         public void SmashDoor()

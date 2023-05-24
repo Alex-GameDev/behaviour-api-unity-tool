@@ -3,12 +3,13 @@ using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Runtime;
 using BehaviourAPI.Unity.Runtime.Extensions;
 using BehaviourAPI.UnityExtensions;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace BehaviourAPI.Unity.Demos
 {
-    public class ChickenFSMRunner : CodeBehaviourRunner
+    public class ChickenFSMRunner : BehaviourRunner
     {
         #region variables
 
@@ -18,11 +19,14 @@ namespace BehaviourAPI.Unity.Demos
 
         #endregion variables
 
-        protected override void OnAwake()
+        BSRuntimeDebugger _debugger;
+        protected override void Init()
         {
             _agent = GetComponent<NavMeshAgent>();
-            base.OnAwake();
+            _debugger = GetComponent<BSRuntimeDebugger>();
+            base.Init();
         }
+
 
         protected override BehaviourGraph CreateGraph()
         {
@@ -48,7 +52,7 @@ namespace BehaviourAPI.Unity.Demos
             fsm.CreateTransition("idle to runaway", idle, chasing, watchPlayer);
             fsm.CreateTransition("moving to runaway", moving, chasing, watchPlayer);
 
-            RegisterGraph(fsm);
+            _debugger.RegisterGraph(fsm);
             return fsm;
         }
 

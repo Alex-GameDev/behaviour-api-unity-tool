@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Demos
 {
-    public class PlayerBTInFSMRunner : CodeBehaviourRunner
+    public class PlayerBTInFSMRunner : BehaviourRunner
     {
         [SerializeField] AudioClip keyFoundClip;
 
@@ -21,12 +21,14 @@ namespace BehaviourAPI.Unity.Demos
 
         bool _hasKey;
 
-        protected override void OnAwake()
+        BSRuntimeDebugger _debugger;
+
+        protected override void Init()
         {
             _enemyTransform = GameObject.FindGameObjectWithTag("Enemy").transform;
             _door = GameObject.FindGameObjectWithTag("Door").transform;
             _audioSource = GetComponent<AudioSource>();
-            base.OnAwake();
+            base.Init();
         }
 
         protected override BehaviourGraph CreateGraph()
@@ -56,8 +58,8 @@ namespace BehaviourAPI.Unity.Demos
             // Cuando consigue huir vuelve hacia la puerta
             fsm.CreateTransition("Return to door", runState, doorState, statusFlags: StatusFlags.Finished);
 
-            RegisterGraph(fsm, "main");
-            RegisterGraph(bt, "key subtree");
+            _debugger.RegisterGraph(fsm, "main");
+            _debugger.RegisterGraph(bt, "key subtree");
             return fsm;
         }
 

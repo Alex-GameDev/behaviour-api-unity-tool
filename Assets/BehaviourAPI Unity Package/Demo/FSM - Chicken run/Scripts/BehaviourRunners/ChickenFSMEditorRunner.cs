@@ -10,10 +10,10 @@ namespace BehaviourAPI.Unity.Demos
         [SerializeField] Collider _visionCollider;
         NavMeshAgent _agent;
 
-        protected override void OnAwake()
+        protected override void Init()
         {
             _agent = GetComponent<NavMeshAgent>();
-            base.OnAwake();
+            base.Init();
         }
 
         public bool CheckWatchTarget()

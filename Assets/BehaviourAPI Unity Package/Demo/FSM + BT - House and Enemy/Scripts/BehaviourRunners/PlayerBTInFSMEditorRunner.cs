@@ -21,14 +21,14 @@ namespace BehaviourAPI.Unity.Demos
 
         bool _hasKey;
 
-        protected override void OnAwake()
+        protected override void Init()
         {
             _enemyTransform = GameObject.FindGameObjectWithTag("Enemy").transform;
             _door = GameObject.FindGameObjectWithTag("Door").transform;
             _doorPos = new Vector3(_door.position.x, transform.position.y, _door.position.z);
             _keyPos = GameObject.FindGameObjectWithTag("Key").transform.position;
             _audioSource = GetComponent<AudioSource>();
-            base.OnAwake();
+            base.Init();
         }
 
         protected override void ModifyGraphs()

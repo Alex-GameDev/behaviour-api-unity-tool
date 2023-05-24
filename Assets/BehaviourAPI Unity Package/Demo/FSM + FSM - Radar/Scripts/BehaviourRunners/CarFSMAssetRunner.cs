@@ -10,11 +10,11 @@ namespace BehaviourAPI.Unity.Demos
     {
         Rigidbody _rb;
 
-        protected override void OnAwake()
+        protected override void Init()
         {
             _rb = GetComponent<Rigidbody>();
 
-            base.OnAwake();
+            base.Init();
             IRadar radar = GameObject.FindGameObjectWithTag("Radar").GetComponent<IRadar>();
 
             var mainGraph = FindGraph("main");

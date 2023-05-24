@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Demos
 {
-    public class FishingBoyBTRunner : CodeBehaviourRunner
+    public class FishingBoyBTRunner : BehaviourRunner
     {
         [SerializeField] GameObject _fishPrefab, _bootPrefab;
         [SerializeField] Transform _fishDropTarget, _bootDropTarget, _baitTarget;
@@ -17,6 +17,15 @@ namespace BehaviourAPI.Unity.Demos
         GameObject _currentCapture;
 
         float _timeToSuccess;
+
+        BSRuntimeDebugger _debugger;
+
+        protected override void Init()
+        {
+            _debugger = GetComponent<BSRuntimeDebugger>();
+            base.Init();
+        }
+
 
         protected override BehaviourGraph CreateGraph()
         {
@@ -40,7 +49,7 @@ namespace BehaviourAPI.Unity.Demos
 
             bt.SetRootNode(loop);
 
-            RegisterGraph(bt);
+            _debugger.RegisterGraph(bt);
             return bt;
         }
 

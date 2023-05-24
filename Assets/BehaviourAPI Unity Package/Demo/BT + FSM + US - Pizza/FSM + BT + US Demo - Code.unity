@@ -354,7 +354,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  systemAsset: {fileID: 0}
+  _eventHandler:
+    debugStatusChanges: 1
+    identifier: PIZZA BOY
 --- !u!1 &868694229
 GameObject:
   m_ObjectHideFlags: 0
@@ -1204,7 +1206,7 @@ MonoBehaviour:
   _ingredientText: {fileID: 900355733}
 --- !u!95 &1993031430
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1221,7 +1223,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!64 &1993031431
 MeshCollider:
   m_ObjectHideFlags: 0

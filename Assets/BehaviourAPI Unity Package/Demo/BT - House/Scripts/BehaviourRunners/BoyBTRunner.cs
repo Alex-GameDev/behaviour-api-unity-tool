@@ -8,7 +8,7 @@ using UnityEngine.AI;
 
 namespace BehaviourAPI.Unity.Demos
 {
-    public class BoyBTRunner : CodeBehaviourRunner
+    public class BoyBTRunner : BehaviourRunner
     {
         Door _door;
         [SerializeField] AudioClip doorOpenClip;
@@ -22,12 +22,15 @@ namespace BehaviourAPI.Unity.Demos
         AudioSource _audioSource;
         NavMeshAgent meshAgent;
 
-        protected override void OnAwake()
+        BSRuntimeDebugger _debugger;
+
+        protected override void Init()
         {
             _door = FindObjectOfType<Door>();
             _audioSource = GetComponent<AudioSource>();
             meshAgent = GetComponent<NavMeshAgent>();
-            base.OnAwake();
+            _debugger = GetComponent<BSRuntimeDebugger>();
+            base.Init();
         }
 
         protected override BehaviourGraph CreateGraph()
@@ -59,7 +62,7 @@ namespace BehaviourAPI.Unity.Demos
             var root = bt.CreateComposite<SequencerNode>("root", false, walkToDoor, sel, enter);
 
             bt.SetRootNode(root);
-            RegisterGraph(bt);
+            _debugger.RegisterGraph(bt);
             return bt;
         }
 

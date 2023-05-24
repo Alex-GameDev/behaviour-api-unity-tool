@@ -222,8 +222,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e693077d91cc3394791faadbd922de3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExecuteOnLoop: 0
-  DontStopOnDisable: 0
+  executeOnLoop: 0
+  dontStopOnDisable: 0
+  _eventHandler:
+    debugStatusChanges: 0
+    identifier: 
   data:
     graphs:
     - name: BehaviourTree
@@ -237,9 +240,6 @@ MonoBehaviour:
         node:
           rid: 6537695503399780353
         references: []
-        actions: []
-        perceptions: []
-        functions: []
         parentIds: []
         childIds:
         - ef9cf995-5bbe-4375-8a1f-73eb0bbd0377
@@ -249,9 +249,6 @@ MonoBehaviour:
         node:
           rid: 6537695503399780354
         references: []
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 50df7978-7284-477d-8f9a-41cdf6c16dc0
         childIds:
@@ -269,9 +266,6 @@ MonoBehaviour:
             rid: 6537695503399780362
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - ef9cf995-5bbe-4375-8a1f-73eb0bbd0377
         childIds: []
@@ -281,9 +275,6 @@ MonoBehaviour:
         node:
           rid: 6537695503399780356
         references: []
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - ef9cf995-5bbe-4375-8a1f-73eb0bbd0377
         childIds:
@@ -299,9 +290,6 @@ MonoBehaviour:
             rid: 6537695503399780363
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 2ab61c38-8b3e-4713-8ad2-8bb3f1878610
         childIds: []
@@ -311,9 +299,6 @@ MonoBehaviour:
         node:
           rid: 6537695503399780358
         references: []
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - ef9cf995-5bbe-4375-8a1f-73eb0bbd0377
         childIds:
@@ -330,9 +315,6 @@ MonoBehaviour:
             rid: 6537695503399780364
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 36f8b9f7-3315-419d-8e78-4166ba2212e2
         childIds:
@@ -348,9 +330,6 @@ MonoBehaviour:
             rid: 6537695503399780365
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 57f1b324-085a-45f9-bfb0-4e2ee37f2a45
         childIds: []
@@ -365,9 +344,6 @@ MonoBehaviour:
             rid: 6537695503399780366
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 36f8b9f7-3315-419d-8e78-4166ba2212e2
         childIds: []
@@ -499,19 +475,6 @@ MonoBehaviour:
         unpause:
           componentName: 
           methodName: 
---- !u!114 &90416568
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 90416562}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debugStatusChanges: 1
 --- !u!1 &178529728
 GameObject:
   m_ObjectHideFlags: 0

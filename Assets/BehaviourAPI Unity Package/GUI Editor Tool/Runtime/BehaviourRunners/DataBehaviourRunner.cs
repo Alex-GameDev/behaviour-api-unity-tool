@@ -11,7 +11,7 @@ namespace BehaviourAPI.Unity.Runtime
     /// <summary>
     /// Base class of components that use an editable behavior system.
     /// </summary>
-    public abstract class DataBehaviourRunner : BehaviourRunner
+    public abstract class DataBehaviourRunner : UnityExtensions.BehaviourRunner
     {
         #region -------------------------------- private fields ---------------------------------
 
@@ -20,6 +20,8 @@ namespace BehaviourAPI.Unity.Runtime
         Dictionary<string, BehaviourGraph> _graphMap;
         Dictionary<string, PushPerception> _pushPerceptionMap;
 
+        [SerializeField] BSRuntimeEventHandler _eventHandler;
+
         #endregion
 
         #region --------------------------------- properties ----------------------------------
@@ -27,33 +29,48 @@ namespace BehaviourAPI.Unity.Runtime
         /// <summary>
         /// The execution main graph
         /// </summary>
-        public BehaviourGraph BuildedGraph { get; private set; }
+        public BehaviourGraph MainGraph { get; private set; }
 
         #endregion
 
         #region ------------------------------ Execution Methods ------------------------------
 
-        protected sealed override BehaviourGraph GetExecutionGraph()
+        /// <summary>
+        /// Create the graphs and register in the event handler.
+        /// </summary>
+        protected override void Init()
         {
-            _executionSystem = GetEditorSystemData();
+            _eventHandler.Context = this;
+            base.Init();
+
+            foreach(GraphData graph in _executionSystem.graphs)
+            {
+                _eventHandler.RegisterEvents(graph.graph);
+            }
+        }
+        protected sealed override BehaviourGraph CreateGraph()
+        {
+            _executionSystem = GetEditedSystemData();
+
             _executionSystem.BuildSystem(this);
 
             BuildDictionaries();
-            BuildedGraph = _executionSystem.graphs[0].graph;
+            MainGraph = _executionSystem.graphs[0].graph;
 
             ModifyGraphs();
-            return BuildedGraph;
+            return MainGraph;
         }
 
         /// <summary>
         /// Overrides this method to modify the created system in code just after build it.
+        /// Used to modify or assign actions, not create new nodes or graphs.
         /// </summary>
         protected virtual void ModifyGraphs() { }
 
         /// <summary>
-        /// Get the system created in editor mode to build the runtime one.
+        /// Get the system created with editor tools.
         /// </summary>
-        protected abstract SystemData GetEditorSystemData();
+        protected abstract SystemData GetEditedSystemData();
 
         #endregion
 

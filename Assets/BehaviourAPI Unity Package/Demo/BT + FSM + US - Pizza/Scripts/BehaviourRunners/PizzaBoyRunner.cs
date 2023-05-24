@@ -1,16 +1,18 @@
-using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
+using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.StateMachines;
+using BehaviourAPI.UnityExtensions;
 using BehaviourAPI.Unity.Runtime;
 using BehaviourAPI.UtilitySystems;
 using System.Collections.Generic;
 using UnityEngine;
+
 using UnityEngine.AI;
 
 namespace BehaviourAPI.Unity.Demos
 {
-    public class PizzaBoyRunner : CodeBehaviourRunner
+    public class PizzaBoyRunner : BehaviourRunner
     {
         [SerializeField] Ingredient _pizzaMass;
         [SerializeField] Ingredient _tomato;
@@ -22,6 +24,7 @@ namespace BehaviourAPI.Unity.Demos
         [SerializeField] RecipePaper _recipePaper;
 
         NavMeshAgent _agent;
+        BSRuntimeDebugger _debugger;
 
         // utility variables
         int _pizzasCreated = 0;
@@ -31,10 +34,11 @@ namespace BehaviourAPI.Unity.Demos
         int _currentIngredient = 0;
         float _lastIngredientAddedTime = 0f;
 
-        protected override void OnAwake()
+        protected override void Init()
         {
+            _debugger = GetComponent<BSRuntimeDebugger>();
             _agent = GetComponent<NavMeshAgent>();
-            base.OnAwake();
+            base.Init();
         }
 
         protected override BehaviourGraph CreateGraph()
@@ -51,9 +55,9 @@ namespace BehaviourAPI.Unity.Demos
             var root = bt.CreateDecorator<LoopNode>("loop", seq).SetIterations(-1);
             bt.SetRootNode(root);
 
-            RegisterGraph(bt);
-            RegisterGraph(us);
-            RegisterGraph(fsm);
+            _debugger.RegisterGraph(bt);
+            _debugger.RegisterGraph(us);
+            _debugger.RegisterGraph(fsm);
 
             return bt;
         }

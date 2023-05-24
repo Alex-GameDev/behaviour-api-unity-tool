@@ -659,19 +659,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1219031990548499839, guid: 933da4993cc93944496c58aa55824825, type: 3}
   m_PrefabInstance: {fileID: 1401791154}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1401791163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1401791155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debugStatusChanges: 0
 --- !u!114 &1401791164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -684,8 +671,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9132c992b47dee4a8a7895bff44eebf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExecuteOnLoop: 0
-  DontStopOnDisable: 0
+  executeOnLoop: 0
+  dontStopOnDisable: 0
+  _eventHandler:
+    debugStatusChanges: 0
+    identifier: 
   data:
     graphs:
     - name: main
@@ -1314,19 +1304,6 @@ MonoBehaviour:
         unpause:
           componentName: 
           methodName: 
---- !u!114 &1401791170
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1401791155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debugStatusChanges: 0
 --- !u!1 &1434616177
 GameObject:
   m_ObjectHideFlags: 0

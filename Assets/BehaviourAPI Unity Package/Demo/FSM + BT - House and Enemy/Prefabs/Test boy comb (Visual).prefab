@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 6027553377032295140}
   - component: {fileID: 5000012666537557081}
   - component: {fileID: 5000012665791813595}
-  - component: {fileID: 1897590593199712440}
   - component: {fileID: 5737582584103695516}
   - component: {fileID: 4898935086108083608}
   m_Layer: 0
@@ -190,19 +189,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1897590593199712440
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8841883541597954724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debugStatusChanges: 1
 --- !u!114 &5737582584103695516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,8 +201,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f41b6d9c849e88a48b3b7969466f4749, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExecuteOnLoop: 0
-  DontStopOnDisable: 0
+  executeOnLoop: 0
+  dontStopOnDisable: 0
+  _eventHandler:
+    debugStatusChanges: 0
+    identifier: 
   data:
     graphs:
     - name: main
@@ -362,9 +351,6 @@ MonoBehaviour:
             rid: -2
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 3afc4b1a-5ee5-46a0-ab5a-10a139cee8b2
         childIds:
@@ -385,9 +371,6 @@ MonoBehaviour:
             rid: -2
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 9e065d07-7e7e-46be-ba15-10a1b9f158c4
         childIds:
@@ -403,9 +386,6 @@ MonoBehaviour:
         node:
           rid: 6537695524283219970
         references: []
-        actions: []
-        perceptions: []
-        functions: []
         parentIds: []
         childIds:
         - ed49f3f5-298a-4b2c-b708-4655f1fb0c15
@@ -416,9 +396,6 @@ MonoBehaviour:
         node:
           rid: 6537695524283219971
         references: []
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 3b338fa8-debd-4df8-85da-fd1c626ce3a8
         childIds:
@@ -434,9 +411,6 @@ MonoBehaviour:
             rid: -2
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - ed49f3f5-298a-4b2c-b708-4655f1fb0c15
         childIds:
@@ -452,9 +426,6 @@ MonoBehaviour:
             rid: -2
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - aaf223ea-5dd4-4def-9b5d-6201ec359838
         childIds: []
@@ -469,9 +440,6 @@ MonoBehaviour:
             rid: -2
           fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
-        actions: []
-        perceptions: []
-        functions: []
         parentIds:
         - 3b338fa8-debd-4df8-85da-fd1c626ce3a8
         childIds: []

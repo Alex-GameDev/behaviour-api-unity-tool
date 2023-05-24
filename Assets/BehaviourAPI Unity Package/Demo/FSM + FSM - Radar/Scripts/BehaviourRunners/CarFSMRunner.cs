@@ -3,24 +3,28 @@ using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.Unity.Runtime;
+using BehaviourAPI.UnityExtensions;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Demos
 {
-    public class CarFSMRunner : CodeBehaviourRunner, ICar
+    public class CarFSMRunner : BehaviourRunner, ICar
     {
         Rigidbody _rb;
         IRadar _radar;
 
         float _speed;
-        protected override void OnAwake()
+
+        BSRuntimeDebugger _debugger;
+
+        protected override void Init()
         {
             _rb = GetComponent<Rigidbody>();
             _radar = FindObjectOfType<RadarFSMRunner>();
             _speed = Random.Range(10f, 30f);
-            base.OnAwake();
+            _debugger = GetComponent<BSRuntimeDebugger>();
+            base.Init();
         }
-
         protected override BehaviourGraph CreateGraph()
         {
             var carFSM = new BehaviourAPI.StateMachines.FSM();
@@ -38,7 +42,7 @@ namespace BehaviourAPI.Unity.Demos
             carFSM.CreateTransition("speed up", lowSpeedState, highSpeedState, radarIsBroken);
             carFSM.CreateTransition("slow down", highSpeedState, lowSpeedState, radarIsWorking);
 
-            RegisterGraph(carFSM);
+            _debugger.RegisterGraph(carFSM);
             return carFSM;
         }
 

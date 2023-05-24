@@ -25,8 +25,7 @@ namespace BehaviourAPI.Unity.Runtime
 
         #region --------------------------------- properties ----------------------------------
 
-        public sealed override SystemData GetBehaviourSystemAsset() => data;
-        protected sealed override SystemData GetEditorSystemData() => data;
+        protected sealed override SystemData GetEditedSystemData() => data;
 
         #endregion
     }

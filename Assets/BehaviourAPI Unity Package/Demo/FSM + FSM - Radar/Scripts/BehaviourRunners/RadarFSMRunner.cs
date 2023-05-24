@@ -4,20 +4,23 @@ using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.StateMachines;
 using BehaviourAPI.Unity.Runtime;
 using BehaviourAPI.Unity.Runtime.Extensions;
+using BehaviourAPI.UnityExtensions;
 using UnityEngine;
 
 namespace BehaviourAPI.Unity.Demos
 {
-    public class RadarFSMRunner : CodeBehaviourRunner, IRadar
+    public class RadarFSMRunner : BehaviourRunner, IRadar
     {
         State _brokenState, _workingState;
 
         RadarDisplay _radarDisplay;
 
-        protected override void OnAwake()
+        BSRuntimeDebugger _debugger;
+        protected override void Init()
         {
             _radarDisplay = GetComponent<RadarDisplay>();
-            base.OnAwake();
+            _debugger = GetComponent<BSRuntimeDebugger>();
+            base.Init();
         }
 
         protected override BehaviourGraph CreateGraph()
@@ -38,8 +41,8 @@ namespace BehaviourAPI.Unity.Demos
             _brokenState = brokenState;
             _workingState = workingState;
 
-            RegisterGraph(radarFSM, "Radar");
-            RegisterGraph(subFSM, "Lights");
+            _debugger.RegisterGraph(radarFSM, "Radar");
+            _debugger.RegisterGraph(subFSM, "Lights");
 
             return radarFSM;
         }

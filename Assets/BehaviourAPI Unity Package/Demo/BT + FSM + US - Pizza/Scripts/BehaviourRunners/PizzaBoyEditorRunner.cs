@@ -30,10 +30,10 @@ namespace BehaviourAPI.Unity.Demos
         int _currentIngredient = 0;
         float _lastIngredientAddedTime = 0f;
 
-        protected override void OnAwake()
+        protected override void Init()
         {
             _agent = GetComponent<NavMeshAgent>();
-            base.OnAwake();
+            base.Init();
         }
 
         protected override void ModifyGraphs()

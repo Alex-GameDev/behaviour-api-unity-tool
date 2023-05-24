@@ -12,20 +12,20 @@ namespace BehaviourAPI.Unity.Demos
 
         private PushPerception _click;
 
-        protected override void OnAwake()
+        protected override void Init()
         {
-            base.OnAwake();
+            base.Init();
             _click = FindPushPerception("click");
         }
 
         // Update is called once per frame
-        protected override void OnUpdate()
+        protected override void OnUpdated()
         {
             if (Input.GetMouseButtonDown(0))
             {
                 _click.Fire();
             }
-            base.OnUpdate();
+            base.OnUpdated();
         }
 
         public bool CheckDistanceToChicken()

@@ -2,11 +2,20 @@ using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
 using BehaviourAPI.Unity.Runtime;
 using BehaviourAPI.UnityExtensions;
+using UnityEngine.AI;
 
-public class DemoSORuner : CodeBehaviourRunner
+public class DemoSORuner : BehaviourRunner
 {
     private SmartAgent _agent;
 
+    BSRuntimeDebugger _debugger;
+
+    protected override void Init()
+    {
+        _agent = GetComponent<SmartAgent>();
+        _debugger = GetComponent<BSRuntimeDebugger>();
+        base.Init();
+    }
 
     protected override BehaviourGraph CreateGraph()
     {
@@ -17,13 +26,7 @@ public class DemoSORuner : CodeBehaviourRunner
         var root = bt.CreateDecorator<LoopNode>(leaf);
         bt.SetRootNode(root);
 
-        RegisterGraph(bt, "main");
+        _debugger.RegisterGraph(bt, "main");
         return bt;
-    }
-
-    protected override void OnAwake()
-    {
-        _agent = GetComponent<SmartAgent>();
-        base.OnAwake();
     }
 }

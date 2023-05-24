@@ -7,7 +7,7 @@ using UnityEngine.AI;
 
 namespace BehaviourAPI.Unity.Demos
 {
-    public class PlayerFSMRunner : CodeBehaviourRunner
+    public class PlayerFSMRunner : BehaviourRunner
     {
         #region variables
 
@@ -20,10 +20,13 @@ namespace BehaviourAPI.Unity.Demos
 
         #endregion variables
 
-        protected override void OnAwake()
+        BSRuntimeDebugger _debugger;
+
+        protected override void Init()
         {
             meshAgent = GetComponent<NavMeshAgent>();
-            base.OnAwake();
+            _debugger = GetComponent<BSRuntimeDebugger>();
+            base.Init();
         }
 
         protected override BehaviourGraph CreateGraph()
@@ -51,17 +54,17 @@ namespace BehaviourAPI.Unity.Demos
             fsm.CreateTransition("idle to runaway", idle, flee, chickenNear);
             fsm.CreateTransition("moving to runaway", moving, flee, chickenNear);
 
-            RegisterGraph(fsm);
+            _debugger.RegisterGraph(fsm);
             return fsm;
         }
 
-        protected override void OnUpdate()
+        protected override void OnUpdated()
         {
             if (Input.GetMouseButtonDown(0))
             {
                 _click.Fire();
             }
-            base.OnUpdate();
+            base.OnUpdated();
         }
 
         private bool CheckDistanceToChicken()
