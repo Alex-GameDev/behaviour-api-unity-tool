@@ -487,7 +487,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
                     return new CodeCustomExpression(identifier);
                 default:
-                    return new CodeCustomExpression("null /*missing perception*/");
+                    return new CodeCustomExpression("null /*this action is not supported by code generation tool*/");
             }
         }
 
@@ -596,7 +596,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                     break;
 
             }
-            return new CodeCustomExpression("null /*missing perception*/");
+            return new CodeCustomExpression("null /*this perception is not supported by code generation tool*/");
         }
 
         /// <summary>

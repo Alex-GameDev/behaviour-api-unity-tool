@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.Unity.Editor
 {
+    using BehaviourAPI.Unity.Framework;
     using CodeGenerator;
     using Core;
     using Core.Actions;
@@ -217,7 +218,11 @@ namespace BehaviourAPI.Unity.Editor
             ActionHierarchy = new EditorHierarchyNode("Actions", typeof(Action));
             ActionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(Framework.Adaptations.CustomAction)));
             ActionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(Framework.Adaptations.SimpleAction)));
-            ActionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(SubgraphAction)));
+
+            EditorHierarchyNode subgraphNode = new EditorHierarchyNode("Subgraph actions", typeof(SubsystemAction));
+            subgraphNode.Childs.Add(new EditorHierarchyNode(typeof(SubgraphAction)));
+            subgraphNode.Childs.Add(new EditorHierarchyNode(typeof(AssetSubgraphAction)));
+            ActionHierarchy.Childs.Add(subgraphNode);
 
             Dictionary<string, EditorHierarchyNode> groups = new Dictionary<string, EditorHierarchyNode>();
             List<EditorHierarchyNode> ungroupedActionNodes = new List<EditorHierarchyNode>();
