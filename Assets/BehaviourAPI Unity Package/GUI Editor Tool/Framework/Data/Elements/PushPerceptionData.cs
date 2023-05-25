@@ -56,5 +56,26 @@ namespace BehaviourAPI.Unity.Framework
                 }
             }
         }
+
+        public void Build(BuildData buildData)
+        {
+            pushPerception = new PushPerception();
+
+            if (targetNodeIds.Count > 0)
+            {
+                for (int i = 0; i < targetNodeIds.Count; i++)
+                {
+                    var node = buildData.NodeMap[targetNodeIds[i]];
+                    if(node is IPushActivable target)
+                    {
+                        pushPerception.PushListeners.Add(target);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("BUILD ERROR: Trying to add a node that don't implements IPushActivable to a push perception target list");
+                    }
+                }
+            }
+        }
     }
 }

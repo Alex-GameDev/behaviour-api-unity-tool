@@ -219,17 +219,16 @@ namespace BehaviourAPI.Unity.Framework
         /// Build the internal references.
         /// </summary>
         /// <param name="data"></param>
-        public void Build(SystemData data, Component runner)
+        public void Build(BuildData buildData)
         {
-            var builder = new BehaviourGraphBuilder(graph);
-            var nodeIdMap = GetNodeIdMap();
+            var graphBuilder = new BehaviourGraphBuilder(graph);
 
             FixNodeNames();
             for (int i = 0; i < nodes.Count; i++)
             {
-                nodes[i].BuildReferences(builder, nodeIdMap, runner, data);  
+                nodes[i].BuildReferences(graphBuilder, buildData);  
             }
-            builder.Build();
+            graphBuilder.Build();
         }
 
         public bool ValidateReferences()

@@ -72,7 +72,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         /// Set <see cref="compoundPerception"/> subperceptions from <see cref="subPerceptions"/> list.
         /// </summary>
         /// <param name="data">The system data that contains the perception.</param>
-        public void Build(SystemData data)
+        public void Build(BuildData data)
         {
             foreach (var subPerception in subPerceptions)
                 if (subPerception.perception is IBuildable buildable) buildable.Build(data);

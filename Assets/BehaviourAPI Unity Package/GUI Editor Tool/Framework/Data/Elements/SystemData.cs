@@ -47,26 +47,15 @@ namespace BehaviourAPI.Unity.Framework
         /// <returns>The main <see cref="BehaviourGraph"/> that will be executed.</returns>
         public BehaviourGraph BuildSystem(Component runner)
         {
+            var time = DateTime.Now;
+            BuildData buildData = new BuildData(runner, this);
             BehaviourGraph maingraph;
-            if (graphs.Count > 0)
-            {
-                for (int i = 0; i < graphs.Count; i++)
-                {
-                    graphs[i].Build(this, runner);
-                }
 
-                maingraph = graphs[0].graph;
-            }
-            else
-            {
-                maingraph = null;
-            }
+            graphs.ForEach(g => g.Build(buildData));
+            pushPerceptions.ForEach(p => p.Build(buildData));
+            //Debug.Log((DateTime.Now - time).TotalMilliseconds);
 
-            foreach (var pushPerception in pushPerceptions)
-            {
-                pushPerception.Build(this);
-            }
-
+            maingraph = graphs.FirstOrDefault()?.graph;
             return maingraph;
         }
 

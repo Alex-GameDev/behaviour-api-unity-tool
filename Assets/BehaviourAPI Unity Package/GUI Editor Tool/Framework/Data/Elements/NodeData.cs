@@ -120,19 +120,18 @@ namespace BehaviourAPI.Unity.Framework
         /// Build the references that are not serialized directly in node.
         /// These are node connections, actions, perceptions and functions.
         /// </summary>
-        /// <param name="builder">The builder used to set the connections.</param>
+        /// <param name="graphBuilder">The builder used to set the connections.</param>
         /// <param name="nodeIdMap">A dictionary used to get the nodes by its id.</param>
         /// <param name="runner">The script that will run the graph.</param>
         /// <param name="systemData">The system data used to create the subgraph action references.</param>
-        public void BuildReferences(BehaviourGraphBuilder builder, Dictionary<string, NodeData> nodeIdMap, Component runner, SystemData systemData)
+        public void BuildReferences(BehaviourGraphBuilder graphBuilder, BuildData buildData)
         {
             if (node == null) Debug.LogWarning("BUILD ERROR: The referenced node is null");
 
-            builder.AddNode(name, node,
-                parentIds.Select(id => nodeIdMap[id].node).ToList(),
-                childIds.Select(id => nodeIdMap[id].node).ToList()
-            );
-            references.ForEach(r => r.Build(node, systemData, runner));
+            List<Node> parents = parentIds.Select(id => buildData.NodeMap[id]).ToList();
+            List<Node> children = childIds.Select(id => buildData.NodeMap[id]).ToList();
+            graphBuilder.AddNode(name, node, parents, children);
+            references.ForEach(r => r.Build(node, buildData));
         }
     }
 }

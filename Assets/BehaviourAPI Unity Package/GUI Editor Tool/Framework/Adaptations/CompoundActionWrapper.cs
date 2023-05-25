@@ -72,7 +72,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         /// Set <see cref="compoundAction"/> subperceptions from <see cref="subActions"/> list.
         /// </summary>
         /// <param name="data">The system data that contains the action.</param>
-        public void Build(SystemData data)
+        public void Build(BuildData data)
         {
             foreach(var subAction in subActions)
                 if (subAction.action is IBuildable buildable) buildable.Build(data);

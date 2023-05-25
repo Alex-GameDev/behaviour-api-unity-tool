@@ -3,6 +3,7 @@ using UnityEngine;
 namespace BehaviourAPI.Unity.Framework.Adaptations
 {
     using Core.Actions;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Adaptation wrapper class for use <see cref="SubsystemAction"/> in editor tools.
@@ -28,14 +29,14 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         /// with the id stored in <see cref="subgraphId"/>.
         /// </summary>
         /// <param name="data"><inheritdoc/></param>
-        public void Build(SystemData data)
+        public void Build(BuildData data)
         {
             if (!string.IsNullOrEmpty(subgraphId))
             {
-                var subgraphData = data.graphs.Find(g => g.id == subgraphId);
-                if (subgraphData != null)
+                var subgraph = data.GraphMap.GetValueOrDefault(subgraphId);
+                if (subgraph != null)
                 {
-                    SubSystem = subgraphData.graph;
+                    SubSystem = subgraph;
                 }
                 else
                 {

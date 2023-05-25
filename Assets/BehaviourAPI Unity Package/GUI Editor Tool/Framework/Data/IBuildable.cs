@@ -9,6 +9,6 @@ namespace BehaviourAPI.Unity.Framework
         /// Set the element references using <paramref name="data"/>.
         /// </summary>
         /// <param name="data">The behaviour system data</param>
-        public void Build(SystemData data);
+        public void Build(BuildData data);
     }
 }
