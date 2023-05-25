@@ -20,10 +20,7 @@ namespace BehaviourAPI.Unity.Runtime
         /// </summary>
         protected sealed override SystemData GetEditedSystemData()
         {
-            string json = JsonUtility.ToJson(System);
-            BehaviourSystem copy = ScriptableObject.CreateInstance<BehaviourSystem>();
-            JsonUtility.FromJsonOverwrite(json, copy);
-            _runtimeSystem = copy.Data;
+            _runtimeSystem = System.GetBehaviourSystemData();
             return _runtimeSystem;
         }
     }
