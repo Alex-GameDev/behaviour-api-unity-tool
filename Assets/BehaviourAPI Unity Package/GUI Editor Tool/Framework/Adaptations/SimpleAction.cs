@@ -12,14 +12,14 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
         /// <summary>
         /// Method executed when the action started.
         /// </summary>
-        public ContextualSerializedAction start;
+        public ContextualSerializedAction method;
 
-        public override void Start() => start.GetFunction()?.Invoke();
+        public override void Start() => method.GetFunction()?.Invoke();
 
         public override object Clone()
         {
             var copy = (SimpleAction)base.Clone();
-            copy.start = (ContextualSerializedAction)start?.Clone();
+            copy.method = (ContextualSerializedAction)method?.Clone();
             return copy;
         }
 
@@ -28,7 +28,7 @@ namespace BehaviourAPI.Unity.Framework.Adaptations
             var unityContext = (UnityExecutionContext)context;
             if (unityContext != null)
             {
-                start.SetContext(unityContext);
+                method.SetContext(unityContext);
             }
             else
             {

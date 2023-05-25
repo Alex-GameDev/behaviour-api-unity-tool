@@ -1,17 +1,19 @@
-using BehaviourAPI.Unity.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace BehaviourAPI.Unity.Editor.CodeGenerator
 {
-    using BehaviourAPI.Core;
-    using BehaviourAPI.Core.Actions;
-    using BehaviourAPI.Core.Perceptions;
-    using BehaviourAPI.Unity.Framework.Adaptations;
-    using BehaviourAPI.UnityExtensions;
-    using BehaviourAPI.UtilitySystems;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text.RegularExpressions;
+    using Core;
+    using Core.Actions;
+    using Core.Perceptions;
+
+    using Framework;
+    using Framework.Adaptations;
+    using UnityExtensions;
+    using UtilitySystems;
+
     using UnityEngine;
     using Action = Core.Actions.Action;
 
@@ -393,6 +395,24 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                         statements.Add(unpauseStatement);
                     }
 
+                    return new CodeCustomExpression(identifier);
+
+                case Framework.Adaptations.SimpleAction simple:
+
+                    statement = new CodeVariableDeclarationStatement(typeof(Core.Actions.SimpleAction), identifier);
+                    expression = new CodeObjectCreationExpression(typeof(Core.Actions.SimpleAction));
+                    statement.RightExpression = expression;
+                    statements.Add(statement);
+
+                    CodeExpression methodArg = GenerateMethodCodeExpression(simple.method, null);
+
+                    if (methodArg != null)
+                    {
+                        var startStatement = new CodeAssignationStatement();
+                        startStatement.LeftExpression = new CodeMethodReferenceExpression(identifier, "onStarted");
+                        startStatement.RightExpression = methodArg;
+                        statements.Add(startStatement);
+                    }
                     return new CodeCustomExpression(identifier);
 
                 case UnityAction unityAction:
