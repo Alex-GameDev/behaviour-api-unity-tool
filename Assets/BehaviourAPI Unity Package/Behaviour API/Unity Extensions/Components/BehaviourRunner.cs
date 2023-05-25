@@ -109,7 +109,6 @@ namespace BehaviourAPI.UnityExtensions
                     {
                         _executionGraph.Stop();
                     }
-
                 }
             }
             else
@@ -140,10 +139,6 @@ namespace BehaviourAPI.UnityExtensions
                 {
                     _executionGraph.Stop();
                 }
-            }
-            else
-            {
-                _executionGraph.Stop();
             }
         }
 
