@@ -415,8 +415,9 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                     }
                     return new CodeCustomExpression(identifier);
 
-                case UnityAction unityAction:
-                    var type = unityAction.GetType();
+                case UnityRequestAction requestAction:
+
+                    var type = requestAction.GetType();
                     m_UsingNamespaces.Add(type.Namespace);
                     expression = new CodeObjectCreationExpression(type);
 
@@ -424,7 +425,32 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                     statement.RightExpression = expression;
                     statements.Add(statement);
 
+                    var agentId = GetOrCreateLocalComponentReference(typeof(SmartAgent));
+                    statements.Add(new CodeCustomStatement($"{identifier}.agent = {agentId};"));
+ 
                     var fields = type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.FlattenHierarchy);
+                    foreach (var field in fields)
+                    {
+                        var value = field.GetValue(requestAction);
+                        if (value != null)
+                        {
+                            var st = GetPropertyStatement(field.GetValue(requestAction), identifier, field.Name, statements);
+                            statements.Add(st);
+                        }
+                    }
+
+                    return new CodeCustomExpression(identifier);
+
+                case UnityAction unityAction:
+                    type = unityAction.GetType();
+                    m_UsingNamespaces.Add(type.Namespace);
+                    expression = new CodeObjectCreationExpression(type);
+
+                    statement = new CodeVariableDeclarationStatement(type, identifier);
+                    statement.RightExpression = expression;
+                    statements.Add(statement);
+
+                    fields = type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.FlattenHierarchy);
                     foreach (var field in fields)
                     {
                         var value = field.GetValue(unityAction);
@@ -668,7 +694,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                     codeWriter.IdentationLevel++;
                 }
 
-                codeWriter.AppendLine($"public class {value} : CodeBehaviourRunner");
+                codeWriter.AppendLine($"public class {value} : BehaviourRunner");
                 codeWriter.AppendLine("{");
 
                 codeWriter.IdentationLevel++;
@@ -682,7 +708,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
                 if (m_ComponentReferenceIdentifierMap.Count > 0)
                 {
-                    codeWriter.AppendLine("protected override void OnAwake()");
+                    codeWriter.AppendLine("protected override void Init()");
                     codeWriter.AppendLine("{");
                     codeWriter.IdentationLevel++;
 
@@ -691,7 +717,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
                         codeWriter.AppendLine($"{kvp.Value} = GetComponent<{kvp.Key.Name}>();");
                     }
                     codeWriter.AppendLine("");
-                    codeWriter.AppendLine("base.OnAwake();");
+                    codeWriter.AppendLine("base.Init();");
                     codeWriter.IdentationLevel--;
                     codeWriter.AppendLine("}");
                 }
@@ -790,6 +816,11 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
         private string GetOrCreateLocalComponentReference(Type componentType)
         {
+            if(m_ComponentReferenceIdentifierMap.TryGetValue(componentType, out var componentReference))
+            {
+                return componentReference;
+            }
+
             var id = GenerateIdentifier($"m_{componentType.Name}");
             var member = new CodeFieldMember(id, componentType);
             m_FieldMembers.Add(member);

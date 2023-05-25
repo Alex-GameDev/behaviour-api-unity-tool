@@ -71,7 +71,7 @@ namespace BehaviourAPI.Unity.Editor
 
             var file = m_classNameText.value + ".cs";
 
-            var fullPath = $"{path}{file}.cs";
+            var fullPath = $"{path}{file}";
 
             if (!Directory.Exists(path))
             {

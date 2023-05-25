@@ -24,8 +24,8 @@ namespace BehaviourAPI.UnityExtensions
             base.SetExecutionContext(ctx);
             context = (UnityExecutionContext)ctx;
 
-            if (m_Agent == null)
-                m_Agent = context.SmartAgent;
+            if (agent == null)
+                agent = context.SmartAgent;
 
             OnSetContext(context);
         }
