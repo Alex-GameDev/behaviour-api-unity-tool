@@ -216,6 +216,7 @@ namespace BehaviourAPI.Unity.Editor
         {
             ActionHierarchy = new EditorHierarchyNode("Actions", typeof(Action));
             ActionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(Framework.Adaptations.CustomAction)));
+            ActionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(Framework.Adaptations.SimpleAction)));
             ActionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(SubgraphAction)));
 
             Dictionary<string, EditorHierarchyNode> groups = new Dictionary<string, EditorHierarchyNode>();
