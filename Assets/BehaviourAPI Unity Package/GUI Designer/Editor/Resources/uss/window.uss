@@ -1,0 +1,56 @@
+.toolbar-btn {
+    height: 30px;
+    width: auto;
+    font-size: 30px;
+    -unity-text-align: middle-center;
+    white-space: nowrap;
+}
+
+.toolbar-squared-btn {
+    width: 30px;
+}
+
+.cover {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(32, 32, 32);
+}
+
+#bw-main {
+    flex-direction: row;
+    height: 100%;
+}
+
+#bw-inspector {
+    background-color: rgba(43, 43, 43, 0.95);
+    height: 100%;
+    display: flex;
+    width: 400px;
+}
+
+.toolbar {
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    height: auto;
+    justify-content: space-between;
+}
+
+.toolbar-section {
+    flex-direction: row;
+    align-items: center;
+}
+
+#bw-graph-select {
+    -unity-font-definition: ;
+    height: 30px;
+    font-size: 16px;
+    -unity-text-align: middle-left;
+    width: 350px;
+}

@@ -1,8 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
 {
+    using Core;
+    using Core.Actions;
+    using Core.Perceptions;
+    using Framework;
+
     public abstract class CodeElement
     {
         public abstract void GenerateCode(CodeWriter writer, CodeGenerationOptions options);
@@ -281,6 +287,196 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
         {
             writer.Append(name + ": ");
             expression.GenerateCode(writer, options);
+        }
+    }
+
+    /// <summary>
+    /// Class that represents the set of instructions needed to instantiate a node.
+    /// </summary>
+    public class CodeNodeStatementGroup
+    {
+        NodeData m_NodeData;
+
+        CodeTemplate m_Template;
+
+        List<CodeStatement> m_argumentStatements;
+        CodeVariableDeclarationStatement m_NodeCreationStatement;
+        CodeMethodInvokeExpression m_MethodInvoke;
+        List<CodeStatement> m_PropertyStatements;
+
+
+        public CodeNodeStatementGroup(NodeData nodeData, CodeTemplate template)
+        {
+            m_NodeData = nodeData;
+            m_Template = template;
+            string identifier = template.GetSystemElementIdentifier(nodeData.id);
+
+            m_NodeCreationStatement = new CodeVariableDeclarationStatement(nodeData.node.GetType(), identifier);
+            m_MethodInvoke = new CodeMethodInvokeExpression();
+            m_NodeCreationStatement.RightExpression = m_MethodInvoke;
+
+            m_argumentStatements = new List<CodeStatement>();
+            m_PropertyStatements = new List<CodeStatement>();
+        }
+
+        public void Commit() => m_Template.AddNodeStatement(this);
+
+        public void SetMethod(string k_method)
+        {
+            string graphIdentifier = m_Template.CurrentGraphIdentifier;
+            m_MethodInvoke.methodReferenceExpression = new CodeMethodReferenceExpression(graphIdentifier, k_method);
+        }
+
+        public void AddFloat(float value)
+        {
+            m_MethodInvoke.parameters.Add(new CodeCustomExpression(value.ToCodeFormat()));
+        }
+
+        public void AddChildList()
+        {
+            for (int i = 0; i < m_NodeData.childIds.Count; i++)
+            {
+                string childIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.childIds[i]);
+                var childExpression = new CodeCustomExpression(childIdentifier);
+                m_MethodInvoke.parameters.Add(childExpression);
+            }
+        }
+
+        public void AddFirstChild()
+        {
+            if (m_NodeData.childIds.Count > 0)
+            {
+                string childIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.childIds[0]);
+                var childExpression = new CodeCustomExpression(childIdentifier);
+                m_MethodInvoke.parameters.Add(childExpression);
+            }
+            else
+            {
+                var childExpression = new CodeCustomExpression("null /* missing child */");
+                m_MethodInvoke.parameters.Add(childExpression);
+            }
+        }
+
+        public void AddAction(string fieldName, bool isNotMandatory = false, string paramName = null)
+        {
+            var actionData = m_NodeData.references.Find((r) => r.FieldName == fieldName);
+
+            if (actionData != null && actionData.Value is Action action)
+            {
+                var actionIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.id) + "_action";
+                var actionExpression = m_Template.GetActionExpression(action, actionIdentifier, m_argumentStatements);
+                m_MethodInvoke.parameters.Add(actionExpression);
+            }
+            else if (!isNotMandatory)
+            {
+                var childExpression = new CodeCustomExpression("null /* missing action */");
+                m_MethodInvoke.parameters.Add(childExpression);
+            }
+        }
+
+        public void AddPerception(string fieldName, bool isNotMandatory = false, string paramName = null)
+        {
+            var perceptionData = m_NodeData.references.Find((r) => r.FieldName == fieldName);
+
+            if (perceptionData != null && perceptionData.Value is Perception perception)
+            {
+                var perceptionIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.id) + "_perception";
+                var perceptionExpression = m_Template.GetPerceptionExpression(perception, perceptionIdentifier, m_argumentStatements);
+                m_MethodInvoke.parameters.Add(perceptionExpression);
+            }
+            else if (!isNotMandatory)
+            {
+                var childExpression = new CodeCustomExpression("null /* missing perception */");
+                m_MethodInvoke.parameters.Add(childExpression);
+            }
+        }
+
+        public void AddStatusFlags(StatusFlags statusFlags, bool isNotMandatory = false, string paramName = null)
+        {
+            if ((int)statusFlags == -1 || statusFlags == StatusFlags.Active)
+            {
+                if (isNotMandatory) return;
+                else statusFlags = StatusFlags.Active;
+            }
+            string paramPrefix = string.IsNullOrEmpty(paramName) ? "" : paramName + ": ";
+            var statusExpression = new CodeCustomExpression(paramPrefix + "StatusFlags." + statusFlags);
+            m_MethodInvoke.parameters.Add(statusExpression);
+        }
+
+
+        public void AddFirstParent(bool isNotMandatory = false)
+        {
+            if (m_NodeData.parentIds.Count > 0)
+            {
+                string parentIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.parentIds[0]);
+                var parentExpression = new CodeCustomExpression(parentIdentifier);
+                m_MethodInvoke.parameters.Add(parentExpression);
+            }
+            else if (!isNotMandatory)
+            {
+                var childExpression = new CodeCustomExpression("null /* missing parent */");
+                m_MethodInvoke.parameters.Add(childExpression);
+            }
+        }
+
+        public void AddStatus(Status exitStatus)
+        {
+            var statusExpression = new CodeCustomExpression("Status." + exitStatus);
+            m_MethodInvoke.parameters.Add(statusExpression);
+        }
+
+        public void AddFunction(string fieldName, bool isNotMandatory = false)
+        {
+            var methodData = m_NodeData.references.Find((r) => r.FieldName == fieldName);
+
+            if (methodData != null && methodData.Value is SerializedContextMethod contextMethod)
+            {
+                var fieldInfo = m_NodeData.node.GetType().GetField(methodData.FieldName);
+
+                if (fieldInfo == null || !fieldInfo.FieldType.IsSubclassOf(typeof(Delegate))) return;
+
+                var methodInfo = fieldInfo.FieldType.GetMethod("Invoke");
+                var returnParam = methodInfo.ReturnParameter.ParameterType;
+                var args = methodInfo.GetParameters().Select(p => p.GetType()).ToArray();
+
+                var functionIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.id) + "_function";
+                var functionExpression = m_Template.GenerateMethodCodeExpression(contextMethod, args, returnParam);
+                m_MethodInvoke.parameters.Add(functionExpression);
+            }
+            else if (!isNotMandatory)
+            {
+                var childExpression = new CodeCustomExpression("null /* missing action */");
+                m_MethodInvoke.parameters.Add(childExpression);
+            }
+        }
+
+        public void AddBool(bool b)
+        {
+            var boolExpression = new CodeCustomExpression(b.ToCodeFormat());
+            m_MethodInvoke.parameters.Add(boolExpression);
+        }
+
+        public void AddPropertyAssignations()
+        {
+            string nodeIdentifier = m_Template.GetSystemElementIdentifier(m_NodeData.id);
+            foreach (var field in m_NodeData.node.GetType().GetFields(System.Reflection.BindingFlags.Public |
+                System.Reflection.BindingFlags.FlattenHierarchy | System.Reflection.BindingFlags.Instance))
+            {
+                var value = field.GetValue(m_NodeData.node);
+                if (value != null)
+                {
+                    var statement = m_Template.GetPropertyStatement(field.GetValue(m_NodeData.node), nodeIdentifier, field.Name, m_PropertyStatements);
+                    m_PropertyStatements.Add(statement);
+                }
+            }
+        }
+
+        public void GenerateCode(CodeWriter codeWriter, CodeGenerationOptions options)
+        {
+            m_argumentStatements.ForEach(s => s.GenerateCode(codeWriter, options));
+            m_NodeCreationStatement.GenerateCode(codeWriter, options);
+            m_PropertyStatements.ForEach(s => s.GenerateCode(codeWriter, options));
+            codeWriter.AppendLine("");
         }
     }
 }
