@@ -15,7 +15,8 @@ public class #SCRIPTNAME# : UnityPerception
     // Override the string displayed in the editor.
     public override string DisplayInfo => base.DisplayInfo;
     
-    // Override this method to get references to unity components before the execution.
+    // Override this method to get references to unity components before the execution
+    // using the "context" property.
     protected override void OnSetContext()
     {
         // To get a component of the object that is running this perception:

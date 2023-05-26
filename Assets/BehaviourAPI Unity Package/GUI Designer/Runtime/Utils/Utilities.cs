@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BehaviourAPI.UnityToolkit
+namespace BehaviourAPI.UnityToolkit.GUIDesigner
 {
     using Core;
     public static class Utilities

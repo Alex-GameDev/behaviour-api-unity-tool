@@ -321,7 +321,7 @@ MonoBehaviour:
         - 9afc671b-abb9-4b1e-b9b0-a87628513874
       - name: LeafNode
         id: 9afc671b-abb9-4b1e-b9b0-a87628513874
-        position: {x: 316, y: 815}
+        position: {x: 300, y: 800}
         node:
           rid: 6537695503399780360
         references:

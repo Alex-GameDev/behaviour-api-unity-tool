@@ -3,7 +3,7 @@ using UnityEngine;
 namespace BehaviourAPI.UnityToolkit
 {
     /// <summary>
-    /// Perception triggered when a totalTime passes, asuming its executing on Update
+    /// Perception triggered when a time passes, using unity scaled time.
     /// </summary>
     public class UnityTimePerception : UnityPerception
     {

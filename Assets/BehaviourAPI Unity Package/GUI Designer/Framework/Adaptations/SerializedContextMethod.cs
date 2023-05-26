@@ -1,6 +1,4 @@
 using System;
-using System.Linq.Expressions;
-using System.Linq;
 using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
@@ -117,22 +115,5 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
     [Serializable]
     public class ContextualSerializedBoolFunction : SerializedContextMethod<Func<bool>>
     {
-    }
-
-    /// <summary>
-    /// Serialized method for variable factor utility.
-    /// </summary>
-    [Serializable]
-    public class ContextualSerializedFloatFunction : SerializedContextMethod<Func<float>>
-    {
-    }
-
-    /// <summary>
-    /// Serialized method for function factor utility.
-    /// </summary>
-    [Serializable]
-    public class ContextualSerializedFloatFloatFunction : SerializedContextMethod<Func<float, float>>
-    {
-        protected override Type[] FunctionArgs => new Type[] { typeof(float) };
     }
 }
