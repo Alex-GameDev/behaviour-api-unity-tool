@@ -2,7 +2,7 @@ using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor.Graph
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
 {
     /// <summary>
     /// Generic Edge connector listener class.

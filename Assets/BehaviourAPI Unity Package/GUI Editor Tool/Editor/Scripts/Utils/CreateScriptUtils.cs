@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     public static class CreateScriptUtils
     {

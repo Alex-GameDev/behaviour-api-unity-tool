@@ -1,8 +1,8 @@
-using BehaviourAPI.UnityExtensions;
+using BehaviourAPI.UnityToolkit;
 using UnityEditor;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     [CustomPropertyDrawer(typeof(CapabilityMap))]
     public class CapabilityMapPropertyDrawer : PropertyDrawer

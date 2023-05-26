@@ -1,8 +1,8 @@
-using BehaviourAPI.Unity.SmartObjects;
+using BehaviourAPI.UnityToolkit.SmartObjects;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     [DefaultExecutionOrder(-1)]
     public class SmartObjectManager : MonoBehaviour

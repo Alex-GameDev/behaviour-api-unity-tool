@@ -1,13 +1,12 @@
 ﻿using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.Unity.Runtime;
-using BehaviourAPI.Unity.Runtime.Extensions;
-using BehaviourAPI.UnityExtensions;
+using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
+using BehaviourAPI.UnityToolkit;
 using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace BehaviourAPI.Unity.Demos
+namespace BehaviourAPI.UnityToolkit.Demos
 {
     public class ChickenFSMRunner : BehaviourRunner
     {

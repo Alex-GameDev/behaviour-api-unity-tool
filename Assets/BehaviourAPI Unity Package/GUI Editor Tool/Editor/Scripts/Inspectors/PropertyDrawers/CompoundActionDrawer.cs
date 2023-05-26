@@ -2,10 +2,10 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     using Core.Actions;
-    using Framework.Adaptations;
+    using Framework;
     using System.Linq;
 
     [CustomPropertyDrawer(typeof(CompoundActionWrapper))]

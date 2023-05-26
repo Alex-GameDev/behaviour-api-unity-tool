@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Framework
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
     /// <summary>
     /// Class that serializes a behaviour system

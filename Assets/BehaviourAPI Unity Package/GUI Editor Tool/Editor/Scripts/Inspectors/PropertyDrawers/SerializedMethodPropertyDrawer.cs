@@ -1,13 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     using Framework;
-    using UnityEngine;
-    using UnityEditor;
-    using UnityEngine.UIElements;
 
     [CustomPropertyDrawer(typeof(SerializedContextMethod), true)]
     public class SerializedMethodPropertyDrawer : PropertyDrawer

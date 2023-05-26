@@ -1,12 +1,13 @@
-using BehaviourAPI.BehaviourTrees;
-using BehaviourAPI.Core;
-using BehaviourAPI.Unity.Framework;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
-namespace BehaviourAPI.Unity.Editor.Graph
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
 {
+    using Core;
+    using BehaviourTrees;
+    using Framework;
+
     [CustomNodeDrawer(typeof(BTNode))]
     public class BTNodeDrawer : NodeDrawer
     {

@@ -1,8 +1,9 @@
 using UnityEngine;
 
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     using BehaviourAPI.Core;
+    using System;
 
     /// <summary>
     /// Base class for all behaviour system runners
@@ -40,7 +41,7 @@ namespace BehaviourAPI.UnityExtensions
 
         /*
          * Unity events:
-         * Dont override this methods in subclasses. The events in this script won't be called.
+         * Dont override this methods in subclasses. Otherwise the events in this script won't be called.
          */
 
         private void Awake() => Init();
@@ -150,6 +151,7 @@ namespace BehaviourAPI.UnityExtensions
         {
             if (!_systemRunning || _executionGraph == null)
                 return;
+
             bool interrupted = _executionGraph.Status == Status.Running;
 
             if (interrupted)

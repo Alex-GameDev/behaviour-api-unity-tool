@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     public class IPanelManager : MonoBehaviour
     {

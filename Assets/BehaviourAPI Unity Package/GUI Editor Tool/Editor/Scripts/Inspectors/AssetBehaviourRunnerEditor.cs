@@ -1,12 +1,11 @@
-using BehaviourAPI.Unity.Runtime;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
+    using Runtime;
+
     [CustomEditor(typeof(AssetBehaviourRunner), editorForChildClasses: true)]
     public class AssetBehaviourRunnerEditor : UnityEditor.Editor
     {

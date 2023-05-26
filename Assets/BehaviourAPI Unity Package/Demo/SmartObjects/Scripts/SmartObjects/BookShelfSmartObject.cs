@@ -1,7 +1,7 @@
-namespace BehaviourAPI.Unity.Demos
+namespace BehaviourAPI.UnityToolkit.Demos
 {
     using BehaviourAPI.Core.Actions;
-    using BehaviourAPI.UnityExtensions;
+    using BehaviourAPI.UnityToolkit;
 
     public class BookShelfSmartObject : DirectSmartObject
     {

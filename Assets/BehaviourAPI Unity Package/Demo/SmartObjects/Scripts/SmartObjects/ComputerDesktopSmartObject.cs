@@ -1,7 +1,7 @@
 using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Unity.Demos;
-using BehaviourAPI.Unity.SmartObjects;
-using BehaviourAPI.UnityExtensions;
+using BehaviourAPI.UnityToolkit.Demos;
+using BehaviourAPI.UnityToolkit.SmartObjects;
+using BehaviourAPI.UnityToolkit;
 using UnityEngine;
 
 public class ComputerDesktopSmartObject : SmartObject

@@ -1,14 +1,13 @@
 using System;
-
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
-    using System.Linq;
     using Core.Perceptions;
-    using Framework.Adaptations;
+    using Framework;
 
     [CustomPropertyDrawer(typeof(Perception))]
     public class PerceptionPropertyDrawer : PropertyDrawer

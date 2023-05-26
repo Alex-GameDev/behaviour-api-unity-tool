@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace BehaviourAPI.Unity.Editor.CodeGenerator
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
 {
     public abstract class CodeElement
     {
@@ -34,7 +34,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         {
             if (isSerializeField) writer.Append("[SerializeField] ");
             writer.Append(isPublic ? "public " : "private ");
-            writer.Append(type.GetTypeName() + " " + name);
+            writer.Append(type.Name + " " + name);
             if (InitExpression != null) InitExpression.GenerateCode(writer, options);
             writer.AppendLine(";");
         }
@@ -234,7 +234,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
         public override void GenerateCode(CodeWriter writer, CodeGenerationOptions options)
         {
-            writer.Append($"new {Type.GetTypeName()}(");
+            writer.Append($"new {Type.Name}(");
 
             for (int i = 0; i < parameters.Count; i++)
             {

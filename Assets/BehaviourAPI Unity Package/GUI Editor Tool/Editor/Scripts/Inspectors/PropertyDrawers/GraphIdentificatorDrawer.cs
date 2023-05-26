@@ -1,11 +1,11 @@
-using BehaviourAPI.Unity.Framework;
-using BehaviourAPI.Unity.Framework.Adaptations;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
+    using Framework;
+
     [CustomPropertyDrawer(typeof(GraphIdentificatorAttribute))]
     public class GraphIdentificatorDrawer : PropertyDrawer
     {

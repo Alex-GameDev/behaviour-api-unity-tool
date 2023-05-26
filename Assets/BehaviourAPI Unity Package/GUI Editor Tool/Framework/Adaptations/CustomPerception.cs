@@ -1,10 +1,10 @@
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Framework.Adaptations
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
     using Core;
     using Core.Perceptions;
-    using UnityExtensions;
+    using UnityToolkit;
 
     /// <summary>
     /// Adaptation class for use custom <see cref="ConditionPerception"/> in editor tools.

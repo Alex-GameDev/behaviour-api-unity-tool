@@ -223,7 +223,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   executeOnLoop: 0
-  dontStopOnDisable: 0
+  interruptOptions: 0
   _eventHandler:
     debugStatusChanges: 0
     identifier: 
@@ -370,7 +370,7 @@ MonoBehaviour:
     - rid: 6537695503399780355
       type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
     - rid: 6537695503399780356
-      type: {class: UnityTimerDecorator, ns: BehaviourAPI.UnityExtensions, asm: BehaviourAPI.UnityExtensions}
+      type: {class: UnityTimerDecorator, ns: BehaviourAPI.UnityToolkit, asm: BehaviourAPI.UnityToolkit}
       data:
         TotalTime: 3
     - rid: 6537695503399780357
@@ -386,7 +386,7 @@ MonoBehaviour:
     - rid: 6537695503399780361
       type: {class: LeafNode, ns: BehaviourAPI.BehaviourTrees, asm: BehaviourAPI.BehaviourTrees}
     - rid: 6537695503399780362
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         start:
           componentName: 
@@ -404,7 +404,7 @@ MonoBehaviour:
           componentName: 
           methodName: 
     - rid: 6537695503399780363
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         start:
           componentName: 
@@ -422,7 +422,7 @@ MonoBehaviour:
           componentName: 
           methodName: 
     - rid: 6537695503399780364
-      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         init:
           componentName: 
@@ -440,7 +440,7 @@ MonoBehaviour:
           componentName: 
           methodName: 
     - rid: 6537695503399780365
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         start:
           componentName: 
@@ -458,7 +458,7 @@ MonoBehaviour:
           componentName: 
           methodName: 
     - rid: 6537695503399780366
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         start:
           componentName: 

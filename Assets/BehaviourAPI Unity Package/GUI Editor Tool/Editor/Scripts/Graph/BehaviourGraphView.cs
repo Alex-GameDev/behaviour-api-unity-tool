@@ -1,5 +1,3 @@
-using BehaviourAPI.Core;
-using BehaviourAPI.Unity.Framework;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -8,8 +6,10 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Vector2 = UnityEngine.Vector2;
 
-namespace BehaviourAPI.Unity.Editor.Graph
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
 {
+    using Framework;
+
     /// <summary>
     /// Class used to represent the nodes of a <see cref="GraphData"/> element in a editor window.
     /// </summary>

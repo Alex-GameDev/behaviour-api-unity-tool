@@ -1,11 +1,11 @@
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Demos
+namespace BehaviourAPI.UnityToolkit.Demos
 {
     using BehaviourTrees;
     using Core.Actions;
     using SmartObjects;
-    using UnityExtensions;
+    using UnityToolkit;
 
     /// <summary> 
     /// A subtype of the SmartObject that the agent navigates to in order to use it. 

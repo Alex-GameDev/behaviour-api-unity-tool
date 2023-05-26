@@ -1,12 +1,12 @@
 using System;
-using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
+    using Graphs;
+
     public class GraphTypeEntry : VisualElement
     {
         public Action<GraphTypeEntry> Selected;

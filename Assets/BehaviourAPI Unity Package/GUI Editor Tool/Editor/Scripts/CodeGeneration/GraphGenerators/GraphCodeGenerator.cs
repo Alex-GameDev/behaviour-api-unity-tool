@@ -1,9 +1,10 @@
-using BehaviourAPI.Unity.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace BehaviourAPI.Unity.Editor.CodeGenerator
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
 {
+    using Framework;
+
     public abstract class GraphCodeGenerator
     {
         GraphData m_GraphData;

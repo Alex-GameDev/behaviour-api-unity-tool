@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using BehaviourAPI.Core;
-using BehaviourAPI.UnityExtensions;
+using BehaviourAPI.UnityToolkit;
 
 #ROOTNAMESPACEBEGIN#
 
@@ -23,6 +23,7 @@ public class #SCRIPTNAME# : UnityPerception
 
         // Some components like transform, rigidbody, etc. are directly accessible from context:
         // context.Transform
+        // context.RigidBody
     }
 
     // Called at the start of the execution. Use it to initialize the perception.

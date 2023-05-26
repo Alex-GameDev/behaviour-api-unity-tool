@@ -1,10 +1,10 @@
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Framework.Adaptations
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
     using Core;
     using Core.Actions;
-    using UnityExtensions;
+    using UnityToolkit;
 
     /// <summary>
     /// Adaptation class for use custom <see cref="FunctionalAction"/> in editor tools.

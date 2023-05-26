@@ -1,10 +1,9 @@
 using BehaviourAPI.BehaviourTrees;
-using BehaviourAPI.Unity.Runtime;
-using BehaviourAPI.UnityExtensions;
+using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
 using System.Linq;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Demos
+namespace BehaviourAPI.UnityToolkit.Demos
 {
     public class BadBoyEditorRunner : EditorBehaviourRunner
     {

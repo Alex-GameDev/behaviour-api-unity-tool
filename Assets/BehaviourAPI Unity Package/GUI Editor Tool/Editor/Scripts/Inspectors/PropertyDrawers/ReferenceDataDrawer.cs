@@ -1,16 +1,13 @@
-using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.Unity.Framework;
-using BehaviourAPI.Unity.Framework.Adaptations;
-using BehaviourAPI.UnityExtensions;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
+    using Core.Actions;
+    using Core.Perceptions;
+    using Framework;
+
     [CustomPropertyDrawer(typeof(ReferenceData))]
     public class ReferenceDataDrawer : PropertyDrawer
     {

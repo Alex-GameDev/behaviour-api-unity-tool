@@ -1,6 +1,6 @@
 using UnityEngine.UIElements;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     public class ToolPanel : VisualElement
     {

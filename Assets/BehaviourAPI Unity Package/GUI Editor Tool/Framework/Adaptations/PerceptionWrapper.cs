@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Framework.Adaptations
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
     using Core;
     using Core.Perceptions;

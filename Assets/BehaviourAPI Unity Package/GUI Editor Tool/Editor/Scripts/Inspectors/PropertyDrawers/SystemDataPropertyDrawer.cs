@@ -1,11 +1,10 @@
-using BehaviourAPI.Unity.Framework;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
+    using Framework;
+
     [CustomPropertyDrawer(typeof(SystemData))]
     public class SystemDataPropertyDrawer : PropertyDrawer
     {

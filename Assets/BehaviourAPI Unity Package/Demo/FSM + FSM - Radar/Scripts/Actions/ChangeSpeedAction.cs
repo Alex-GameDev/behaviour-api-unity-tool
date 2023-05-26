@@ -1,9 +1,9 @@
-using BehaviourAPI.Core;
-using BehaviourAPI.UnityExtensions;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Demos
+namespace BehaviourAPI.UnityToolkit.Demos
 {
+    using BehaviourAPI.Core;
+
     [SelectionGroup("DEMO - Radar")]
     public class ChangeSpeedAction : UnityAction
     {
@@ -28,14 +28,12 @@ namespace BehaviourAPI.Unity.Demos
             context.Rigidbody.velocity = context.Transform.forward * s;
         }
 
-        public override void Stop()
-        {
-        }
-
         public override Status Update()
         {
             return Status.Success;
         }
+
+        public override string DisplayInfo => "Change car speed";
     }
 
 }

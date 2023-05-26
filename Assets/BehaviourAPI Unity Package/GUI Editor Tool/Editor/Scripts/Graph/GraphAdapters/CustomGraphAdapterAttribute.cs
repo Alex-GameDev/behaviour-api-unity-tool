@@ -1,6 +1,6 @@
 using System;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
 {
     /// <summary>
     /// Attribute to assign a <see cref="GraphAdapter"/> to a BehaviourGraph class.

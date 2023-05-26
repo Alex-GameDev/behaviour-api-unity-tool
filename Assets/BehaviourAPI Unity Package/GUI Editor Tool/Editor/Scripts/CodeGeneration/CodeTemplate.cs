@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace BehaviourAPI.Unity.Editor.CodeGenerator
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
 {
     using Core;
     using Core.Actions;
     using Core.Perceptions;
 
     using Framework;
-    using Framework.Adaptations;
-    using UnityExtensions;
+    using UnityToolkit;
     using UtilitySystems;
 
     using UnityEngine;
@@ -230,8 +229,8 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
             "BehaviourAPI.Core",
             "BehaviourAPI.Core.Actions",
             "BehaviourAPI.Core.Perceptions",
-            "BehaviourAPI.UnityExtensions",
-            "BehaviourAPI.Unity.Runtime"
+            "BehaviourAPI.UnityToolkit",
+            "BehaviourAPI.UnityToolkit.GUIDesigner.Runtime"
         };
 
         SystemData m_SystemData;
@@ -397,7 +396,7 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
 
                     return new CodeCustomExpression(identifier);
 
-                case Framework.Adaptations.SimpleAction simple:
+                case Framework.SimpleAction simple:
 
                     statement = new CodeVariableDeclarationStatement(typeof(Core.Actions.SimpleAction), identifier);
                     expression = new CodeObjectCreationExpression(typeof(Core.Actions.SimpleAction));
@@ -677,99 +676,96 @@ namespace BehaviourAPI.Unity.Editor.CodeGenerator
         /// <returns></returns>
         public string GenerateCode(string value, CodeGenerationOptions options)
         {
-            using (new DebugTimer())
+            CodeWriter codeWriter = new CodeWriter();
+            foreach (var usingNamespace in m_UsingNamespaces)
             {
-                CodeWriter codeWriter = new CodeWriter();
-                foreach (var usingNamespace in m_UsingNamespaces)
-                {
-                    codeWriter.AppendLine($"using {usingNamespace};");
-                }
-
-                codeWriter.AppendLine("");
-
-                if (!string.IsNullOrWhiteSpace(options.scriptNamespace))
-                {
-                    codeWriter.AppendLine("namespace " + options.scriptNamespace);
-                    codeWriter.AppendLine("{");
-                    codeWriter.IdentationLevel++;
-                }
-
-                codeWriter.AppendLine($"public class {value} : BehaviourRunner");
-                codeWriter.AppendLine("{");
-
-                codeWriter.IdentationLevel++;
-
-                foreach (var fieldCode in m_FieldMembers)
-                {
-                    fieldCode.GenerateCode(codeWriter, options);
-                }
-
-                codeWriter.AppendLine("");
-
-                if (m_ComponentReferenceIdentifierMap.Count > 0)
-                {
-                    codeWriter.AppendLine("protected override void Init()");
-                    codeWriter.AppendLine("{");
-                    codeWriter.IdentationLevel++;
-
-                    foreach (var kvp in m_ComponentReferenceIdentifierMap)
-                    {
-                        codeWriter.AppendLine($"{kvp.Value} = GetComponent<{kvp.Key.Name}>();");
-                    }
-                    codeWriter.AppendLine("");
-                    codeWriter.AppendLine("base.Init();");
-                    codeWriter.IdentationLevel--;
-                    codeWriter.AppendLine("}");
-                }
-
-                codeWriter.AppendLine("");
-
-                codeWriter.AppendLine("protected override BehaviourGraph CreateGraph()");
-                codeWriter.AppendLine("{");
-
-                codeWriter.IdentationLevel++;
-
-                m_CodeGraphStatements.ForEach(c => c.GenerateCode(codeWriter, options));               
-                codeWriter.AppendLine("");
-                m_CodeNodeStatementList.ForEach(c => c.GenerateCode(codeWriter, options));
-
-                m_CodeStatements.ForEach(c => c.GenerateCode(codeWriter, options));
-
-                var firstGraphId = m_SystemData.graphs.FirstOrDefault()?.id;
-                if (options.registerGraphsInDebugger)
-                {
-                    foreach (var graph in m_SystemData.graphs)
-                    {
-                        codeWriter.AppendLine($"RegisterGraph({m_SystemElementIdentifierMap[graph.id]});");
-                    }
-                    codeWriter.AppendLine("");
-                }
-
-                if (firstGraphId != null) codeWriter.AppendLine($"return {m_SystemElementIdentifierMap[firstGraphId]};");
-                else codeWriter.Append("return null");
-
-
-                codeWriter.IdentationLevel--;
-
-                codeWriter.AppendLine("}");
-
-                foreach (var method in m_MethodMembers.Values)
-                {
-                    method.GenerateCode(codeWriter, options);
-                }
-
-                codeWriter.IdentationLevel--;
-
-                codeWriter.AppendLine("}");
-
-                if (!string.IsNullOrWhiteSpace(options.scriptNamespace))
-                {
-                    codeWriter.IdentationLevel--;
-                    codeWriter.AppendLine("}");
-                }
-
-                return codeWriter.ToString();
+                codeWriter.AppendLine($"using {usingNamespace};");
             }
+
+            codeWriter.AppendLine("");
+
+            if (!string.IsNullOrWhiteSpace(options.scriptNamespace))
+            {
+                codeWriter.AppendLine("namespace " + options.scriptNamespace);
+                codeWriter.AppendLine("{");
+                codeWriter.IdentationLevel++;
+            }
+
+            codeWriter.AppendLine($"public class {value} : BehaviourRunner");
+            codeWriter.AppendLine("{");
+
+            codeWriter.IdentationLevel++;
+
+            foreach (var fieldCode in m_FieldMembers)
+            {
+                fieldCode.GenerateCode(codeWriter, options);
+            }
+
+            codeWriter.AppendLine("");
+
+            if (m_ComponentReferenceIdentifierMap.Count > 0)
+            {
+                codeWriter.AppendLine("protected override void Init()");
+                codeWriter.AppendLine("{");
+                codeWriter.IdentationLevel++;
+
+                foreach (var kvp in m_ComponentReferenceIdentifierMap)
+                {
+                    codeWriter.AppendLine($"{kvp.Value} = GetComponent<{kvp.Key.Name}>();");
+                }
+                codeWriter.AppendLine("");
+                codeWriter.AppendLine("base.Init();");
+                codeWriter.IdentationLevel--;
+                codeWriter.AppendLine("}");
+            }
+
+            codeWriter.AppendLine("");
+
+            codeWriter.AppendLine("protected override BehaviourGraph CreateGraph()");
+            codeWriter.AppendLine("{");
+
+            codeWriter.IdentationLevel++;
+
+            m_CodeGraphStatements.ForEach(c => c.GenerateCode(codeWriter, options));               
+            codeWriter.AppendLine("");
+            m_CodeNodeStatementList.ForEach(c => c.GenerateCode(codeWriter, options));
+
+            m_CodeStatements.ForEach(c => c.GenerateCode(codeWriter, options));
+
+            var firstGraphId = m_SystemData.graphs.FirstOrDefault()?.id;
+            if (options.registerGraphsInDebugger)
+            {
+                foreach (var graph in m_SystemData.graphs)
+                {
+                    codeWriter.AppendLine($"RegisterGraph({m_SystemElementIdentifierMap[graph.id]});");
+                }
+                codeWriter.AppendLine("");
+            }
+
+            if (firstGraphId != null) codeWriter.AppendLine($"return {m_SystemElementIdentifierMap[firstGraphId]};");
+            else codeWriter.Append("return null");
+
+
+            codeWriter.IdentationLevel--;
+
+            codeWriter.AppendLine("}");
+
+            foreach (var method in m_MethodMembers.Values)
+            {
+                method.GenerateCode(codeWriter, options);
+            }
+
+            codeWriter.IdentationLevel--;
+
+            codeWriter.AppendLine("}");
+
+            if (!string.IsNullOrWhiteSpace(options.scriptNamespace))
+            {
+                codeWriter.IdentationLevel--;
+                codeWriter.AppendLine("}");
+            }
+
+            return codeWriter.ToString();
         }
 
         private void RegisterSystemElementIdentifiers(SystemData systemData)

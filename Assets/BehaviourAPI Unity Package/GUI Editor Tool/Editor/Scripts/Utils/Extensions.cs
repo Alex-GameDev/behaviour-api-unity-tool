@@ -1,19 +1,17 @@
-﻿using BehaviourAPI.Core;
-using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.Unity.Framework;
-using BehaviourAPI.Unity.Framework.Adaptations;
-using BehaviourAPI.UnityExtensions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
-using Action = BehaviourAPI.Core.Actions.Action;
-using UnityAction = BehaviourAPI.UnityExtensions.UnityAction;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
+    using Core;
+    using Core.Actions;
+    using Core.Perceptions;
+    using Framework;
+    using Action = Core.Actions.Action;
+
     public static class Extensions
     {
         #region -------------------------------- Strings and regex --------------------------------

@@ -1628,7 +1628,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1638828729}
-        m_TargetAssemblyTypeName: BehaviourAPI.Unity.Demos.PlayerFSMEditorRunner,
+        m_TargetAssemblyTypeName: BehaviourAPI.UnityToolkit.Demos.PlayerFSMEditorRunner,
           Assembly-CSharp
         m_MethodName: Restart
         m_Mode: 1
@@ -5312,7 +5312,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   executeOnLoop: 0
-  dontStopOnDisable: 0
+  interruptOptions: 0
   _eventHandler:
     debugStatusChanges: 0
     identifier: 
@@ -5328,7 +5328,12 @@ MonoBehaviour:
         position: {x: 51, y: 164}
         node:
           rid: 6537695503399780434
-        references: []
+        references:
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - 7901948e-113b-4e88-b6d9-a4949bbdb142
         - 073466f0-6c3f-4093-864e-77f57b97a1a8
@@ -5341,16 +5346,16 @@ MonoBehaviour:
         node:
           rid: 6537695503399780433
         references:
-        - fieldName: Action
-          value:
-            rid: -2
-          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         - fieldName: Perception
           value:
             rid: -2
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - 6c0b684b-d847-493f-a49c-b6aa3d80642d
         childIds:
@@ -5391,40 +5396,40 @@ MonoBehaviour:
         - 7901948e-113b-4e88-b6d9-a4949bbdb142
       - name: StateTransition
         id: 1a3c0e40-8787-4bd9-9ff4-424ee07f22d6
-        position: {x: 625, y: 453}
+        position: {x: 640, y: 468}
         node:
           rid: 6537695503399780437
         references:
-        - fieldName: Action
-          value:
-            rid: -2
-          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         - fieldName: Perception
           value:
             rid: 6537695503399780443
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - d9a02e41-860b-4e51-8c74-a39ad9f254ba
         childIds:
         - 7445c584-51ab-4621-90da-941c86d3888c
       - name: StateTransition
         id: c9d2a7af-94dc-45e4-9175-145b2068e9bd
-        position: {x: 236, y: 409}
+        position: {x: 252, y: 430}
         node:
           rid: 6537695503399780438
         references:
-        - fieldName: Action
-          value:
-            rid: -2
-          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         - fieldName: Perception
           value:
             rid: 6537695503399780442
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - 6c0b684b-d847-493f-a49c-b6aa3d80642d
         childIds:
@@ -5435,16 +5440,16 @@ MonoBehaviour:
         node:
           rid: 6537695503399780439
         references:
-        - fieldName: Action
-          value:
-            rid: -2
-          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         - fieldName: Perception
           value:
             rid: -2
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - d9a02e41-860b-4e51-8c74-a39ad9f254ba
         childIds:
@@ -5455,36 +5460,36 @@ MonoBehaviour:
         node:
           rid: 6537695503399780440
         references:
-        - fieldName: Action
-          value:
-            rid: -2
-          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         - fieldName: Perception
           value:
             rid: -2
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - d9a02e41-860b-4e51-8c74-a39ad9f254ba
         childIds:
         - 6c0b684b-d847-493f-a49c-b6aa3d80642d
       - name: StateTransition
         id: 7901948e-113b-4e88-b6d9-a4949bbdb142
-        position: {x: -89, y: 393}
+        position: {x: -64, y: 425}
         node:
           rid: 6537695503399780441
         references:
-        - fieldName: Action
-          value:
-            rid: -2
-          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         - fieldName: Perception
           value:
             rid: -2
           fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
             Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        - fieldName: Action
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Actions.Action, BehaviourAPI.Core, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
         parentIds:
         - 7445c584-51ab-4621-90da-941c86d3888c
         childIds:
@@ -5535,19 +5540,19 @@ MonoBehaviour:
       data:
         StatusFlags: 6
     - rid: 6537695503399780442
-      type: {class: DistancePerception, ns: BehaviourAPI.UnityExtensions, asm: BehaviourAPI.UnityExtensions}
+      type: {class: DistancePerception, ns: BehaviourAPI.UnityToolkit, asm: BehaviourAPI.UnityToolkit}
       data:
         OtherTransform: {fileID: 26509546}
         MaxDistance: 10
     - rid: 6537695503399780443
-      type: {class: DistancePerception, ns: BehaviourAPI.UnityExtensions, asm: BehaviourAPI.UnityExtensions}
+      type: {class: DistancePerception, ns: BehaviourAPI.UnityToolkit, asm: BehaviourAPI.UnityToolkit}
       data:
         OtherTransform: {fileID: 26509546}
         MaxDistance: 10
     - rid: 6537695503399780458
-      type: {class: MoveToMousePosAction, ns: BehaviourAPI.UnityExtensions, asm: BehaviourAPI.UnityExtensions}
+      type: {class: MoveToMousePosAction, ns: BehaviourAPI.UnityToolkit, asm: BehaviourAPI.UnityToolkit}
     - rid: 6537695503399780459
-      type: {class: FleeAction, ns: BehaviourAPI.UnityExtensions, asm: BehaviourAPI.UnityExtensions}
+      type: {class: FleeAction, ns: BehaviourAPI.UnityToolkit, asm: BehaviourAPI.UnityToolkit}
       data:
         OtherTransform: {fileID: 26509546}
         speed: 2.5
@@ -6693,7 +6698,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   executeOnLoop: 0
-  dontStopOnDisable: 0
+  interruptOptions: 0
   _eventHandler:
     debugStatusChanges: 0
     identifier: 
@@ -6890,18 +6895,18 @@ MonoBehaviour:
       data:
         StatusFlags: 6
     - rid: 6537695503399780453
-      type: {class: ChaseAction, ns: BehaviourAPI.UnityExtensions, asm: BehaviourAPI.UnityExtensions}
+      type: {class: ChaseAction, ns: BehaviourAPI.UnityToolkit, asm: BehaviourAPI.UnityToolkit}
       data:
         speed: 1.2
         target: {fileID: 1638828722}
         maxDistance: 1
         maxTime: 2
     - rid: 6537695503399780454
-      type: {class: PatrolAction, ns: BehaviourAPI.UnityExtensions, asm: BehaviourAPI.UnityExtensions}
+      type: {class: PatrolAction, ns: BehaviourAPI.UnityToolkit, asm: BehaviourAPI.UnityToolkit}
       data:
         maxDistance: 13
     - rid: 6537695503399780455
-      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         init:
           componentName: 
@@ -6919,7 +6924,7 @@ MonoBehaviour:
           componentName: 
           methodName: 
     - rid: 6537695503399780456
-      type: {class: CustomPerception, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: CustomPerception, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         init:
           componentName: 
@@ -6937,7 +6942,7 @@ MonoBehaviour:
           componentName: 
           methodName: 
     - rid: 6537695503399780457
-      type: {class: UnityTimePerception, ns: BehaviourAPI.Unity.Runtime.Extensions, asm: Assembly-CSharp}
+      type: {class: UnityTimePerception, ns: BehaviourAPI.UnityToolkit, asm: Assembly-CSharp}
       data:
         TotalTime: 3
 --- !u!114 &2092855754

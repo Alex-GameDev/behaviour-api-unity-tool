@@ -1,10 +1,7 @@
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor.CodeGenerator
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
 {
-    using Core;
-    using Core.Actions;
-    using Core.Perceptions;
     using Framework;
     using StateMachines;
     using System.Linq;

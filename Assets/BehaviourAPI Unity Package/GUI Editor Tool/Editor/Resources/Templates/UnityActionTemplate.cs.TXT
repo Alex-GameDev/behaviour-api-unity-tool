@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using BehaviourAPI.Core;
-using BehaviourAPI.UnityExtensions;
+using BehaviourAPI.UnityToolkit;
 
 #ROOTNAMESPACEBEGIN#
 
@@ -15,7 +15,8 @@ public class #SCRIPTNAME# : UnityAction
     // Override the string displayed in the editor.
     public override string DisplayInfo => base.DisplayInfo;
     
-    // Override this method to get references to unity components before the execution.
+    // Override this method to get references to unity components before the execution
+    // using the "context" property.
     protected override void OnSetContext()
     {
         // To get a component of the object that is running this action:
@@ -23,6 +24,7 @@ public class #SCRIPTNAME# : UnityAction
 
         // Some components like transform, rigidbody, etc. are directly accessible from context:
         // context.Transform
+        // context.RigidBody
     }
 
     // Called at the start of the execution. Use it to initialize the action.
@@ -31,14 +33,14 @@ public class #SCRIPTNAME# : UnityAction
         throw new System.NotImplementedException();
     }
 
-    // Called at the end of the execution. Use it to reset the action.
-    public override void Stop()
+    // Called every execution frame.
+    public override Status Update()
     {
         throw new System.NotImplementedException();
     }
 
-    // Called every execution frame.
-    public override Status Update()
+    // Called at the end of the execution. Use it to reset the action.
+    public override void Stop()
     {
         throw new System.NotImplementedException();
     }

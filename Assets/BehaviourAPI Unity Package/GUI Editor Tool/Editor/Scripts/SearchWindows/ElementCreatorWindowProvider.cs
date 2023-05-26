@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     public abstract class ElementCreatorWindowProvider : ScriptableObject, ISearchWindowProvider
     {

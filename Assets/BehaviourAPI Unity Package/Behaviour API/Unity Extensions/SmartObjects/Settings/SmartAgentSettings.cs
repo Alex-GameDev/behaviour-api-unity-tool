@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     [CreateAssetMenu(fileName = "NewAgentSettings", menuName = "BehaviourAPI/Smart Objects/Agent Settings")]
     public class SmartAgentSettings : ScriptableObject

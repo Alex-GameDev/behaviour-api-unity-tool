@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Framework
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
     using Core;
     using System.Linq;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     /// <summary>
     /// Check if the agent is looking an object

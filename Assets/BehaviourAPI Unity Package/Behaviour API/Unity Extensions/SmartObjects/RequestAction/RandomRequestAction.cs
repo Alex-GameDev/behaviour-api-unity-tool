@@ -1,7 +1,7 @@
-using BehaviourAPI.Unity.SmartObjects;
+using BehaviourAPI.UnityToolkit.SmartObjects;
 using UnityEngine;
 
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     /// <summary> 
     /// Request action that find a random Smart Object using the smart object manager. 

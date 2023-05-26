@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Framework
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
     using Core;
     using Core.Serialization;
@@ -81,8 +81,6 @@ namespace BehaviourAPI.Unity.Framework
 
                 this.nodes.Add(nodeData);
             }
-            LayoutHandler layoutHandler = new LayoutHandler();
-            layoutHandler.ComputeLayout(this);
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     [System.Serializable]
     public class SerializedMap<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver

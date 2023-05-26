@@ -1,10 +1,10 @@
 using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Unity.SmartObjects;
-using BehaviourAPI.UnityExtensions;
+using BehaviourAPI.UnityToolkit.SmartObjects;
+using BehaviourAPI.UnityToolkit;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Demos
+namespace BehaviourAPI.UnityToolkit.Demos
 {
     public class ChickenSmartObject : SmartObject
     {

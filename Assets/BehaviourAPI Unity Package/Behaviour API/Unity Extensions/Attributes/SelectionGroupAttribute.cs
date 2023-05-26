@@ -1,6 +1,6 @@
 using System;
 
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     /// <summary>
     /// Attribute that indicates that an action or perception belongs to a specific group.

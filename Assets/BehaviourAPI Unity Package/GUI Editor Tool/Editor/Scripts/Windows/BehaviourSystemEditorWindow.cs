@@ -1,18 +1,17 @@
-using BehaviourAPI.Core;
-using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.Unity.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.UIElements;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
-    using Graph;
-    using UnityEditor.UIElements;
+    using Graphs;
+    using Framework;
+    using Core.Perceptions;
 
     /// <summary>
     /// 

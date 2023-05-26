@@ -1,14 +1,15 @@
-using BehaviourAPI.Core;
-using BehaviourAPI.StateMachines;
-using BehaviourAPI.Unity.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace BehaviourAPI.Unity.Editor.Graph
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
 {
+    using Core;
+    using StateMachines;
+    using Framework;
+
     [CustomNodeDrawer(typeof(FSMNode))]
     public class FSMNodeDrawer : NodeDrawer
     {

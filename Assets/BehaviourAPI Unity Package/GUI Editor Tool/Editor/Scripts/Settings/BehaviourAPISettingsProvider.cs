@@ -4,9 +4,8 @@ using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEngine;
 using System.Reflection;
-using UnityEditorInternal;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     class BehaviourAPISettingsProvider : SettingsProvider
     {

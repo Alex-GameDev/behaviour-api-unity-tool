@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Demos
+namespace BehaviourAPI.UnityToolkit.Demos
 {
     [CreateAssetMenu(menuName = "BehaviourAPI/Demos/Pizza/Ingredient", fileName = "ingredient")]
 

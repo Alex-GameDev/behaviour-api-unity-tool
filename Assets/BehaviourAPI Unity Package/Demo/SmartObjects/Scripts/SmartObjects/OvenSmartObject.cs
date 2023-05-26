@@ -1,9 +1,9 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
-using BehaviourAPI.UnityExtensions;
+using BehaviourAPI.UnityToolkit;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Demos
+namespace BehaviourAPI.UnityToolkit.Demos
 {
     public class OvenSmartObject : DirectSmartObject
     {

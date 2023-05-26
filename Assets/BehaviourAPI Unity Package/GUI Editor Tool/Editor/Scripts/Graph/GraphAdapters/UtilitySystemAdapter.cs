@@ -1,10 +1,11 @@
-using BehaviourAPI.Unity.Framework;
-using BehaviourAPI.UtilitySystems;
 using System;
 using System.Collections.Generic;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
 {
+    using UtilitySystems;
+    using Framework;
+
     [CustomGraphAdapter(typeof(UtilitySystem))]
     public class UtilitySystemAdapter : GraphAdapter
     {

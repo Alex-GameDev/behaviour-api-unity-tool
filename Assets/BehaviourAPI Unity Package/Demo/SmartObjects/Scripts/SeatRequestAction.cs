@@ -1,6 +1,6 @@
-using BehaviourAPI.Unity.Demos;
-using BehaviourAPI.Unity.SmartObjects;
-using BehaviourAPI.UnityExtensions;
+using BehaviourAPI.UnityToolkit.Demos;
+using BehaviourAPI.UnityToolkit.SmartObjects;
+using BehaviourAPI.UnityToolkit;
 
 public class SeatRequestAction : UnityRequestAction
 {

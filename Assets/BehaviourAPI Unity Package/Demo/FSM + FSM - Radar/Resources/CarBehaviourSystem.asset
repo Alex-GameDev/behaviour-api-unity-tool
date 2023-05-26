@@ -40,6 +40,11 @@ MonoBehaviour:
         node:
           rid: 6537695503399780425
         references:
+        - fieldName: Perception
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
           value:
             rid: -2
@@ -70,6 +75,11 @@ MonoBehaviour:
         node:
           rid: 6537695503399780428
         references:
+        - fieldName: Perception
+          value:
+            rid: -2
+          fieldType: BehaviourAPI.Core.Perceptions.Perception, BehaviourAPI.Core,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         - fieldName: Action
           value:
             rid: -2
@@ -100,13 +110,13 @@ MonoBehaviour:
       data:
         StatusFlags: 7
     - rid: 6537695503399780429
-      type: {class: ChangeSpeedAction, ns: BehaviourAPI.Unity.Demos, asm: Assembly-CSharp}
+      type: {class: ChangeSpeedAction, ns: BehaviourAPI.UnityToolkit.Demos, asm: Assembly-CSharp}
       data:
         baseSpeed: 0
         minAddedSpeed: 10
         maxAddedSpeed: 30
     - rid: 6537695503399780430
-      type: {class: ChangeSpeedAction, ns: BehaviourAPI.Unity.Demos, asm: Assembly-CSharp}
+      type: {class: ChangeSpeedAction, ns: BehaviourAPI.UnityToolkit.Demos, asm: Assembly-CSharp}
       data:
         baseSpeed: 10
         minAddedSpeed: 10

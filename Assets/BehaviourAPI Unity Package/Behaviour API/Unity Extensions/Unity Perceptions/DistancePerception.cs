@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     /// <summary>
     /// Perception that checks the distance to another object.

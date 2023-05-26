@@ -1,7 +1,6 @@
-using BehaviourAPI.UnityExtensions;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Runtime.Extensions
+namespace BehaviourAPI.UnityToolkit
 {
     /// <summary>
     /// Perception triggered when a totalTime passes, asuming its executing on Update

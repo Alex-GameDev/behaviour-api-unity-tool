@@ -1,12 +1,10 @@
-using BehaviourAPI.Unity.Runtime;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
+    using Runtime;
+
     [CustomEditor(typeof(BSRuntimeDebugger))]
     public class BSRuntimeDebuggerEditor : UnityEditor.Editor
     {

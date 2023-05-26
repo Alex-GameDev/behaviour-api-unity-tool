@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Runtime
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
 {
     using Framework;
 

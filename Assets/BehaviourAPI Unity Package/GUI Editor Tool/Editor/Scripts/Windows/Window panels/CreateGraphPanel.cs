@@ -1,8 +1,7 @@
 using System;
-using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     public class CreateGraphPanel : ToolPanel
     {

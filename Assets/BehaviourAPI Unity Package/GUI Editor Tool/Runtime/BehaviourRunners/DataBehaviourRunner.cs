@@ -2,16 +2,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Runtime
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
 {
     using Core;
     using Core.Perceptions;
-    using Unity.Framework;
+    using Framework;
 
     /// <summary>
     /// Base class of components that use an editable behavior system.
     /// </summary>
-    public abstract class DataBehaviourRunner : UnityExtensions.BehaviourRunner
+    public abstract class DataBehaviourRunner : UnityToolkit.BehaviourRunner
     {
         #region -------------------------------- private fields ---------------------------------
 

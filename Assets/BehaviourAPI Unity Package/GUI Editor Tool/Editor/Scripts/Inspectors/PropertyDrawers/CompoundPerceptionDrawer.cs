@@ -1,12 +1,12 @@
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
+    using Framework;
     using Core.Perceptions;
-    using Framework.Adaptations;
-    using System.Linq;
 
     [CustomPropertyDrawer(typeof(CompoundPerceptionWrapper))]
     public class CompoundPerceptionPropertyDrawer : PropertyDrawer

@@ -1,13 +1,10 @@
+using System.Linq;
+using System.Reflection;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
-    using System.Linq;
-    using System.Reflection;
-    using UnityExtensions;
-
     public class EditorHierarchyNode
     {
 

@@ -1,5 +1,5 @@
-using BehaviourAPI.Unity.SmartObjects;
-using BehaviourAPI.UnityExtensions;
+using BehaviourAPI.UnityToolkit.SmartObjects;
+using BehaviourAPI.UnityToolkit;
 
 public class UnityTypedRequestAction<T> : UnityRequestAction
 {

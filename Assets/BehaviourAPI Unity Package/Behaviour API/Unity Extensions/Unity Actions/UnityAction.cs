@@ -1,7 +1,7 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     public abstract class UnityAction : Action, ITaskDisplayable
     {

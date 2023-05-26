@@ -1,6 +1,6 @@
 ﻿using BehaviourAPI.Core.Actions;
 
-namespace BehaviourAPI.Unity.Framework.Adaptations
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
     /// <summary>
     /// Allows API tools to know what nodes has an <see cref="Action"/> field.

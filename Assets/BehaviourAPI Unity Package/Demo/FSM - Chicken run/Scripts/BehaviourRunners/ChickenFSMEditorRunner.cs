@@ -1,8 +1,8 @@
-using BehaviourAPI.Unity.Runtime;
+using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace BehaviourAPI.Unity.Demos
+namespace BehaviourAPI.UnityToolkit.Demos
 {
     public class ChickenFSMEditorRunner : EditorBehaviourRunner
     {

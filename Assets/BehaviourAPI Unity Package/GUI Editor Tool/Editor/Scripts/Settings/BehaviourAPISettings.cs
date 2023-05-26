@@ -2,10 +2,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
-
-
     [FilePath("ProjectSettings/BehaviourAPISettings.asset", FilePathAttribute.Location.ProjectFolder)]
     public class BehaviourAPISettings : ScriptableSingleton<BehaviourAPISettings>
     {
@@ -29,10 +27,10 @@ namespace BehaviourAPI.Unity.Editor
             "BehaviourAPI.StateMachines",
             "BehaviourAPI.BehaviourTrees",
             "BehaviourAPI.UtilitySystems",
-            "BehaviourAPI.UnityExtensions",
-            "BehaviourAPI.Unity.Runtime",
-            "BehaviourAPI.UnityTool.Framework",
-            "BehaviourAPI.Unity.Editor"
+            "BehaviourAPI.UnityToolkit",
+            "BehaviourAPI.UnityToolkit.GUIDesigner.Runtime",
+            "BehaviourAPI.UnityToolkit.GUIDesigner.Framework",
+            "BehaviourAPI.UnityToolkit.GUIDesigner.Editor"
         };
 
         private static readonly string k_RootPath = "Assets/BehaviourAPI Unity Package/GUI Editor Tool";

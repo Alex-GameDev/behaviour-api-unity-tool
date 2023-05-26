@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     using Core;
     /// <summary>

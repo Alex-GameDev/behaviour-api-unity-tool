@@ -1,9 +1,10 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     using Framework;
+
     [CustomEditor(typeof(BehaviourSystem))]
     public class BehaviourSystemAssetEditor : UnityEditor.Editor
     {

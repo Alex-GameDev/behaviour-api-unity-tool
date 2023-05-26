@@ -1,10 +1,11 @@
-using BehaviourAPI.Unity.Runtime;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
+    using Runtime;
+
     [CustomEditor(typeof(EditorBehaviourRunner), editorForChildClasses: true)]
     public class EditorBehaviourRunnerEditor : UnityEditor.Editor
     {

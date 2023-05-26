@@ -1,7 +1,7 @@
 using BehaviourAPI.SmartObjects;
-using BehaviourAPI.Unity.SmartObjects;
+using BehaviourAPI.UnityToolkit.SmartObjects;
 
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     public class DirectRequestAction : UnityRequestAction
     {

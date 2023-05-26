@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor.CodeGenerator
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
 {
     using BehaviourTrees;
     using Framework;

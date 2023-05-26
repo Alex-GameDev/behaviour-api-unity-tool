@@ -2,12 +2,10 @@ using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.StateMachines;
-using BehaviourAPI.Unity.Runtime;
-using BehaviourAPI.Unity.Runtime.Extensions;
-using BehaviourAPI.UnityExtensions;
+using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Demos
+namespace BehaviourAPI.UnityToolkit.Demos
 {
     public class RadarFSMRunner : BehaviourRunner, IRadar
     {

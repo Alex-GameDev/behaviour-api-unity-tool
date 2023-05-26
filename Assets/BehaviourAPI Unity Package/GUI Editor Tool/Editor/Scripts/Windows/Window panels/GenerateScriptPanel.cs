@@ -3,7 +3,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine.UIElements;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     using CodeGenerator;
     public class GenerateScriptPanel : ToolPanel

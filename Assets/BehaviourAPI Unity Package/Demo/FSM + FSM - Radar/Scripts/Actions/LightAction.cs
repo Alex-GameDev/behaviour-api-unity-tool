@@ -1,12 +1,12 @@
 using BehaviourAPI.Core;
-using BehaviourAPI.UnityExtensions;
+using BehaviourAPI.UnityToolkit;
 using UnityEngine;
 
 /// <summary>
 /// Custom action that changes the color of a light.
 /// </summary>
 
-namespace BehaviourAPI.Unity.Demos
+namespace BehaviourAPI.UnityToolkit.Demos
 {
     [SelectionGroup("DEMO - Radar")]
     public class LightAction : UnityAction

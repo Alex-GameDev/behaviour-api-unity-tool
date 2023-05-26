@@ -1,10 +1,10 @@
-using BehaviourAPI.Core;
-using BehaviourAPI.UnityExtensions;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BehaviourAPI.Unity.Demos
+namespace BehaviourAPI.UnityToolkit.Demos
 {
+    using Core;
+
     /// <summary>
     /// Custom action that makes a light blink.
     /// </summary>

@@ -1,7 +1,7 @@
 using BehaviourAPI.Core.Actions;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Framework
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
     public class AssetSubgraphAction : SubsystemAction, IBuildable
     {

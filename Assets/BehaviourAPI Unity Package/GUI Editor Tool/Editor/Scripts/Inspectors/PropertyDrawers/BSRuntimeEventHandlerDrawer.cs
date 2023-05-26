@@ -1,11 +1,10 @@
-using BehaviourAPI.Unity.Runtime;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
+    using Runtime;
+
     [CustomPropertyDrawer(typeof(BSRuntimeEventHandler))]
     public class BSRuntimeEventHandlerDrawer : PropertyDrawer
     {

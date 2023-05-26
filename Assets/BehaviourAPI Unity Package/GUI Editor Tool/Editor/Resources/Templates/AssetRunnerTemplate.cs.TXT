@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using BehaviourAPI.Core;
-using BehaviourAPI.Unity.Runtime;
+using BehaviourAPI.UnityToolkit;
+using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
 
 #ROOTNAMESPACEBEGIN#
 
@@ -18,31 +19,31 @@ public class #SCRIPTNAME# : AssetBehaviourRunner
     }
 
     // Use this method instead of Awake
-    protected override void OnAwake()
+    protected override void Init()
     {
-        base.OnAwake();
+        base.Init();
     }
 
     // Use this method instead of OnDisable
-    protected override void OnDisableSystem()
+    protected override void OnUnpaused()
     {
         base.OnDisableSystem();
     }
 
     // Use this method instead of OnEnable
-    protected override void OnEnableSystem()
+    protected override void OnPaused()
     {
         base.OnEnableSystem();
     }
 
     // Use this method instead of Start
-    protected override void OnStart()
+    protected override void OnStarted()
     {
         base.OnStart();
     }
 
     // Use this method instead of Update
-    protected override void OnUpdate()
+    protected override void OnUpdated()
     {
         base.OnUpdate();
     }

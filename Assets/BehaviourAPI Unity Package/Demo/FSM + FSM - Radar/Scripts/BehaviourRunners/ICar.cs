@@ -1,4 +1,4 @@
-namespace BehaviourAPI.Unity.Demos
+namespace BehaviourAPI.UnityToolkit.Demos
 {
 	public interface ICar
 	{

@@ -3,11 +3,11 @@ using System.Linq.Expressions;
 using System.Linq;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Framework
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
     using Core;
     using System.Reflection;
-    using UnityExtensions;
+    using UnityToolkit;
 
     /// <summary>
     /// Data class to serialize a component method call.

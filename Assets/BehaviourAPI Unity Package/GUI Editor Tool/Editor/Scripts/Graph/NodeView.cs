@@ -7,12 +7,11 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace BehaviourAPI.Unity.Editor.Graph
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
 {
     using BehaviourAPI.Core;
-    using BehaviourAPI.UnityExtensions;
+    using BehaviourAPI.UnityToolkit;
     using Framework;
-    using Framework.Adaptations;
 
     /// <summary>
     /// Class used to represent a <see cref="NodeData"/> element in a <see cref="GraphView"/>.

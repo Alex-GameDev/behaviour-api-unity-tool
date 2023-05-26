@@ -1,10 +1,9 @@
-using UnityEngine;
+using System.Linq;
 
-namespace BehaviourAPI.Unity.Editor.CodeGenerator
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
 {
-    using Framework;
-    using System.Linq;
     using UtilitySystems;
+    using Framework;
 
     [CustomGraphCodeGenerator(typeof(UtilitySystem))]
     public class UtilitySystemCodeGenerator : GraphCodeGenerator

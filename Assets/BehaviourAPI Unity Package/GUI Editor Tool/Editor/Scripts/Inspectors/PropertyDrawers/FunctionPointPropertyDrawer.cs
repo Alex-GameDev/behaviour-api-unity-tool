@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     using UtilitySystems;
     [CustomPropertyDrawer(typeof(CurvePoint))]

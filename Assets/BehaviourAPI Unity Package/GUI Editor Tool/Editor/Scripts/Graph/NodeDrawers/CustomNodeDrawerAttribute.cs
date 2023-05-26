@@ -1,6 +1,6 @@
 using System;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     /// <summary>
     /// Attribute to assign a <see cref="NodeDrawer"/> to a node class.

@@ -1,4 +1,4 @@
-namespace BehaviourAPI.Unity.Framework
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
     /// <summary>
     /// Indicates that an element of a behavior system has to build internal references before it is used.

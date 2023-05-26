@@ -1,4 +1,4 @@
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     public interface ITaskDisplayable 
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Framework
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
     /// <summary>
     /// Stores a behaviour system data in a asset file.

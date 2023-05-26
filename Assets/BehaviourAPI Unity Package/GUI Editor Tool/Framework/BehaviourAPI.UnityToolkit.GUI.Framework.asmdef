@@ -1,7 +1,8 @@
 {
-    "name": "BehaviourAPI.UnityExtensions",
-    "rootNamespace": "BehaviourAPI.UnityExtensions",
+    "name": "BehaviourAPI.UnityToolkit.GUIDesigner.Framework",
+    "rootNamespace": "BehaviourAPI.UnityToolkit.GUIDesigner.Framework",
     "references": [
+        "GUID:ffb0f7a8fe68cd348b9342f5caf8d7bc",
         "GUID:b5c267a5d5186c14faa2c049b82a2a28",
         "GUID:419431879464d2141a7bc7dc6339f485",
         "GUID:a5f3f1652a2bf024ea00fa9ef872705d",

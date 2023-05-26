@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     [CreateAssetMenu(fileName = "New SmartObject Settings", menuName = "BehaviourAPI/Smart Objects/Smart Object Settings")]
     public class SmartObjectSettings : ScriptableObject

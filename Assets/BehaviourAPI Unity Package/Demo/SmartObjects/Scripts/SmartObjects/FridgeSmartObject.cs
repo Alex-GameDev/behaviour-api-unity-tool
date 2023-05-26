@@ -1,10 +1,10 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Unity.Demos;
-using BehaviourAPI.UnityExtensions;
+using BehaviourAPI.UnityToolkit.Demos;
+using BehaviourAPI.UnityToolkit;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.SmartObjects
+namespace BehaviourAPI.UnityToolkit.SmartObjects
 {
     public class FridgeSmartObject : DirectSmartObject
     {

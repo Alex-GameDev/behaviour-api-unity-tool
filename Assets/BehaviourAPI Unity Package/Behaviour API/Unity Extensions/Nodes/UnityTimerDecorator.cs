@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     using BehaviourTrees;
     using Core;

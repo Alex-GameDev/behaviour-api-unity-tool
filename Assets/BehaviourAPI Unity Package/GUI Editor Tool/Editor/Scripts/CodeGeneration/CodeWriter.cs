@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Text;
 
-namespace BehaviourAPI.Unity.Editor.CodeGenerator
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
 {
     public class CodeWriter
     {

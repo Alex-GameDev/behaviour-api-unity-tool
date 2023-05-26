@@ -1,10 +1,10 @@
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Demos
+namespace BehaviourAPI.UnityToolkit.Demos
 {
     using BehaviourAPI.Core.Actions;
-    using BehaviourAPI.Unity.SmartObjects;
-    using BehaviourAPI.UnityExtensions;
+    using BehaviourAPI.UnityToolkit.SmartObjects;
+    using BehaviourAPI.UnityToolkit;
 
     public class TVSmartObject : SmartObject
     {

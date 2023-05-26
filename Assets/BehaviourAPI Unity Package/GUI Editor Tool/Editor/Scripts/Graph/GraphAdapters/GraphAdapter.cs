@@ -1,10 +1,11 @@
 using BehaviourAPI.Core;
-using BehaviourAPI.Unity.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
 {
+    using Framework;
+
     /// <summary>
     /// Allows editor tools to use specific graph type.
     /// </summary>

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
 {
-    using BehaviourAPI.Unity.Framework;
+    using Framework;
     using StateMachines;
 
     [CustomGraphAdapter(typeof(FSM))]

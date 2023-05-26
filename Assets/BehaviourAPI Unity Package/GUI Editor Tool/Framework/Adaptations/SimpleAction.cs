@@ -1,17 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using BehaviourAPI.Core;
-using BehaviourAPI.Unity.Framework;
-using BehaviourAPI.UnityExtensions;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Framework.Adaptations
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
+    using BehaviourAPI.Core;
     public class SimpleAction : Core.Actions.SimpleAction
     {
-        /// <summary>
-        /// Method executed when the action started.
-        /// </summary>
         public ContextualSerializedAction method;
 
         public override void Start() => method.GetFunction()?.Invoke();

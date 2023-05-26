@@ -1,4 +1,4 @@
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     using Core;
     using Core.Perceptions;

@@ -1,6 +1,6 @@
 using System;
 
-namespace BehaviourAPI.Unity.Editor.CodeGenerator
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class CustomGraphCodeGeneratorAttribute : Attribute

@@ -1,6 +1,6 @@
 using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Unity.SmartObjects;
-using BehaviourAPI.UnityExtensions;
+using BehaviourAPI.UnityToolkit.SmartObjects;
+using BehaviourAPI.UnityToolkit;
 using UnityEngine;
 
 public class DrinkSmartObject : SmartObject

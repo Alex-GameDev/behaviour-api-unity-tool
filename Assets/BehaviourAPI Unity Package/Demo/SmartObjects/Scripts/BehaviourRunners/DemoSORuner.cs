@@ -1,8 +1,7 @@
 using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
-using BehaviourAPI.Unity.Runtime;
-using BehaviourAPI.UnityExtensions;
-using UnityEngine.AI;
+using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
+using BehaviourAPI.UnityToolkit;
 
 public class DemoSORuner : BehaviourRunner
 {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Framework
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
     /// <summary>
     /// Element that is editable in behaviour system editor window.

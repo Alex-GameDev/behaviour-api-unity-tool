@@ -1,9 +1,9 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.SmartObjects;
-using BehaviourAPI.Unity.SmartObjects;
+using BehaviourAPI.UnityToolkit.SmartObjects;
 using UnityEngine;
 
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     public abstract class UnityRequestAction : RequestAction<SmartAgent>, ITaskDisplayable
     {

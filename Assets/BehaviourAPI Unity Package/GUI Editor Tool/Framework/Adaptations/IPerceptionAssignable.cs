@@ -1,6 +1,6 @@
 ﻿using BehaviourAPI.Core.Perceptions;
 
-namespace BehaviourAPI.Unity.Framework.Adaptations
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
     /// <summary>
     /// Allows API tools to know what nodes has a <see cref="Perception"/> field.

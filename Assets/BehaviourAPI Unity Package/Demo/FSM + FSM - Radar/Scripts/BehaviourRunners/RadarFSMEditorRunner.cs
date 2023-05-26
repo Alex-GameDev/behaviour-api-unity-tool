@@ -1,7 +1,7 @@
 using BehaviourAPI.StateMachines;
-using BehaviourAPI.Unity.Runtime;
+using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
 
-namespace BehaviourAPI.Unity.Demos
+namespace BehaviourAPI.UnityToolkit.Demos
 {
     public class RadarFSMEditorRunner : EditorBehaviourRunner, IRadar
     {

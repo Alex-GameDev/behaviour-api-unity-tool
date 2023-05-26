@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.SmartObjects
+namespace BehaviourAPI.UnityToolkit.SmartObjects
 {
     using BehaviourAPI.SmartObjects;
     using Core;
     using Core.Actions;
-    using UnityExtensions;
+    using UnityToolkit;
 
     /// <summary> 
     /// Unity component to implement a Smart Object.

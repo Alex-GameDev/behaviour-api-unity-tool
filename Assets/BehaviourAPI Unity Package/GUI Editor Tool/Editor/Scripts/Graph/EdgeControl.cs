@@ -1,9 +1,9 @@
 using BehaviourAPI.Core;
-using BehaviourAPI.UnityExtensions;
+using BehaviourAPI.UnityToolkit;
 using UnityEngine.UIElements;
 using Vector2 = UnityEngine.Vector2;
 
-namespace BehaviourAPI.Unity.Editor.Graph
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
 {
     public class EdgeControl : UnityEditor.Experimental.GraphView.EdgeControl
     {

@@ -3,11 +3,10 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using System.Linq;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
-    using BehaviourAPI.Core.Actions;
-    using BehaviourAPI.UnityExtensions;
-    using Framework.Adaptations;
+    using Core.Actions;
+    using Framework;
 
     /// <summary>
     /// Default property drawer for actions

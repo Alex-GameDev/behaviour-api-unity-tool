@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using BehaviourAPI.Core;
 using UnityEngine;
 
-namespace BehaviourAPI.UnityExtensions
+namespace BehaviourAPI.UnityToolkit
 {
     public class TalkAction : UnityAction
     {

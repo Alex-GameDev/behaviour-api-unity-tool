@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     using Framework;
     using System;

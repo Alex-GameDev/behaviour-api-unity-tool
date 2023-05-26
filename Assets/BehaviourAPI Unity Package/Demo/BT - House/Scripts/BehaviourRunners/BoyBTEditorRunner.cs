@@ -1,11 +1,10 @@
 using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
-using BehaviourAPI.Unity.Runtime;
-using BehaviourAPI.UnityExtensions;
+using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace BehaviourAPI.Unity.Demos
+namespace BehaviourAPI.UnityToolkit.Demos
 {
     public class BoyBTEditorRunner : EditorBehaviourRunner
     {

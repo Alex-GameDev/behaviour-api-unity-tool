@@ -3,9 +3,9 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
-    using Graph;
+    using Graphs;
     public static class VisualElementExtensions
     {
         public static void Disable(this VisualElement visualElement) => visualElement.style.display = DisplayStyle.None;

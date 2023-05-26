@@ -672,7 +672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   executeOnLoop: 0
-  dontStopOnDisable: 0
+  interruptOptions: 0
   _eventHandler:
     debugStatusChanges: 0
     identifier: 
@@ -1029,13 +1029,13 @@ MonoBehaviour:
       data:
         Inertia: 1.3
     - rid: 6537695503399780376
-      type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: SubgraphAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         ExecuteOnLoop: 0
         InterruptOptions: 1
         subgraphId: 83a6a2f6-d924-4743-9c35-444504d0c2d9
     - rid: 6537695503399780377
-      type: {class: SubgraphAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: SubgraphAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         ExecuteOnLoop: 0
         InterruptOptions: 2
@@ -1064,7 +1064,7 @@ MonoBehaviour:
       data:
         StatusFlags: 4
     - rid: 6537695503399780386
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         start:
           componentName: 
@@ -1082,7 +1082,7 @@ MonoBehaviour:
           componentName: 
           methodName: 
     - rid: 6537695503399780387
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         start:
           componentName: 
@@ -1100,7 +1100,7 @@ MonoBehaviour:
           componentName: 
           methodName: 
     - rid: 6537695503399780388
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         start:
           componentName: 
@@ -1123,7 +1123,7 @@ MonoBehaviour:
         PullingEnabled: 0
         FinishSystemOnComplete: 1
     - rid: 6537695503399780391
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         start:
           componentName: 
@@ -1146,7 +1146,7 @@ MonoBehaviour:
         PullingEnabled: 0
         FinishSystemOnComplete: 1
     - rid: 6537695503399780393
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         start:
           componentName: 
@@ -1169,7 +1169,7 @@ MonoBehaviour:
         PullingEnabled: 0
         FinishSystemOnComplete: 1
     - rid: 6537695503399780395
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         start:
           componentName: 
@@ -1187,7 +1187,7 @@ MonoBehaviour:
           componentName: 
           methodName: 
     - rid: 6537695503399780396
-      type: {class: UnityCurveFactor, ns: BehaviourAPI.UnityExtensions, asm: BehaviourAPI.UnityExtensions}
+      type: {class: UnityCurveFactor, ns: BehaviourAPI.UnityToolkit, asm: BehaviourAPI.UnityToolkit}
       data:
         PullingEnabled: 1
         curve:
@@ -1277,17 +1277,17 @@ MonoBehaviour:
         - 0.6
         - 0.4
     - rid: 7842134175220760740
-      type: {class: SerializedContextMethod, ns: BehaviourAPI.Unity.Framework, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         componentName: 
         methodName: PizzaFactor
     - rid: 7842134175220760741
-      type: {class: SerializedContextMethod, ns: BehaviourAPI.Unity.Framework, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: SerializedContextMethod, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         componentName: 
         methodName: PeperoniFactor
     - rid: 8223533443065315330
-      type: {class: CustomAction, ns: BehaviourAPI.Unity.Framework.Adaptations, asm: BehaviourAPI.UnityTool.Framework}
+      type: {class: CustomAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         start:
           componentName: 

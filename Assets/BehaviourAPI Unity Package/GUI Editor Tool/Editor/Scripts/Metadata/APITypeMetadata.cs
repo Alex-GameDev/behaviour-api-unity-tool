@@ -4,16 +4,14 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-namespace BehaviourAPI.Unity.Editor
+namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
-    using BehaviourAPI.Unity.Framework;
+    using Framework;
     using CodeGenerator;
     using Core;
     using Core.Actions;
     using Core.Perceptions;
-    using Framework.Adaptations;
-    using Graph;
-    using UnityExtensions;
+    using Graphs;
 
     /// <summary>
     /// Class that manages all the Type metadata used in the package tools.
@@ -216,8 +214,8 @@ namespace BehaviourAPI.Unity.Editor
         private void BuildActionHierarchy(List<Type> actionTypes, List<Type> compoundActionTypes)
         {
             ActionHierarchy = new EditorHierarchyNode("Actions", typeof(Action));
-            ActionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(Framework.Adaptations.CustomAction)));
-            ActionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(Framework.Adaptations.SimpleAction)));
+            ActionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(Framework.CustomAction)));
+            ActionHierarchy.Childs.Add(new EditorHierarchyNode(typeof(Framework.SimpleAction)));
 
             EditorHierarchyNode subgraphNode = new EditorHierarchyNode("Subgraph actions", typeof(SubsystemAction));
             subgraphNode.Childs.Add(new EditorHierarchyNode(typeof(SubgraphAction)));
