@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Designer/Editor/Resources/uss/window.uss?fileID=7433441132597879392&amp;guid=06606009490d1534d9be0b41e0d7badb&amp;type=3#window" />
     <Style src="project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Designer/Editor/Resources/uss/default.uss?fileID=7433441132597879392&amp;guid=7bfa94199ea81a84faedb051a619dadc&amp;type=3#default" />
-    <uie:Toolbar name="bw-toolbar" class="toolbar">
+    <Style src="project://database/Assets/BehaviourAPI%20Unity%20Package/GUI%20Designer/Editor/Resources/uss/window.uss?fileID=7433441132597879392&amp;guid=06606009490d1534d9be0b41e0d7badb&amp;type=3#window" />
+    <uie:Toolbar name="bw-toolbar" class="toolbar" style="height: auto;">
         <ui:VisualElement name="bw-toolbar-left" class="toolbar-section">
             <ui:DropdownField label="Graph" index="-1" name="bw-graph-select" choices="-" class="text" />
             <ui:VisualElement name="bw-edit-toolbar" style="flex-direction: row; border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; background-color: rgb(60, 60, 60); padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; justify-content: flex-start; align-items: center; margin-left: 5px; max-width: 60%; overflow: hidden;">

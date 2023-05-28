@@ -1,13 +1,19 @@
-.toolbar-btn {
-    height: 30px;
-    width: auto;
-    font-size: 30px;
-    -unity-text-align: middle-center;
-    white-space: nowrap;
+#bw-main {
+    flex-direction: row;
+    height: 100%;
 }
 
-.toolbar-squared-btn {
-    width: 30px;
+#bw-inspector {
+    height: 100%;
+    width: 400px;
+    background-color: rgba(43, 43, 43, 0.94);
+}
+
+#bw-graph-select {
+    height: 30px;
+    -unity-text-align: middle-left;
+    font-size: 16px;
+    width: 350px;
 }
 
 .cover {
@@ -15,22 +21,9 @@
     left: 0;
     top: 0;
     right: 0;
-    bottom: 0;
     align-items: center;
     justify-content: center;
-    background-color: rgb(32, 32, 32);
-}
-
-#bw-main {
-    flex-direction: row;
-    height: 100%;
-}
-
-#bw-inspector {
-    background-color: rgba(43, 43, 43, 0.95);
-    height: 100%;
-    display: flex;
-    width: 400px;
+    background-color: rgba(32, 32, 32, 255);
 }
 
 .toolbar {
@@ -38,8 +31,8 @@
     padding-right: 2px;
     padding-top: 2px;
     padding-bottom: 2px;
-    height: auto;
     justify-content: space-between;
+    flex-direction: row;
 }
 
 .toolbar-section {
@@ -47,10 +40,12 @@
     align-items: center;
 }
 
-#bw-graph-select {
-    -unity-font-definition: ;
+.toolbar-btn {
     height: 30px;
-    font-size: 16px;
-    -unity-text-align: middle-left;
-    width: 350px;
+    -unity-text-align: middle-center;
+    font-size: 30px;
+}
+
+.toolbar-squared-btn {
+    width: 30px;
 }
