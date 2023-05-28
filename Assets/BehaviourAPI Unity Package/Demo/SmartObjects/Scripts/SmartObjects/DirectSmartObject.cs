@@ -2,9 +2,8 @@ using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit.Demos
 {
-    using BehaviourTrees;
+    using BehaviourAPI.SmartObjects;
     using Core.Actions;
-    using SmartObjects;
     using UnityToolkit;
 
     /// <summary> 
@@ -12,7 +11,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
     /// Also, the item can only be used by one agent at a time.
     /// </summary>
 
-    public abstract class DirectSmartObject : SmartObject
+    public abstract class DirectSmartObject : SimpleSmartObject
     {
         [Tooltip("The target where the agent must be placed to use the item")]
         [SerializeField] protected Transform _placeTarget;
@@ -23,7 +22,6 @@ namespace BehaviourAPI.UnityToolkit.Demos
         /// the object is not selectable for other agents.
         /// </summary>
         /// <value> The owner. </value>
-
         public SmartAgent Owner { get; protected set; }
 
         public override bool ValidateAgent(SmartAgent agent)
@@ -31,24 +29,29 @@ namespace BehaviourAPI.UnityToolkit.Demos
             return Owner == null;
         }
 
-        protected sealed override Action GetRequestedAction(SmartAgent agent, string interactionName = null)
+        protected sealed override Action GenerateAction(SmartAgent agent, RequestData requestData)
         {
-            BehaviourTree bt = new BehaviourTree();
+            // Simple way to make an action sequence
+            SequenceAction sequence = new SequenceAction();
 
-            Action placeAction = new WalkAction(_placeTarget.position);
-            var movementNode = bt.CreateLeafNode(placeAction);
+            // First step: move to smart object
+            sequence.SubActions.Add(new WalkAction(_placeTarget.position));
 
-            Action useAction = GetUseAction(agent);
-            var actionNode = bt.CreateLeafNode(useAction);
+            // Second step: use the smart object
+            sequence.SubActions.Add(GetUseAction(agent, requestData));
 
-            var seq = bt.CreateComposite<SequencerNode>(false, movementNode, actionNode);
-            bt.SetRootNode(seq);
-            return new SubsystemAction(bt);
+            return sequence;
         }
 
-        protected abstract Action GetUseAction(SmartAgent agent);
+        protected abstract Action GetUseAction(SmartAgent agent, RequestData requestData);
 
-        public override void OnInitInteraction(SmartAgent agent)
+        protected override void SetInteractionEvents(SmartInteraction interaction, SmartAgent agent)
+        {
+            interaction.OnInitialize += () => OnInitInteraction(agent);
+            interaction.OnRelease += () => OnReleaseInteraction(agent);
+        }
+
+        void OnInitInteraction(SmartAgent agent)
         {
             if (_registerOnManager)
                 SmartObjectManager.Instance?.UnregisterSmartObject(this);
@@ -60,7 +63,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
         }
 
 
-        public override void OnReleaseInteraction(SmartAgent agent)
+        void OnReleaseInteraction(SmartAgent agent)
         {
             if (_registerOnManager)
                 SmartObjectManager.Instance?.RegisterSmartObject(this);

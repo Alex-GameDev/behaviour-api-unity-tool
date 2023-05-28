@@ -1,45 +1,43 @@
-using BehaviourAPI.UnityToolkit.Demos;
-using BehaviourAPI.UnityToolkit.SmartObjects;
-using BehaviourAPI.UnityToolkit;
+using BehaviourAPI.SmartObjects;
+using UnityEngine;
 
-public class SeatRequestAction : UnityRequestAction
+namespace BehaviourAPI.UnityToolkit.Demos
 {
-    public bool closest = false;
-
-    public float useTime = 5f;
-
-    public SeatRequestAction()
+    public class SeatRequestAction : UnityRequestAction
     {
-    }
+        [Tooltip("Find the closest seat?")]
+        public bool closest = false;
 
-    public SeatRequestAction(SmartAgent agent, bool closest = false, float useTime = 5f) : base(agent)
-    {
-        this.closest = closest;
-        this.useTime = useTime;
-    }
+        [Tooltip("The time we want to use the seat")]
+        public float useTime = 5f;
 
-    protected override SmartObject GetSmartObject(SmartAgent agent)
-    {
-        SeatSmartObject requestedSeat;
-        if (SeatManager.Instance != null)
+        public SeatRequestAction()
         {
-            if (closest)
-            {
-                requestedSeat = SeatManager.Instance.GetClosestSeat(agent.transform.position);
-            }
-            else
-            {
-                requestedSeat = SeatManager.Instance.GetRandomSeat();
-            }
-        }
-        else
-        {
-            requestedSeat = null;
         }
 
-        if (requestedSeat != null)
-            requestedSeat.UseTime = useTime;
+        public SeatRequestAction(SmartAgent agent, bool closest = false, float useTime = 5f) : base(agent)
+        {
+            this.closest = closest;
+            this.useTime = useTime;
+        }
 
-        return requestedSeat;
+        /// <summary>
+        /// Sent the use time in the request.
+        /// </summary>
+        /// <returns>Create an specific request for seat smart objects.</returns>
+        protected override RequestData GetRequestData()
+        {
+            return new SeatRequestData(useTime);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        protected override ISmartObjectProvider<SmartAgent> GetSmartObjectProvider()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

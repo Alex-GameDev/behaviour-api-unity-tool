@@ -11,12 +11,12 @@
         /// <summary> 
         /// The current interaction that this action is executing. 
         /// </summary>
-        SmartInteraction<T> m_CurrentInteraction;
+        SmartInteraction m_CurrentInteraction;
 
         /// <summary> 
         /// The agent used in the interactions. 
         /// </summary>
-        public T agent { get; set; }
+        public T Agent { get; set; }
 
         /// <summary>
         /// The context that the request action will propagate throught the provided actions.
@@ -36,14 +36,14 @@
         /// <param name="agent"> The agent used in the interactions. </param>
         protected RequestAction(T agent)
         {
-            this.agent = agent;
+            Agent = agent;
         }
 
-        /// <summary>   
-        /// Searches for a smart interaction to execute it. 
+        /// <summary>
+        /// Get the provider that this request action will use to find the smart objects.
         /// </summary>
-        /// <returns> The found interaction. </returns>
-        protected abstract ISmartObject<T> FindSmartObject(T agent);
+        /// <returns>The smart object provider.</returns>
+        protected abstract ISmartObjectProvider<T> GetSmartObjectProvider();
 
         /// <summary> 
         /// Request interaction. 
@@ -51,10 +51,7 @@
         /// <param name="smartObject"> The smart object. </param>
         /// <param name="agent"> The agent used in the interactions. </param>
         /// <returns> A SmartInteraction. </returns>
-        protected virtual string GetInteractionName()
-        {
-            return null;
-        }
+        protected abstract RequestData GetRequestData();
 
         /// <summary>   
         /// <inheritdoc/>
@@ -62,26 +59,17 @@
         ///  </summary>
         public override void Start()
         {
-            if (agent == null)
+            if (Agent == null)
                 throw new MissingAgentException<T>(this, "Can't send request to a smart object without smart agent");
 
-            ISmartObject<T> obj = FindSmartObject(agent);
+            ISmartObjectProvider<T> soProvider = GetSmartObjectProvider();
+            ISmartObject<T> obj = soProvider.GetSmartObject(Agent);
 
-            if (obj != null && obj.ValidateAgent(agent))
+            if (obj != null && obj.ValidateAgent(Agent))
             {
-                var interactionName = GetInteractionName();
-                m_CurrentInteraction = obj.RequestInteraction(agent, interactionName);
-
-                if (m_CurrentInteraction != null)
-                {
-                    m_CurrentInteraction.SmartObject.OnInitInteraction(agent);
-
-                    if (context != null)
-                    {
-                        m_CurrentInteraction.Action.SetExecutionContext(context);
-                    }
-                    m_CurrentInteraction.Action.Start();
-                }
+                RequestData requestData = GetRequestData();
+                m_CurrentInteraction = obj.RequestInteraction(Agent, requestData);
+                m_CurrentInteraction?.Initialize(context);
             }
         }
 
@@ -91,15 +79,8 @@
         ///  </summary>
         public override void Stop()
         {
-            if (agent == null)
-                throw new MissingAgentException<T>(this, "Can't release interaction to a smart object without smart agent");
-
-            if (m_CurrentInteraction != null)
-            {
-                m_CurrentInteraction.Action.Stop();
-                m_CurrentInteraction.SmartObject.OnReleaseInteraction(agent);
-                m_CurrentInteraction = null;
-            }
+            m_CurrentInteraction?.Release();
+            m_CurrentInteraction = null;
         }
 
         /// <summary>   
@@ -109,24 +90,9 @@
         /// <returns><inheritdoc/></returns>
         public override Status Update()
         {
-            if (agent == null)
-                throw new MissingAgentException<T>(this, "Can't update request to a smart object without smart agent");
-
             if (m_CurrentInteraction != null)
             {
-                var status = m_CurrentInteraction.Action.Update();
-
-                if (status == Status.Success)
-                {
-                    foreach (var capabilityName in m_CurrentInteraction.SmartObject.GetCapabilities())
-                    {
-                        agent.CoverNeed(capabilityName, m_CurrentInteraction.SmartObject.GetCapabilityValue(capabilityName));
-                    }
-                }
-
-                if (status != Status.Running)
-                    m_CurrentInteraction.SmartObject.OnCompleteInteraction(agent, status);
-
+                var status = m_CurrentInteraction.Update();
                 return status;
             }
             else
@@ -137,26 +103,12 @@
 
         public override void Pause()
         {
-            if (m_CurrentInteraction != null)
-            {
-                if (agent == null)
-                    throw new MissingAgentException<T>(this, "Can't pause interaction to a smart object without smart agent");
-
-                m_CurrentInteraction.Action.Pause();
-                m_CurrentInteraction.SmartObject.OnPauseInteraction(agent);
-            }
+            m_CurrentInteraction?.Pause();
         }
 
         public override void Unpause()
         {
-            if (m_CurrentInteraction != null)
-            {
-                if (agent == null)
-                    throw new MissingAgentException<T>(this, "Can't unpause interaction to a smart object without smart agent");
-
-                m_CurrentInteraction.Action.Unpause();
-                m_CurrentInteraction.SmartObject.OnUnpauseInteraction(agent);
-            }
+            m_CurrentInteraction?.Unpause();
         }
 
         public override void SetExecutionContext(ExecutionContext context)

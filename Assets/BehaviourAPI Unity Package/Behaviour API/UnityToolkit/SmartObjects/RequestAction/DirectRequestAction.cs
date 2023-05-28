@@ -1,5 +1,4 @@
 using BehaviourAPI.SmartObjects;
-using BehaviourAPI.UnityToolkit.SmartObjects;
 
 namespace BehaviourAPI.UnityToolkit
 {
@@ -13,14 +12,24 @@ namespace BehaviourAPI.UnityToolkit
         {
         }
 
-        public DirectRequestAction(SmartAgent agent, SmartObject smartObject, string interactionName = null) : base(agent)
+        public DirectRequestAction(SmartObject smartObject)
         {
             this.smartObject = smartObject;
         }
 
-        protected override SmartObject GetSmartObject(SmartAgent agent)
+        public DirectRequestAction(SmartAgent agent, SmartObject smartObject) : base(agent)
         {
-            return smartObject;
+            this.smartObject = smartObject;
+        }
+
+        protected override ISmartObjectProvider<SmartAgent> GetSmartObjectProvider()
+        {
+            return new DirectSOProvider<SmartAgent>(smartObject);
+        }
+
+        protected override RequestData GetRequestData()
+        {
+            return new RequestData();
         }
     }
 }

@@ -1,5 +1,6 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
+using BehaviourAPI.SmartObjects;
 using BehaviourAPI.UnityToolkit;
 using UnityEngine;
 
@@ -18,11 +19,12 @@ namespace BehaviourAPI.UnityToolkit.Demos
 
         float lieTime;
 
-        public float UseTime { get => _useTime; set => _useTime = value; }
-
-        protected override Action GetUseAction(SmartAgent agent)
+        protected override Action GetUseAction(SmartAgent agent, RequestData requestData)
         {
-            Action action = new FunctionalAction(() => SitDown(agent), Wait, () => SitUp(agent));
+            float usetime = k_DefaultUseTime;
+            if(requestData is SeatRequestData seatRequestData) usetime = seatRequestData.useTime;
+
+            Action action = new FunctionalAction(() => SitDown(agent), () => Wait(usetime), () => SitUp(agent));
             return action;
         }
 
@@ -43,9 +45,9 @@ namespace BehaviourAPI.UnityToolkit.Demos
             _useTime = k_DefaultUseTime;
         }
 
-        Status Wait()
+        Status Wait(float useTime)
         {
-            if (Time.time > lieTime + _useTime)
+            if (Time.time > lieTime + useTime)
             {
                 return Status.Success;
             }

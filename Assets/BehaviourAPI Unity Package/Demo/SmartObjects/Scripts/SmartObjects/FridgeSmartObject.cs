@@ -3,6 +3,8 @@ using BehaviourAPI.Core.Actions;
 using BehaviourAPI.UnityToolkit.Demos;
 using BehaviourAPI.UnityToolkit;
 using UnityEngine;
+using UnityEditor.PackageManager.Requests;
+using BehaviourAPI.SmartObjects;
 
 namespace BehaviourAPI.UnityToolkit.SmartObjects
 {
@@ -12,7 +14,7 @@ namespace BehaviourAPI.UnityToolkit.SmartObjects
         [SerializeField] Transform fridgeDoor;
         float lieTime;
 
-        protected override Action GetUseAction(SmartAgent agent)
+        protected override Action GetUseAction(SmartAgent agent, RequestData requestData)
         {
             return new FunctionalAction(StartUse, () => OnUpdate(agent), StopUse);
         }

@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 namespace BehaviourAPI.UnityToolkit.Demos
 {
+    using BehaviourAPI.SmartObjects;
     using Core;
 
     public class BathubSmartObject : DirectSmartObject
@@ -17,7 +18,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
 
         float lieTime;
 
-        protected override Action GetUseAction(SmartAgent agent)
+        protected override Action GetUseAction(SmartAgent agent, RequestData requestData)
         {
             var liedown = new FunctionalAction(() => BedDown(agent), Wait, () => BedUp(agent));
             return liedown;

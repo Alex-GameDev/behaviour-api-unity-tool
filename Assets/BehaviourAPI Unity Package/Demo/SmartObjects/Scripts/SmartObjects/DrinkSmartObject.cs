@@ -1,20 +1,23 @@
-using BehaviourAPI.Core.Actions;
-using BehaviourAPI.UnityToolkit.SmartObjects;
-using BehaviourAPI.UnityToolkit;
 using UnityEngine;
 
-public class DrinkSmartObject : SmartObject
+namespace BehaviourAPI.UnityToolkit.Demos
 {
-    [SerializeField] FridgeSmartObject _fridge;
-
-    public override bool ValidateAgent(SmartAgent agent)
+    using BehaviourAPI.SmartObjects;
+    using Core.Actions;
+    using UnityToolkit.SmartObjects;
+    public class DrinkSmartObject : SimpleSmartObject
     {
-        return _fridge.ValidateAgent(agent);
+        [SerializeField] FridgeSmartObject _fridge;
+
+        public override bool ValidateAgent(SmartAgent agent)
+        {
+            return _fridge.ValidateAgent(agent);
+        }
+
+        protected override Action GenerateAction(SmartAgent agent, RequestData requestData)
+        {
+            return new DirectRequestAction(agent, _fridge);
+        }
     }
 
-    protected override Action GetRequestedAction(SmartAgent agent, string interactionName = null)
-    {
-        return new DirectRequestAction(agent, _fridge, interactionName);
-
-    }
 }

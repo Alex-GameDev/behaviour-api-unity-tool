@@ -1,21 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BehaviourAPI.UnityToolkit.SmartObjects
+namespace BehaviourAPI.UnityToolkit
 {
     using BehaviourAPI.SmartObjects;
-    using Core;
-    using Core.Actions;
-    using UnityToolkit;
 
     /// <summary> 
     /// Unity component to implement a Smart Object.
     /// </summary>
-
     public abstract class SmartObject : MonoBehaviour, ISmartObject<SmartAgent>
     {
-        [SerializeField] SmartObjectSettings _config;
-
         /// <summary> 
         /// Flag to register the smart object in the <see cref="SmartObjectManager"/>. 
         /// </summary>
@@ -34,49 +28,29 @@ namespace BehaviourAPI.UnityToolkit.SmartObjects
                 SmartObjectManager.Instance.UnregisterSmartObject(this);
         }
 
-        public IEnumerable<string> GetCapabilities()
+        /// <summary>
+        /// Validate a agent used to make a request.
+        /// </summary>
+        /// <param name="agent">The smart agent.</param>
+        /// <returns>True if the agent is valid, false otherwise.</returns>
+        public abstract bool ValidateAgent(SmartAgent agent);
+
+        /// <summary>
+        /// Get the interaction requested.
+        /// </summary>
+        /// <param name="agent">The smart agent.</param>
+        /// <param name="requestData">The data used to specify the interaction requested.</param>
+        /// <returns>The interaction generated</returns>
+        public abstract SmartInteraction RequestInteraction(SmartAgent agent, RequestData requestData);
+
+        public Dictionary<string, float> GetCapabilities()
         {
-            return _config.GetCapabilities();
+            throw new System.NotImplementedException();
         }
 
         public float GetCapabilityValue(string capabilityName)
         {
-            return _config.GetCapability(name);
+            throw new System.NotImplementedException();
         }
-
-        public virtual void OnCompleteInteraction(SmartAgent agent, Status status)
-        {
-            return;
-        }
-
-        public virtual void OnInitInteraction(SmartAgent agent)
-        {
-            return;
-        }
-
-        public virtual void OnReleaseInteraction(SmartAgent agent)
-        {
-            return;
-        }
-
-        public virtual void OnPauseInteraction(SmartAgent agent)
-        {
-            return;
-        }
-
-        public virtual void OnUnpauseInteraction(SmartAgent agent)
-        {
-            return;
-        }
-
-        public SmartInteraction<SmartAgent> RequestInteraction(SmartAgent agent, string requestData)
-        {
-            Action action = GetRequestedAction(agent, requestData);
-            return new SmartInteraction<SmartAgent>(this, action);
-        }
-
-        public abstract bool ValidateAgent(SmartAgent agent);
-
-        protected abstract Action GetRequestedAction(SmartAgent agent, string requestData = null);
     }
 }

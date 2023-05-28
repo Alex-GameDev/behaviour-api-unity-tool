@@ -1,7 +1,5 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.SmartObjects;
-using BehaviourAPI.UnityToolkit.SmartObjects;
-using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit
 {
@@ -24,8 +22,8 @@ namespace BehaviourAPI.UnityToolkit
             base.SetExecutionContext(ctx);
             context = (UnityExecutionContext)ctx;
 
-            if (agent == null)
-                agent = context.SmartAgent;
+            if (Agent == null)
+                Agent = context.SmartAgent;
 
             OnSetContext(context);
         }
@@ -33,15 +31,5 @@ namespace BehaviourAPI.UnityToolkit
         protected virtual void OnSetContext(UnityExecutionContext context)
         {
         }
-
-        protected sealed override ISmartObject<SmartAgent> FindSmartObject(SmartAgent agent)
-        {
-            var obj = GetSmartObject(agent);
-            Debug.Log("Smart object selected", obj.gameObject);
-            return obj;
-        }
-
-
-        protected abstract SmartObject GetSmartObject(SmartAgent agent);
     }
 }

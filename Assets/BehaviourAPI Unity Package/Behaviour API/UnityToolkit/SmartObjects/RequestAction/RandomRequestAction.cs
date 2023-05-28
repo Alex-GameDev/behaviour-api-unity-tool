@@ -1,3 +1,4 @@
+using BehaviourAPI.SmartObjects;
 using BehaviourAPI.UnityToolkit.SmartObjects;
 using UnityEngine;
 
@@ -19,10 +20,14 @@ namespace BehaviourAPI.UnityToolkit
 
         public override string DisplayInfo => "Request to random SO";
 
-        protected override SmartObject GetSmartObject(SmartAgent agent)
+        protected override RequestData GetRequestData()
         {
-            int random = Random.Range(0, SmartObjectManager.Instance.RegisteredObjects.Count);
-            return SmartObjectManager.Instance.RegisteredObjects[random];
+            return new RequestData();
+        }
+
+        protected override ISmartObjectProvider<SmartAgent> GetSmartObjectProvider()
+        {
+            return new RandomSOProvider<SmartAgent>();
         }
     }
 }

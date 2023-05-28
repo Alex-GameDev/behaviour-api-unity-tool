@@ -3,7 +3,6 @@
     /// <summary>
     /// A behaviour agent that has some needs and can use smart objects. 
     /// </summary>
-
     public interface ISmartAgent
     {
         /// <summary> 

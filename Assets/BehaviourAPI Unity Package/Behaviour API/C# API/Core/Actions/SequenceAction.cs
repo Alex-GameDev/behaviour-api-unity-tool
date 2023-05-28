@@ -7,7 +7,7 @@ namespace BehaviourAPI.Core.Actions
     /// </summary>
     public class SequenceAction : CompoundAction
     {
-        public Status TargetStatus;
+        public Status TargetStatus = Status.Success;
 
         int currentChildIdx = 0;
 

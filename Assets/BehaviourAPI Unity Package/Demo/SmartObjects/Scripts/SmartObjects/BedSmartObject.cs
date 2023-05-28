@@ -1,5 +1,6 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
+using BehaviourAPI.SmartObjects;
 using BehaviourAPI.UnityToolkit;
 using UnityEngine;
 using UnityEngine.AI;
@@ -12,7 +13,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
         [SerializeField] float useTime = 5f;
 
         float lieTime;
-        protected override Action GetUseAction(SmartAgent agent)
+        protected override Action GetUseAction(SmartAgent agent, RequestData requestData)
         {
             var liedown = new FunctionalAction(() => BedDown(agent), Wait, () => BedUp(agent));
             return liedown;

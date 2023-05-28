@@ -1,6 +1,7 @@
 namespace BehaviourAPI.UnityToolkit.Demos
 {
     using BehaviourAPI.Core.Actions;
+    using BehaviourAPI.SmartObjects;
     using BehaviourAPI.UnityToolkit;
 
     public class BookShelfSmartObject : DirectSmartObject
@@ -11,7 +12,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
             return true;
         }
 
-        protected override Action GetUseAction(SmartAgent agent)
+        protected override Action GetUseAction(SmartAgent agent, RequestData requestData)
         {
             var seatAction = new SeatRequestAction(agent);
             return seatAction;

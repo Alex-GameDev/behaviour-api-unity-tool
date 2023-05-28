@@ -1,21 +1,23 @@
 using BehaviourAPI.Core.Actions;
-using BehaviourAPI.UnityToolkit.Demos;
-using BehaviourAPI.UnityToolkit.SmartObjects;
-using BehaviourAPI.UnityToolkit;
 using UnityEngine;
+using BehaviourAPI.SmartObjects;
 
-public class ComputerDesktopSmartObject : SmartObject
+namespace BehaviourAPI.UnityToolkit.Demos
 {
-    [SerializeField] Transform target;
-    [SerializeField] SeatSmartObject seat;
-
-    public override bool ValidateAgent(SmartAgent agent)
+    public class ComputerDesktopSmartObject : SimpleSmartObject
     {
-        return seat.ValidateAgent(agent);
+        [SerializeField] Transform target;
+        [SerializeField] SeatSmartObject seat;
+
+        public override bool ValidateAgent(SmartAgent agent)
+        {
+            return seat.ValidateAgent(agent);
+        }
+
+        protected override Action GenerateAction(SmartAgent agent, RequestData requestData)
+        {
+            return new DirectRequestAction(agent, seat);
+        }
     }
 
-    protected override Action GetRequestedAction(SmartAgent agent, string interactionName = null)
-    {
-        return new DirectRequestAction(agent, seat, interactionName);
-    }
 }

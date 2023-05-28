@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit.Demos
 {
+    using BehaviourAPI.SmartObjects;
     using Core;
 
     public class ToiletSmartObject : DirectSmartObject
@@ -17,7 +18,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
 
         float lieTime;
 
-        protected override Action GetUseAction(SmartAgent agent)
+        protected override Action GetUseAction(SmartAgent agent, RequestData requestData)
         {
             Action action = new FunctionalAction(() => SitDown(agent), Wait, () => SitUp(agent));
             return action;

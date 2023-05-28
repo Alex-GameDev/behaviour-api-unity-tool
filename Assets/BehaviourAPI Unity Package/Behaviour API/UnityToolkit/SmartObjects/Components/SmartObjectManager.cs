@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit
 {
+    using BehaviourAPI.SmartObjects;
+    using SmartObjects;
+
     [DefaultExecutionOrder(-1)]
     public class SmartObjectManager : MonoBehaviour
     {

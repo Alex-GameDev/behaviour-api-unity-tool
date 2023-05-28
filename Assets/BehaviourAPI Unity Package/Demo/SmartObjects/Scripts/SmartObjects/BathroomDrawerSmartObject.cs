@@ -1,5 +1,6 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
+using BehaviourAPI.SmartObjects;
 using BehaviourAPI.UnityToolkit;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
 
         float startTime;
 
-        protected override Action GetUseAction(SmartAgent agent)
+        protected override Action GetUseAction(SmartAgent agent, RequestData requestData)
         {
             return new FunctionalAction(() => StartUse(agent), Wait, () => StopUse(agent));
         }
