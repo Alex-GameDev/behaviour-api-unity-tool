@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace BehaviourAPI.Core.Actions
 {
@@ -18,7 +19,7 @@ namespace BehaviourAPI.Core.Actions
 
         public SequenceAction() : base()
         {
-            TargetStatus = Status.Failure;
+            TargetStatus = Status.Success;
         }
 
         public SequenceAction(Status targetStatus, params Action[] subActions) : base(subActions)
@@ -53,8 +54,8 @@ namespace BehaviourAPI.Core.Actions
 
         public override void Stop()
         {
-            currentChildIdx = 0;
             SubActions[currentChildIdx].Stop();
+            currentChildIdx = 0;
         }
     }
 }
