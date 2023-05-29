@@ -32,7 +32,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
             }
         }
 
-        private void GenerateCode(NodeData nodeData, CodeTemplate template)
+        protected void GenerateCode(NodeData nodeData, CodeTemplate template)
         {
             if (nodeData == null || IsGenerated(nodeData.id)) return;
             CodeNodeStatementGroup nodeCode = new CodeNodeStatementGroup(nodeData, template);
@@ -41,7 +41,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
             nodeCode.Commit();
         }
 
-        private void GenerateNodeCode(NodeData nodeData, CodeNodeStatementGroup code, CodeTemplate template)
+        protected virtual void GenerateNodeCode(NodeData nodeData, CodeNodeStatementGroup code, CodeTemplate template)
         {
             switch (nodeData.node)
             {
@@ -52,7 +52,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
                     //TODO: Probabilities
                     break;
 
-                case State state:
+                case State:
                     code.SetMethod(k_StateMethod);
                     code.AddAction("Action", true);
                     break;
