@@ -1,33 +1,29 @@
 using BehaviourAPI.SmartObjects;
-using BehaviourAPI.UnityToolkit.SmartObjects;
 using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit
 {
-    /// <summary> 
-    /// Request action that find a random Smart Object using the smart object manager. 
-    /// </summary>
     public class RandomRequestAction : UnityRequestAction
     {
+        public RequestData requestData;
 
-        public RandomRequestAction()
+        public RandomRequestAction(SmartAgent agent, RequestData requestData = null) : base(agent)
         {
+            this.requestData = requestData;
         }
 
-        public RandomRequestAction(SmartAgent agent) : base(agent)
-        {
-        }
+        protected override RequestData GetRequestData() => requestData;
 
-        public override string DisplayInfo => "Request to random SO";
-
-        protected override RequestData GetRequestData()
+        protected override SmartObject GetRequestedSmartObject()
         {
-            return new RequestData();
-        }
+            if(SmartObjectManager.Instance == null)
+            {
+                Debug.LogWarning("This request action need a SmartObjectManager in the scene");
+            }
 
-        protected override ISmartObjectProvider<SmartAgent> GetSmartObjectProvider()
-        {
-            return new RandomSOProvider<SmartAgent>();
+            int random = Random.Range(0, SmartObjectManager.Instance.RegisteredObjects.Count);
+
+            return SmartObjectManager.Instance.RegisteredObjects[random];
         }
     }
 }

@@ -28,6 +28,10 @@ namespace BehaviourAPI.UnityToolkit
             OnSetContext(context);
         }
 
+        protected sealed override ISmartObject<SmartAgent> GetSmartObject() => GetRequestedSmartObject();
+
+        protected abstract SmartObject GetRequestedSmartObject();
+
         protected virtual void OnSetContext(UnityExecutionContext context)
         {
         }
