@@ -9,7 +9,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
     public class BehaviourSystem : ScriptableObject, IBehaviourSystem
     {
 
-        [SerializeField] SystemData data = new SystemData();
+        [SerializeField] SystemData data;
         public SystemData Data => data;
         public Object ObjectReference => this;
 
@@ -20,7 +20,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         public SystemData GetBehaviourSystemData()
         {
             string json = JsonUtility.ToJson(this);
-            BehaviourSystem copy = ScriptableObject.CreateInstance<BehaviourSystem>();
+            BehaviourSystem copy = CreateInstance<BehaviourSystem>();
             JsonUtility.FromJsonOverwrite(json, copy);
             return copy.Data;
         }

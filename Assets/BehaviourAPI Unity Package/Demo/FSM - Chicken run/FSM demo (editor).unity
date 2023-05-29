@@ -6942,7 +6942,7 @@ MonoBehaviour:
           componentName: 
           methodName: 
     - rid: 6537695503399780457
-      type: {class: UnityTimePerception, ns: BehaviourAPI.UnityToolkit, asm: Assembly-CSharp}
+      type: {class: UnityTimePerception, ns: BehaviourAPI.UnityToolkit, asm: BehaviourAPI.UnityToolkit}
       data:
         TotalTime: 3
 --- !u!114 &2092855754

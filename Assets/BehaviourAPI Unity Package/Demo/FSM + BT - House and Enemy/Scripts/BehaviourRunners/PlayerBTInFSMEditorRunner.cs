@@ -1,8 +1,10 @@
 using BehaviourAPI.BehaviourTrees;
+using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.StateMachines;
 using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit.Demos
@@ -30,10 +32,10 @@ namespace BehaviourAPI.UnityToolkit.Demos
             base.Init();
         }
 
-        protected override void ModifyGraphs()
+        protected override void ModifyGraphs(Dictionary<string, BehaviourGraph> graphMap, Dictionary<string, PushPerception> pushPerceptionMap)
         {
-            var mainGraph = FindGraph("main");
-            var subgraph = FindGraph("key subtree");
+            var mainGraph = graphMap["main"];
+            var subgraph = graphMap["key subtree"];
 
             mainGraph.FindNode<State>("go to home").Action = new WalkAction(_doorPos);
             mainGraph.FindNode<State>("enter house").Action = new FunctionalAction(EnterTheHouse);

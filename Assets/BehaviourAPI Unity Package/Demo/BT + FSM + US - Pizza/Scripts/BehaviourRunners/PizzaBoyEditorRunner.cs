@@ -1,4 +1,5 @@
 using BehaviourAPI.Core;
+using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
 using BehaviourAPI.UtilitySystems;
 using System.Collections.Generic;
@@ -36,9 +37,9 @@ namespace BehaviourAPI.UnityToolkit.Demos
             base.Init();
         }
 
-        protected override void ModifyGraphs()
+        protected override void ModifyGraphs(Dictionary<string, BehaviourGraph> graphMap, Dictionary<string, PushPerception> pushPerceptionMap)
         {
-            var graph = FindGraph("Recipe US");
+            var graph = graphMap["Recipe US"];
             m_ChooseRecipeActions.Add(graph.FindNode<UtilityNode>("ham and cheese"));
             m_ChooseRecipeActions.Add(graph.FindNode<UtilityNode>("vegetarian"));
             m_ChooseRecipeActions.Add(graph.FindNode<UtilityNode>("hawaiian"));

@@ -1,6 +1,8 @@
 using BehaviourAPI.BehaviourTrees;
 using BehaviourAPI.Core;
+using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -26,11 +28,12 @@ namespace BehaviourAPI.UnityToolkit.Demos
             base.Init();
         }
 
-        protected override void ModifyGraphs()
+        protected override void ModifyGraphs(Dictionary<string, BehaviourGraph> graphMap, Dictionary<string, PushPerception> pushPerceptionMap)
         {
             var doorPos = new Vector3(_door.transform.position.x, transform.position.y, _door.transform.position.z);
-            MainGraph.FindNode<LeafNode>("go to door").Action = new WalkAction(doorPos);
-            MainGraph.FindNode<LeafNode>("return to door").Action = new WalkAction(doorPos);
+            BehaviourGraph mainGraph = graphMap["main"];
+            mainGraph.FindNode<LeafNode>("go to door").Action = new WalkAction(doorPos);
+            mainGraph.FindNode<LeafNode>("return to door").Action = new WalkAction(doorPos);
         }
 
         public void SmashDoor()

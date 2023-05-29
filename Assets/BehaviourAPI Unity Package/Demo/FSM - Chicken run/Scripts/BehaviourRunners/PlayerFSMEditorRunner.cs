@@ -1,5 +1,7 @@
+using BehaviourAPI.Core;
 using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit.Demos
@@ -11,12 +13,6 @@ namespace BehaviourAPI.UnityToolkit.Demos
         [SerializeField] private Transform origin;
 
         private PushPerception _click;
-
-        protected override void Init()
-        {
-            base.Init();
-            _click = FindPushPerception("click");
-        }
 
         // Update is called once per frame
         protected override void OnUpdated()
@@ -37,6 +33,10 @@ namespace BehaviourAPI.UnityToolkit.Demos
         {
             transform.position = origin.position;
         }
-    }
 
+        protected override void ModifyGraphs(Dictionary<string, BehaviourGraph> graphMap, Dictionary<string, PushPerception> pushPerceptionMap)
+        {
+            _click = pushPerceptionMap["click"];
+        }
+    }
 }

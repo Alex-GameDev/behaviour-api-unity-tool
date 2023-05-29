@@ -1,5 +1,8 @@
+using BehaviourAPI.Core;
+using BehaviourAPI.Core.Perceptions;
 using BehaviourAPI.StateMachines;
 using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
+using System.Collections.Generic;
 
 namespace BehaviourAPI.UnityToolkit.Demos
 {
@@ -7,22 +10,25 @@ namespace BehaviourAPI.UnityToolkit.Demos
     {
         RadarDisplay _radarDisplay;
 
+        State m_BrokenState;
+        State m_WorkingState;
+
         protected override void Init()
         {
             _radarDisplay = GetComponent<RadarDisplay>();
             base.Init();
         }
 
-
-        public State GetBrokenState()
+        protected override void ModifyGraphs(Dictionary<string, BehaviourGraph> graphMap, Dictionary<string, PushPerception> pushPerceptionMap)
         {
-            return FindGraph("Main").FindNode<State>("broken");
+            var mainGraph = graphMap["Main"];
+            m_BrokenState = mainGraph.FindNode<State>("broken");
+            m_WorkingState = mainGraph.FindNode<State>("working");
         }
 
-        public State GetWorkingState()
-        {
-            return FindGraph("Main").FindNode<State>("working");
-        }
+        public State GetBrokenState() => m_BrokenState;
+
+        public State GetWorkingState() => m_WorkingState;
 
         public bool CheckRadarForOverSpeed()
         {

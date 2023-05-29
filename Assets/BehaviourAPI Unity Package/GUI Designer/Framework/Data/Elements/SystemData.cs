@@ -1,4 +1,5 @@
 using BehaviourAPI.Core;
+using BehaviourAPI.Core.Perceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,19 +45,49 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         /// <summary>
         /// Build the main <see cref="BehaviourGraph"/> using the serialized data.
         /// </summary>
-        /// <returns>The main <see cref="BehaviourGraph"/> that will be executed.</returns>
-        public BehaviourGraph BuildSystem(Component runner)
+        /// <returns>The <see cref="BuildedSystemData"/>.</returns>
+        public BuildedSystemData BuildSystem(Component runner)
         {
-            var time = DateTime.Now;
             BuildData buildData = new BuildData(runner, this);
-            BehaviourGraph maingraph;
 
-            graphs.ForEach(g => g.Build(buildData));
-            pushPerceptions.ForEach(p => p.Build(buildData));
-            //Debug.Log((DateTime.Now - time).TotalMilliseconds);
+            Dictionary<string, BehaviourGraph> graphMap = new Dictionary<string, BehaviourGraph>();
 
-            maingraph = graphs.FirstOrDefault()?.graph;
-            return maingraph;
+            for(int i = 0; i < graphs.Count; i++)
+            {
+                graphs[i].Build(buildData);
+                if (!string.IsNullOrWhiteSpace(graphs[i].name))
+                {
+                    if (!graphMap.TryAdd(graphs[i].name, graphs[i].graph))
+                        Debug.LogWarning($"BUILD WARNING: Graph \"{graphs[i].name}\" wasn't added to dictionary because a graph with the same name was added before.", runner);
+                }
+                else
+                {
+                    Debug.LogWarning($"BUILD WARNING: Graph \"{graphs[i].name}\" wasn't added to dictionary because the name is not valid", runner);
+                }
+            }
+
+            Dictionary<string, PushPerception> pushPerceptionMap = new Dictionary<string, PushPerception>();
+
+            for (int i = 0; i < pushPerceptions.Count; i++)
+            {
+                pushPerceptions[i].Build(buildData);
+                if (!string.IsNullOrWhiteSpace(pushPerceptions[i].name))
+                {
+                    if (!pushPerceptionMap.TryAdd(pushPerceptions[i].name, pushPerceptions[i].pushPerception))
+                    {
+                        Debug.LogWarning($"ERROR: Push perception \"{pushPerceptions[i].name}\" wasn't added to dictionary because a push perception with the same name was added before.", runner);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"ERROR: Push perception \"{pushPerceptions[i].name}\" wasn't added to dictionary because the name is not valid", runner);
+                }
+            }
+
+            BehaviourGraph mainGraph = graphs.FirstOrDefault()?.graph;
+
+            BuildedSystemData buildedSystemData = new BuildedSystemData(mainGraph, graphMap, pushPerceptionMap);
+            return buildedSystemData;
         }
 
         public Dictionary<string, NodeData> GetNodeIdMap()

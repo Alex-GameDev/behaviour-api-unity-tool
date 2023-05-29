@@ -544,11 +544,11 @@ MonoBehaviour:
       data:
         StatusFlags: -1
     - rid: 6537695503399780408
-      type: {class: UnityTimePerception, ns: BehaviourAPI.UnityToolkit, asm: Assembly-CSharp}
+      type: {class: UnityTimePerception, ns: BehaviourAPI.UnityToolkit, asm: BehaviourAPI.UnityToolkit}
       data:
         TotalTime: 20
     - rid: 6537695503399780409
-      type: {class: UnityTimePerception, ns: BehaviourAPI.UnityToolkit, asm: Assembly-CSharp}
+      type: {class: UnityTimePerception, ns: BehaviourAPI.UnityToolkit, asm: BehaviourAPI.UnityToolkit}
       data:
         TotalTime: 10
     - rid: 6537695503399780410

@@ -202,13 +202,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   executeOnLoop: 0
-  dontStopOnDisable: 0
+  interruptOptions: 0
   _eventHandler:
     debugStatusChanges: 0
     identifier: 
   data:
     graphs:
-    - name: BehaviourTree
+    - name: main
       id: f5c2baef-2aef-45a9-86d2-4156e26db825
       graph:
         rid: 6537695503399780467
