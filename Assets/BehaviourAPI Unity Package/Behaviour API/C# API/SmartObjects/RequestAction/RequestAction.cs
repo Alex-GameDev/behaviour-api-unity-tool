@@ -43,7 +43,7 @@
         /// Get the provider that this request action will use to find the smart objects.
         /// </summary>
         /// <returns>The smart object provider.</returns>
-        protected abstract ISmartObjectProvider<T> GetSmartObjectProvider();
+        protected abstract ISmartObject<T> GetSmartObject();
 
         /// <summary> 
         /// Request interaction. 
@@ -62,8 +62,7 @@
             if (Agent == null)
                 throw new MissingAgentException<T>(this, "Can't send request to a smart object without smart agent");
 
-            ISmartObjectProvider<T> soProvider = GetSmartObjectProvider();
-            ISmartObject<T> obj = soProvider.GetSmartObject(Agent);
+            ISmartObject<T> obj = GetSmartObject();
 
             if (obj != null && obj.ValidateAgent(Agent))
             {

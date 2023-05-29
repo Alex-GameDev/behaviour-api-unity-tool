@@ -2,7 +2,7 @@
 
 namespace BehaviourAPI.SmartObjects
 {
-    using BehaviourAPI.Core;
+    using Core;
     using Core.Actions;
 
     /// <summary>   

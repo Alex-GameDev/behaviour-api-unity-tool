@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace BehaviourAPI.SmartObjects
+﻿namespace BehaviourAPI.SmartObjects
 {
 
     /// <summary> 
@@ -24,17 +22,10 @@ namespace BehaviourAPI.SmartObjects
         bool ValidateAgent(T agent);
 
         /// <summary> 
-        /// Gets a capability value. 
+        /// Gets the capability that this object has to cover a determined need with the same name. 
         /// </summary>
         /// <param name="capabilityName"> Name of the capability. </param>
-        /// <returns>  The capability. </returns>
+        /// <returns> The capability. </returns>
         float GetCapabilityValue(string capabilityName);
-
-        /// <summary> 
-        /// Gets all the capabilities that this smart object has. 
-        /// </summary>
-        /// <returns> An enumerator that allows foreach to be used to process the capabilities.
-        /// </returns>
-        Dictionary<string, float> GetCapabilities();
     }
 }

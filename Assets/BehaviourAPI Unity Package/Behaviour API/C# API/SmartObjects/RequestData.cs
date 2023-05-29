@@ -25,5 +25,7 @@
         {
             InteractionName = interactionName;
         }
+
+        public static implicit operator RequestData(string interactionName) => new RequestData(interactionName);
     }
 }
