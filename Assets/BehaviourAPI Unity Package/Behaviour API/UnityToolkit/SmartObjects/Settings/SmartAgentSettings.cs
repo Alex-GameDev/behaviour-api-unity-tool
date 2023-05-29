@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit
@@ -7,5 +8,7 @@ namespace BehaviourAPI.UnityToolkit
     {
         [Header("Needs")]
         [SerializeField] CapabilityMap _needMap;
+
+        public Dictionary<string, float> GetCapabilityMap() => _needMap;
     }
 }

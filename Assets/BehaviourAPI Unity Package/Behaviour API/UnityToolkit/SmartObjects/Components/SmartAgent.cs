@@ -11,6 +11,8 @@ namespace BehaviourAPI.UnityToolkit
     {
         [SerializeField] SmartAgentSettings _settings;
 
+        public BehaviourRunner Runner { get; private set; }
+
         /// <summary>
         /// Component used for the agent movement.
         /// </summary>
@@ -29,9 +31,10 @@ namespace BehaviourAPI.UnityToolkit
 
         private void Awake()
         {
-            m_Needs = new Dictionary<string, float>();
-
+            m_Needs = _settings.GetCapabilityMap();
+            Runner = GetComponent<BehaviourRunner>();
             Movement = GetComponent<IMovementComponent>();
+            Talk = GetComponent<ITalkComponent>();
         }
 
         public float GetNeed(string name)
