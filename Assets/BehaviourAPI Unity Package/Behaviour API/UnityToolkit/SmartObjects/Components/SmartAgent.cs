@@ -11,7 +11,6 @@ namespace BehaviourAPI.UnityToolkit
     public class SmartAgent : MonoBehaviour, ISmartAgent
     {
         [SerializeField] SmartAgentSettings _settings;
-
         public BehaviourRunner Runner { get; private set; }
 
         /// <summary>
