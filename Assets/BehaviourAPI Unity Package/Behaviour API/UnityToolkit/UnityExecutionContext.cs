@@ -35,11 +35,6 @@ namespace BehaviourAPI.UnityToolkit
         public Animator Animator { get; private set; }
 
         /// <summary>
-        /// The animator component.
-        /// </summary>
-        public AudioSource AudioSource { get; private set; }
-
-        /// <summary>
         /// The Rigidbody component.
         /// </summary>
         public Rigidbody Rigidbody { get; private set; }
@@ -80,6 +75,11 @@ namespace BehaviourAPI.UnityToolkit
         public ITalkComponent Talk { get; private set; }
 
         /// <summary>
+        /// The component used by talk actions.
+        /// </summary>
+        public ISoundComponent Sound { get; private set; }
+
+        /// <summary>
         /// Create a new unity execution context with a runner script component. Use this constructor
         /// to access methods in the runner component with custom actions or perceptions.
         /// </summary>
@@ -104,12 +104,12 @@ namespace BehaviourAPI.UnityToolkit
                 Collider = gameObject.GetComponent<Collider>();
                 Collider2D = gameObject.GetComponent<Collider2D>();
                 CharacterController = gameObject.GetComponent<CharacterController>();
-                AudioSource = gameObject.GetComponent<AudioSource>();
                 Animator = gameObject.GetComponent<Animator>();
                 SmartAgent = gameObject.GetComponent<SmartAgent>();
 
                 Movement = gameObject.GetComponent<IMovementComponent>();
                 Talk = gameObject.GetComponent<ITalkComponent>();
+                Sound = gameObject.GetComponent<ISoundComponent>();
             }
             else
             {

@@ -23,7 +23,8 @@
     right: 0;
     align-items: center;
     justify-content: center;
-    background-color: rgba(32, 32, 32, 255);
+    background-color: rgb(32, 32, 32);
+    bottom: 0;
 }
 
 .toolbar {

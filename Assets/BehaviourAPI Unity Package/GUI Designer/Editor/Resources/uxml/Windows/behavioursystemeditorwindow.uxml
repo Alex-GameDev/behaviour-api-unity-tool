@@ -25,7 +25,7 @@
         <ui:VisualElement name="bw-graph" class="panel-fullwidth" />
         <ui:IMGUIContainer name="bw-inspector" />
     </ui:VisualElement>
-    <ui:VisualElement name="bw-empty" class="cover" style="display: none;">
+    <ui:VisualElement name="bw-empty" class="cover" style="display: flex;">
         <ui:Label text="Edit mode: Press the EDIT button in a EditorBehaviourRunner script or BehaviourSystemAsset" display-tooltip-when-elided="true" name="Label" class="text text-header" />
         <ui:Label text="Play mode: Press the OPEN button in a RuntimeDebugger script" display-tooltip-when-elided="true" class="text text-header" />
     </ui:VisualElement>

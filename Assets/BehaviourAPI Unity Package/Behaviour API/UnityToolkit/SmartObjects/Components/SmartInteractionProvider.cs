@@ -14,11 +14,17 @@ namespace BehaviourAPI.UnityToolkit
         {
             Action action = GetInteractionAction(smartAgent);
             SmartInteraction smartInteraction = new SmartInteraction(action, smartAgent,GetCapabilityMap());
+            SetInteractionEvents(smartInteraction);
             return smartInteraction;
         }
 
         public abstract Action GetInteractionAction(SmartAgent agent);
 
         public Dictionary<string, float> GetCapabilityMap() => capabilities;
+
+        protected virtual void SetInteractionEvents(SmartInteraction smartInteraction)
+        {
+            return;
+        }
     }
 }

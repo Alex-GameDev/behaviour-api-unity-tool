@@ -83,7 +83,7 @@ namespace BehaviourAPI.UnityToolkit
                 return Status.Running;
             }
         }
-        public override string DisplayInfo => "Flee to random direction";
+        public override string DisplayInfo => "Flee from $OtherTransform";
 
     }
 }

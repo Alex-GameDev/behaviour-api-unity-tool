@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -94,12 +95,11 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
                     string info = taskDisplayable.DisplayInfo;
 
                     var type = taskDisplayable.GetType();
-                    var properties = type.GetFields();
+                    var properties = type.GetFields(BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.NonPublic);
 
                     for (int i = 0; i < properties.Length; i++)
                     {
-                        string value = GetPropertyDisplay(properties[i].GetValue(taskDisplayable));
-                        info = info.Replace($"${properties[i].Name}", value);
+                        info = info.Replace($"${properties[i].Name}", properties[i].GetValue(taskDisplayable)?.ToString());
                     }
                     return info;
 
@@ -156,8 +156,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 
                     for (int i = 0; i < properties.Length; i++)
                     {
-                        string value = GetPropertyDisplay(properties[i].GetValue(taskDisplayable));
-                        info = info.Replace($"${properties[i].Name}", value);
+                        info = info.Replace($"${properties[i].Name}", properties[i].GetValue(taskDisplayable)?.ToString());
                     }
                     return info;
 
@@ -191,21 +190,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
             if (string.IsNullOrWhiteSpace(contextMethod.methodName)) return null;
             return $"{(string.IsNullOrEmpty(contextMethod.componentName) ? "$runner" : contextMethod.componentName)}.{contextMethod.methodName};";
         }
-
-
-        private static string GetPropertyDisplay(object property)
-        {
-            if (property == null) return null;
-            switch (property)
-            {
-                case Color color:
-                    var colorTag = $"#{ColorUtility.ToHtmlStringRGB(color)}";
-                    return $"<color={colorTag}>color</color>";
-                default:
-                    return property.ToString();
-            }
-        }
-
 
         public static SerializedProperty AddElement(this SerializedProperty prop)
         {
