@@ -1,26 +1,42 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace BehaviourAPI.UnityToolkit.Demos
 {
-    using BehaviourAPI.Core.Actions;
-    using BehaviourAPI.SmartObjects;
-    using BehaviourAPI.UnityToolkit;
+    using Core.Actions;
+    using SmartObjects;
+    using UnityToolkit;
 
-    public class TVSmartObject : SimpleSmartObject
+
+    public class TVSmartObject : SmartObject
     {
         [SerializeField] float maxDistance;
-
         [SerializeField] float useTime;
+
+        [SerializeField, Range(0f, 1f)] float leisureCapability = 0.5f;
+
+        public override Dictionary<string, float> GetCapabilities()
+        {
+            Dictionary<string, float> capabilities = new Dictionary<string, float>();
+            capabilities["leisure"] = leisureCapability;
+            return capabilities;
+        }
+
+        public override float GetCapabilityValue(string capabilityName)
+        {
+            if (capabilityName == "leisure") return leisureCapability;
+            else return 0f;
+        }
+
+        public override SmartInteraction RequestInteraction(SmartAgent agent, RequestData requestData)
+        {
+            Action action = new TVSeatRequestAction(agent, transform, maxDistance, useTime);
+            return new SmartInteraction(action, agent, GetCapabilities());
+        }
 
         public override bool ValidateAgent(SmartAgent agent)
         {
             return true;
-        }
-
-        protected override Action GenerateAction(SmartAgent agent, RequestData requestData)
-        {
-            var seatRequestAction = new TVSeatRequestAction(agent, transform, maxDistance, useTime);
-            return seatRequestAction;
         }
 
         private class TVSeatRequestAction : UnityRequestAction
@@ -41,27 +57,18 @@ namespace BehaviourAPI.UnityToolkit.Demos
                 return new SeatRequestData(useTime);
             }
 
-            //protected override SmartObject GetSmartObject(SmartAgent agent)
-            //{
-            //    SeatSmartObject requestedSeat;
-            //    if (SeatManager.Instance != null)
-            //    {
-            //        requestedSeat = SeatManager.Instance.GetRandomSeat(requestTf.position, maxDistance);
-            //    }
-            //    else
-            //    {
-            //        requestedSeat = null;
-            //    }
-
-            //    if (requestedSeat != null)
-            //        requestedSeat.UseTime = useTime;
-
-            //    return requestedSeat;
-            //}
-
-            protected override ISmartObjectProvider<SmartAgent> GetSmartObjectProvider()
+            protected override SmartObject GetRequestedSmartObject()
             {
-                return null;
+                SeatSmartObject requestedSeat;
+                if (SeatManager.Instance != null)
+                {
+                    requestedSeat = SeatManager.Instance.GetRandomSeat(requestTf.position, maxDistance);
+                }
+                else
+                {
+                    requestedSeat = null;
+                }
+                return requestedSeat;
             }
         }
     }

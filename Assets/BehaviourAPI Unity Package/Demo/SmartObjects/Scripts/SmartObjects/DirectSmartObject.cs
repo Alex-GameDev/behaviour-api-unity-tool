@@ -4,18 +4,23 @@ namespace BehaviourAPI.UnityToolkit.Demos
 {
     using BehaviourAPI.SmartObjects;
     using Core.Actions;
+    using System.Collections.Generic;
     using UnityToolkit;
 
     /// <summary> 
     /// A subtype of the SmartObject that the agent navigates to in order to use it. 
     /// Also, the item can only be used by one agent at a time.
+    /// The interaction that the object provides can cover one need defined by capabilityName and capabilityValue;
     /// </summary>
 
-    public abstract class DirectSmartObject : SimpleSmartObject
+    public abstract class DirectSmartObject : SmartObject
     {
         [Tooltip("The target where the agent must be placed to use the item")]
         [SerializeField] protected Transform _placeTarget;
 
+        [Header("Capability")]
+        [SerializeField] string capabilityName;
+        [SerializeField, Range(0f, 1f)] float capabilityValue;
         /// <summary> 
         /// Gets or sets the owner. 
         /// The current agent using the object. If the property has value
@@ -29,7 +34,15 @@ namespace BehaviourAPI.UnityToolkit.Demos
             return Owner == null;
         }
 
-        protected sealed override Action GenerateAction(SmartAgent agent, RequestData requestData)
+        public override SmartInteraction RequestInteraction(SmartAgent agent, RequestData requestData)
+        {
+            Action action = GenerateAction(agent, requestData);
+            SmartInteraction interaction = new SmartInteraction(action, agent, GetCapabilities());
+            SetInteractionEvents(interaction, agent);
+            return interaction;
+        }
+
+        private Action GenerateAction(SmartAgent agent, RequestData requestData)
         {
             // Simple way to make an action sequence
             SequenceAction sequence = new SequenceAction();
@@ -45,7 +58,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
 
         protected abstract Action GetUseAction(SmartAgent agent, RequestData requestData);
 
-        protected override void SetInteractionEvents(SmartInteraction interaction, SmartAgent agent)
+        protected virtual void SetInteractionEvents(SmartInteraction interaction, SmartAgent agent)
         {
             interaction.OnInitialize += () => OnInitInteraction(agent);
             interaction.OnRelease += () => OnReleaseInteraction(agent);
@@ -62,7 +75,6 @@ namespace BehaviourAPI.UnityToolkit.Demos
             Owner = agent;
         }
 
-
         void OnReleaseInteraction(SmartAgent agent)
         {
             if (_registerOnManager)
@@ -72,6 +84,22 @@ namespace BehaviourAPI.UnityToolkit.Demos
                 Debug.LogError("Error: Trying to release a smart object interaction from an Agent that is not the owner", this);
 
             Owner = null;
+        }
+
+        public override Dictionary<string, float> GetCapabilities()
+        {
+            Dictionary<string, float> capabilities = new Dictionary<string, float>();
+
+            if(!string.IsNullOrEmpty(capabilityName))
+                capabilities[capabilityName] = capabilityValue;
+
+            return capabilities;
+        }
+
+        public override float GetCapabilityValue(string capabilityName)
+        {
+            if (this.capabilityName == capabilityName) return capabilityValue;
+            else return 0f;
         }
     }
 }

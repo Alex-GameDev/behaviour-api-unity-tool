@@ -2,6 +2,7 @@ using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.SmartObjects;
 using BehaviourAPI.UnityToolkit;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit.Demos
@@ -18,6 +19,16 @@ namespace BehaviourAPI.UnityToolkit.Demos
         NPCPoseController _poseController;
 
         float lieTime;
+
+        public override Dictionary<string, float> GetCapabilities()
+        {
+            return new Dictionary<string, float>();
+        }
+
+        public override float GetCapabilityValue(string capabilityName)
+        {
+            return 0f;
+        }
 
         protected override Action GetUseAction(SmartAgent agent, RequestData requestData)
         {

@@ -30,14 +30,9 @@ namespace BehaviourAPI.UnityToolkit.Demos
             return new SeatRequestData(useTime);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        protected override ISmartObjectProvider<SmartAgent> GetSmartObjectProvider()
+        protected override SmartObject GetRequestedSmartObject()
         {
-            throw new System.NotImplementedException();
+            return SeatManager.Instance.GetClosestSeat(Agent.transform.position);
         }
     }
 }

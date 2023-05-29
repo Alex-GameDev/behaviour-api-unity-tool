@@ -1,21 +1,41 @@
-using BehaviourAPI.Core.Actions;
-using BehaviourAPI.UnityToolkit.SmartObjects;
-using BehaviourAPI.UnityToolkit;
 using UnityEngine;
-using BehaviourAPI.SmartObjects;
+using System.Collections.Generic;
 
-public class AppleSmartObject : SimpleSmartObject
+namespace BehaviourAPI.UnityToolkit.Demos
 {
-    //TODO: Crear clase FridgeItem que represente un smartObject que se usa cogi�ndolo de la nevera y despu�s us�ndolo.
-    [SerializeField] FridgeSmartObject _fridge;
+    using Core.Actions;
+    using SmartObjects;
 
-    public override bool ValidateAgent(SmartAgent agent)
+    public class AppleSmartObject : SmartObject
     {
-        return _fridge.ValidateAgent(agent);
-    }
+        [SerializeField]
+        FridgeSmartObject _fridge;
 
-    protected override Action GenerateAction(SmartAgent agent, RequestData requestData)
-    {
-        return new DirectRequestAction(agent, _fridge);
+        [SerializeField, Range(0f, 1f)]
+        float hungerCapability = 0.1f;
+
+        public override Dictionary<string, float> GetCapabilities()
+        {
+            Dictionary<string, float> capabilities = new Dictionary<string, float>();
+            capabilities["hunger"] = hungerCapability;
+            return capabilities;
+        }
+
+        public override float GetCapabilityValue(string capabilityName)
+        {
+            if (capabilityName == "hunger") return hungerCapability;
+            else return 0f;
+        }
+
+        public override SmartInteraction RequestInteraction(SmartAgent agent, RequestData requestData)
+        {
+            Action action = new TargetRequestAction(agent, _fridge, requestData);
+            return new SmartInteraction(action, agent, GetCapabilities());
+        }
+
+        public override bool ValidateAgent(SmartAgent agent)
+        {
+            return _fridge.ValidateAgent(agent);
+        }
     }
 }

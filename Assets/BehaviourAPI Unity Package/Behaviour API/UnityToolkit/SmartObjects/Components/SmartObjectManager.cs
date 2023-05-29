@@ -1,11 +1,8 @@
-using BehaviourAPI.UnityToolkit.SmartObjects;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit
 {
-    using BehaviourAPI.SmartObjects;
-    using SmartObjects;
 
     [DefaultExecutionOrder(-1)]
     public class SmartObjectManager : MonoBehaviour
@@ -25,7 +22,6 @@ namespace BehaviourAPI.UnityToolkit
 
             Instance = this;
         }
-
 
         public void RegisterSmartObject(SmartObject smartObject)
         {

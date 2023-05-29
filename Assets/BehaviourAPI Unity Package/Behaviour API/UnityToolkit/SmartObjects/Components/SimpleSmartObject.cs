@@ -2,24 +2,34 @@ using BehaviourAPI.SmartObjects;
 
 namespace BehaviourAPI.UnityToolkit
 {
-    using Core.Actions;
+    using System.Collections.Generic;
+    using UnityEngine;
 
     /// <summary>
-    /// Smart object that provide allways the same interaction
+    /// Smart object that provide always the same interaction
     /// </summary>
     public abstract class SimpleSmartObject : SmartObject
     {
+        [SerializeField] SmartInteractionProvider interactionProvider;
+
+        public override Dictionary<string, float> GetCapabilities()
+        {
+            return interactionProvider.GetCapabilityMap();
+        }
+
+        public override float GetCapabilityValue(string capabilityName)
+        {
+            return interactionProvider.GetCapabilityMap().GetValueOrDefault(capabilityName);
+        }
+
         public override SmartInteraction RequestInteraction(SmartAgent agent, RequestData requestData)
         {
-            Action action = GenerateAction(agent, requestData);
-            SmartInteraction interaction = new SmartInteraction(action, agent, GetCapabilities());
-            SetInteractionEvents(interaction, agent);
+            SmartInteraction interaction = interactionProvider.CreateInteraction(agent);
+            SetInteractionEvents(interaction);
             return interaction;
         }
 
-        protected abstract Action GenerateAction(SmartAgent agent, RequestData requestData);
-
-        protected virtual void SetInteractionEvents(SmartInteraction interaction, SmartAgent agent)
+        public virtual void SetInteractionEvents(SmartInteraction interaction) 
         {
             return;
         }

@@ -1,9 +1,10 @@
-using BehaviourAPI.SmartObjects;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit
 {
+    using SmartObjects;
+
     /// <summary>
     /// Unity component that implements the ISmartAgent interface.
     /// </summary>

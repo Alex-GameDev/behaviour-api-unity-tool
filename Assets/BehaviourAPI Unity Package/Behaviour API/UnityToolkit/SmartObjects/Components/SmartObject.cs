@@ -10,6 +10,8 @@ namespace BehaviourAPI.UnityToolkit
     /// </summary>
     public abstract class SmartObject : MonoBehaviour, ISmartObject<SmartAgent>
     {
+        [SerializeField] List<string> tags = new List<string>();
+
         /// <summary> 
         /// Flag to register the smart object in the <see cref="SmartObjectManager"/>. 
         /// </summary>
@@ -43,14 +45,13 @@ namespace BehaviourAPI.UnityToolkit
         /// <returns>The interaction generated</returns>
         public abstract SmartInteraction RequestInteraction(SmartAgent agent, RequestData requestData);
 
-        public Dictionary<string, float> GetCapabilities()
-        {
-            throw new System.NotImplementedException();
-        }
+        public abstract Dictionary<string, float> GetCapabilities();
 
-        public float GetCapabilityValue(string capabilityName)
+        public abstract float GetCapabilityValue(string capabilityName);
+
+        public bool HasTag(string tag)
         {
-            throw new System.NotImplementedException();
+            return tags.Contains(tag);
         }
     }
 }

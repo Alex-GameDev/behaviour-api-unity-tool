@@ -1,13 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BehaviourAPI.UnityToolkit.SmartObjects
+namespace BehaviourAPI.UnityToolkit
 {
     public class SmartObjectLocator : MonoBehaviour
     {
         public bool autoCheck = true;
         public float intervalTime = 1f;
         public float maxDistance = 10f;
+
+        [Header("Gizmos")]
+        [SerializeField] bool drawAlways;
+        [SerializeField] Color gizmoColor;
 
         List<SmartObject> _availableSmartObjects;
 
@@ -50,5 +54,18 @@ namespace BehaviourAPI.UnityToolkit.SmartObjects
         }
 
         public List<SmartObject> GetSmartObjects() => _availableSmartObjects;
+
+        private void OnDrawGizmosSelected()
+        {
+            UnityEditor.Handles.color = gizmoColor;
+            UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, maxDistance);
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (!drawAlways) return;
+
+            OnDrawGizmosSelected();
+        }
     }
 }

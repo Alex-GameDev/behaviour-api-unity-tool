@@ -1,12 +1,11 @@
-using BehaviourAPI.Core.Actions;
-using BehaviourAPI.UnityToolkit;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace BehaviourAPI.UnityToolkit.Demos
 {
-    using BehaviourAPI.SmartObjects;
     using Core;
+    using Core.Actions;
+    using SmartObjects;
 
     public class BathubSmartObject : DirectSmartObject
     {
@@ -48,5 +47,4 @@ namespace BehaviourAPI.UnityToolkit.Demos
             smartAgent.gameObject.GetComponent<NavMeshAgent>().enabled = enabled;
         }
     }
-
 }

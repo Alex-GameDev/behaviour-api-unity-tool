@@ -52,7 +52,7 @@ namespace BehaviourAPI.SmartObjects
         public ISmartAgent Agent { get; private set; }
 
         /// <summary> 
-        /// Constructor. 
+        /// Create a new Smart interaction with the given action and capabilities. 
         /// </summary>
         /// <param name="agent"> The smart agent that was used to request the interaction. </param>
         /// <param name="action"> The action that this interaction executes </param>
@@ -61,6 +61,18 @@ namespace BehaviourAPI.SmartObjects
         {
             Action = action;
             Capabilities = capabilities;
+            Agent = agent;
+        }
+
+        /// <summary> 
+        /// Create a new Smart interaction with the given action. 
+        /// </summary>
+        /// <param name="agent"> The smart agent that was used to request the interaction. </param>
+        /// <param name="action"> The action that this interaction executes </param>   
+        public SmartInteraction(Action action, ISmartAgent agent)
+        {
+            Action = action;
+            Capabilities = new Dictionary<string, float>();
             Agent = agent;
         }
 

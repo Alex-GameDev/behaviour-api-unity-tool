@@ -1,12 +1,11 @@
 using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.UnityToolkit.Demos;
-using BehaviourAPI.UnityToolkit;
 using UnityEngine;
-using UnityEditor.PackageManager.Requests;
 using BehaviourAPI.SmartObjects;
+using System.Collections.Generic;
 
-namespace BehaviourAPI.UnityToolkit.SmartObjects
+namespace BehaviourAPI.UnityToolkit.Demos
 {
     public class FridgeSmartObject : DirectSmartObject
     {
@@ -38,6 +37,16 @@ namespace BehaviourAPI.UnityToolkit.SmartObjects
                 return Status.Success;
             }
             return Status.Running;
+        }
+
+        public override Dictionary<string, float> GetCapabilities()
+        {
+            return new Dictionary<string, float>();
+        }
+
+        public override float GetCapabilityValue(string capabilityName)
+        {
+            return 0f;
         }
     }
 }

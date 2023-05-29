@@ -2,6 +2,7 @@ using BehaviourAPI.Core;
 using BehaviourAPI.Core.Actions;
 using BehaviourAPI.SmartObjects;
 using BehaviourAPI.UnityToolkit;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit.Demos
@@ -11,7 +12,23 @@ namespace BehaviourAPI.UnityToolkit.Demos
         [SerializeField] ParticleSystem _particleSystem;
         [SerializeField] float useTime = 5f;
 
+        [SerializeField, Range(0f, 1f)]
+        float hygieneCapability = 0.8f;
+
         float startTime;
+
+        public override Dictionary<string, float> GetCapabilities()
+        {
+            Dictionary<string, float> capabilities = new Dictionary<string, float>();
+            capabilities["hygiene"] = hygieneCapability;
+            return capabilities;
+        }
+
+        public override float GetCapabilityValue(string capabilityName)
+        {
+            if (capabilityName == "hygiene") return hygieneCapability;
+            else return 0f;
+        }
 
         protected override Action GetUseAction(SmartAgent agent, RequestData requestData)
         {
