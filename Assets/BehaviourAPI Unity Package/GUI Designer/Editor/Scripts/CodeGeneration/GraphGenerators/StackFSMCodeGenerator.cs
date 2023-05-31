@@ -31,7 +31,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
                         break;
 
                     case PushTransition push:
-                        code.SetMethod(k_PopTransitionMethod);
+                        code.SetMethod(k_PushTransitionMethod);
 
                         if (nodeData.parentIds.Count > 0)
                             GenerateCode(GetNodeById(nodeData.parentIds[0]), template);
