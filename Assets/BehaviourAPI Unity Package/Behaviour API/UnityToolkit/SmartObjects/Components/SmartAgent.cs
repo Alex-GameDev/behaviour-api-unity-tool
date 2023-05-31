@@ -29,6 +29,11 @@ namespace BehaviourAPI.UnityToolkit
         public ISoundComponent Sound { get; set; }
 
         /// <summary>
+        /// Component used for the agent to talk.
+        /// </summary>
+        public IRendererComponent Renderer { get; set; }
+
+        /// <summary>
         /// Component used fot the agent 
         /// </summary>
 
@@ -42,6 +47,7 @@ namespace BehaviourAPI.UnityToolkit
             Movement = GetComponent<IMovementComponent>();
             Talk = GetComponent<ITalkComponent>();
             Sound = GetComponent<ISoundComponent>();
+            Renderer = GetComponent<IRendererComponent>();
         }
 
         public float GetNeed(string name)

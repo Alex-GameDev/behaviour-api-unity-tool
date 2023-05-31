@@ -80,6 +80,11 @@ namespace BehaviourAPI.UnityToolkit
         public ISoundComponent Sound { get; private set; }
 
         /// <summary>
+        /// The component used by talk actions.
+        /// </summary>
+        public IRendererComponent Renderer { get; private set; }
+
+        /// <summary>
         /// Create a new unity execution context with a runner script component. Use this constructor
         /// to access methods in the runner component with custom actions or perceptions.
         /// </summary>
@@ -110,6 +115,7 @@ namespace BehaviourAPI.UnityToolkit
                 Movement = gameObject.GetComponent<IMovementComponent>();
                 Talk = gameObject.GetComponent<ITalkComponent>();
                 Sound = gameObject.GetComponent<ISoundComponent>();
+                Renderer = gameObject.GetComponent<IRendererComponent>();
             }
             else
             {
