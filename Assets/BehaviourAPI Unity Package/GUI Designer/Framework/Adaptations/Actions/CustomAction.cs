@@ -10,7 +10,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
     /// Adaptation class for use custom <see cref="FunctionalAction"/> in editor tools.
     /// <para>! -- Don't use this class directly in code.</para>
     /// </summary>
-    public class CustomAction : Action
+    public class CustomAction : FunctionalAction
     {
         /// <summary>
         /// Method reference for start event.
@@ -45,41 +45,19 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         public override void SetExecutionContext(ExecutionContext context)
         {
             var unityContext = (UnityExecutionContext)context;
-            if (unityContext != null)
+            if (unityContext != null && unityContext.RunnerComponent != null)
             {
-                start.SetContext(unityContext);
-                update.SetContext(unityContext);
-                stop.SetContext(unityContext);
-                pause.SetContext(unityContext);
-                unpause.SetContext(unityContext);
+                onStarted = start.CreateDelegate(unityContext.RunnerComponent);
+                onUpdated = update.CreateDelegate(unityContext.RunnerComponent);
+                onStopped = stop.CreateDelegate(unityContext.RunnerComponent);
+                onPaused = pause.CreateDelegate(unityContext.RunnerComponent);
+                onUnpaused = unpause.CreateDelegate(unityContext.RunnerComponent);
             }
             else
             {
-                Debug.LogError("Context action need an UnityExecutionContext to work");
+                Debug.LogError("Context action need an UnityExecutionContext with a runner component to work");
             }
         }
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// Invoke the method stored in <see cref="start"/>.
-        /// </summary>
-        public override void Start() => start.GetFunction()?.Invoke();
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// Invoke the method stored in <see cref="stop"/>.
-        /// </summary>
-        public override void Stop() => stop.GetFunction()?.Invoke();
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// Invoke the method stored in <see cref="update"/>.
-        /// </summary>
-        public override Status Update() => update.GetFunction()?.Invoke() ?? Status.Running;
-
-        public override void Pause() => pause.GetFunction()?.Invoke();
-
-        public override void Unpause() => unpause.GetFunction()?.Invoke();
 
         /// <summary>
         /// <inheritdoc/>

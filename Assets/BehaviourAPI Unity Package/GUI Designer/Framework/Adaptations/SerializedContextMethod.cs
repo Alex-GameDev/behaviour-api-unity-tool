@@ -90,7 +90,20 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         {
             var del = GetDelegate(context.RunnerComponent, FunctionArgs, typeof(T));
             if (del is T typedDelegate) _function = typedDelegate;
-        }       
+        }    
+        
+        public T CreateDelegate(Component runner)
+        {
+            var del = GetDelegate(runner, FunctionArgs, typeof(T));
+            if(del is T typedDelegate)
+            {
+                return typedDelegate;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 
     /// <summary>

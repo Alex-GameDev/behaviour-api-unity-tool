@@ -3,12 +3,13 @@
     /// <summary>
     /// Class that stores the information sent to smart object to request an interaction.
     /// </summary>
+    [System.Serializable]
     public class RequestData
     {
         /// <summary>
         /// The name of the interaction requested.
         /// </summary>
-        public string InteractionName { get; set; }
+        public string InteractionName;
 
         /// <summary>
         /// Create a new request data without specify the interaction name.

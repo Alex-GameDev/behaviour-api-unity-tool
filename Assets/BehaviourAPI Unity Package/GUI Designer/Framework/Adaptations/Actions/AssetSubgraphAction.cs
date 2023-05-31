@@ -14,7 +14,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         public void Build(BuildData data)
         {
             var runtimeData = subgraph.GetBehaviourSystemData();
-            SubSystem = runtimeData.BuildSystem(data.Runner);
+            SubSystem = runtimeData.BuildSystem(data.Runner).MainGraph;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
     /// Adaptation class for use custom <see cref="ConditionPerception"/> in editor tools.
     /// <para>! -- Don't use this class directly in code.</para>
     /// </summary>
-    public class CustomPerception : Perception
+    public class CustomPerception : ConditionPerception
     {
         /// <summary>
         /// Method reference for init event.
@@ -45,49 +45,19 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         public override void SetExecutionContext(ExecutionContext context)
         {
             var unityContext = (UnityExecutionContext)context;
-            if (unityContext != null)
+            if (unityContext != null && unityContext.RunnerComponent != null)
             {
-                init.SetContext(unityContext);
-                check.SetContext(unityContext);
-                reset.SetContext(unityContext);
-                pause.SetContext(unityContext);
-                unpause.SetContext(unityContext);
+                onInit = init.CreateDelegate(unityContext.RunnerComponent);
+                onCheck = check.CreateDelegate(unityContext.RunnerComponent);
+                onReset = reset.CreateDelegate(unityContext.RunnerComponent);
+                onPaused = pause.CreateDelegate(unityContext.RunnerComponent);
+                onUnpaused = unpause.CreateDelegate(unityContext.RunnerComponent);
             }
             else
             {
                 Debug.LogError("Context perception need an UnityExecutionContext to work");
             }
         }
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// Invoke the method stored in <see cref="init"/>.
-        /// </summary>
-        public override void Initialize() => init.GetFunction()?.Invoke();
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// Invoke the method stored in <see cref="reset"/>.
-        /// </summary>
-        public override void Reset() => reset.GetFunction()?.Invoke();
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// Invoke the method stored in <see cref="check"/>.
-        /// </summary>
-        public override bool Check() => check.GetFunction()?.Invoke() ?? false;
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// Invoke the method stored in <see cref="reset"/>.
-        /// </summary>
-        public override void Pause() => pause.GetFunction()?.Invoke();
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// Invoke the method stored in <see cref="check"/>.
-        /// </summary>
-        public override void Unpause() => unpause.GetFunction()?.Invoke();
 
         /// <summary>
         /// <inheritdoc/>
