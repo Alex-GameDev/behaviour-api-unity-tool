@@ -18,6 +18,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
     /// </summary>
     public class NodeView : UnityEditor.Experimental.GraphView.Node
     {
+        #region UI Elements 
         private static readonly string k_NameField = "title-input-field";
         private static readonly string k_Status = "node-status";
         private static readonly string k_Border = "node-border";
@@ -26,9 +27,8 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
         private static readonly string k_ExtensionToggle = "node-extension-toggle";
         private static readonly string k_ExtensionContainer = "node-extension-content";
 
-        private static readonly string k_ColorTop = "node-type-color-top";
-        private static readonly string k_ColorBottom = "node-type-color-bottom";
         private static readonly string k_PortCover = "node-port-cover";
+        #endregion
 
         #region ------------------------------- Public fields -------------------------------
 
@@ -71,9 +71,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
         VisualElement m_ExtensionContainer;
         VisualElement m_StatusBorder;
 
-        VisualElement m_ColorTop;
-        VisualElement m_ColorBottom;
-
         TextField m_NameInputField;
 
         Toggle m_ExtensionToggle;
@@ -84,6 +81,30 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
 
         #endregion
 
+        public NodeView(NodeData data, NodeDrawer drawer)
+        {
+            this.data = data;
+            this.drawer = drawer;
+
+            m_NameInputField = this.Q<TextField>(k_NameField);
+            m_BorderElement = this.Q(k_Border);
+            m_ExtensionToggle = this.Q<Toggle>(k_ExtensionToggle);
+            m_ExtensionContainer = this.Q(k_ExtensionContainer);
+            m_StatusBorder = this.Q(k_Status);
+            m_Details = this.Q(k_DetailsDiv);
+
+            m_ExtensionToggle.RegisterValueChangedCallback(OnChangeExtensionToggle);
+
+            m_NameInputField.value = data.name;
+        }
+
+        /// <summary>
+        /// Create a new view for an specified node
+        /// </summary>
+        /// <param name="data">The node data.</param>
+        /// <param name="drawer">The drawer used to render the node details.</param>
+        /// <param name="graphView"></param>
+        /// <param name="property">The serialized property of the node.</param>
         public NodeView(NodeData data, NodeDrawer drawer, BehaviourGraphView graphView, SerializedProperty property = null) : base(drawer.LayoutPath)
         {
             this.data = data;
@@ -99,8 +120,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
             m_ExtensionToggle = this.Q<Toggle>(k_ExtensionToggle);
             m_ExtensionContainer = this.Q(k_ExtensionContainer);
             m_StatusBorder = this.Q(k_Status);
-            m_ColorTop = this.Q(k_ColorTop);
-            m_ColorBottom = this.Q(k_ColorBottom);
             m_Details = this.Q(k_DetailsDiv);
 
             m_ExtensionToggle.RegisterValueChangedCallback(OnChangeExtensionToggle);
@@ -108,9 +127,67 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
             nodeProperty = property;
 
             drawer.SetUpPorts();
+
+            m_NameInputField.value = data.name;
+
+            if (nodeProperty != null)
+            {
+                m_NameInputField.bindingPath = nodeProperty.FindPropertyRelative("name").propertyPath;
+                m_NameInputField.Bind(nodeProperty.serializedObject);
+                m_NameInputField.isReadOnly = false;
+            }
+            else
+            {
+                m_NameInputField.isReadOnly = true;
+            }
+
             DrawNodeDetails();
             RefreshDisplay();
         }
+
+        /// <summary>
+        /// Called when property is modified in the inspector.
+        /// </summary>
+        public void OnPropertyChanged()
+        {
+            foreach (var referencedData in data.references)
+            {
+                var display = m_taskViews[referencedData.FieldName];
+                display.Update(referencedData.GetInfo());
+            }
+            drawer.OnRefreshDisplay();
+            drawer.OnRefreshDisplay();
+        }
+
+        /// <summary>
+        /// Call this method when the node is selected.
+        /// </summary>
+        public override void OnSelected()
+        {
+            base.OnSelected();
+            m_BorderElement.ChangeBackgroundColor(new Color(.5f, .5f, .5f, .5f));
+            drawer.OnSelected();
+        }
+
+        /// <summary>
+        /// Call this method when the node is unselected.
+        /// </summary>
+        public override void OnUnselected()
+        {
+            base.OnSelected();
+            m_BorderElement.ChangeBackgroundColor(new Color(0f, 0f, 0f, 0f));
+            drawer.OnUnselected();
+        }
+
+        /// <summary>
+        /// Call this when the node is dragged in the editor
+        /// </summary>
+        public void OnMoved()
+        {
+            data.position = GetPosition().position;
+            drawer.OnMoved();
+        }
+
 
         private void DrawNodeDetails()
         {
@@ -245,8 +322,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
             var iconElement = this.Q("node-icon");
             iconElement.ChangeBackgroundColor(color);
             elementTypeColor = color;
-            //m_ColorTop.ChangeBackgroundColor(color);
-            //m_ColorBottom.ChangeBackgroundColor(color);
         }
 
         /// <summary>
@@ -262,35 +337,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
         #endregion
 
         #region -------------------------------------- Editor Events --------------------------------------
-
-        /// <summary>
-        /// Call this method when the node is selected.
-        /// </summary>
-        public override void OnSelected()
-        {
-            base.OnSelected();
-            m_BorderElement.ChangeBackgroundColor(new Color(.5f, .5f, .5f, .5f));
-            drawer.OnSelected();
-        }
-
-        /// <summary>
-        /// Call this method when the node is unselected.
-        /// </summary>
-        public override void OnUnselected()
-        {
-            base.OnSelected();
-            m_BorderElement.ChangeBackgroundColor(new Color(0f, 0f, 0f, 0f));
-            drawer.OnUnselected();
-        }
-
-        /// <summary>
-        /// Call this when the node is moved
-        /// </summary>
-        public void OnMoved()
-        {
-            data.position = GetPosition().position;
-            drawer.OnMoved();
-        }
 
         /// <summary>
         /// Call this method when a new edge is connected to the node.
@@ -539,6 +585,8 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
             SetPosition(new Rect(data.position, Vector2.zero));
             drawer.OnRepaint();
         }
+
+
 
         private void UpdateChildConnectionViews()
         {

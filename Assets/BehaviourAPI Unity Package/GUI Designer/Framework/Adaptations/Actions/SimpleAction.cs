@@ -28,5 +28,10 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
                 Debug.LogError("Simple action need an UnityExecutionContext to work");
             }
         }
+
+        public override string ToString()
+        {
+            return "SimpleAction(" + method.ToString() + ")";
+        }
     }
 }

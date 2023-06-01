@@ -5,11 +5,20 @@ using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit
 {
+    /// <summary>
+    /// Display a text in the talk component, and then waits to remove the text.
+    /// </summary>
     public class TalkAction : UnityAction
     {
-        public string text;
+        /// <summary>
+        /// The text displayed in the talk component.
+        /// </summary>
+        [SerializeField] string text;
 
-        public float delay;
+        /// <summary>
+        /// The number of seconds that the action will wait after display the text.
+        /// </summary>
+        [SerializeField] float delay;
 
         float _currentDelay;
 
@@ -21,23 +30,6 @@ namespace BehaviourAPI.UnityToolkit
         {
             this.text = text;
             this.delay = delay;
-        }
-
-        public override string DisplayInfo => base.DisplayInfo;
-
-        public override object Clone()
-        {
-            return base.Clone();
-        }
-
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
         }
 
         public override void Start()
@@ -77,7 +69,6 @@ namespace BehaviourAPI.UnityToolkit
                 {
                     return Status.Running;
                 }
-
             }
         }
     }

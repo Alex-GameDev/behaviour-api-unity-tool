@@ -33,11 +33,10 @@ namespace BehaviourAPI.UnityToolkit
 
         public override void Stop()
         {
-            Debug.Log("Stop");
             context.Sound.CancelSound();
         }
 
-        public override string DisplayInfo => "Play clip $clip";
+        public override string ToString() => $"Play clip {clip}";
     }
 
 }

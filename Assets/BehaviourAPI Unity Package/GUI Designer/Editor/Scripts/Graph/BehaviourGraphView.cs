@@ -22,7 +22,8 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
 
         private static readonly float k_MinZoomScale = 1.5f;
         private static readonly float k_MaxZoomScale = 3f;
-        private static string stylePath => "graph.uss";
+
+        private static readonly string stylePath = "graph.uss";
 
         #endregion
 
@@ -34,9 +35,9 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
         public Action DataChanged { get; set; }
         public Action<List<int>> SelectionNodeChanged { get; set; }
 
-        public IEdgeConnectorListener Connector => m_EdgeConnectorListener;
-
         public Action<string> UndoRegisterOperationPerformed { get; set; }
+
+        public IEdgeConnectorListener Connector => m_EdgeConnectorListener;
 
         #endregion
 
@@ -64,28 +65,32 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
         {
             styleSheets.Add(BehaviourAPISettings.instance.GetStyleSheet(stylePath));
 
+            // Background:
             GridBackground gridBackground = new GridBackground();
             Insert(0, gridBackground);
 
+            // Minimap:
             m_Minimap = new MiniMap() { anchored = true };
             m_Minimap.SetPosition(new Rect(k_miniMapOffset, k_miniMapSize));
             RegisterCallback((GeometryChangedEvent evt) =>
             {
                 m_Minimap.SetPosition(new Rect(evt.newRect.max - (k_miniMapOffset + k_miniMapSize), k_miniMapSize));
             });
-
             Add(m_Minimap);
 
+            // Manipulators;
             SetupZoom(ContentZoomer.DefaultMinScale * k_MinZoomScale, ContentZoomer.DefaultMaxScale * k_MaxZoomScale);
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
 
+            // Connector
             m_EdgeConnectorListener = new CustomEdgeConnector<EdgeView>(OnEdgeCreated, OnEdgeCreatedOutsidePort);
+
+            // Events
             nodeCreationRequest = HandleNodeCreationCall;
             graphViewChanged = HandleGraphViewChanged;
             m_EditorWindow = editorWindow;
-
             Undo.undoRedoPerformed += ReloadView;
         }
 

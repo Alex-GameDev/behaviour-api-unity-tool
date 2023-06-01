@@ -62,6 +62,12 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
             }
             
         }
+
+        public override string ToString()
+        {
+            if (string.IsNullOrWhiteSpace(methodName)) return "";
+            return $"{(string.IsNullOrEmpty(componentName) ? "$runner" : componentName)}.{methodName}";
+        }
     }
 
     /// <summary>

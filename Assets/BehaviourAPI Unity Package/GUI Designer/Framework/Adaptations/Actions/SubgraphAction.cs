@@ -44,5 +44,10 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
                 }
             }
         }
+
+        public override string ToString()
+        {
+           return $"@Subgraph: _g({subgraphId})";
+        }
     }
 }

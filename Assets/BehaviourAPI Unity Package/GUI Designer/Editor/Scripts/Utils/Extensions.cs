@@ -11,6 +11,8 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
     using Core.Actions;
     using Core.Perceptions;
     using Framework;
+    using System;
+    using System.Collections;
     using Action = Core.Actions.Action;
 
     public static class Extensions
@@ -80,122 +82,36 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 
         public static string GetInfo(this ReferenceData referenceData) 
         {
-            if (referenceData.Value == null) return "-";
-            else if (referenceData.Value is Action action) return action.GetActionInfo();
-            else if (referenceData.Value is Perception perception) return perception.GetPerceptionInfo();
-            else if (referenceData.Value is SerializedContextMethod method) return method.GetSerializedMethodText();
-            else return "-";
-        }
+            var graphMap = BehaviourSystemEditorWindow.instance.System.Data.graphs.ToDictionary(g => g.id, g => g.name);
 
-        public static string GetActionInfo(this Action action)
-        {
-            switch (action)
+            if (referenceData.Value != null)
             {
-                case ITaskDisplayable taskDisplayable:
-                    string info = taskDisplayable.DisplayInfo;
+                string info = referenceData.Value.ToString();
 
-                    var type = taskDisplayable.GetType();
-                    var properties = type.GetFields(BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.NonPublic);
-
-                    for (int i = 0; i < properties.Length; i++)
-                    {
-                        info = info.Replace($"${properties[i].Name}", properties[i].GetValue(taskDisplayable)?.ToString());
-                    }
+                if (info.StartsWith('@'))
+                {
+                    string pattern = @"_g\(([a-f0-9\-]*)\)";
+                    return Regex.Replace(info.Substring(1), pattern, Replacement);
+                }
+                else
+                {
                     return info;
-
-                case CustomAction customAction:
-
-                    var actionMethodLines = new List<string>();
-
-                    var code = customAction.start.GetSerializedMethodText();
-                    if (code != null) actionMethodLines.Add(code);
-
-                    code = customAction.update.GetSerializedMethodText();
-                    if (code != null) actionMethodLines.Add(code);
-                    else actionMethodLines.Add("() => Running;");
-
-                    code = customAction.stop.GetSerializedMethodText();
-                    if (code != null) actionMethodLines.Add(code);
-
-                    return actionMethodLines.Join("\n");               
-
-                case CompoundActionWrapper compoundAction:
-                    var compoundType = compoundAction.compoundAction.GetType();
-                    var logicCharacter = compoundType == typeof(SequenceAction) ? " >> " :
-                      compoundType == typeof(ParallelAction) ? " | " : " - ";
-                    return "(" + compoundAction.subActions.Select(sub => GetActionInfo(sub.action)).Join(logicCharacter) + ")";
-
-                case SubgraphAction subgraphAction:
-                    if (string.IsNullOrEmpty(subgraphAction.subgraphId))
-                    {
-                        return "Subgraph: Unasigned";
-                    }
-                    else
-                    {
-                        var graph = BehaviourSystemEditorWindow.instance.System.Data.graphs.Find(g => g.id == subgraphAction.subgraphId);
-                        if (graph == null) return "Subgraph: missing subgraph";
-                        else return "Subgraph: " + graph.name;
-                    }
-
-                default:
-                    return null;
-
+                }
             }
-        }
-
-        public static string GetPerceptionInfo(this Perception perception)
-        {
-            switch (perception)
+            else
             {
-
-                case ITaskDisplayable taskDisplayable:
-                    string info = taskDisplayable.DisplayInfo;
-
-                    var type = taskDisplayable.GetType();
-                    var properties = type.GetFields();
-
-                    for (int i = 0; i < properties.Length; i++)
-                    {
-                        info = info.Replace($"${properties[i].Name}", properties[i].GetValue(taskDisplayable)?.ToString());
-                    }
-                    return info;
-
-                case CustomPerception customPerception:
-                    var perceptionMethodLines = new List<string>();
-
-                    var code = customPerception.init.GetSerializedMethodText();
-                    if (code != null) perceptionMethodLines.Add(code);
-
-                    code = customPerception.check.GetSerializedMethodText();
-                    if (code != null) perceptionMethodLines.Add(code);
-                    else perceptionMethodLines.Add("() => false;");
-
-                    code = customPerception.reset.GetSerializedMethodText();
-                    if (code != null) perceptionMethodLines.Add(code);
-
-                    return perceptionMethodLines.Join("\n");
-
-                case CompoundPerceptionWrapper compoundPerception:
-                    var compoundType = compoundPerception.compoundPerception.GetType();
-                    var logicCharacter = compoundType == typeof(AndPerception) ? " && " :
-                        compoundType == typeof(OrPerception) ? " || " : " - ";
-                    return "(" + compoundPerception.subPerceptions.Select(sub => GetPerceptionInfo(sub.perception)).Join(logicCharacter) + ")";
-                default:
-                    return null;
+                return "-";
             }
-        }
 
-        public static string GetSerializedMethodText(this SerializedContextMethod contextMethod)
-        {
-            if (string.IsNullOrWhiteSpace(contextMethod.methodName)) return null;
-            return $"{(string.IsNullOrEmpty(contextMethod.componentName) ? "$runner" : contextMethod.componentName)}.{contextMethod.methodName};";
-        }
-
-        public static SerializedProperty AddElement(this SerializedProperty prop)
-        {
-            int size = prop.arraySize;
-            prop.InsertArrayElementAtIndex(size);
-            return prop.GetArrayElementAtIndex(size);
+            string Replacement(Match match)
+            {
+                string key = match.Groups[1].Value;
+                if (graphMap.ContainsKey(key))
+                {
+                    return graphMap[key];
+                }
+                return match.Value;
+            }
         }
 
         public static void MoveAtFirst<T>(this List<T> list, T element)

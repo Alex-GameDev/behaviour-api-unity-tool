@@ -54,7 +54,7 @@ namespace BehaviourAPI.UnityToolkit
             context.Movement.CancelMove();
         }
 
-        public override string DisplayInfo => "Walk to $Target";
+        public override string ToString() => $"Walk to {Target}";
     }
 }
 

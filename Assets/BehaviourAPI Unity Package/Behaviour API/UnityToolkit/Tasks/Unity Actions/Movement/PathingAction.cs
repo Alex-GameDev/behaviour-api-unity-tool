@@ -40,7 +40,7 @@ namespace BehaviourAPI.UnityToolkit
             this.distanceThreshold = distanceThreshold;
         }
 
-        public override string DisplayInfo => "Move between positions.";
+        public override string ToString() => $"Move between ({positions.Count}) positions.";
 
         public override void Start()
         {

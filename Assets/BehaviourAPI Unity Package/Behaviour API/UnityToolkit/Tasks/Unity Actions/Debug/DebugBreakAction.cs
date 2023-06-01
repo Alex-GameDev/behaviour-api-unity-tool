@@ -11,7 +11,7 @@ namespace BehaviourAPI.UnityToolkit
     [SelectionGroup("DEBUG")]
     public class DebugBreakAction : UnityAction
     {
-        public override string DisplayInfo => "Debug Break";
+        public override string ToString() => "Debug Break";
 
         /// <summary>
         /// Create a Debug breaak

@@ -58,6 +58,10 @@ namespace BehaviourAPI.UnityToolkit.Demos
             return Status.Running;
         }
 
-        public override string DisplayInfo => "Make light blink in $Color";
+        public override string ToString()
+        {
+            var colorTag = $"#{ColorUtility.ToHtmlStringRGB(Color)}";
+            return $"Make light blink in <color={colorTag}>color</color> and disable {Marker.name}"; 
+        }
     }
 }

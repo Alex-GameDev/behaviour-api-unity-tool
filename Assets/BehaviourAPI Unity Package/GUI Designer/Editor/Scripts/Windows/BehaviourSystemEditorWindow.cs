@@ -74,7 +74,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
         VisualElement m_EditorToolbarDiv;
 
         IMGUIContainer m_InspectorContainer;
-
+          
         Label m_PathLabel;
         Label m_ModeLabel;
 
@@ -666,13 +666,9 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 
         private void DrawAllFieldsWithoutFoldout(SerializedProperty property)
         {
-            int deep = property.propertyPath.Count(c => c == '.');
-            foreach (SerializedProperty p in property)
+            foreach(var prop in property.GetChildProperties())
             {
-                if (p.propertyPath.Count(c => c == '.') == deep + 1)
-                {
-                    EditorGUILayout.PropertyField(p, true);
-                }
+                EditorGUILayout.PropertyField(prop, includeChildren: true);
             }
         }
 

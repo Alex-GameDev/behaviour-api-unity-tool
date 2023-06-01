@@ -54,6 +54,6 @@ namespace BehaviourAPI.UnityToolkit
                 return Status.Running;
         }
 
-        public override string DisplayInfo => "Move to a random position in a $maxDistance radius circle.";
+        public override string ToString() => $"Move to a random position in a {maxDistance} radius circle.";
     }
 }

@@ -4,6 +4,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
     using Core;
     using Core.Actions;
+    using System.Collections.Generic;
     using UnityToolkit;
 
     /// <summary>
@@ -73,6 +74,23 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
             copy.pause = (ContextualSerializedAction)pause?.Clone();
             copy.unpause = (ContextualSerializedAction)pause?.Clone();
             return copy;
+        }
+
+        public override string ToString()
+        {
+            List<string> actionLines = new List<string>();
+            string startLine = start.ToString();
+            if (!string.IsNullOrEmpty(startLine)) actionLines.Add($"Start:{startLine}");
+            string updateLine = update.ToString();
+            if (!string.IsNullOrEmpty(updateLine)) actionLines.Add($"Update:{updateLine}");
+            string stopLine = stop.ToString();
+            if (!string.IsNullOrEmpty(stopLine)) actionLines.Add($"Stop:{stopLine}");
+            string pauseLine = pause.ToString();
+            if (!string.IsNullOrEmpty(pauseLine)) actionLines.Add($"Pause:{pauseLine}");
+            string unpauseLine = unpause.ToString();
+            if (!string.IsNullOrEmpty(unpauseLine)) actionLines.Add($"Unpause:{unpauseLine}");
+
+            return "CustomAction(" + string.Join(", ", actionLines) + ")";
         }
     }
 }

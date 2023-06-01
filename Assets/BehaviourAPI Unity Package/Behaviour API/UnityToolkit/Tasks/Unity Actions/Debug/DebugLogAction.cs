@@ -15,7 +15,7 @@ namespace BehaviourAPI.UnityToolkit
         /// </summary>
         public string message;
 
-        public override string DisplayInfo => "Debug Log \"$message\"";
+        public override string ToString() => $"Debug Log \"{message}\"";
 
 
 

@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
+    using BehaviourAPI.Core.Perceptions;
     using Core;
     using Core.Actions;
 
@@ -79,5 +80,13 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 
             compoundAction.SubActions = subActions.Select(p => p.action).ToList();
         }
+
+        public override string ToString()
+        {
+            var compoundType = compoundAction.GetType();
+            var logicCharacter = compoundType == typeof(SequenceAction) ? " >> " : compoundType == typeof(ParallelAction) ? " | " : " - ";
+            return "(" + string.Join(logicCharacter, subActions.Select(sub => sub.action?.ToString())) + ")";
+        }
+
     }
 }

@@ -79,7 +79,7 @@ namespace BehaviourAPI.UnityToolkit
             context.Movement.CancelMove();
             context.Movement.Speed *= 1f / speed;
         }
-        public override string DisplayInfo => "Chase $target for $maxTime seconds";
+        public override string ToString() => $"Chase {target} for {maxTime} second(s)";
     }
 
 }

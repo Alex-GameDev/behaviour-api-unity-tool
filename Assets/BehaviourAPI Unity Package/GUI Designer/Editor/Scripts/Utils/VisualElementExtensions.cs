@@ -6,6 +6,9 @@ using UnityEngine.UIElements;
 namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     using Graphs;
+    using System.Linq;
+    using UnityEditor;
+
     public static class VisualElementExtensions
     {
         public static void Disable(this VisualElement visualElement) => visualElement.style.display = DisplayStyle.None;
@@ -98,5 +101,16 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
             }
         }
 
+        public static IEnumerable<SerializedProperty> GetChildProperties(this SerializedProperty property)
+        {
+            int deep = property.propertyPath.Count(c => c == '.');
+            foreach (SerializedProperty p in property)
+            {
+                if (p.propertyPath.Count(c => c == '.') == deep + 1)
+                {
+                    yield return p.Copy();
+                }
+            }
+        }
     }
 }

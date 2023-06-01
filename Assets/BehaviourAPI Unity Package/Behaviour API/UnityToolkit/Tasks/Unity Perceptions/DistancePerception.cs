@@ -40,6 +40,6 @@ namespace BehaviourAPI.UnityToolkit
             return Vector3.Distance(context.Transform.position, OtherTransform.position) < MaxDistance;
         }
 
-        public override string DisplayInfo => "if dist to $OtherTransform < $MaxDistance";
+        public override string ToString() => $"If dist to {OtherTransform} < {MaxDistance}";
     }
 }

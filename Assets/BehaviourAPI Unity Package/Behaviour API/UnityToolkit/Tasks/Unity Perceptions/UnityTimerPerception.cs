@@ -36,6 +36,6 @@ namespace BehaviourAPI.UnityToolkit
             return _currentTime >= TotalTime;
         }
 
-        public override string DisplayInfo => "$TotalTime second(s) passes";
+        public override string ToString() => $"{TotalTime} second(s) passes";
     }
 }

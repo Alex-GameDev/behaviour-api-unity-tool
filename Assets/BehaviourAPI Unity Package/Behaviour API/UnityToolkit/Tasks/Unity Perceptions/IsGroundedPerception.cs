@@ -8,7 +8,7 @@ namespace BehaviourAPI.UnityToolkit
     /// </summary>
     public class IsGroundedPerception : UnityPerception
     {
-        public override string DisplayInfo => "is grounded";
+        public override string ToString() => "Is grounded";
 
         public override bool Check()
         {

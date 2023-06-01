@@ -79,5 +79,12 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 
             compoundPerception.Perceptions = subPerceptions.Select(p => p.perception).ToList();
         }
+
+        public override string ToString()
+        {
+            var compoundType = compoundPerception.GetType();
+            var logicCharacter = compoundType == typeof(AndPerception) ? " && " : compoundType == typeof(OrPerception) ? " || " : " - ";
+            return "(" + string.Join(logicCharacter, subPerceptions.Select(sub => sub.perception?.ToString())) + ")";
+        }
     }
 }

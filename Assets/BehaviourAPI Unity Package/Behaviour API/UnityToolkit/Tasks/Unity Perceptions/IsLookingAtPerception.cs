@@ -38,6 +38,6 @@ namespace BehaviourAPI.UnityToolkit
             return Vector3.Angle(lookAt, delta) < maxAngle;
         }
 
-        public override string DisplayInfo => "is looking at $OtherTransform";
+        public override string ToString() => $"Is looking at {OtherTransform}";
     }
 }

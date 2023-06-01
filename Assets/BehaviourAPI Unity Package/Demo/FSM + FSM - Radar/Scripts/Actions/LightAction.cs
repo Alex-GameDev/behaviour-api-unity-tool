@@ -1,10 +1,5 @@
 using BehaviourAPI.Core;
-using BehaviourAPI.UnityToolkit;
 using UnityEngine;
-
-/// <summary>
-/// Custom action that changes the color of a light.
-/// </summary>
 
 namespace BehaviourAPI.UnityToolkit.Demos
 {
@@ -16,8 +11,6 @@ namespace BehaviourAPI.UnityToolkit.Demos
         public float TimeToEnd;
 
         float _currentTime;
-
-        public override string DisplayInfo => "Change light color to $Color";
 
         public LightAction()
         {
@@ -52,6 +45,12 @@ namespace BehaviourAPI.UnityToolkit.Demos
                 }
             }
             return Status.Running;
+        }
+
+        public override string ToString()
+        {
+            var colorTag = $"#{ColorUtility.ToHtmlStringRGB(Color)}";
+            return $"Change light ({Light}) color to <color={colorTag}>color</color>";
         }
     }
 

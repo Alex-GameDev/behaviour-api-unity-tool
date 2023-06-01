@@ -9,25 +9,19 @@ namespace BehaviourAPI.UnityToolkit
     /// revert the sprite value. Otherwise the action will end inmediatly.
     /// </summary>
     [SelectionGroup("SPRITE")]
-    public class ChangeSpriteAction : UnityAction
+    public class ChangeTintAction : UnityAction
     {
-        /// <summary>
-        /// The sprite applied to the renderer.
-        /// </summary>
-        [SerializeField] Sprite sprite;
+        [SerializeField] Color tintColor;
 
-        /// <summary>
-        /// The time to finish the action and revert the value.
-        /// </summary>
         [SerializeField] float time = 1f;
 
-        private Sprite _previousSprite;
+        private Color _previousColor;
         private float _currentTime;
 
         public override void Start()
         {
-            _previousSprite = context.Renderer.Sprite;
-            context.Renderer.Sprite = sprite;
+            _previousColor = context.Renderer.Tint;
+            context.Renderer.Tint = tintColor;
         }
 
         public override Status Update()
@@ -47,20 +41,22 @@ namespace BehaviourAPI.UnityToolkit
         {
             if (time > 0f)
             {
-                context.Renderer.Sprite = _previousSprite;
+                context.Renderer.Tint = _previousColor;
             }
         }
 
         public override string ToString()
         {
-            if(time > 0f)
+            var colorTag = $"#{ColorUtility.ToHtmlStringRGB(tintColor)}";
+            string color =  $"<color={colorTag}>color</color>";
+            if (time > 0f)
             {
-                return $"Change renderer sprite to {sprite} by {time} second(s)";
+                return $"Change renderer tint color to {color} by {time} second(s)";
             }
             else
             {
-                return $"Change renderer sprite to {sprite}";
-            }            
+                return $"Change renderer tint color to {color}";
+            }
         }
     }
 }

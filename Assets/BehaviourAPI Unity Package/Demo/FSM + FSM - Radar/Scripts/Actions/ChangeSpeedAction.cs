@@ -33,7 +33,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
             return Status.Success;
         }
 
-        public override string DisplayInfo => "Change car speed";
+        public override string ToString() => "Change car speed";
     }
 
 }

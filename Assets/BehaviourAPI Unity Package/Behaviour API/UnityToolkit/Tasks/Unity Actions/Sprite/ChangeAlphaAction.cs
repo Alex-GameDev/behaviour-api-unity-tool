@@ -4,39 +4,32 @@ using UnityEngine;
 namespace BehaviourAPI.UnityToolkit
 {
     /// <summary>
-    /// Flip the sprite of the renderer component. 
+    /// Change the alpha value of the renderer component. 
     /// If time is bigger that 0, the action will end when the time passes and
-    /// revert the flip. Otherwise the action will end inmediatly.
+    /// revert the alpha value. Otherwise the action will end inmediatly.
     /// </summary>
     [SelectionGroup("SPRITE")]
-    public class FlipSpriteAction : UnityAction
+    public class ChangeAlphaAction : UnityAction
     {
         /// <summary>
-        /// ¿Flip the x coord?
+        /// The value of the alpha
         /// </summary>
-        [SerializeField] bool flipx;
-
-        /// <summary>
-        /// ¿Flip the y coord?
-        /// </summary>
-        [SerializeField] bool flipy;
+        [SerializeField, Range(0f, 1f)] float alpha;
 
         /// <summary>
         /// The time to finish the action and revert the value.
         /// </summary>
         [SerializeField] float time = 1f;
-        
+
+        private float _previousAlpha;
         private float _currentTime;
-        private bool previousFlipX;
-        private bool previousFlipY;
 
         public override void Start()
         {
-            previousFlipX = context.Renderer.FlipX;
-            previousFlipY = context.Renderer.FlipY;
-
-            context.Renderer.FlipX = flipx;
-            context.Renderer.FlipY = flipy;
+            _previousAlpha = context.Renderer.Tint.a;
+            Color color = context.Renderer.Tint;
+            color.a = alpha;
+            context.Renderer.Tint = color;
         }
 
         public override Status Update()
@@ -54,10 +47,11 @@ namespace BehaviourAPI.UnityToolkit
 
         public override void Stop()
         {
-            if (time > 0f)
+            if(time > 0f)
             {
-                context.Renderer.FlipX = previousFlipX;
-                context.Renderer.FlipY = previousFlipY;
+                Color color = context.Renderer.Tint;
+                color.a = _previousAlpha;
+                context.Renderer.Tint = color;
             }
         }
 
@@ -65,11 +59,11 @@ namespace BehaviourAPI.UnityToolkit
         {
             if (time > 0f)
             {
-                return $"Change renderer sprite by {time} second(s)";
+                return $"Change renderer alpha to {alpha} by {time} second(s)";
             }
             else
             {
-                return $"Flip renderer sprite";
+                return $"Change renderer alpha to {alpha}";
             }
         }
     }

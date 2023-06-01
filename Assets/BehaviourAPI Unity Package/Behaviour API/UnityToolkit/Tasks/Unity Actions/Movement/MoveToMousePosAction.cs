@@ -44,7 +44,7 @@ namespace BehaviourAPI.UnityToolkit
 
         }
 
-        public override string DisplayInfo => "Move to mouse position";
+        public override string ToString() => "Move to mouse position";
     }
 }
 

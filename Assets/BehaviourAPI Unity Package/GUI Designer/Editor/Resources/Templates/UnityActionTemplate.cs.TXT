@@ -12,8 +12,6 @@ using BehaviourAPI.UnityToolkit;
 // [SelectionGroup("groupName")]
 public class #SCRIPTNAME# : UnityAction
 {
-    // Override the string displayed in the editor.
-    public override string DisplayInfo => base.DisplayInfo;
     
     // Override this method to get references to unity components before the execution
     // using the "context" property.
