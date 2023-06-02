@@ -125,7 +125,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
                     break;
 
                 case ConstantFactor constant:
-                    functionTaskView = view.GetTaskView("%ConstantFactor");
+                    functionTaskView = view.GetTaskView("$ConstantFactor");
                     functionTaskView.Update(constant.value.ToString());
                     break;
 

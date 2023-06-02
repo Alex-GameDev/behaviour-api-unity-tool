@@ -20,6 +20,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
         {
             EditorHierarchyNode mainNode = new EditorHierarchyNode("Utility nodes");
             EditorHierarchyNode factorNodes = new EditorHierarchyNode("Factors");
+            EditorHierarchyNode leafFactorNode = new EditorHierarchyNode("Leaf factors");
             EditorHierarchyNode fusionFactorNode = new EditorHierarchyNode("Fusion factors");
             EditorHierarchyNode curveFactor = new EditorHierarchyNode("Curve factors");
 
@@ -27,7 +28,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
             EditorHierarchyNode exitNode = new EditorHierarchyNode(typeof(UtilityExitNode));
             EditorHierarchyNode bucketNode = new EditorHierarchyNode(typeof(UtilityBucket));
 
-
+            factorNodes.Childs.Add(leafFactorNode);
             factorNodes.Childs.Add(fusionFactorNode);
             factorNodes.Childs.Add(curveFactor);
             for (int i = 0; i < types.Count; i++)
@@ -36,8 +37,8 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
                     fusionFactorNode.Childs.Add(new EditorHierarchyNode(types[i]));
                 else if (typeof(CurveFactor).IsAssignableFrom(types[i]))
                     curveFactor.Childs.Add(new EditorHierarchyNode(types[i]));
-                else if (typeof(Factor).IsAssignableFrom(types[i]))
-                    factorNodes.Childs.Add(new EditorHierarchyNode(types[i]));
+                else if (typeof(LeafFactor).IsAssignableFrom(types[i]))
+                    leafFactorNode.Childs.Add(new EditorHierarchyNode(types[i]));
             }
 
             mainNode.Childs.Add(actionNode);
