@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BehaviourAPI.Core.Exceptions
+namespace BehaviourAPI.Core
 {
     using Actions;
     /// <summary>

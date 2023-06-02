@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace BehaviourAPI.UtilitySystems
 {
     using Core;
-    using Core.Exceptions;
+    
 
     /// <summary>
     /// Utility element that handle multiple <see cref="UtilitySelectableNode"/> itself and
@@ -37,8 +37,8 @@ namespace BehaviourAPI.UtilitySystems
 
         List<UtilitySelectableNode> _utilityCandidates = new List<UtilitySelectableNode>();
 
-        UtilitySelectableNode? _currentBestElement;
-        UtilitySelectableNode? _lastExecutedElement;
+        UtilitySelectableNode _currentBestElement;
+        UtilitySelectableNode _lastExecutedElement;
 
         #endregion       
 
@@ -105,11 +105,11 @@ namespace BehaviourAPI.UtilitySystems
             return maxUtility;
         }
 
-        private UtilitySelectableNode? ComputeCurrentBestAction()
+        private UtilitySelectableNode ComputeCurrentBestAction()
         {
             float currentHigherUtility = -1f; // If value starts in 0, elems with Utility == 0 couldn't be executed
 
-            UtilitySelectableNode? newBestElement = null;
+            UtilitySelectableNode newBestElement = null;
 
             int i = 0;
             var currentElementIsLocked = false; // Set to true when a the current element is a locked bucket

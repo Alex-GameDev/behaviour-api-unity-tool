@@ -1,5 +1,4 @@
-﻿using BehaviourAPI.Core.Exceptions;
-using System;
+﻿using System;
 
 namespace BehaviourAPI.Core
 {

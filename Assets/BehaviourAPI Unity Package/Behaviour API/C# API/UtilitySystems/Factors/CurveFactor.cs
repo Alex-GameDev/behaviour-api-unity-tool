@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace BehaviourAPI.UtilitySystems
 {
     using Core;
-    using Core.Exceptions;
+    
 
     /// <summary>
     /// Factor that modifies its child value with a function.

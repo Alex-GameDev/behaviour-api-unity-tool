@@ -65,31 +65,27 @@
             BTNode currentChild = GetCurrentChild();
             currentChild.OnUpdated();
             var status = currentChild.Status;
-            if (KeepExecuting(status))
+
+            if (KeepExecutingNextChild(status) && currentChildIdx < m_children.Count - 1)
             {
-                if (TryGoToNextChild())
-                {
-                    status = Status.Running;
-                }
-                else
-                {
-                    status = GetFinalStatus(status);
-                }
+                currentChild.OnStopped();
+                currentChildIdx++;
+                currentChild = GetCurrentChild();
+                currentChild.OnStarted();
+                return Status.Running;
             }
             else
             {
-                status = GetFinalStatus(status);
+                return GetFinalStatus(status);
             }
-
-            return status;
         }
 
         /// <summary>
-        /// Return if <paramref name="status"/> is not the target value.
+        /// Return if the execution should jump to the next child if exists.
         /// </summary>
         /// <param name="status">The current status of the child.</param>
         /// <returns>true if <paramref name="status"/> is not the target value, false otherwise. </returns>
-        protected abstract bool KeepExecuting(Status status);
+        protected abstract bool KeepExecutingNextChild(Status status);
 
         /// <summary>
         /// Get the final status of the composite node (must be success or failure).
@@ -97,21 +93,6 @@
         /// <param name="status">The current status of the node.</param>
         /// <returns>The final execution status of the node.</returns>
         protected abstract Status GetFinalStatus(Status status);
-
-        private bool TryGoToNextChild()
-        {
-            if (currentChildIdx < ChildCount - 1)
-            {
-                GetCurrentChild().OnStopped();
-                currentChildIdx++;
-                GetCurrentChild().OnStarted();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
 
         private BTNode GetCurrentChild() => GetBTChildAt(currentChildIdx);
 

@@ -6,7 +6,6 @@ namespace BehaviourAPI.UtilitySystems
 {
     using Core;
     using Core.Actions;
-    using Core.Exceptions;
 
     /// <summary>
     /// Behaviour graph that choose between diferent <see cref="UtilitySelectableNode"/> items and executes.
@@ -34,7 +33,7 @@ namespace BehaviourAPI.UtilitySystems
         List<UtilitySelectableNode> _utilityCandidates;
         List<UtilityNode> _utilityNodes;
 
-        UtilitySelectableNode? _currentBestElement;
+        UtilitySelectableNode _currentBestElement;
 
         #region ---------------------------------------- Build methods ---------------------------------------
 
@@ -52,7 +51,6 @@ namespace BehaviourAPI.UtilitySystems
         /// Creates a new <see cref="UtilitySystem"/>
         /// </summary>
         /// <param name="inertia">The utility multiplier applied to the last selected element when the best element is calculated.</param>
-        /// <param name="utilityThreshold">The minimum utility value an element must have to be selected.</param>
         public UtilitySystem(float inertia = 1.3f)
         {
             Inertia = inertia;
@@ -60,7 +58,28 @@ namespace BehaviourAPI.UtilitySystems
             _utilityCandidates = new List<UtilitySelectableNode>();
         }
 
+        /// <summary>
+        /// Use this method to instantiate custom types of leaf factors.
+        /// </summary>
+        /// <typeparam name="T">The type of the leaf factor.</typeparam>
+        /// <returns>The factor of type <typeparamref name="T"/> created.</returns>
+        public T CreateLeafFactor<T>() where T : LeafFactor, new()
+        {
+            T leafFactor = CreateNode<T>();
+            return leafFactor;
+        }
 
+        /// <summary>
+        /// Use this method to instantiate custom types of leaf factors with name.
+        /// </summary>
+        /// <typeparam name="T">The type of the leaf factor.</typeparam>
+        /// <param name="name">The name of the factor</param>
+        /// <returns>The factor of type <typeparamref name="T"/> created.</returns>
+        public T CreateLeafFactor<T>(string name) where T : LeafFactor, new()
+        {
+            T leafFactor = CreateNode<T>(name);
+            return leafFactor;
+        }
 
         /// <summary>
         /// Create a new <see cref="VariableFactor"/> named <paramref name="name"/> in this <see cref="UtilitySystem"/> that computes its utility value with the result
@@ -73,7 +92,7 @@ namespace BehaviourAPI.UtilitySystems
         /// <returns>The <see cref="VariableFactor"/> created.</returns>
         public VariableFactor CreateVariable(string name, Func<float> func, float min, float max)
         {
-            VariableFactor variableFactor = CreateNode<VariableFactor>(name);
+            VariableFactor variableFactor = CreateLeafFactor<VariableFactor>(name);
             variableFactor.Variable = func;
             variableFactor.min = min;
             variableFactor.max = max;
@@ -90,7 +109,7 @@ namespace BehaviourAPI.UtilitySystems
         /// <returns>The <see cref="VariableFactor"/> created.</returns>
         public VariableFactor CreateVariable(Func<float> func, float min, float max)
         {
-            VariableFactor variableFactor = CreateNode<VariableFactor>();
+            VariableFactor variableFactor = CreateLeafFactor<VariableFactor>();
             variableFactor.Variable = func;
             variableFactor.min = min;
             variableFactor.max = max;
@@ -104,7 +123,7 @@ namespace BehaviourAPI.UtilitySystems
         /// <returns>The <see cref="ConstantFactor"/> created.</returns>
         public ConstantFactor CreateConstant(string name, float value)
         {
-            ConstantFactor constantFactor = CreateNode<ConstantFactor>(name);
+            ConstantFactor constantFactor = CreateLeafFactor<ConstantFactor>(name);
             constantFactor.value = value;
 
             return constantFactor;
@@ -149,8 +168,6 @@ namespace BehaviourAPI.UtilitySystems
             curveFactor.SetChild(child);
             return curveFactor;
         }
-
-
 
         /// <summary>
         /// Create a new fusion factor of type <typeparamref name="T"/> named <paramref name="name"/> that combines the utility of <paramref name="factors"/>.

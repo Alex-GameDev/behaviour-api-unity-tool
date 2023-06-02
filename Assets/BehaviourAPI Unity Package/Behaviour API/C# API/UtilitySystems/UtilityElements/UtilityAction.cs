@@ -23,6 +23,12 @@ namespace BehaviourAPI.UtilitySystems
 
         #endregion
 
+        #region -------------------------------------- Private variables -------------------------------------
+
+        bool _isActionRunning;
+
+        #endregion
+
         #region ---------------------------------------- Build methods ---------------------------------------
 
         /// <summary>
@@ -49,6 +55,7 @@ namespace BehaviourAPI.UtilitySystems
         {
             base.OnStarted();
             Action?.Start();
+            _isActionRunning = true;
         }
 
         /// <summary>
@@ -59,7 +66,13 @@ namespace BehaviourAPI.UtilitySystems
         {
             if (Status != Status.Running) return;
 
-            Status = Action?.Update() ?? Status.Running;
+            var actionResult = Action?.Update() ?? Status.Running;
+            if (actionResult != Status.Running)
+            {
+                _isActionRunning = false;
+                Action?.Stop();
+            }
+            Status = actionResult;
 
             if (FinishSystemOnComplete && Status != Status.Running)
             {
@@ -74,7 +87,11 @@ namespace BehaviourAPI.UtilitySystems
         public override void Stop()
         {
             base.Stop();
-            Action?.Stop();
+            if (_isActionRunning)
+            {
+                _isActionRunning = false;
+                Action.Stop();
+            }
         }
 
         /// <summary>
@@ -83,6 +100,8 @@ namespace BehaviourAPI.UtilitySystems
         /// </summary>
         public override void OnPaused()
         {
+            if (!_isActionRunning) return;
+
             Action?.Pause();
         }
 
@@ -92,6 +111,8 @@ namespace BehaviourAPI.UtilitySystems
         /// </summary>
         public override void OnUnpaused()
         {
+            if (!_isActionRunning) return;
+
             Action?.Unpause();
         }
 

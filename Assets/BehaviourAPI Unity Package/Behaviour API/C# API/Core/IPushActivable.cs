@@ -1,4 +1,4 @@
-﻿namespace BehaviourAPI.Core.Perceptions
+﻿namespace BehaviourAPI.Core
 {
     /// <summary>
     /// Implement this interface in a node to make it activable externally.

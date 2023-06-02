@@ -1,6 +1,4 @@
-﻿using BehaviourAPI.Core.Exceptions;
-
-namespace BehaviourAPI.Core.Actions
+﻿namespace BehaviourAPI.Core.Actions
 {
     /// <summary>
     /// Represents an action that executes a sub behaviour engine.
@@ -21,6 +19,12 @@ namespace BehaviourAPI.Core.Actions
         /// True if the subsystem won't restart if is interrupted.
         /// </summary>
         public ExecutionInterruptOptions InterruptOptions;
+
+        /// <summary>
+        /// Gets if the subgraph was interrupted without having finished.
+        /// </summary>
+        /// <value>True if the subgraph was interrupted, false otherwise.</value>
+        public bool IsInterrupted { get; private set; }
 
         /// <summary>
         /// Create a new <see cref="SubsystemAction"/> with the specified subsystem and configuration flags.
@@ -47,9 +51,7 @@ namespace BehaviourAPI.Core.Actions
             if (SubSystem == null)
                 throw new MissingSubsystemException(this, "Subsystem cannot be null");
 
-            bool interrupted = SubSystem.Status == Status.Running;
-
-            if(interrupted)
+            if(IsInterrupted)
             {
                 if (InterruptOptions == ExecutionInterruptOptions.Pause)
                 {
@@ -94,9 +96,9 @@ namespace BehaviourAPI.Core.Actions
             if (SubSystem == null)
                 throw new MissingSubsystemException(this, "Subsystem cannot be null");
 
-            bool interrupted = SubSystem.Status == Status.Running;
+            IsInterrupted = SubSystem.Status == Status.Running;
 
-            if (interrupted)
+            if (IsInterrupted)
             {
                 if (InterruptOptions == ExecutionInterruptOptions.Pause && SubSystem.Status == Status.Running)
                 {

@@ -5,7 +5,6 @@ namespace BehaviourAPI.StateMachines
 {
     using Core;
     using Core.Actions;
-    using Core.Exceptions;
     /// <summary>
     /// Represents a state in a FSM graph.
     /// </summary>
@@ -51,6 +50,8 @@ namespace BehaviourAPI.StateMachines
         #region -------------------------------------- Private variables -------------------------------------
 
         Status _status;
+
+        bool _isActionRunning;
 
         /// <summary>
         /// The list of transitions that have this state as source state.
@@ -113,6 +114,7 @@ namespace BehaviourAPI.StateMachines
 
             Status = Status.Running;
             Action?.Start();
+            _isActionRunning = true;
             _transitions.ForEach(t => t?.Start());
         }
 
@@ -122,7 +124,15 @@ namespace BehaviourAPI.StateMachines
         public virtual void OnUpdated()
         {
             if (Status == Status.Running)
-                Status = Action?.Update() ?? Status.Running;
+            {
+                Status actionResults = Action?.Update() ?? Status.Running;
+                if(actionResults != Status.Running)
+                {
+                    Action?.Stop();
+                    _isActionRunning= false;
+                }
+                Status = actionResults;
+            }
 
             CheckTransitions();
         }
@@ -138,7 +148,13 @@ namespace BehaviourAPI.StateMachines
                 throw new ExecutionStatusException(this, "ERROR: This node is already been stopped");
 
             Status = Status.None;
-            Action?.Stop();
+
+            if(_isActionRunning)
+            {
+                Action?.Stop();
+                _isActionRunning = false;
+            }
+
             _transitions.ForEach(t => t?.Stop());
         }
 
@@ -148,7 +164,9 @@ namespace BehaviourAPI.StateMachines
         /// </summary>
         public virtual void OnPaused()
         {
-            Action?.Pause();
+            if (_isActionRunning)
+                Action?.Pause();
+
             _transitions.ForEach(t => t?.OnPaused());
         }
 
@@ -158,7 +176,9 @@ namespace BehaviourAPI.StateMachines
         /// </summary>
         public virtual void OnUnpaused()
         {
-            Action?.Unpause();
+            if (_isActionRunning)
+                Action?.Unpause();
+
             _transitions.ForEach(t => t?.OnUnpaused());
         }
 

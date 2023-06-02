@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BehaviourAPI.Core.Exceptions
+namespace BehaviourAPI.Core
 {
     /// <summary>
     /// Exception that is thrown when a node tries to access a child node that is null.

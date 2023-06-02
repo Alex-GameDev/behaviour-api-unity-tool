@@ -1,22 +1,42 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace BehaviourAPI.BehaviourTrees
+﻿namespace BehaviourAPI.BehaviourTrees
 {
-    using Core;
-    using Core.Exceptions;
+    using Core;  
 
     /// <summary>
-    /// Composite node that executes all its children in all execution frames, until one of them returns the trigger value.
+    /// Composite node that executes all its children in all execution frames. It can be configured to stop the execution when
+    /// any anction ends, when ends with success or failure, or when all action ends.
+    /// By default, the action stops when all action ends and return the result of the last actiom.
     /// </summary>
     public class ParallelCompositeNode : CompositeNode
     {
         #region ------------------------------------------- Fields -------------------------------------------
 
         /// <summary>
-        /// The status value that any of the children must reach to end the execution of all nodes.
+        /// If true, the parallel action will stop when any action ends with success.
         /// </summary>
-        public Status TriggerStatus = Status.Failure;
+        public bool finishOnSuccess;
+
+        /// <summary>
+        /// If true, the parallel action will stop when any action ends with success.
+        /// </summary>
+        public bool finishOnFailure;
+
+        #endregion
+
+        #region ---------------------------------------- Build methods ---------------------------------------
+
+        /// <summary>
+        /// Set the target status flags of the parallel node.
+        /// </summary>
+        /// <param name="finishOnSuccess">If true, the parallel action will stop when any action ends with success.</param>
+        /// <param name="finishOnFailure"></param>
+        /// <returns></returns>
+        public ParallelCompositeNode SetTargetStatusFlags(bool finishOnSuccess, bool finishOnFailure)
+        {
+            this.finishOnSuccess = finishOnSuccess;
+            this.finishOnFailure = finishOnFailure;
+            return this;
+        }
 
         #endregion
 
@@ -71,16 +91,37 @@ namespace BehaviourAPI.BehaviourTrees
         {
             if (m_children.Count == 0) throw new MissingChildException(this, "This composite has no childs");
 
-            m_children.ForEach(c => c.OnUpdated());
-            List<Status> allStatus = m_children.Select(c => c.Status).ToList();
+            int currentChildId = 0;
 
-            // Check for trigger value
-            if (allStatus.Contains(TriggerStatus)) return TriggerStatus;
+            Status returnedStatus = Status.Running;
+            Status currentChildStatus = Status.Running;
+            bool anyChildRunning = false;
 
-            // Check if execution finish
-            if (!allStatus.Contains(Status.Running)) return TriggerStatus == Status.Success ? Status.Failure : Status.Success;
+            while(currentChildId < m_children.Count && returnedStatus == Status.Running)
+            {
+                var child = m_children[currentChildId];
+                if(child.Status == Status.Running)
+                {
+                    child.OnUpdated();
+                    currentChildStatus = child.Status;
+                    if (currentChildStatus == Status.Running) anyChildRunning |= true;
 
-            return Status.Running;
+                    if (finishOnSuccess && currentChildStatus == Status.Success || finishOnFailure && currentChildStatus == Status.Failure)
+                    {
+                        returnedStatus = currentChildStatus;
+                    }
+                }
+                currentChildId++;
+            }
+
+            if (!anyChildRunning && returnedStatus == Status.Running)
+            {
+                return currentChildStatus;
+            }
+            else
+            {
+                return returnedStatus;
+            }
         }
 
 

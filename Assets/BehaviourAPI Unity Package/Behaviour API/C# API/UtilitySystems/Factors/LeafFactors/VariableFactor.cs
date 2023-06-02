@@ -5,14 +5,8 @@ namespace BehaviourAPI.UtilitySystems
     /// <summary>
     /// Leaf factor that computes its utility using a function.
     /// </summary>
-    public class VariableFactor : Factor
+    public class VariableFactor : LeafFactor
     {
-        #region ------------------------------------------ Properties -----------------------------------------
-
-        public override int MaxOutputConnections => 0;
-
-        #endregion
-
         #region ------------------------------------------- Fields -------------------------------------------
 
         /// <summary>

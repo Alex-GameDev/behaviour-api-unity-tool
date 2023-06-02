@@ -3,7 +3,7 @@
 namespace BehaviourAPI.BehaviourTrees
 {
     using Core.Actions;
-    using Core.Exceptions;
+    
 
     /// <summary>
     /// BTNode type that has no children and executes an <see cref="Core.Actions.Action"/>.
@@ -17,6 +17,12 @@ namespace BehaviourAPI.BehaviourTrees
         /// The action executed by this node.
         /// </summary>
         public Action Action;
+
+        #endregion
+
+        #region -------------------------------------- Private variables -------------------------------------
+
+        bool _isActionRunning;
 
         #endregion
 
@@ -45,6 +51,7 @@ namespace BehaviourAPI.BehaviourTrees
                 throw new MissingActionException(this, "Leaf nodes need an action to work.");
 
             Action.Start();
+            _isActionRunning = true;
         }
 
         /// <summary>
@@ -58,7 +65,13 @@ namespace BehaviourAPI.BehaviourTrees
             if (Action == null)
                 throw new MissingActionException(this, "Leaf nodes need an action to work.");
 
-            Status = Action.Update();
+            var actionResult = Action.Update();
+            if (actionResult != Status.Running)
+            {
+                _isActionRunning = false;
+                Action.Stop();
+            }
+            Status = actionResult;
             return Status;
         }
 
@@ -71,10 +84,14 @@ namespace BehaviourAPI.BehaviourTrees
         {
             base.OnStopped();
 
-            if (Action == null)
-                throw new MissingActionException(this, "Leaf nodes need an action to work.");
+            if (_isActionRunning)
+            {
+                if (Action == null)
+                    throw new MissingActionException(this, "Leaf nodes need an action to work.");
 
-            Action.Stop();
+                _isActionRunning = false;
+                Action.Stop();
+            }
         }
 
         /// <summary>
@@ -84,6 +101,8 @@ namespace BehaviourAPI.BehaviourTrees
         /// <exception cref="MissingActionException"></exception>
         public override void OnPaused()
         {
+            if (!_isActionRunning) return;
+
             if (Action == null)
                 throw new MissingActionException(this, "Leaf nodes need an action to work.");
 
@@ -97,6 +116,8 @@ namespace BehaviourAPI.BehaviourTrees
         /// <exception cref="MissingActionException"></exception>
         public override void OnUnpaused()
         {
+            if (!_isActionRunning) return;
+
             if (Action == null)
                 throw new MissingActionException(this, "Leaf nodes need an action to work.");
 

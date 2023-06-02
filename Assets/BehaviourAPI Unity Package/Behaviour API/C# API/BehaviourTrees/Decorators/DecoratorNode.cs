@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace BehaviourAPI.BehaviourTrees
 {
     using Core;
-    using Core.Exceptions;    
+        
 
     /// <summary>
     /// BTNode that alters the result returned by its child node or its execution.

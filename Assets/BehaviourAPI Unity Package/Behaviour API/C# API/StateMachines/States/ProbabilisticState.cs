@@ -10,14 +10,17 @@ namespace BehaviourAPI.StateMachines
     public class ProbabilisticState : State
     {
         #region ------------------------------------------ Properties -----------------------------------------
-        
+
         /// <summary>
         /// The last random value generated to check probabilities (only for debug).
         /// </summary>
         public double RandomValue { get; private set; }
 
+        /// <summary>
+        /// The list of probabilities assigned to each transition. To set the probability using the
+        /// transition directly, use <see cref="SetProbability"/> method.
+        /// </summary>
         public List<float> probabilities = new List<float>();
-
         #endregion
 
         #region -------------------------------------- Private variables -------------------------------------
@@ -37,7 +40,10 @@ namespace BehaviourAPI.StateMachines
         public void SetProbability(Transition transition, float probability)
         {
             int index = Children.IndexOf(transition);
-            for (int i = index; i < probabilities.Count; i++) probabilities.Add(0);
+
+            if (index == -1) return;
+
+            for (int i = probabilities.Count; i <= index; i++) probabilities.Add(0);
             probabilities[index] = probability;
         }
 
@@ -62,7 +68,7 @@ namespace BehaviourAPI.StateMachines
             {
                 // First select a transition with the generated number
                 Transition transition = _transitions[i];
-                if (transition == null) break;
+                if (transition == null) continue;
 
                 if (probabilities.Count > i && probabilities[i] > 0f)
                 {
@@ -108,7 +114,7 @@ namespace BehaviourAPI.StateMachines
             else
                 return 0f;
         }
-        
+
         #endregion
     }
 }

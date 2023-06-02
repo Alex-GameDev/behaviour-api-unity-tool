@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 namespace BehaviourAPI.Core.Actions
 {
@@ -8,7 +7,10 @@ namespace BehaviourAPI.Core.Actions
     /// </summary>
     public class SequenceAction : CompoundAction
     {
-        public Status TargetStatus = Status.Success;
+        /// <summary>
+        /// The status that subactions should reach to jump to the next subaction.
+        /// </summary>
+        public Status TargetStatus;
 
         int currentChildIdx = 0;
 
@@ -30,7 +32,7 @@ namespace BehaviourAPI.Core.Actions
         public override void Start()
         {
             if (SubActions.Count == 0) return;
-            SubActions[0].Start();
+            SubActions[currentChildIdx].Start();
         }
 
         public override Status Update()

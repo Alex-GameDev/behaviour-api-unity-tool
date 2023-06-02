@@ -10,8 +10,8 @@ namespace BehaviourAPI.Core.Perceptions
         public Func<bool> onCheck;
         public Action onInit;
         public Action onReset;
-        public Action onPaused;
-        public Action onUnpaused;
+        public Action onPause;
+        public Action onUnpause;
 
         /// <summary>
         /// Create a <see cref="ConditionPerception"/> that execute a delegate on Init, Check and reset.
@@ -39,8 +39,8 @@ namespace BehaviourAPI.Core.Perceptions
             this.onInit = onInit;
             this.onCheck = onCheck;
             this.onReset = onReset;
-            this.onPaused = onPause;
-            this.onUnpaused = onUnpause;
+            this.onPause = onPause;
+            this.onUnpause = onUnpause;
         }
 
         /// <summary>
@@ -83,12 +83,12 @@ namespace BehaviourAPI.Core.Perceptions
         /// <inheritdoc/>
         /// Invoke the pause delegate.
         /// </summary>
-        public override void Pause() => onPaused?.Invoke();
+        public override void Pause() => onPause?.Invoke();
 
         /// <summary>
         /// <inheritdoc/>
         /// Invoke the unpause delegate.
         /// </summary>
-        public override void Unpause() => onUnpaused?.Invoke();
+        public override void Unpause() => onUnpause?.Invoke();
     }
 }

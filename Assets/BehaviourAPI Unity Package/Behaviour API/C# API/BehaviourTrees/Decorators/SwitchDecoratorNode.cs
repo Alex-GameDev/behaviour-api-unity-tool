@@ -3,7 +3,7 @@
 namespace BehaviourAPI.BehaviourTrees
 {
     using Core;
-    using Core.Exceptions;
+    
     using Core.Perceptions;
 
     /// <summary>

@@ -7,7 +7,7 @@ namespace BehaviourAPI.BehaviourTrees
     /// </summary>
     public class SequencerNode : SerialCompositeNode
     {
-        protected override bool KeepExecuting(Status status)
+        protected override bool KeepExecutingNextChild(Status status)
         {
             return status == Status.Success;
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BehaviourAPI.Core.Perceptions
+namespace BehaviourAPI.Core
 {
     /// <summary>
     /// A element used to modify the execution flow of elements that 

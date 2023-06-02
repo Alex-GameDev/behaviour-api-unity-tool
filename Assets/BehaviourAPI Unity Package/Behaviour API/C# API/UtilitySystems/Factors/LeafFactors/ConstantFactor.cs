@@ -3,14 +3,8 @@
     /// <summary>
     /// Leaf factor which have a constant utility value
     /// </summary>
-    public class ConstantFactor : Factor
+    public class ConstantFactor : LeafFactor
     {
-        #region ------------------------------------------ Properties -----------------------------------------
-
-        public override int MaxOutputConnections => 0;
-
-        #endregion
-
         #region ------------------------------------------- Fields -------------------------------------------
 
         /// <summary>

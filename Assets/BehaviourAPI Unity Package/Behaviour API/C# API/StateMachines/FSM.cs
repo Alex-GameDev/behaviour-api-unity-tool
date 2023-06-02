@@ -4,7 +4,6 @@ namespace BehaviourAPI.StateMachines
 {
     using Core;
     using Core.Actions;
-    using Core.Exceptions;
     using Core.Perceptions;
 
     /// <summary>
@@ -115,6 +114,32 @@ namespace BehaviourAPI.StateMachines
             return state;
         }
 
+        /// <summary>
+        /// Use this method to create custom types of states.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="action"></param>
+        /// <returns>The state of type <typeparamref name="T"/> created.</returns>
+        public T CreateState<T>(Action action = null) where T : State, new()
+        {
+            T state = CreateNode<T>();
+            state.Action = action;
+            return state;
+        }
+
+        /// <summary>
+        /// Use this method to create custom type of states with name.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name">The name of the node</param>
+        /// <param name="action">The action executed by the state.</param>
+        /// <returns>The state of type <typeparamref name="T"/> created.</returns>
+        public T CreateState<T>(string name, Action action = null) where T : State, new()
+        {
+            T state = CreateNode<T>(name);
+            state.Action = action;
+            return state;
+        }
 
 
         /// <summary>
@@ -124,9 +149,7 @@ namespace BehaviourAPI.StateMachines
         /// <returns>The <see cref="ProbabilisticState"/> created.</returns>
         public ProbabilisticState CreateProbabilisticState(Action action = null)
         {
-            ProbabilisticState state = CreateNode<ProbabilisticState>();
-            state.Action = action;
-            return state;
+            return CreateState<ProbabilisticState>(action);
         }
 
         /// <summary>
@@ -137,9 +160,7 @@ namespace BehaviourAPI.StateMachines
         /// <returns>The <see cref="ProbabilisticState"/> created.</returns>
         public ProbabilisticState CreateProbabilisticState(string name, Action action = null)
         {
-            ProbabilisticState state = CreateNode<ProbabilisticState>(name);
-            state.Action = action;
-            return state;
+            return CreateState<ProbabilisticState>(name, action);
         }
 
 

@@ -4,7 +4,7 @@ using System.Linq;
 namespace BehaviourAPI.UtilitySystems
 {
     using Core;
-    using Core.Exceptions;
+    
 
     /// <summary>
     /// Factor that combines the utility of its childs factors.

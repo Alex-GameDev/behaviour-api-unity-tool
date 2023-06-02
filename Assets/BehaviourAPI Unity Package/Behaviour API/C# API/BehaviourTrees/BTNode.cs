@@ -2,8 +2,6 @@ using System;
 
 namespace BehaviourAPI.BehaviourTrees
 {
-    using BehaviourAPI.Core.Exceptions;
-    using BehaviourAPI.Core.Perceptions;
     using Core;
 
     /// <summary>
@@ -58,11 +56,8 @@ namespace BehaviourAPI.BehaviourTrees
 
         #endregion
 
-
         Status _status;
         Status _lastExecutionStatus;
-
-
 
         #region ----------------------------------------- Build methods --------------------------------------
 

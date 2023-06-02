@@ -1,7 +1,5 @@
-using BehaviourAPI.Core.Exceptions;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace BehaviourAPI.Core
@@ -147,6 +145,9 @@ namespace BehaviourAPI.Core
         /// <exception cref="ArgumentException">if <paramref name="source"/> or <paramref name="target"/> values are unvalid.</exception>
         protected void Connect(Node source, Node target)
         {
+            if (source == null || target == null)
+                throw new ArgumentException($"ERROR: Source or target are null references");
+
             if (source == target)
                 throw new ArgumentException($"ERROR: Source and child cannot be the same node");
 
@@ -238,9 +239,9 @@ namespace BehaviourAPI.Core
         }
 
         /// <summary>
-        /// Gets a readonly collection with all the nodes in the graph
+        /// Gets a list with all the nodes in the graph.
         /// </summary>
-        public ReadOnlyCollection<Node> NodeList => Nodes.AsReadOnly();
+        public List<Node> NodeList => new List<Node>(Nodes);
 
         /// <summary>
         /// Inverts the name-node dictionary

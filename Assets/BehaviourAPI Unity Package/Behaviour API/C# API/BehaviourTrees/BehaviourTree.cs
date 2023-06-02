@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace BehaviourAPI.BehaviourTrees
 {
+    using BehaviourAPI.Core.Perceptions;
     using Core;
     using Core.Actions;
-    using Core.Exceptions;
 
     /// <summary>
     /// Decision system that consists of traversing a tree in depth depending on the result returned by its nodes.
@@ -62,6 +62,37 @@ namespace BehaviourAPI.BehaviourTrees
         }
 
         /// <summary>
+        /// Create a new condition decorator in this <see cref="BehaviourTree"/> that have <paramref name="child"/> as a child.
+        /// The condition node will check <see cref="perception"/> at the beggining of the execution and if returns true, executes the child.
+        /// </summary>
+        /// <param name="child">The child BT Node.</param>
+        /// <param name="perception">The perception of the node.</param>
+        /// <returns>The condition node created.</returns>
+        public ConditionNode CreateConditionNode(BTNode child, Perception perception)
+        {
+            ConditionNode node = CreateDecorator<ConditionNode>(child);
+            node.Perception = perception;
+            return node;
+        }
+
+        /// <summary>
+        /// Create a new condition decorator named <paramref name="name"/> in this <see cref="BehaviourTree"/> that have <paramref name="child"/> as a child.
+        /// The condition node will check <see cref="perception"/> at the beggining of the execution and if returns true, executes the child.
+        /// <para> Sortcut method (Equal to <see cref="CreateDecorator{T}(BTNode)"/> with T = ConditionNode.</para>
+        /// </summary>
+        /// <param name="name">The name of the decorator.</param>
+        /// <param name="child">The child BT Node.</param>
+        /// <param name="perception">The perception of the node.</param>
+        /// <returns>The condition node created.</returns>
+        public ConditionNode CreateConditionNode(string name, BTNode child, Perception perception)
+        {
+            ConditionNode node = CreateDecorator<ConditionNode>(name, child);
+            node.Perception = perception;
+            return node;
+        }
+
+
+        /// <summary>
         /// Create a new composite node of type <typeparamref name="T"/> named <paramref name="name"/> in this <see cref="BehaviourTree"/> that have <paramref name="children"/> as children.
         /// </summary>
         /// <typeparam name="T">The type of the composite.</typeparam>
@@ -97,7 +128,6 @@ namespace BehaviourAPI.BehaviourTrees
             {
                 Connect(node, child);
                 node.AddChild(child);
-
             });
             return node;
         }

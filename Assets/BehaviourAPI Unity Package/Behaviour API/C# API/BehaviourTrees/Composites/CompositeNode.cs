@@ -5,7 +5,6 @@ using System.Linq;
 namespace BehaviourAPI.BehaviourTrees
 {
     using Core;
-    using Core.Exceptions;
 
     /// <summary>
     /// BTNode subtype that has multiple children and executes them according to certain conditions.

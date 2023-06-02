@@ -122,11 +122,13 @@ namespace BehaviourAPI.StateMachines.StackFSMs
         }
 
         /// <summary>
-        /// Return to the last state saved in the stack.
+        /// Return to the last state saved in the stack, if exists.
         /// </summary>
         /// <param name="popTransition">The pop transition that triggers this method.</param>
         public void Pop(PopTransition popTransition)
         {
+            if (_stateStack.Count == 0) return;
+
             var targetState = _stateStack.Pop();
             SetCurrentState(targetState, popTransition);
         }
