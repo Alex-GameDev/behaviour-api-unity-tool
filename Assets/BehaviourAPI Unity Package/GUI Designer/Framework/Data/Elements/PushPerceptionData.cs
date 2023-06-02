@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
-    using Core.Perceptions;
+    using Core;
 
     /// <summary>
     /// Clas that serializes a push perception

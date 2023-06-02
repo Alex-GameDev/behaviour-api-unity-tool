@@ -83,6 +83,6 @@ namespace BehaviourAPI.UnityToolkit
                 return Status.Running;
             }
         }
-        public override string ToString() => $"Flee from {OtherTransform.name}";
+        public override string ToString() => $"Flee from {OtherTransform}";
     }
 }

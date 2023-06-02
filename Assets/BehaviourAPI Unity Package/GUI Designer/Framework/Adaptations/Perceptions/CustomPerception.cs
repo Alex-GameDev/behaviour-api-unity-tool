@@ -50,8 +50,8 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
                 onInit = init.CreateDelegate(unityContext.RunnerComponent);
                 onCheck = check.CreateDelegate(unityContext.RunnerComponent);
                 onReset = reset.CreateDelegate(unityContext.RunnerComponent);
-                onPaused = pause.CreateDelegate(unityContext.RunnerComponent);
-                onUnpaused = unpause.CreateDelegate(unityContext.RunnerComponent);
+                onPause = pause.CreateDelegate(unityContext.RunnerComponent);
+                onUnpause = unpause.CreateDelegate(unityContext.RunnerComponent);
             }
             else
             {
