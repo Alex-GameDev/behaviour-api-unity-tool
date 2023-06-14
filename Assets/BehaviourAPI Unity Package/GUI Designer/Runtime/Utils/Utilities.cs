@@ -10,6 +10,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner
             if (status == Status.Success) return Color.green;
             if (status == Status.Failure) return Color.red;
             if (status == Status.Running) return Color.yellow;
+            if (status == Status.Paused) return Color.white;
             return Color.gray;
         }
     }
