@@ -10,6 +10,9 @@ namespace BehaviourAPI.UnityToolkit
     [SelectionGroup("MOVEMENT")]
     public class MoveToMousePosAction : UnityAction
     {
+        [SerializeField] float maxRayDistance = 100f;
+        [SerializeField] LayerMask layerMask;
+
         /// <summary>
         /// Create a new MoveToMousePosAction
         /// </summary>
@@ -20,7 +23,7 @@ namespace BehaviourAPI.UnityToolkit
         public override void Start()
         {
             Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(cameraRay, out RaycastHit hit, 100f))
+            if (Physics.Raycast(cameraRay, out RaycastHit hit, maxRayDistance, layerMask))
             {
                 context.Movement.SetTarget(hit.point);
             }

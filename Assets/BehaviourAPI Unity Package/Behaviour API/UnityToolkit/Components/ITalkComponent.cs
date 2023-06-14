@@ -9,8 +9,6 @@ namespace BehaviourAPI.UnityToolkit
     /// </summary>
     public interface ITalkComponent
     {
-        bool IsInmediate { get; set; }
-
         void StartTalk(string text);
 
         bool IsTalking();

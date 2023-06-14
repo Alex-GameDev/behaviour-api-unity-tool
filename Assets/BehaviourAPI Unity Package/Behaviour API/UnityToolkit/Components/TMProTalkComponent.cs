@@ -1,13 +1,12 @@
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace BehaviourAPI.UnityToolkit
 {
-    public class TextTalkComponent : MonoBehaviour, ITalkComponent
+    public class TMProTalkComponent : MonoBehaviour, ITalkComponent
     {
-        [SerializeField] Text textComponent;
+        [SerializeField] TextMeshProUGUI textComponent;
 
         [SerializeField] float _textSpeed = 30f;
 

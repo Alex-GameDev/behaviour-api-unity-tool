@@ -20,5 +20,7 @@ namespace BehaviourAPI.UnityToolkit
             m_AudioSource.clip = clip;
             m_AudioSource.Play();
         }
+
+        public float Volume { get =>  m_AudioSource.volume; set=>  m_AudioSource.volume = value; }
     }
 }
