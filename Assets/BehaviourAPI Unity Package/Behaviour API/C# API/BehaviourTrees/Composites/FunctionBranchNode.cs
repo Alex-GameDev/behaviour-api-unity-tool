@@ -23,12 +23,10 @@ namespace BehaviourAPI.BehaviourTrees
             return this;
         }
 
-        protected override BTNode SelectBranch()
+        protected override int SelectBranchIndex()
         {
             int index = nodeIndexFunction?.Invoke() ?? 0;
-            if (index < 0) index = 0;
-            if(index > ChildCount) index = ChildCount - 1;
-            return GetBTChildAt(index);
+            return index;
         }
     }
 }

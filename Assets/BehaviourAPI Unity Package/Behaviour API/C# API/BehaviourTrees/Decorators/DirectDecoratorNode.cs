@@ -1,7 +1,6 @@
 ﻿namespace BehaviourAPI.BehaviourTrees
 {
-    using BehaviourAPI.Core;
-    
+    using BehaviourAPI.Core;    
 
     /// <summary>
     /// Decorator that always execute its child.
@@ -64,6 +63,8 @@
         /// <exception cref="MissingChildException">If child is null.</exception>
         public override void OnPaused()
         {
+            base.OnPaused();
+
             if (m_childNode == null) throw new MissingChildException(this, "This decorator has no child");
 
             m_childNode.OnPaused();
@@ -76,6 +77,8 @@
         /// <exception cref="MissingChildException">If child is null.</exception>
         public override void OnUnpaused()
         {
+            base.OnUnpaused();
+
             if (m_childNode == null) throw new MissingChildException(this, "This decorator has no child");
 
             m_childNode.OnUnpaused();

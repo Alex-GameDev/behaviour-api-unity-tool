@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace BehaviourAPI.StateMachines
 {
+    using BehaviourAPI.Core;
     using Core;
     using Core.Actions;
     using Core.Perceptions;

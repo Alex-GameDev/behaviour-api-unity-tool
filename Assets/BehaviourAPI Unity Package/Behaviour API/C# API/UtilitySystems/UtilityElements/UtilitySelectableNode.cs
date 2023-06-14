@@ -53,7 +53,10 @@ namespace BehaviourAPI.UtilitySystems
         public override object Clone()
         {
             UtilitySelectableNode node = (UtilitySelectableNode)base.Clone();
-            node.StatusChanged = (Action<Status>)StatusChanged?.Clone();
+
+            if(StatusChanged != null)
+                node.StatusChanged = (Action<Status>)StatusChanged.Clone();
+
             return node;
         }
 
@@ -82,7 +85,7 @@ namespace BehaviourAPI.UtilitySystems
         /// Called when the <see cref="UtilitySelectableNode"/> is no longer selected or the <see cref="UtilitySystem"/> was stopped.
         /// </summary>
         /// <exception cref="ExecutionStatusException">If it's not running.</exception>
-        public virtual void Stop()
+        public virtual void OnStopped()
         {
             if (Status == Status.None)
                 throw new ExecutionStatusException(this, "ERROR: This node is already been stopped");
@@ -93,12 +96,25 @@ namespace BehaviourAPI.UtilitySystems
         /// <summary>
         /// Called when the node is being selected and the graph is paused.
         /// </summary>
-        public abstract void OnPaused();
+        public virtual void OnPaused()
+        {
+            if (Status != Status.Running)
+                throw new ExecutionStatusException(this, "ERROR: This node can't be paused. It's status is not running");
+
+            Status = Status.Paused;
+        }
 
         /// <summary>
         /// Called when the node is being selected and the graph is unpaused.
         /// </summary>
-        public abstract void OnUnpaused();
+        public virtual void OnUnpaused()
+        {
+            if (Status != Status.Paused)
+                throw new ExecutionStatusException(this, "ERROR: This node can't be unpaused. It's status is not paused");
+
+            Status = Status.Running;
+        }
+
         #endregion
     }
 }

@@ -65,8 +65,6 @@ namespace BehaviourAPI.Core
 
         Dictionary<string, Node> _nodeDict = new Dictionary<string, Node>();
 
-        HashSet<Node> _nodeSet = new HashSet<Node>();
-
         #endregion
 
         #region ---------------------------------------- Build methods -----------------------------------------
@@ -112,7 +110,6 @@ namespace BehaviourAPI.Core
                     $"This node can only belongs to a graph of types derived from {node.GraphType}");
 
             Nodes.Add(node);
-            _nodeSet.Add(node);
             node.BehaviourGraph = this;
         }
 
@@ -154,10 +151,10 @@ namespace BehaviourAPI.Core
             if (!source.ChildType.IsAssignableFrom(target.GetType()))
                 throw new ArgumentException($"ERROR: Source node child type({source.GetType()}) can handle target's type ({target.GetType()}) as a child. It should be {source.ChildType}");
 
-            if (!_nodeSet.Contains(source))
+            if (source.BehaviourGraph != this)
                 throw new ArgumentException("ERROR: Source node is not in the graph.");
 
-            if (!_nodeSet.Contains(target))
+            if (target.BehaviourGraph != this)
                 throw new ArgumentException("ERROR: Target node is not in the graph.");
 
             if (!source.CanAddAChild())
@@ -226,7 +223,6 @@ namespace BehaviourAPI.Core
             var graph = (BehaviourGraph)MemberwiseClone();
             graph.Nodes = new List<Node>();
             graph._nodeDict = new Dictionary<string, Node>();
-            graph._nodeSet = new HashSet<Node>();
             return graph;
         }
 

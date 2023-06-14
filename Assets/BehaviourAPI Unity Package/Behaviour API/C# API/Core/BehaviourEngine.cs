@@ -28,7 +28,12 @@ namespace BehaviourAPI.Core
         /// Gets if the graph is paused.
         /// </summary>
         /// <value>True if the graph is paused, false otherwise.</value>
-        public bool IsPaused { get; private set; }
+        public bool IsPaused => _status == Status.Paused;
+
+        /// <summary>
+        /// Gets if the graph execution was started and is not over yet.
+        /// </summary>
+        public bool IsExecuting => _status == Status.Running || _status == Status.Paused;
 
         #endregion
 
@@ -71,7 +76,7 @@ namespace BehaviourAPI.Core
         /// </summary>
         public void Update()
         {
-            if (Status != Status.Running || IsPaused) return; // Graph already finished
+            if (Status != Status.Running) return; // Graph already finished or paused
             OnUpdated();
         }
 
@@ -80,9 +85,9 @@ namespace BehaviourAPI.Core
         /// </summary>
         public void Pause()
         {
-            if (!IsPaused)
+            if (Status == Status.Running)
             {
-                IsPaused = true;
+                Status = Status.Paused;
                 OnPaused();
             }
         }
@@ -92,9 +97,9 @@ namespace BehaviourAPI.Core
         /// </summary>
         public void Unpause()
         {
-            if (IsPaused)
+            if (Status == Status.Paused)
             {
-                IsPaused = false;
+                Status = Status.Running;
                 OnUnpaused();
             }
         }

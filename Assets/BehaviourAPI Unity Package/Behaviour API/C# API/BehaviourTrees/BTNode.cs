@@ -115,14 +115,26 @@ namespace BehaviourAPI.BehaviourTrees
         }
 
         /// <summary>
-        /// Called when the node is in the running branch and the graph is paused.
+        /// Called when the node is in a running branch and the graph is paused.
         /// </summary>
-        public abstract void OnPaused();
+        public virtual void OnPaused()
+        {
+            if (Status != Status.Running)
+                throw new ExecutionStatusException(this, "ERROR: This node can't be paused. It's status is not running");
+
+            Status = Status.Paused;
+        }
 
         /// <summary>
-        /// Called when the node is in the running branch and the graph is unpaused.
+        /// Called when the node is in a running branch and the graph is unpaused.
         /// </summary>
-        public abstract void OnUnpaused();
+        public virtual void OnUnpaused()
+        {
+            if (Status != Status.Paused)
+                throw new ExecutionStatusException(this, "ERROR: This node can't be unpaused. It's status is not paused");
+
+            Status = Status.Running;
+        }
 
         /// <summary>
         /// Get the updated status of the node.

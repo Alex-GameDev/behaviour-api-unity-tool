@@ -84,9 +84,9 @@ namespace BehaviourAPI.UtilitySystems
         /// <inheritdoc/>
         /// Stops the action.
         /// </summary>
-        public override void Stop()
+        public override void OnStopped()
         {
-            base.Stop();
+            base.OnStopped();
             if (_isActionRunning)
             {
                 _isActionRunning = false;
@@ -100,6 +100,8 @@ namespace BehaviourAPI.UtilitySystems
         /// </summary>
         public override void OnPaused()
         {
+            base.OnPaused();
+
             if (!_isActionRunning) return;
 
             Action?.Pause();
@@ -111,6 +113,8 @@ namespace BehaviourAPI.UtilitySystems
         /// </summary>
         public override void OnUnpaused()
         {
+            base.OnUnpaused();
+
             if (!_isActionRunning) return;
 
             Action?.Unpause();

@@ -90,6 +90,28 @@ namespace BehaviourAPI.BehaviourTrees
         }
 
         /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <exception cref="MissingChildException">If the <see cref="m_children"/> list has no elements.</exception>
+        public override void OnPaused()
+        {
+            base.OnPaused();
+
+            if (m_children.Count == 0) throw new MissingChildException(this, "This composite has no childs");
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <exception cref="MissingChildException">If the <see cref="m_children"/> list has no elements.</exception>
+        public override void OnUnpaused()
+        {
+            base.OnUnpaused();
+
+            if (m_children.Count == 0) throw new MissingChildException(this, "This composite has no childs");
+        }
+
+        /// <summary>
         /// Get the element in btnode children list at the given index.
         /// </summary>
         /// <param name="idx">The index in the list.</param>

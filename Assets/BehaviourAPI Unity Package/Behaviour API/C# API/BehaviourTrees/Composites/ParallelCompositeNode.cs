@@ -59,7 +59,6 @@
         public override void OnStopped()
         {
             base.OnStopped();
-
             m_children.ForEach(c => c?.OnStopped());
         }
 
@@ -69,7 +68,12 @@
         /// </summary>
         public override void OnPaused()
         {
-            m_children.ForEach(c => c?.OnPaused());
+            base.OnPaused();
+            m_children.ForEach(c =>
+            {
+                if (c.Status == Status.Running)
+                    c.OnPaused();
+            });
         }
 
         /// <summary>
@@ -78,7 +82,12 @@
         /// </summary>
         public override void OnUnpaused()
         {
-            m_children.ForEach(c => c?.OnUnpaused());
+            base.OnUnpaused();
+            m_children.ForEach(c =>
+            {
+                if (c.Status == Status.Paused)
+                    c.OnUnpaused();
+            });
         }
 
         /// <summary>

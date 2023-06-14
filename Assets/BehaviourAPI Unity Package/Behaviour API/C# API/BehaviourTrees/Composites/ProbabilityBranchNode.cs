@@ -57,13 +57,13 @@ namespace BehaviourAPI.BehaviourTrees
         /// Gets a child based on its probabilities and a random generated value.
         /// </summary>
         /// <returns><inheritdoc/></returns>
-        protected override BTNode SelectBranch()
+        protected override int SelectBranchIndex()
         {
             var totalProbability = probabilities.Where(p => p > 0f).Sum();
             var probability = Random.NextDouble() * totalProbability;
             RandomValue = probability;
             var currentProbSum = 0f;
-            BTNode selectedChild = null;
+            int selectedChild = 0;
 
             for (int i = 0; i < m_children.Count; i++)
             {
@@ -75,7 +75,7 @@ namespace BehaviourAPI.BehaviourTrees
                     currentProbSum += probabilities[i];
                     if (currentProbSum > probability)
                     {
-                        selectedChild = node;
+                        selectedChild = i;
                         break;
                     }
                 }

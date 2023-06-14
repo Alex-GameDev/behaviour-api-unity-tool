@@ -5,17 +5,14 @@ using System.Text;
 namespace BehaviourAPI.BehaviourTrees
 {
     using Core;
+    using System.Reflection;
 
     /// <summary>
     /// Composite node that selects one of its branch to execute it.
     /// </summary>
     public abstract class BranchNode : CompositeNode
     {
-        /// <summary>
-        /// Use this property to read and modify the current selected node.
-        /// </summary>
-        /// <value>The current selected node.</value>
-        protected BTNode SelectedNode { get; set; }
+        BTNode m_SelectedNode;
 
         /// <summary>
         /// <inheritdoc/>
@@ -25,9 +22,12 @@ namespace BehaviourAPI.BehaviourTrees
         {
             base.OnStarted();
 
-            SelectedNode = SelectBranch() ?? GetBTChildAt(0);
+            int branchIndex = SelectBranchIndex();
+            if (branchIndex < 0) branchIndex = 0;
+            if (branchIndex >= ChildCount) branchIndex = ChildCount - 1;
+            m_SelectedNode = GetBTChildAt(branchIndex);
 
-            SelectedNode?.OnStarted();
+            m_SelectedNode?.OnStarted();
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace BehaviourAPI.BehaviourTrees
         public override void OnStopped()
         {
             base.OnStopped();
-            SelectedNode?.OnStopped();
+            m_SelectedNode?.OnStopped();
         }
 
         /// <summary>
@@ -46,7 +46,8 @@ namespace BehaviourAPI.BehaviourTrees
         /// </summary>
         public override void OnPaused()
         {
-            SelectedNode?.OnPaused();
+            base.OnPaused();
+            m_SelectedNode?.OnPaused();
         }
 
         /// <summary>
@@ -55,7 +56,8 @@ namespace BehaviourAPI.BehaviourTrees
         /// </summary>
         public override void OnUnpaused()
         {
-            SelectedNode?.OnUnpaused();
+            base.OnUnpaused();
+            m_SelectedNode?.OnUnpaused();
         }
 
         /// <summary>
@@ -65,8 +67,8 @@ namespace BehaviourAPI.BehaviourTrees
         /// <returns><inheritdoc/></returns>
         protected override Status UpdateStatus()
         {
-            SelectedNode.OnUpdated();
-            return SelectedNode?.Status ?? Status.Failure;
+            m_SelectedNode.OnUpdated();
+            return m_SelectedNode?.Status ?? Status.Failure;
         }
 
         /// <summary>
@@ -74,6 +76,6 @@ namespace BehaviourAPI.BehaviourTrees
         /// Override this method to define how to select the branch that will be executed.
         /// </summary>
         /// <returns><inheritdoc/></returns>
-        protected abstract BTNode SelectBranch();
+        protected abstract int SelectBranchIndex();
     }
 }

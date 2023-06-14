@@ -11,12 +11,12 @@ namespace BehaviourAPI.Core
         None = 0,
 
         /// <summary>
-        /// Call stop event
+        /// Call pause event
         /// </summary>
         Pause = 1,
 
         /// <summary>
-        /// Call pause event
+        /// Call stop event
         /// </summary>
         Stop = 2
     }

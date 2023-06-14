@@ -29,16 +29,6 @@
             BehaviourGraph.Finish(ExitStatus);
         }
 
-        public override void OnPaused()
-        {
-            return;
-        }
-
-        public override void OnUnpaused()
-        {
-            return;
-        }
-
         /// <summary>
         /// <inheritdoc/>
         /// This method is empty because is only executed the frame the utility system exits.

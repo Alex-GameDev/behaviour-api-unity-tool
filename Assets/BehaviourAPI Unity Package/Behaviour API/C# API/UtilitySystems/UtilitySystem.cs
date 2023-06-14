@@ -63,7 +63,7 @@ namespace BehaviourAPI.UtilitySystems
         /// </summary>
         /// <typeparam name="T">The type of the leaf factor.</typeparam>
         /// <returns>The factor of type <typeparamref name="T"/> created.</returns>
-        public T CreateLeafFactor<T>() where T : LeafFactor, new()
+        public T CreateLeaf<T>() where T : LeafFactor, new()
         {
             T leafFactor = CreateNode<T>();
             return leafFactor;
@@ -75,7 +75,7 @@ namespace BehaviourAPI.UtilitySystems
         /// <typeparam name="T">The type of the leaf factor.</typeparam>
         /// <param name="name">The name of the factor</param>
         /// <returns>The factor of type <typeparamref name="T"/> created.</returns>
-        public T CreateLeafFactor<T>(string name) where T : LeafFactor, new()
+        public T CreateLeaf<T>(string name) where T : LeafFactor, new()
         {
             T leafFactor = CreateNode<T>(name);
             return leafFactor;
@@ -92,7 +92,7 @@ namespace BehaviourAPI.UtilitySystems
         /// <returns>The <see cref="VariableFactor"/> created.</returns>
         public VariableFactor CreateVariable(string name, Func<float> func, float min, float max)
         {
-            VariableFactor variableFactor = CreateLeafFactor<VariableFactor>(name);
+            VariableFactor variableFactor = CreateLeaf<VariableFactor>(name);
             variableFactor.Variable = func;
             variableFactor.min = min;
             variableFactor.max = max;
@@ -109,7 +109,7 @@ namespace BehaviourAPI.UtilitySystems
         /// <returns>The <see cref="VariableFactor"/> created.</returns>
         public VariableFactor CreateVariable(Func<float> func, float min, float max)
         {
-            VariableFactor variableFactor = CreateLeafFactor<VariableFactor>();
+            VariableFactor variableFactor = CreateLeaf<VariableFactor>();
             variableFactor.Variable = func;
             variableFactor.min = min;
             variableFactor.max = max;
@@ -123,7 +123,7 @@ namespace BehaviourAPI.UtilitySystems
         /// <returns>The <see cref="ConstantFactor"/> created.</returns>
         public ConstantFactor CreateConstant(string name, float value)
         {
-            ConstantFactor constantFactor = CreateLeafFactor<ConstantFactor>(name);
+            ConstantFactor constantFactor = CreateLeaf<ConstantFactor>(name);
             constantFactor.value = value;
 
             return constantFactor;
@@ -434,7 +434,7 @@ namespace BehaviourAPI.UtilitySystems
             // If the best action changes:
             if (newBestAction != _currentBestElement)
             {
-                _currentBestElement?.Stop();
+                _currentBestElement?.OnStopped();
                 _currentBestElement = newBestAction;
                 _currentBestElement?.OnStarted();
             }
@@ -486,7 +486,7 @@ namespace BehaviourAPI.UtilitySystems
         /// </summary>
         protected override void OnStopped()
         {
-            _currentBestElement?.Stop();
+            _currentBestElement?.OnStopped();
             _currentBestElement = null;
         }
 

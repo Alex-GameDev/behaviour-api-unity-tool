@@ -91,6 +91,8 @@ namespace BehaviourAPI.BehaviourTrees
         /// <exception cref="NotImplementedException"></exception>
         public override void OnPaused()
         {
+
+            base.OnPaused();
             if (_executeChild)
             {
                 m_childNode.OnPaused();
@@ -103,6 +105,7 @@ namespace BehaviourAPI.BehaviourTrees
         /// <exception cref="NotImplementedException"></exception>
         public override void OnUnpaused()
         {
+            base.OnUnpaused();
             if (_executeChild)
             {
                 m_childNode.OnUnpaused();

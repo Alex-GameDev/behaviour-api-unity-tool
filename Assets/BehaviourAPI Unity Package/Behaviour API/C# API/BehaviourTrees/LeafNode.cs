@@ -101,6 +101,8 @@ namespace BehaviourAPI.BehaviourTrees
         /// <exception cref="MissingActionException"></exception>
         public override void OnPaused()
         {
+            base.OnPaused();
+
             if (!_isActionRunning) return;
 
             if (Action == null)
@@ -116,6 +118,8 @@ namespace BehaviourAPI.BehaviourTrees
         /// <exception cref="MissingActionException"></exception>
         public override void OnUnpaused()
         {
+            base.OnUnpaused();
+
             if (!_isActionRunning) return;
 
             if (Action == null)

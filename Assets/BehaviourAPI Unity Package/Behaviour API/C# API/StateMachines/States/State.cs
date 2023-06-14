@@ -129,7 +129,7 @@ namespace BehaviourAPI.StateMachines
                 if(actionResults != Status.Running)
                 {
                     Action?.Stop();
-                    _isActionRunning= false;
+                    _isActionRunning = false;
                 }
                 Status = actionResults;
             }
@@ -164,6 +164,11 @@ namespace BehaviourAPI.StateMachines
         /// </summary>
         public virtual void OnPaused()
         {
+            if (Status != Status.Running)
+                throw new ExecutionStatusException(this, "ERROR: This node can't be paused. It's status is not running");
+
+            Status = Status.Paused;
+
             if (_isActionRunning)
                 Action?.Pause();
 
@@ -176,6 +181,11 @@ namespace BehaviourAPI.StateMachines
         /// </summary>
         public virtual void OnUnpaused()
         {
+            if (Status != Status.Paused)
+                throw new ExecutionStatusException(this, "ERROR: This node can't be unpaused. It's status is not paused");
+
+            Status = Status.Running;
+
             if (_isActionRunning)
                 Action?.Unpause();
 
@@ -192,6 +202,7 @@ namespace BehaviourAPI.StateMachines
                 if (_transitions[i] != null && CheckTransition(_transitions[i]))
                 {
                     _transitions[i]?.Perform();
+                    break;
                 }
             }
         }

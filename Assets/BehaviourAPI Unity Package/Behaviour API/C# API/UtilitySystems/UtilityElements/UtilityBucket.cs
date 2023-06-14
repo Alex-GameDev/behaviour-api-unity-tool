@@ -151,7 +151,7 @@ namespace BehaviourAPI.UtilitySystems
         {
             if (_currentBestElement != _lastExecutedElement)
             {
-                _lastExecutedElement?.Stop();
+                _lastExecutedElement?.OnStopped();
                 _lastExecutedElement = _currentBestElement;
                 _lastExecutedElement?.OnStarted();
             }
@@ -168,10 +168,10 @@ namespace BehaviourAPI.UtilitySystems
         /// <inheritdoc/>
         /// Stop the last executed action.
         /// </summary>
-        public override void Stop()
+        public override void OnStopped()
         {
-            base.Stop();
-            _lastExecutedElement?.Stop();
+            base.OnStopped();
+            _lastExecutedElement?.OnStopped();
             _lastExecutedElement = null;
             _currentBestElement = null;
         }

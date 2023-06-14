@@ -24,7 +24,7 @@ namespace BehaviourAPI.Core.Actions
 
         public override object Clone()
         {
-            var clone = (SequenceAction)MemberwiseClone();
+            var clone = (SerialAction)MemberwiseClone();
             clone.SubActions = SubActions.Select(a => (Action)a.Clone()).ToList();
             return clone;
         }

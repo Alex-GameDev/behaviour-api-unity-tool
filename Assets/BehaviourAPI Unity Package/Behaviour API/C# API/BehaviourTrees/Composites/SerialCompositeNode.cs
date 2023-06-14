@@ -42,6 +42,7 @@
         /// </summary>
         public override void OnPaused()
         {
+            base.OnPaused();
             GetCurrentChild().OnPaused();
         }
 
@@ -51,6 +52,7 @@
         /// </summary>
         public override void OnUnpaused()
         {
+            base.OnUnpaused();
             GetCurrentChild().OnUnpaused();
         }
 

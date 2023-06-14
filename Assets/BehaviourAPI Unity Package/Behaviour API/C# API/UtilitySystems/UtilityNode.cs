@@ -70,6 +70,7 @@ namespace BehaviourAPI.UtilitySystems
         /// <summary>
         /// Updates the current value of <see cref="Utility"/> if required.
         /// </summary>
+        /// <param name="forceRecalculate">If true, the utility will be updated even if is not required.</param>
         public void UpdateUtility(bool forceRecalculate = false)
         {
             if (_needToRecalculateUtility || forceRecalculate)

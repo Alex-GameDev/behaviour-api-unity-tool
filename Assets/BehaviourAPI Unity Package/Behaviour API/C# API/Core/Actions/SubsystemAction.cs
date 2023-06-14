@@ -20,11 +20,7 @@
         /// </summary>
         public ExecutionInterruptOptions InterruptOptions;
 
-        /// <summary>
-        /// Gets if the subgraph was interrupted without having finished.
-        /// </summary>
-        /// <value>True if the subgraph was interrupted, false otherwise.</value>
-        public bool IsInterrupted { get; private set; }
+        bool _isInterrupted;
 
         /// <summary>
         /// Create a new <see cref="SubsystemAction"/> with the specified subsystem and configuration flags.
@@ -51,7 +47,7 @@
             if (SubSystem == null)
                 throw new MissingSubsystemException(this, "Subsystem cannot be null");
 
-            if(IsInterrupted)
+            if(_isInterrupted)
             {
                 if (InterruptOptions == ExecutionInterruptOptions.Pause)
                 {
@@ -79,7 +75,7 @@
 
             SubSystem.Update();
 
-            if (ExecuteOnLoop && SubSystem.Status != Status.Running)
+            if (ExecuteOnLoop && (SubSystem.Status == Status.Success || SubSystem.Status == Status.Failure))
                 SubSystem.Restart();
 
             return SubSystem.Status;
@@ -96,9 +92,9 @@
             if (SubSystem == null)
                 throw new MissingSubsystemException(this, "Subsystem cannot be null");
 
-            IsInterrupted = SubSystem.Status == Status.Running;
+            _isInterrupted = SubSystem.Status == Status.Running || SubSystem.Status == Status.Paused;
 
-            if (IsInterrupted)
+            if (_isInterrupted)
             {
                 if (InterruptOptions == ExecutionInterruptOptions.Pause && SubSystem.Status == Status.Running)
                 {

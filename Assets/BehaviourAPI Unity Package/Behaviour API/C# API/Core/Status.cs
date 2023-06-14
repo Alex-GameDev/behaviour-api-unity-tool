@@ -23,7 +23,12 @@ namespace BehaviourAPI.Core
         /// <summary>
         /// The element execution ended with failure.
         /// </summary>
-        Failure = 4
+        Failure = 4,
+
+        /// <summary>
+        /// The execution is currently paused.
+        /// </summary>
+        Paused = 8
     }
 
     /// <summary>
@@ -48,19 +53,9 @@ namespace BehaviourAPI.Core
         Success = 2,
 
         /// <summary>
-        /// Equivalent to Status.Running | Status.Success
-        /// </summary>
-        NotFailure = 3,
-
-        /// <summary>
         /// Equivalent to Status.Failure
         /// </summary>
         Failure = 4,
-
-        /// <summary>
-        /// Equivalent to Status.Running | Status.Failure
-        /// </summary>
-        NotSuccess = 5,
 
         /// <summary>
         /// Equivalent to Status.Success | Status.Failure
@@ -70,7 +65,22 @@ namespace BehaviourAPI.Core
         /// <summary>
         /// Equivalent to Status.Running | Status.Success | Status.Failure
         /// </summary>
-        Active = 7
+        NotPaused = 7,
+
+        /// <summary>
+        /// Equivalent to Status.Paused
+        /// </summary>
+        Paused = 8,
+
+        /// <summary>
+        /// Equivalent to Status.Running | Status.Paused
+        /// </summary>
+        Unfinished = 9,
+
+        /// <summary>
+        /// Equivalent to Status.Running | Status.Paused | Status.Success | Status.Failure
+        /// </summary>
+        Active = 15
     }
 
     /// <summary>
