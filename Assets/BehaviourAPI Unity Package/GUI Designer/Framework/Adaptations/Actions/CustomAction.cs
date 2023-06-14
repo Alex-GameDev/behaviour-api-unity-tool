@@ -1,17 +1,14 @@
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
-    using Core;
     using Core.Actions;
-    using System.Collections.Generic;
-    using UnityToolkit;
 
     /// <summary>
     /// Adaptation class for use custom <see cref="FunctionalAction"/> in editor tools.
     /// <para>! -- Don't use this class directly in code.</para>
     /// </summary>
-    public class CustomAction : FunctionalAction
+    public class CustomAction : FunctionalAction, IBuildable
     {
         /// <summary>
         /// Method reference for start event.
@@ -37,28 +34,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         /// Method reference for stop event.
         /// </summary>
         public ContextualSerializedAction unpause;
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// Build the delegates using <paramref name="context"/> and the method references.
-        /// </summary>
-        /// <param name="context"><inheritdoc/></param>
-        public override void SetExecutionContext(ExecutionContext context)
-        {
-            var unityContext = (UnityExecutionContext)context;
-            if (unityContext != null && unityContext.RunnerComponent != null)
-            {
-                onStarted = start.CreateDelegate(unityContext.RunnerComponent);
-                onUpdated = update.CreateDelegate(unityContext.RunnerComponent);
-                onStopped = stop.CreateDelegate(unityContext.RunnerComponent);
-                onPaused = pause.CreateDelegate(unityContext.RunnerComponent);
-                onUnpaused = unpause.CreateDelegate(unityContext.RunnerComponent);
-            }
-            else
-            {
-                Debug.LogError("Context action need an UnityExecutionContext with a runner component to work");
-            }
-        }
 
         /// <summary>
         /// <inheritdoc/>
@@ -91,6 +66,15 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
             if (!string.IsNullOrEmpty(unpauseLine)) actionLines.Add($"Unpause:{unpauseLine}");
 
             return "CustomAction(" + string.Join(", ", actionLines) + ")";
+        }
+
+        public void Build(BuildData data)
+        {
+            onStarted = start.CreateDelegate(data.Runner);
+            onUpdated = update.CreateDelegate(data.Runner);
+            onStopped = stop.CreateDelegate(data.Runner);
+            onPaused = pause.CreateDelegate(data.Runner);
+            onUnpaused = unpause.CreateDelegate(data.Runner);
         }
     }
 }

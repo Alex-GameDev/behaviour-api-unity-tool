@@ -1,16 +1,12 @@
-using UnityEngine;
-
 namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
-    using Core;
     using Core.Perceptions;
-    using UnityToolkit;
 
     /// <summary>
     /// Adaptation class for use custom <see cref="ConditionPerception"/> in editor tools.
     /// <para>! -- Don't use this class directly in code.</para>
     /// </summary>
-    public class CustomPerception : ConditionPerception
+    public class CustomPerception : ConditionPerception, IBuildable
     {
         /// <summary>
         /// Method reference for init event.
@@ -39,28 +35,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 
         /// <summary>
         /// <inheritdoc/>
-        /// Build the delegates using <paramref name="context"/> and the method references.
-        /// </summary>
-        /// <param name="context"><inheritdoc/></param>
-        public override void SetExecutionContext(ExecutionContext context)
-        {
-            var unityContext = (UnityExecutionContext)context;
-            if (unityContext != null && unityContext.RunnerComponent != null)
-            {
-                onInit = init.CreateDelegate(unityContext.RunnerComponent);
-                onCheck = check.CreateDelegate(unityContext.RunnerComponent);
-                onReset = reset.CreateDelegate(unityContext.RunnerComponent);
-                onPause = pause.CreateDelegate(unityContext.RunnerComponent);
-                onUnpause = unpause.CreateDelegate(unityContext.RunnerComponent);
-            }
-            else
-            {
-                Debug.LogError("Context perception need an UnityExecutionContext to work");
-            }
-        }
-
-        /// <summary>
-        /// <inheritdoc/>
         /// Copy the method references too.
         /// </summary>
         /// <returns><inheritdoc/></returns>
@@ -73,6 +47,15 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
             copy.pause = (ContextualSerializedAction)pause?.Clone();
             copy.unpause = (ContextualSerializedAction)unpause?.Clone();
             return copy;
+        }
+
+        public void Build(BuildData data)
+        {
+            onInit = init.CreateDelegate(data.Runner);
+            onCheck = check.CreateDelegate(data.Runner);
+            onReset = reset.CreateDelegate(data.Runner);
+            onPause = pause.CreateDelegate(data.Runner);
+            onUnpause = unpause.CreateDelegate(data.Runner);
         }
     }
 }
