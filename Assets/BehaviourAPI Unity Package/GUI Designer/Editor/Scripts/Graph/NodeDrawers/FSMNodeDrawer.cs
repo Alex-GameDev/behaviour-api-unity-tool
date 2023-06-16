@@ -19,11 +19,11 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
         VisualElement rootIcon;
         Label rootLabel;
 
-        public override string LayoutPath => BehaviourAPISettings.instance.EditorLayoutsPath + "Nodes/cyclicgraphnode.uxml";
-
         public override void DrawNodeDetails()
         {
             rootIcon = view.Q("node-root");
+
+            rootIcon.Q("node-root-tag").style.width = 80;
 
             if (node is State)
             {
@@ -32,12 +32,8 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
             else if (node is Transition)
             {
                 view.SetColor(BehaviourAPISettings.instance.TransitionColor);
+                view.SetIconText($"Transition");
                 view.AddExtensionView("statusFlags");
-                if (node is ExitTransition)
-                {
-                    rootIcon.Enable();
-                    rootLabel = view.Q<Label>("node-root-label");
-                }
             }
 
             RecomputeEntryNode();
@@ -135,6 +131,26 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
 
         public override void SetUpPorts()
         {
+            var containerStyle = view.inputContainer.style;
+            containerStyle.left = 0;
+            containerStyle.right = 0;
+            containerStyle.top = 0;
+            containerStyle.bottom = 0;
+            containerStyle.position = Position.Absolute;
+            containerStyle.flexDirection = FlexDirection.Row;
+            containerStyle.alignItems = Align.Center;
+            containerStyle.justifyContent = Justify.SpaceBetween;
+
+            containerStyle = view.outputContainer.style;
+            containerStyle.left = 0;
+            containerStyle.right = 0;
+            containerStyle.top = 0;
+            containerStyle.bottom = 0;
+            containerStyle.position = Position.Absolute;
+            containerStyle.flexDirection = FlexDirection.Row;
+            containerStyle.alignItems = Align.Center;
+            containerStyle.justifyContent = Justify.SpaceBetween;
+
             InputPorts = new List<PortView>();
             OutputPorts = new List<PortView>();
             if (node == null || node.MaxInputConnections != 0)
@@ -271,7 +287,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
                 taskView.Update("Check " + flagsDisplay);
                 if (t is ExitTransition exit)
                 {
-                    rootLabel.text = "Exit with " + exit.ExitStatus;
+                    view.SetIconText($"Exit ({exit.ExitStatus})");
                 }
             }
         }

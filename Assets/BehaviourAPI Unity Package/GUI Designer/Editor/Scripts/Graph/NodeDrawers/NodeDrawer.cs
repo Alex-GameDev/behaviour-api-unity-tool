@@ -11,8 +11,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
         protected NodeView view;
         protected Node node;
 
-        public abstract string LayoutPath { get; }
-
         /// <summary>
         /// Set the references of the drawer
         /// </summary>

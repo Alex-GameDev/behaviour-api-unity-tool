@@ -14,7 +14,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
         PortView InputPort, OutputPort;
 
         VisualElement rootIcon;
-        public override string LayoutPath => BehaviourAPISettings.instance.EditorLayoutsPath + "Nodes/treegraphnode.uxml";
 
         public override void DrawNodeDetails()
         {
@@ -97,7 +96,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
                 OutputPort = view.InstantiatePort(Direction.Output, EPortOrientation.Top);
             }
             else view.outputContainer.Disable();
-
         }
 
         public override PortView GetPort(NodeView nodeView, Direction direction)

@@ -291,7 +291,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
             else if (!graphData.graph.CanRepeatConnection)
             {
                 bannedNodes = startPort.direction == Direction.Input ? graphData.GetDirectParents(startNodeView.data) :
-                graphData.GetDirectChilds(startNodeView.data);
+                graphData.GetDirectChildren(startNodeView.data);
             }
 
             foreach (Port port in ports)

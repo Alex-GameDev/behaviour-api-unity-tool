@@ -12,7 +12,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
         PortView InputPort, OutputPort;
 
         private FunctionDisplay m_FunctionDisplay;
-        public override string LayoutPath => BehaviourAPISettings.instance.EditorLayoutsPath + "Nodes/acyclicgraphnode.uxml";
 
         ProgressBar m_UtilityProgressBar;
 
@@ -92,6 +91,9 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
 
         public override void SetUpPorts()
         {
+            var portDiv = view.Q("node-ports");
+            portDiv.style.flexDirection = FlexDirection.RowReverse;
+
             if (node == null || node.MaxInputConnections != 0)
             {
                 InputPort = view.InstantiatePort(Direction.Input, EPortOrientation.Right);

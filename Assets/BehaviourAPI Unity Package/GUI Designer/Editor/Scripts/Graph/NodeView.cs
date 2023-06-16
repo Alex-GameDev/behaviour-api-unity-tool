@@ -105,7 +105,8 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
         /// <param name="drawer">The drawer used to render the node details.</param>
         /// <param name="graphView"></param>
         /// <param name="property">The serialized property of the node.</param>
-        public NodeView(NodeData data, NodeDrawer drawer, BehaviourGraphView graphView, SerializedProperty property = null) : base(drawer.LayoutPath)
+        public NodeView(NodeData data, NodeDrawer drawer, BehaviourGraphView graphView, SerializedProperty property = null) 
+            : base(BehaviourAPISettings.instance.EditorLayoutsPath + "Elements/node.uxml")
         {
             this.data = data;
             this.drawer = drawer;
