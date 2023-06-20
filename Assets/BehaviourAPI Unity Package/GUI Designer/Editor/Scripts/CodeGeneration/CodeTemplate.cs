@@ -542,14 +542,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
             m_CodeStatements.ForEach(c => c.GenerateCode(codeWriter, options));
 
             var firstGraphId = m_SystemData.graphs.FirstOrDefault()?.id;
-            if (options.registerGraphsInDebugger)
-            {
-                foreach (var graph in m_SystemData.graphs)
-                {
-                    codeWriter.AppendLine($"RegisterGraph({m_SystemElementIdentifierMap[graph.id]});");
-                }
-                codeWriter.AppendLine("");
-            }
 
             if (firstGraphId != null) codeWriter.AppendLine($"return {m_SystemElementIdentifierMap[firstGraphId]};");
             else codeWriter.Append("return null");

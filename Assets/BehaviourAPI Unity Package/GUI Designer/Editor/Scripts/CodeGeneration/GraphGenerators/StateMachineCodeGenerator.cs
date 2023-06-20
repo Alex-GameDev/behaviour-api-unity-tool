@@ -49,8 +49,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
                     code.SetMethod(k_ProbabilisticStateMethod);
                     code.AddAction("Action", true);
                     code.AddPropertyAssignations();
-                    //TODO: Probabilities
-                    break;
+                     break;
 
                 case State:
                     code.SetMethod(k_StateMethod);
@@ -89,30 +88,5 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
                     break;
             }
         }
-
-
-        //private CodeNodeCreationMethodExpression GenerateProbabilisticStateCode(ProbabilisticState state, NodeData data, CodeTemplate template)
-        //{
-        //    CodeNodeCreationMethodExpression initMethod = new CodeNodeCreationMethodExpression();
-        //    initMethod.nodeName = data.name;
-        //    initMethod.methodReferenceExpression = new CodeMethodReferenceExpression(GraphIdentifier, k_ProbabilisticStateMethod);
-
-        //    initMethod.Add(template.GetActionExpression(data.actions[0].action, template.GetSystemElementIdentifier(data.id) + "_action"));
-
-        //    var probNum = Mathf.Max(data.childIds.Count, state.probabilities.Count);
-
-        //    for (int i = 0; i < probNum; i++)
-        //    {
-        //        var id = template.GetSystemElementIdentifier(data.childIds[i]);
-        //        if (id != null && state.probabilities.Count > i && state.probabilities[i] > 0)
-        //        {
-        //            var nodeId = template.GetSystemElementIdentifier(data.id);
-        //            CodeCustomStatement probAssignation = new CodeCustomStatement($"{nodeId}.SetProbability({state.probabilities[i]});");
-        //            template.AddStatement(probAssignation);
-        //        }
-        //    }
-
-        //    return initMethod;
-        //}
     }
 }

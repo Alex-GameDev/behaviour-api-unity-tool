@@ -81,23 +81,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
 
         #endregion
 
-        public NodeView(NodeData data, NodeDrawer drawer)
-        {
-            this.data = data;
-            this.drawer = drawer;
-
-            m_NameInputField = this.Q<TextField>(k_NameField);
-            m_BorderElement = this.Q(k_Border);
-            m_ExtensionToggle = this.Q<Toggle>(k_ExtensionToggle);
-            m_ExtensionContainer = this.Q(k_ExtensionContainer);
-            m_StatusBorder = this.Q(k_Status);
-            m_Details = this.Q(k_DetailsDiv);
-
-            m_ExtensionToggle.RegisterValueChangedCallback(OnChangeExtensionToggle);
-
-            m_NameInputField.value = data.name;
-        }
-
         /// <summary>
         /// Create a new view for an specified node
         /// </summary>
@@ -143,21 +126,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
             }
 
             DrawNodeDetails();
-            RefreshDisplay();
-        }
-
-        /// <summary>
-        /// Called when property is modified in the inspector.
-        /// </summary>
-        public void OnPropertyChanged()
-        {
-            foreach (var referencedData in data.references)
-            {
-                var display = m_taskViews[referencedData.FieldName];
-                display.Update(referencedData.GetInfo());
-            }
-            drawer.OnRefreshDisplay();
-            drawer.OnRefreshDisplay();
+            OnPropertyChanged();
         }
 
         /// <summary>
@@ -424,7 +393,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
         /// <summary>
         /// Called every time the node serialized property changed in editor:
         /// </summary>
-        public void RefreshDisplay()
+        public void OnPropertyChanged()
         {
             foreach(var referencedData in data.references)
             {

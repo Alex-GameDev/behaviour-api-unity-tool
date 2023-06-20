@@ -18,8 +18,11 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 
         public override void OnGUI(Rect pos, SerializedProperty property, GUIContent label)
         {
-            float currentHeight = pos.y + k_Spacer;
+            var lastColor = GUI.contentColor;
+
+            GUI.contentColor = Color.white;
             var h = EditorGUIUtility.singleLineHeight * 1.2f;
+            float currentHeight = pos.y + k_Spacer + h;
             var titleRect = new Rect(pos.x, currentHeight, pos.width, k_TitleHeight);
             currentHeight += k_TitleHeight + k_Spacer;
 
@@ -88,13 +91,14 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 
             GUI.Label(pushRect, "Push Perceptions:", style);
             GUI.Label(nRect, property.FindPropertyRelative("pushPerceptions").arraySize.ToString(), "box");
+            GUI.contentColor = lastColor;
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             int graphCount = property.FindPropertyRelative("graphs").arraySize;
 
-            int lines = graphCount + 4;
+            int lines = graphCount + 5;
 
             return (EditorGUIUtility.singleLineHeight * 1.2f + k_Spacer) * lines + k_TitleHeight;
         }

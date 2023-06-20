@@ -293,7 +293,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
     /// <summary>
     /// Class that represents the set of instructions needed to instantiate a node.
     /// </summary>
-    public class CodeNodeStatementGroup
+    public class CodeNodeStatementGroup : CodeStatement
     {
         NodeData m_NodeData;
 
@@ -312,7 +312,9 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
             string identifier = template.GetSystemElementIdentifier(nodeData.id);
 
             m_NodeCreationStatement = new CodeVariableDeclarationStatement(nodeData.node.GetType(), identifier);
-            m_MethodInvoke = new CodeMethodInvokeExpression();
+            var nodeExpression = new CodeNodeCreationMethodExpression();
+            nodeExpression.nodeName = nodeData.name;
+            m_MethodInvoke = nodeExpression;
             m_NodeCreationStatement.RightExpression = m_MethodInvoke;
 
             m_argumentStatements = new List<CodeStatement>();
@@ -471,7 +473,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.CodeGenerator
             }
         }
 
-        public void GenerateCode(CodeWriter codeWriter, CodeGenerationOptions options)
+        public override void GenerateCode(CodeWriter codeWriter, CodeGenerationOptions options)
         {
             m_argumentStatements.ForEach(s => s.GenerateCode(codeWriter, options));
             m_NodeCreationStatement.GenerateCode(codeWriter, options);

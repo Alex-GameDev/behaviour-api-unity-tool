@@ -36,8 +36,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 
             m_IncludeNodeNamesToggle = this.Q<Toggle>("csw-includenodename-toggle");
             m_IncludeNodeNamesToggle.RegisterValueChangedCallback(_ => RefreshGeneratedCode());
-            m_RegisterGraphsInDebuggerToggle = this.Q<Toggle>("csw-registergraphs-toggle");
-            m_RegisterGraphsInDebuggerToggle.RegisterValueChangedCallback(_ => RefreshGeneratedCode());
             m_UseVarKeywordToggle = this.Q<Toggle>("csw-usevarkeyword-toggle");
             m_UseVarKeywordToggle.RegisterValueChangedCallback(_ => RefreshGeneratedCode());
         }
@@ -56,7 +54,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
             {
                 scriptNamespace = m_namespaceText.text,
                 includeNames = m_IncludeNodeNamesToggle.value,
-                registerGraphsInDebugger = m_RegisterGraphsInDebuggerToggle.value,
                 useVarKeyword = m_UseVarKeywordToggle.value,
             };
             m_ScriptText.value = m_Template.GenerateCode(m_classNameText.value, options);

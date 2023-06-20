@@ -141,9 +141,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
             }
         }
 
-
-
-
         private class FunctionDisplay : VisualElement
         {
             private static readonly int k_FunctionIntervals = 50;

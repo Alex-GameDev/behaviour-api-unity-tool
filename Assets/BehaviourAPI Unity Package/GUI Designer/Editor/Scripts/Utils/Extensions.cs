@@ -68,21 +68,33 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 
         public static string DisplayInfo(this StatusFlags statusFlags)
         {
-            switch (statusFlags)
+            List<string> raisedFlags = new List<string>();
+            if ((statusFlags & StatusFlags.Running) == StatusFlags.Running) raisedFlags.Add("Running");
+            if ((statusFlags & StatusFlags.Success) == StatusFlags.Success) raisedFlags.Add("Success");
+            if ((statusFlags & StatusFlags.Failure) == StatusFlags.Failure) raisedFlags.Add("Failure");
+
+            if(raisedFlags.Count == 0)
             {
-                case StatusFlags.None: return "never";
-                case StatusFlags.Success: return "when finish with success";
-                case StatusFlags.Failure: return "when finish with failure";
-                case StatusFlags.Finished: return "when finish";
-                case StatusFlags.NotSuccess: return "when not finished with success";
-                case StatusFlags.NotFailure: return "when not finished with failure";
-                default: return "always";
+                return "disabled";
+            }
+            else if(raisedFlags.Count == 3)
+            {
+                return "always";
+            }
+            else
+            {
+                return string.Join(" | ", raisedFlags);
             }
         }
 
         public static string GetInfo(this ReferenceData referenceData) 
         {
-            var graphMap = BehaviourSystemEditorWindow.instance.System.Data.graphs.ToDictionary(g => g.id, g => g.name);
+            var graphMap = new Dictionary<string, string>();
+
+            if(!BehaviourSystemEditorWindow.instance.IsRuntime)
+            {
+                graphMap = BehaviourSystemEditorWindow.instance.System.Data.graphs.ToDictionary(g => g.id, g => g.name);
+            }
 
             if (referenceData.Value != null)
             {
