@@ -136,8 +136,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
             }
         }
 
-
-        public HashSet<NodeData> GetDirectChilds(NodeData data)
+        public HashSet<NodeData> GetDirectChildren(NodeData data)
         {
             var nodeIdMap = GetNodeIdMap();
             return data.childIds.Select(id => nodeIdMap[id]).ToHashSet();
@@ -217,7 +216,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         /// Build the internal references.
         /// </summary>
         /// <param name="data"></param>
-        public void Build(BuildData buildData)
+        public void Build(BSBuildingInfo buildData)
         {
             var graphBuilder = new BehaviourGraphBuilder(graph);
 
@@ -226,6 +225,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
             {
                 nodes[i].BuildReferences(graphBuilder, buildData);  
             }
+
             graphBuilder.Build();
         }
 
