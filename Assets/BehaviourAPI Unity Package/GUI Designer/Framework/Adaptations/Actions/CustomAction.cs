@@ -68,7 +68,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
             return "CustomAction(" + string.Join(", ", actionLines) + ")";
         }
 
-        public void Build(BuildData data)
+        public void Build(BSBuildingInfo data)
         {
             onStarted = start.CreateDelegate(data.Runner);
             onUpdated = update.CreateDelegate(data.Runner);
@@ -76,5 +76,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
             onPaused = pause.CreateDelegate(data.Runner);
             onUnpaused = unpause.CreateDelegate(data.Runner);
         }
+
+        public bool Validate(BSValidationInfo validationInfo) => true;
     }
 }

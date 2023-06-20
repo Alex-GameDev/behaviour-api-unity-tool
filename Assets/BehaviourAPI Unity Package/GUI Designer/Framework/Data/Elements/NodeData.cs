@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+using System.Linq;
+using System.Reflection;
+
 namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
     using Core;
     using Core.Actions;
     using Core.Perceptions;
     using Core.Serialization;
-    using log4net.Filter;
-    using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     /// Class that serialize node data.
@@ -121,10 +121,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         /// These are node connections, actions, perceptions and functions.
         /// </summary>
         /// <param name="graphBuilder">The builder used to set the connections.</param>
-        /// <param name="nodeIdMap">A dictionary used to get the nodes by its id.</param>
-        /// <param name="runner">The script that will run the graph.</param>
-        /// <param name="systemData">The system data used to create the subgraph action references.</param>
-        public void BuildReferences(BehaviourGraphBuilder graphBuilder, BuildData buildData)
+        public void BuildReferences(BehaviourGraphBuilder graphBuilder, BSBuildingInfo buildData)
         {
             if (node == null) Debug.LogWarning("BUILD ERROR: The referenced node is null");
 

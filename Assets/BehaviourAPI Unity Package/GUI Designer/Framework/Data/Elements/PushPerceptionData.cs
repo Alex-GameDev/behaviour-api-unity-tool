@@ -57,7 +57,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
             }
         }
 
-        public void Build(BuildData buildData)
+        public void Build(BSBuildingInfo buildData)
         {
             pushPerception = new PushPerception();
 

@@ -72,7 +72,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         /// Set <see cref="compoundPerception"/> subperceptions from <see cref="subPerceptions"/> list.
         /// </summary>
         /// <param name="data">The system data that contains the perception.</param>
-        public void Build(BuildData data)
+        public void Build(BSBuildingInfo data)
         {
             foreach (var subPerception in subPerceptions)
                 if (subPerception.perception is IBuildable buildable) buildable.Build(data);
@@ -86,5 +86,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
             var logicCharacter = compoundType == typeof(AndPerception) ? " && " : compoundType == typeof(OrPerception) ? " || " : " - ";
             return "(" + string.Join(logicCharacter, subPerceptions.Select(sub => sub.perception?.ToString())) + ")";
         }
+
+        public bool Validate(BSValidationInfo validationInfo) => subPerceptions.All(sub => (sub is IBuildable buildable) ? buildable.Validate(validationInfo) : true);
     }
 }

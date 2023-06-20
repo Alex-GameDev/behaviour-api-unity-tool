@@ -29,7 +29,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         /// with the id stored in <see cref="subgraphId"/>.
         /// </summary>
         /// <param name="data"><inheritdoc/></param>
-        public void Build(BuildData data)
+        public void Build(BSBuildingInfo data)
         {
             if (!string.IsNullOrEmpty(subgraphId))
             {
@@ -49,5 +49,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         {
            return $"@Subgraph: _g({subgraphId})";
         }
+
+        public bool Validate(BSValidationInfo validationInfo) => true; // Comprobar que el id es válido
     }
 }

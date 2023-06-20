@@ -45,49 +45,86 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         /// <summary>
         /// Build the main <see cref="BehaviourGraph"/> using the serialized data.
         /// </summary>
-        /// <returns>The <see cref="BuildedSystemData"/>.</returns>
-        public BuildedSystemData BuildSystem(Component runner)
+        /// <returns>The <see cref="BSBuildingResults"/>.</returns>
+        public BSBuildingResults BuildSystem(Component runner)
         {
-            BuildData buildData = new BuildData(runner, this);
-
-            Dictionary<string, BehaviourGraph> graphMap = new Dictionary<string, BehaviourGraph>();
-
-            for(int i = 0; i < graphs.Count; i++)
+            if (graphs.Count == 0)
             {
-                graphs[i].Build(buildData);
-                if (!string.IsNullOrWhiteSpace(graphs[i].name))
-                {
-                    if (!graphMap.TryAdd(graphs[i].name, graphs[i].graph))
-                        Debug.LogWarning($"BUILD WARNING: Graph \"{graphs[i].name}\" wasn't added to dictionary because a graph with the same name was added before.", runner);
-                }
-                else
-                {
-                    Debug.LogWarning($"BUILD WARNING: Graph \"{graphs[i].name}\" wasn't added to dictionary because the name is not valid", runner);
-                }
+                Debug.LogWarning("BUILD ERROR: This system has no graphs");
+                return null;
             }
 
-            Dictionary<string, PushPerception> pushPerceptionMap = new Dictionary<string, PushPerception>();
+            BSBuildingInfo data = new BSBuildingInfo(runner, this);
+
+            for (int i = 0; i < graphs.Count; i++)
+            {
+                graphs[i].Build(data);
+            }
 
             for (int i = 0; i < pushPerceptions.Count; i++)
             {
-                pushPerceptions[i].Build(buildData);
-                if (!string.IsNullOrWhiteSpace(pushPerceptions[i].name))
-                {
-                    if (!pushPerceptionMap.TryAdd(pushPerceptions[i].name, pushPerceptions[i].pushPerception))
-                    {
-                        Debug.LogWarning($"ERROR: Push perception \"{pushPerceptions[i].name}\" wasn't added to dictionary because a push perception with the same name was added before.", runner);
-                    }
-                }
-                else
-                {
-                    Debug.LogWarning($"ERROR: Push perception \"{pushPerceptions[i].name}\" wasn't added to dictionary because the name is not valid", runner);
-                }
+                pushPerceptions[i].Build(data);
             }
 
-            BehaviourGraph mainGraph = graphs.FirstOrDefault()?.graph;
+            return new BSBuildingResults(this, runner);
+        }
 
-            BuildedSystemData buildedSystemData = new BuildedSystemData(mainGraph, graphMap, pushPerceptionMap);
-            return buildedSystemData;
+        public BehaviourGraph BuildSystem(BSBuildingInfo rootData, string subSystemName)
+        {
+            if (graphs.Count == 0)
+            {
+                Debug.LogWarning("BUILD ERROR: This system has no graphs");
+                return null;
+            }
+
+            BSBuildingInfo data = new BSBuildingInfo(rootData, this, subSystemName);
+
+            for (int i = 0; i < graphs.Count; i++)
+            {
+                graphs[i].Build(data);
+                graphs[i].name = data.SubsystemName + graphs[i].name;
+                data.RootSystemData.graphs.Add(graphs[i]);
+            }
+
+            for (int i = 0; i < pushPerceptions.Count; i++)
+            {
+                pushPerceptions[i].Build(data);
+                graphs[i].name = data.SubsystemName + graphs[i].name;
+                data.RootSystemData.pushPerceptions.Add(pushPerceptions[i]);
+            }
+
+            return graphs.FirstOrDefault()?.graph;
+        }
+
+        public bool CheckCyclicReferences()
+        {
+            BSValidationInfo validationInfo = new BSValidationInfo();
+            return CheckCyclicReferences(validationInfo);
+        }
+
+        public bool CheckCyclicReferences(BSValidationInfo bSValidationInfo)
+        {
+            bSValidationInfo.systemStack.Add(this);
+            foreach (var graph in graphs)
+            {
+                foreach (var node in graph.nodes)
+                {
+                    foreach (var reference in node.references)
+                    {
+                        if (reference.Value is IBuildable buildable)
+                        {
+                            var result = buildable.Validate(bSValidationInfo);
+                            if (!result)
+                            {
+                                bSValidationInfo.systemStack.Remove(this);
+                                return result;
+                            }
+                        }
+                    }
+                }
+            }
+            bSValidationInfo.systemStack.Remove(this);
+            return true;
         }
 
         public Dictionary<string, NodeData> GetNodeIdMap()

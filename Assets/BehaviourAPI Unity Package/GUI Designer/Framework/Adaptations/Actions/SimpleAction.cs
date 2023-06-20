@@ -4,7 +4,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
     {
         public ContextualSerializedAction method;
 
-        public void Build(BuildData data)
+        public void Build(BSBuildingInfo data)
         {
             action = method.CreateDelegate(data.Runner);
         }
@@ -20,5 +20,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         {
             return "SimpleAction(" + method.ToString() + ")";
         }
+
+        public bool Validate(BSValidationInfo validationInfo) => true;
     }
 }

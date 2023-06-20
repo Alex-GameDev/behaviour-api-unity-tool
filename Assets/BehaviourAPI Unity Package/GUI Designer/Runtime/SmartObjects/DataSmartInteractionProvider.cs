@@ -11,7 +11,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
         public override Action GetInteractionAction(SmartAgent agent)
         {
             SystemData data = GetSystemdata();
-            BuildedSystemData buildedData = data.BuildSystem(agent);
+            BSBuildingResults buildedData = data.BuildSystem(agent);
             ModifyGraph(buildedData.GraphMap, buildedData.PushPerceptionMap);
             return new SubsystemAction(buildedData.MainGraph);
         }

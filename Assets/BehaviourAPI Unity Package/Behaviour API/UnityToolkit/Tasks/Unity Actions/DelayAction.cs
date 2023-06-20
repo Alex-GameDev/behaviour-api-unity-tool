@@ -32,7 +32,7 @@ namespace BehaviourAPI.UnityToolkit
             this.delayTime = delayTime;
         }
 
-        public override string ToString() => $"Wait {delayTime} in seconds";
+        public override string ToString() => $"Wait {delayTime} second(s)";
 
         public override void Start()
         {

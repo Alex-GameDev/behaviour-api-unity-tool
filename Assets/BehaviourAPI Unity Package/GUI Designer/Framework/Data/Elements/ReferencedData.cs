@@ -24,7 +24,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         public string FieldType => fieldType;
         public object Value { get => value; set => this.value = value; }
 
-        public void Build(Node node, BuildData buildData)
+        public void Build(Node node, BSBuildingInfo buildData)
         {
             if (Value == null) return;
 

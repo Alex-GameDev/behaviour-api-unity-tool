@@ -49,7 +49,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
             return copy;
         }
 
-        public void Build(BuildData data)
+        public void Build(BSBuildingInfo data)
         {
             onInit = init.CreateDelegate(data.Runner);
             onCheck = check.CreateDelegate(data.Runner);
@@ -57,5 +57,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
             onPause = pause.CreateDelegate(data.Runner);
             onUnpause = unpause.CreateDelegate(data.Runner);
         }
+
+        public bool Validate(BSValidationInfo validationInfo) => true;
     }
 }

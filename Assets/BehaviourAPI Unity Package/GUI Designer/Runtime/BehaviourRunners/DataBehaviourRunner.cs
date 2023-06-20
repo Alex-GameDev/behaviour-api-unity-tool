@@ -17,9 +17,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
 
         SystemData _executionSystem;
 
-        Dictionary<string, BehaviourGraph> _graphMap;
-        Dictionary<string, PushPerception> _pushPerceptionMap;
-
         [SerializeField] BSRuntimeEventHandler _eventHandler;
 
         #endregion
@@ -52,7 +49,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
         {
             _executionSystem = GetEditedSystemData();
 
-            BuildedSystemData buildedData = _executionSystem.BuildSystem(this);
+            BSBuildingResults buildedData = _executionSystem.BuildSystem(this);
             ModifyGraphs(buildedData.GraphMap, buildedData.PushPerceptionMap);
             return buildedData.MainGraph;
         }

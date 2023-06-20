@@ -73,7 +73,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         /// Set <see cref="compoundAction"/> subperceptions from <see cref="subActions"/> list.
         /// </summary>
         /// <param name="data">The system data that contains the action.</param>
-        public void Build(BuildData data)
+        public void Build(BSBuildingInfo data)
         {
             foreach(var subAction in subActions)
                 if (subAction.action is IBuildable buildable) buildable.Build(data);
@@ -88,5 +88,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
             return "(" + string.Join(logicCharacter, subActions.Select(sub => sub.action?.ToString())) + ")";
         }
 
+        public bool Validate(BSValidationInfo validationInfo) => subActions.All(sub => (sub is IBuildable buildable) ? buildable.Validate(validationInfo) : true);
     }
 }
