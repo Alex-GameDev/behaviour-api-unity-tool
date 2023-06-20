@@ -89,9 +89,30 @@ namespace BehaviourAPI.UnityToolkit
         /// to access methods in the runner component with custom actions or perceptions.
         /// </summary>
         /// <param name="runnerComponent">The runner component.</param>
-        public UnityExecutionContext(Component runnerComponent) : this(runnerComponent.gameObject)
+        public UnityExecutionContext(Component runnerComponent)
         {
             RunnerComponent = runnerComponent;
+            GameObject = runnerComponent.gameObject;
+            if (GameObject != null)
+            {
+                NavMeshAgent = GameObject.GetComponent<NavMeshAgent>();
+                Rigidbody = GameObject.GetComponent<Rigidbody>();
+                Rigidbody2D = GameObject.GetComponent<Rigidbody2D>();
+                Collider = GameObject.GetComponent<Collider>();
+                Collider2D = GameObject.GetComponent<Collider2D>();
+                CharacterController = GameObject.GetComponent<CharacterController>();
+                Animator = GameObject.GetComponent<Animator>();
+                SmartAgent = GameObject.GetComponent<SmartAgent>();
+
+                Movement = GameObject.GetComponent<IMovementComponent>();
+                Talk = GameObject.GetComponent<ITalkComponent>();
+                Sound = GameObject.GetComponent<ISoundComponent>();
+                Renderer = GameObject.GetComponent<IRendererComponent>();
+            }
+            else
+            {
+                Debug.LogError("Context was created with a null component reference");
+            }
         }
 
         /// <summary>
@@ -100,27 +121,7 @@ namespace BehaviourAPI.UnityToolkit
         /// <param name="gameObject"></param>
         public UnityExecutionContext(GameObject gameObject)
         {
-            GameObject = gameObject;
-            if (gameObject != null)
-            {
-                NavMeshAgent = gameObject.GetComponent<NavMeshAgent>();
-                Rigidbody = gameObject.GetComponent<Rigidbody>();
-                Rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
-                Collider = gameObject.GetComponent<Collider>();
-                Collider2D = gameObject.GetComponent<Collider2D>();
-                CharacterController = gameObject.GetComponent<CharacterController>();
-                Animator = gameObject.GetComponent<Animator>();
-                SmartAgent = gameObject.GetComponent<SmartAgent>();
-
-                Movement = gameObject.GetComponent<IMovementComponent>();
-                Talk = gameObject.GetComponent<ITalkComponent>();
-                Sound = gameObject.GetComponent<ISoundComponent>();
-                Renderer = gameObject.GetComponent<IRendererComponent>();
-            }
-            else
-            {
-                Debug.LogError("Context was created with a null gameobject reference");
-            }
+           
         }
     }
 }

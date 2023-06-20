@@ -77,27 +77,8 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
     [Serializable]
     public class SerializedContextMethod<T> : SerializedContextMethod where T : Delegate
     {
-        T _function;
-
-        /// <summary>
-        /// Get the generated function in set context method.
-        /// </summary>
-        /// <returns>The function.</returns>
-        public T GetFunction() => _function;
-
         protected virtual Type[] FunctionArgs => new Type[0];
-
-        /// <summary>
-        /// Set value to <see cref="_function"/> using reflection to create a method call by <see cref="SerializedContextMethod.methodName"/> 
-        /// and <see cref="SerializedContextMethod.componentName"/>.
-        /// </summary>
-        /// <param name="context">The context used to get the component reference.</param>
-        public void SetContext(UnityExecutionContext context)
-        {
-            var del = GetDelegate(context.RunnerComponent, FunctionArgs, typeof(T));
-            if (del is T typedDelegate) _function = typedDelegate;
-        }    
-        
+       
         public T CreateDelegate(Component runner)
         {
             var del = GetDelegate(runner, FunctionArgs, typeof(T));

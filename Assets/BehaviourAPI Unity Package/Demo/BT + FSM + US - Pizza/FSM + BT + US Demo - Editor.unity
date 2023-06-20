@@ -948,7 +948,7 @@ MonoBehaviour:
         - 8fe50bac-3f7c-412f-9341-f31dc39514eb
       - name: StateTransition
         id: b14e88cd-13fe-4dc8-aee5-51509dded391
-        position: {x: 490.5, y: 308}
+        position: {x: 507, y: 314}
         node:
           rid: 6537695503399780384
         references:
