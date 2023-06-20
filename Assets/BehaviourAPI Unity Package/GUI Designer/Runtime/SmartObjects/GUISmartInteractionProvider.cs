@@ -7,17 +7,20 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
 
     public class GUISmartInteractionProvider : DataSmartInteractionProvider, IBehaviourSystem
     {
-        [SerializeField] SystemData systemData;
-        public SystemData Data => systemData;
+        [SerializeField] SystemData data;
+        public SystemData Data => data;
         public Object ObjectReference => this;
 
-        public override Action GetInteractionAction(SmartAgent agent)
+        private BehaviourSystem _bSystem;
+
+        private void Awake()
         {
-            BuildedSystemData buildedData = systemData.BuildSystem(agent);
-            ModifyGraph(buildedData.GraphMap, buildedData.PushPerceptionMap);
-            return new SubsystemAction(buildedData.MainGraph);
+            _bSystem = BehaviourSystem.CreateSystem(data);
         }
 
-        protected override SystemData GetSystemdata() => systemData;
+        protected override SystemData GetSystemdata()
+        {
+            return _bSystem.GetBehaviourSystemData();
+        }
     }
 }

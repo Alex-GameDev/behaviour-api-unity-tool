@@ -1,13 +1,11 @@
-using BehaviourAPI.Core;
-using BehaviourAPI.Core.Actions;
-using BehaviourAPI.Core.Perceptions;
-using BehaviourAPI.UnityToolkit.GUIDesigner.Framework;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
 {
+    using Core;
+    using Core.Actions;
+    using Framework;
+
     public abstract class DataSmartInteractionProvider : SmartInteractionProvider
     {
         public override Action GetInteractionAction(SmartAgent agent)

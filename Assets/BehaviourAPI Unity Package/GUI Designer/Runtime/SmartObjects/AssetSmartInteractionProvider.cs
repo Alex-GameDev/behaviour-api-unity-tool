@@ -9,6 +9,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
     public class AssetSmartInteractionProvider : DataSmartInteractionProvider
     {
         [SerializeField] BehaviourSystem _behaviourSystem;
+
         public override Action GetInteractionAction(SmartAgent agent)
         {
             SystemData data = _behaviourSystem.GetBehaviourSystemData();
