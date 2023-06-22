@@ -99,7 +99,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
         {
             if (m_CurrentGraphNodesProperty != null)
             {
-                m_CurrentGraphNodesProperty.serializedObject.Update();
+                //m_CurrentGraphNodesProperty.serializedObject.Update();
                 UpdateGraph(graphData, m_CurrentGraphNodesProperty);
             }
         }
