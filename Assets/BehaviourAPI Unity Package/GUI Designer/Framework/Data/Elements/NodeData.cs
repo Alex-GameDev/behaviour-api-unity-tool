@@ -69,10 +69,11 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
         /// </summary>
         /// <param name="node">The <see cref="Node"/> reference</param>
         /// <param name="id">The id of the element.</param>
-        public NodeData(Node node, string id)
+        public NodeData(Node node, string id, string name)
         {
             this.node = node;
             this.id = id;
+            this.name = name ?? "";
         }
 
         public bool Validate() => ValidateReferences(node.GetType());

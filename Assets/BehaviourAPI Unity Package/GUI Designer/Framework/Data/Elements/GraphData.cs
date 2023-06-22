@@ -65,10 +65,15 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
             var nodes = graph.NodeList;
             Dictionary<Node, string> map = nodes.ToDictionary(n => n, n => Guid.NewGuid().ToString());
 
+            var nodeNames = graph.GetNodeNames();
             for (int i = 0; i < nodes.Count; i++)
             {
                 string id = map[nodes[i]];
-                NodeData nodeData = new NodeData(nodes[i], id);
+
+                var nodename = nodeNames.GetValueOrDefault(nodes[i]);
+                NodeData nodeData = new NodeData(nodes[i], id, nodename);
+
+
                 for (int j = 0; j < nodes[i].ParentCount; j++)
                 {
                     nodeData.parentIds.Add(map[nodes[i].GetParentAt(j)]);
