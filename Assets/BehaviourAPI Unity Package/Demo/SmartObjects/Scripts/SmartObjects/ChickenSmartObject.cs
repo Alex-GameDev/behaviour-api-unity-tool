@@ -6,7 +6,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
     using Core.Actions;
     using SmartObjects;
 
-    public class ChickenSmartObject : SimpleSmartObject
+    public class ChickenSmartObject : SmartObject
     {
         [SerializeField] FridgeSmartObject _fridge;
         [SerializeField] OvenSmartObject _oven;
@@ -29,7 +29,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
             return new SmartInteraction(sequence, agent, GetCapabilities());
         }
 
-        public override Dictionary<string, float> GetCapabilities()
+        private Dictionary<string, float> GetCapabilities()
         {
             Dictionary<string, float> capabilities = new Dictionary<string, float>();
             capabilities["hunger"] = hungerCapability;

@@ -79,12 +79,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 340d956b2af2a2b46be8aae4eed879e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _config: {fileID: 11400000, guid: 97473e2c9c71dbf4abbf121b9e318833, type: 2}
+  tags: []
   _registerOnManager: 1
   _placeTarget: {fileID: 8284941870130620888}
+  capabilityName: hygiene
+  capabilityValue: 0.6
   _useTransform: {fileID: 3130559208976617953}
   _particleSystem: {fileID: 3051528155671436200}
-  useTime: 5
+  useTime: 10
 --- !u!1 &7819771483964690753
 GameObject:
   m_ObjectHideFlags: 0

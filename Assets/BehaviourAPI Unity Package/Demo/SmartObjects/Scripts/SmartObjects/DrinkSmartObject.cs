@@ -13,7 +13,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
         [SerializeField, Range(0f, 1f)]
         float thirstCapability = 0.5f;
 
-        public override Dictionary<string, float> GetCapabilities()
+        private Dictionary<string, float> GetCapabilities()
         {
             Dictionary<string, float> capabilities = new Dictionary<string, float>();
             capabilities["thirst"] = thirstCapability;
@@ -22,7 +22,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
 
         public override float GetCapabilityValue(string capabilityName)
         {
-            if (capabilityName == "hunger") return thirstCapability;
+            if (capabilityName == "thirst") return thirstCapability;
             else return 0f;
         }
 

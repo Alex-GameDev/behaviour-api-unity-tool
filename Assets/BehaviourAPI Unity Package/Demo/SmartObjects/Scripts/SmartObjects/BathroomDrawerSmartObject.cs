@@ -17,7 +17,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
 
         float startTime;
 
-        public override Dictionary<string, float> GetCapabilities()
+        private Dictionary<string, float> GetCapabilities()
         {
             Dictionary<string, float> capabilities = new Dictionary<string, float>();
             capabilities["hygiene"] = hygieneCapability;

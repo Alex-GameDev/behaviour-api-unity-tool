@@ -77,9 +77,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89df2e073b181794eabcef221a959c4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _config: {fileID: 11400000, guid: 97473e2c9c71dbf4abbf121b9e318833, type: 2}
+  tags: []
   _registerOnManager: 1
   _placeTarget: {fileID: 6944540666758602876}
+  capabilityName: leisure
+  capabilityValue: 0.3
 --- !u!1001 &7374699191880368794
 PrefabInstance:
   m_ObjectHideFlags: 0

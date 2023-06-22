@@ -110,11 +110,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84149b24f02f7624a92b1f14722a221a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _config: {fileID: 11400000, guid: 97473e2c9c71dbf4abbf121b9e318833, type: 2}
+  tags: []
   _registerOnManager: 1
   _placeTarget: {fileID: 2438520431856093092}
+  capabilityName: hygiene
+  capabilityValue: 0.8
   _useTransform: {fileID: 916586472842617360}
-  useTime: 5
+  useTime: 15
   _particleSystem: {fileID: 5236367094906137388}
 --- !u!1001 &1504502851819472056
 PrefabInstance:

@@ -86,7 +86,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
             Owner = null;
         }
 
-        public override Dictionary<string, float> GetCapabilities()
+        private Dictionary<string, float> GetCapabilities()
         {
             Dictionary<string, float> capabilities = new Dictionary<string, float>();
 

@@ -78,11 +78,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5077e7c802fe5114e84c6fdb9732c4f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _config: {fileID: 11400000, guid: 97473e2c9c71dbf4abbf121b9e318833, type: 2}
+  tags: []
   _registerOnManager: 1
   _placeTarget: {fileID: 6244908454807050275}
+  capabilityName: rest
+  capabilityValue: 0.7
   _useTransform: {fileID: 8705728568707103158}
-  useTime: 5
+  useTime: 10
 --- !u!1 &3624920192099270576
 GameObject:
   m_ObjectHideFlags: 0

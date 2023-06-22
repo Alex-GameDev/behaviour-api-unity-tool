@@ -3,7 +3,7 @@ using BehaviourAPI.Core;
 using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
 using BehaviourAPI.UnityToolkit;
 
-public class DemoSORuner : BehaviourRunner
+public class DemoSORunner : BehaviourRunner
 {
     private SmartAgent _agent;
 
@@ -18,11 +18,10 @@ public class DemoSORuner : BehaviourRunner
 
     protected override BehaviourGraph CreateGraph()
     {
-        var bt = new BehaviourTree();
-
-        var randomRequestAction = new RandomRequestAction(_agent);
-        var leaf = bt.CreateLeafNode(randomRequestAction);
-        var root = bt.CreateDecorator<LoopNode>(leaf);
+        BehaviourTree bt = new BehaviourTree();
+        RandomRequestAction randomRequestAction = new RandomRequestAction(_agent);
+        LeafNode leaf = bt.CreateLeafNode(randomRequestAction);
+        LoopNode root = bt.CreateDecorator<LoopNode>(leaf);
         bt.SetRootNode(root);
 
         _debugger.RegisterGraph(bt, "main");

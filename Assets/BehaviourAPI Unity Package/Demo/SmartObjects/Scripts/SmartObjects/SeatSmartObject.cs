@@ -20,11 +20,6 @@ namespace BehaviourAPI.UnityToolkit.Demos
 
         float lieTime;
 
-        public override Dictionary<string, float> GetCapabilities()
-        {
-            return new Dictionary<string, float>();
-        }
-
         public override float GetCapabilityValue(string capabilityName)
         {
             return 0f;

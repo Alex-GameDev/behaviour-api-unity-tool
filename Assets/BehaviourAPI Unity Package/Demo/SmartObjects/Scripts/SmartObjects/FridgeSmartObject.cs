@@ -20,7 +20,6 @@ namespace BehaviourAPI.UnityToolkit.Demos
 
         void StartUse()
         {
-            Debug.Log("_______________________________");
             lieTime = Time.time;
             fridgeDoor.rotation = Quaternion.Euler(0, -90, 0);
         }
@@ -37,11 +36,6 @@ namespace BehaviourAPI.UnityToolkit.Demos
                 return Status.Success;
             }
             return Status.Running;
-        }
-
-        public override Dictionary<string, float> GetCapabilities()
-        {
-            return new Dictionary<string, float>();
         }
 
         public override float GetCapabilityValue(string capabilityName)

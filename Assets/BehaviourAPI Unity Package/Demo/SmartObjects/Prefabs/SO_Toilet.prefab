@@ -47,9 +47,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f99b97a98ffc6f44d89977c4f37c1068, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _config: {fileID: 11400000, guid: 97473e2c9c71dbf4abbf121b9e318833, type: 2}
+  tags: []
   _registerOnManager: 1
   _placeTarget: {fileID: 2240994588412965941}
+  capabilityName: bladder
+  capabilityValue: 1
   _useTarget: {fileID: 6738609740919275705}
   _useTime: 5
 --- !u!1 &3829582686934897896

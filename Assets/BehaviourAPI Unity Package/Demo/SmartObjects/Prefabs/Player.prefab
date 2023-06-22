@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 9193852243837980923}
   - component: {fileID: 9193852243837980922}
   - component: {fileID: 9193852243837980918}
-  - component: {fileID: 9193852243837980919}
   - component: {fileID: 9193852243837980912}
   m_Layer: 0
   m_Name: Player
@@ -87,8 +86,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e210cfc0979c2943a7887ab6157ad0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExecuteOnLoop: 0
-  DontStopOnDisable: 0
+  executeOnLoop: 0
+  interruptOptions: 0
 --- !u!114 &9193852243837980922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,7 +100,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugStatusChanges: 1
+  _eventHandler:
+    debugStatusChanges: 0
+    identifier: 
 --- !u!114 &9193852243837980918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,19 +116,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
---- !u!114 &9193852243837980919
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9193852243837980920}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd8abdaf0b717764c905daed1688b47f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _spriteRenderer: {fileID: 9193852244605431698}
+  targetThreshold: 1
+  minDistanceToTarget: 0.3
+  drawGizmos: 0
+  targetColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &9193852243837980912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,7 +215,7 @@ SpriteRenderer:
   m_Size: {x: 0.48, y: 0.48}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1001 &9193852243835387999

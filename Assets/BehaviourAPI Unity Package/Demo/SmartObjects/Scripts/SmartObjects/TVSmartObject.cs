@@ -15,7 +15,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
 
         [SerializeField, Range(0f, 1f)] float leisureCapability = 0.5f;
 
-        public override Dictionary<string, float> GetCapabilities()
+        private Dictionary<string, float> GetCapabilities()
         {
             Dictionary<string, float> capabilities = new Dictionary<string, float>();
             capabilities["leisure"] = leisureCapability;
