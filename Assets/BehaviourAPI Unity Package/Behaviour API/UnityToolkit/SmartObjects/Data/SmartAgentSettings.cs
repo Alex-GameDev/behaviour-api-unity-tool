@@ -7,8 +7,8 @@ namespace BehaviourAPI.UnityToolkit
     public class SmartAgentSettings : ScriptableObject
     {
         [Header("Needs")]
-        [SerializeField] CapabilityMap _needMap;
+        [SerializeField] NeedMap _needMap;
 
-        public Dictionary<string, float> GetCapabilityMap() => _needMap;
+        public Dictionary<string, float> GetCapabilityMap() => new Dictionary<string, float>(_needMap);
     }
 }

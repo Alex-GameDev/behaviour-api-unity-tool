@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit.Editor
 {
-    [CustomPropertyDrawer(typeof(CapabilityMap))]
-    public class CapabilityMapPropertyDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(NeedMap))]
+    public class NeedMapPropertyDrawer : PropertyDrawer
     {
         private string currentKey;
 
@@ -25,7 +25,7 @@ namespace BehaviourAPI.UnityToolkit.Editor
             currentKey = EditorGUI.TextField(createRect, currentKey);
 
             Rect btnRect = new Rect(position.x, position.y + delta, position.width, delta);
-            if (GUI.Button(btnRect, "Add capability") && !string.IsNullOrEmpty(currentKey))
+            if (GUI.Button(btnRect, "Add need") && !string.IsNullOrEmpty(currentKey))
             {
                 keyProp.InsertArrayElementAtIndex(keyProp.arraySize);
                 keyProp.GetArrayElementAtIndex(keyProp.arraySize - 1).stringValue = currentKey;

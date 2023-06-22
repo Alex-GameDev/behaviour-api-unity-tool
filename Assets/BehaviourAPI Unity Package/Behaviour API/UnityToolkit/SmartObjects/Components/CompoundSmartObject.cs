@@ -5,6 +5,9 @@ namespace BehaviourAPI.UnityToolkit
 {
     using SmartObjects;
 
+    /// <summary>
+    /// Smart object that contains a list of interactions, each one binded to a different need.
+    /// </summary>
     public abstract class CompoundSmartObject : SmartObject
     {
         [SerializeField] InteractionMap interactionMap;
@@ -30,8 +33,6 @@ namespace BehaviourAPI.UnityToolkit
                 }
             }
         }
-
-        public override Dictionary<string, float> GetCapabilities() => m_CapabilityMap;
 
         public override float GetCapabilityValue(string capabilityName) => m_CapabilityMap.GetValueOrDefault(capabilityName);
 
@@ -60,11 +61,5 @@ namespace BehaviourAPI.UnityToolkit
         {
             return;
         }
-    }
-
-    [System.Serializable]
-    public class InteractionMap : SerializedMap<string, SmartInteractionProvider> 
-    { 
-        
     }
 }

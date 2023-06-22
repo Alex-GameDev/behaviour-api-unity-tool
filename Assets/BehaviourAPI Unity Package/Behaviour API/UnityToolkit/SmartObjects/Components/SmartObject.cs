@@ -19,7 +19,6 @@ namespace BehaviourAPI.UnityToolkit
 
         void OnEnable()
         {
-            Debug.Log(GetType().Name);
             if (_registerOnManager)
                 SmartObjectManager.Instance.RegisterSmartObject(this);
         }
@@ -44,8 +43,6 @@ namespace BehaviourAPI.UnityToolkit
         /// <param name="requestData">The data used to specify the interaction requested.</param>
         /// <returns>The interaction generated</returns>
         public abstract SmartInteraction RequestInteraction(SmartAgent agent, RequestData requestData);
-
-        public abstract Dictionary<string, float> GetCapabilities();
 
         public abstract float GetCapabilityValue(string capabilityName);
 

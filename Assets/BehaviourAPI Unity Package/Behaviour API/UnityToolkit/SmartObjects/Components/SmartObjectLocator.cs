@@ -3,10 +3,24 @@ using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit
 {
+    /// <summary>
+    /// Component that looks for nearby SmartObjects
+    /// </summary>
     public class SmartObjectLocator : MonoBehaviour
     {
+        /// <summary>
+        /// If true, the objects will be searched automatically
+        /// </summary>
         public bool autoCheck = true;
+
+        /// <summary>
+        /// The time interval between searches
+        /// </summary>
         public float intervalTime = 1f;
+
+        /// <summary>
+        /// The maximum distance at which objects will be searched
+        /// </summary>
         public float maxDistance = 10f;
 
         [Header("Gizmos")]
@@ -36,6 +50,9 @@ namespace BehaviourAPI.UnityToolkit
             }
         }
 
+        /// <summary>
+        /// Look for nearby object and store them in available smart object list.
+        /// </summary>
         public void LocateObjects()
         {
             _availableSmartObjects.Clear();
@@ -53,6 +70,10 @@ namespace BehaviourAPI.UnityToolkit
             _timer = 0; 
         }
 
+        /// <summary>
+        /// Gets the list of located smart objects
+        /// </summary>
+        /// <returns>The list of available smart objects</returns>
         public List<SmartObject> GetSmartObjects() => _availableSmartObjects;
 
         private void OnDrawGizmosSelected()

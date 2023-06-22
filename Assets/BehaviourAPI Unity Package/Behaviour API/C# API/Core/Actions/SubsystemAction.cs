@@ -53,6 +53,10 @@
                 {
                     SubSystem.Unpause();
                 }
+                else if (InterruptOptions == ExecutionInterruptOptions.Stop)
+                {
+                    SubSystem.Start();
+                }
             }
             else
             {

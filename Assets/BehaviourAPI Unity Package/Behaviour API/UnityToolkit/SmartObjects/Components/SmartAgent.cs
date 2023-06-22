@@ -62,5 +62,19 @@ namespace BehaviourAPI.UnityToolkit
                 m_Needs[name] += value;
             }
         }
+
+        [ContextMenu("Debug needs")]
+        public void DebugNeeds()
+        {
+            foreach(var kvp in m_Needs) 
+            { 
+                Debug.Log(kvp.Key + ": " + kvp.Value);
+            }
+        }
+
+        protected void AddNeedValue(string need, float value)
+        {
+            m_Needs[need] = Mathf.Clamp01(m_Needs[need] + value);
+        }
     }
 }

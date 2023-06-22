@@ -12,7 +12,7 @@ namespace BehaviourAPI.UnityToolkit
     {
         [SerializeField] SmartInteractionProvider interactionProvider;
 
-        public override Dictionary<string, float> GetCapabilities()
+        public Dictionary<string, float> GetCapabilities()
         {
             return interactionProvider.GetCapabilityMap();
         }

@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomPropertyDrawer(typeof(InteractionMap))]
-public class InteractorProviderMapDrawer : PropertyDrawer
+public class InteractionMapPropertyDrawer : PropertyDrawer
 {
     private string currentKey;
 
@@ -23,7 +23,7 @@ public class InteractorProviderMapDrawer : PropertyDrawer
         currentKey = EditorGUI.TextField(createRect, currentKey);
 
         Rect btnRect = new Rect(position.x, position.y + delta, position.width, delta);
-        if (GUI.Button(btnRect, "Add capability") && !string.IsNullOrEmpty(currentKey))
+        if (GUI.Button(btnRect, "Add interaction") && !string.IsNullOrEmpty(currentKey))
         {
             keyProp.InsertArrayElementAtIndex(keyProp.arraySize);
             keyProp.GetArrayElementAtIndex(keyProp.arraySize - 1).stringValue = currentKey;

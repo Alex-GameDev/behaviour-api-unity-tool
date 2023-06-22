@@ -8,7 +8,7 @@ namespace BehaviourAPI.UnityToolkit
 
     public abstract class SmartInteractionProvider : MonoBehaviour
     {
-        [SerializeField] CapabilityMap capabilities;
+        [SerializeField] NeedMap capabilities;
 
         public SmartInteraction CreateInteraction(SmartAgent smartAgent)
         {
