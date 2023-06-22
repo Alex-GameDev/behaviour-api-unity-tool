@@ -39,7 +39,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
         #region ----------------------- Editor settings -----------------------
 
         [SerializeField] private string RootPath = k_RootPath;
-        [SerializeField] private string CustomAssemblies = string.Empty;
 
         public string GenerateScriptDefaultPath = "Assets/Scripts/";
         public string GenerateScriptDefaultName = "NewBehaviourRunner";

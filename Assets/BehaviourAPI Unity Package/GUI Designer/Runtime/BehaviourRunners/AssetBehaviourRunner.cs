@@ -6,7 +6,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
     /// <summary>
     /// Subclass of  <see cref="BehaviourRunner"/> that executes a reusable <see cref="BehaviourSystem"/> 
     /// </summary>
-    public abstract class AssetBehaviourRunner : DataBehaviourRunner, IBehaviourSystem
+    public class AssetBehaviourRunner : DataBehaviourRunner, IBehaviourSystem
     {
         public BehaviourSystem System;
         SystemData _runtimeSystem = null;

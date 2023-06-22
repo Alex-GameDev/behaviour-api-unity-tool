@@ -7,7 +7,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
     /// <summary>
     /// Subclass of  <see cref="BehaviourRunner"/> used to edit a behaviour runner with the editor tools.
     /// </summary>
-    public abstract class EditorBehaviourRunner : DataBehaviourRunner, IBehaviourSystem
+    public class EditorBehaviourRunner : DataBehaviourRunner, IBehaviourSystem
     {
         #region ------------------------------- Private fields --------------------------------
 

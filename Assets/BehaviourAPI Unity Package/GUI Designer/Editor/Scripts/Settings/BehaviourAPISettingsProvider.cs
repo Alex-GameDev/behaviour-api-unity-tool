@@ -46,12 +46,6 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
                     pathProp.stringValue = EditorGUILayout.TextField(Styles.RootPath, pathProp.stringValue);
                 }
 
-                var assemblyProp = m_SerializedObject.FindProperty("CustomAssemblies");
-                if (assemblyProp != null)
-                {
-                    assemblyProp.stringValue = EditorGUILayout.TextField(Styles.Assemblies, assemblyProp.stringValue);
-                }
-
                 EditorGUILayout.Space(10);
                 EditorGUILayout.LabelField("Script generation", EditorStyles.boldLabel);
 

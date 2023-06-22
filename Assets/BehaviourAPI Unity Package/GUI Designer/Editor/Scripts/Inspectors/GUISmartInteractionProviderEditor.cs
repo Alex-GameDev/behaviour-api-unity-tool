@@ -6,13 +6,13 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     using Runtime;
 
-    [CustomEditor(typeof(GUISmartInteractionProvider), editorForChildClasses: true)]
+    [CustomEditor(typeof(EditorSmartInteractionProvider), editorForChildClasses: true)]
     public class GUISmartInteractionProviderEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            GUISmartInteractionProvider runner = (GUISmartInteractionProvider)target;
+            EditorSmartInteractionProvider runner = (EditorSmartInteractionProvider)target;
 
             bool isPartOfAPrefab = PrefabUtility.IsPartOfAnyPrefab(runner);
             bool isOnScene = runner.gameObject.scene.name != null;

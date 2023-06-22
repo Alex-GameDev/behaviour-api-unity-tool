@@ -461,8 +461,10 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
             for (int i = 0; i < graphData.nodes.Count; i++)
             {
                 var data = graphData.nodes[i];
-                var view = m_NodeViewMap[data.id];
-                view.RefreshView();
+                if(m_NodeViewMap.TryGetValue(data.id, out var view)) 
+                {
+                    view.RefreshView();
+                }
             }
         }
 

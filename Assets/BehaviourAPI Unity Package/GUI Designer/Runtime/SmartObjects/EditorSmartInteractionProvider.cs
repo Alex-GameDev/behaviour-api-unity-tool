@@ -2,10 +2,9 @@ using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
 {
-    using Core.Actions;
     using Framework;
 
-    public class GUISmartInteractionProvider : DataSmartInteractionProvider, IBehaviourSystem
+    public class EditorSmartInteractionProvider : DataSmartInteractionProvider, IBehaviourSystem
     {
         [SerializeField] SystemData data;
         public SystemData Data => data;
