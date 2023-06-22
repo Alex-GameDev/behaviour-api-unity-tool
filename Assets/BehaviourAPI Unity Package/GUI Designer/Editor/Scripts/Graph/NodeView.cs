@@ -553,6 +553,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
         public void RefreshView()
         {
             SetPosition(new Rect(data.position, Vector2.zero));
+            drawer.OnMoved();
             drawer.OnRepaint();
         }
 

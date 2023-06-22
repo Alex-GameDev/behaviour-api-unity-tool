@@ -19,12 +19,100 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
         HashSet<Vector2Int> occupedPositions = new HashSet<Vector2Int>();
         Dictionary<NodeData, Vector2Int> statePositionMap = new Dictionary<NodeData, Vector2Int>();
 
+        float GetAttractionForce(float x, float k)
+        {
+            return x * x / k;
+        }
+
+        float GetRepulsionForce(float x, float k)
+        {
+            return k * k / x;
+        }
+
         /// <summary>
         /// <inheritdoc/>
         /// 
         /// </summary>
         /// <param name="graphData"><inheritdoc/></param>
         protected override void ComputeLayout(GraphData graphData)
+        {
+            Dictionary<NodeData, Vector2> dispositionMap = new Dictionary<NodeData, Vector2>();
+            Dictionary<string, NodeData> graphIdMap = graphData.GetNodeIdMap();
+            Vector2 area = k_nodeOffset * Mathf.Sqrt(graphData.nodes.Count);
+
+            int iterations = 100;
+
+            float force = Mathf.Sqrt((area.x * area.y) / graphData.nodes.Count);
+
+            for (int i = 0; i < graphData.nodes.Count; i++)
+            {
+                var pos = area * new Vector2(Random.Range(0f, 1f), Random.Range(0f, 1f));
+                graphData.nodes[i].position = pos;
+                dispositionMap[graphData.nodes[i]] = new Vector2(0f, 0f);
+            }
+
+            var maxdist = 100f;
+            for (int i = 0; i < iterations; i++)
+            {
+                for (int j = 0; j < graphData.nodes.Count; j++)
+                {
+                    var node = graphData.nodes[j];
+                    for (int k = 0; k < graphData.nodes.Count; k++)
+                    {
+                        var otherNode = graphData.nodes[k];
+                        if (node != otherNode)
+                        {
+                            var dist = node.position - otherNode.position;
+                            var magnitude = dist.magnitude;
+                            dispositionMap[node] += dist.normalized * GetRepulsionForce(magnitude, force);
+                        }
+                    }
+                }
+
+                for (int j = 0; j < graphData.nodes.Count; j++)
+                {
+                    var node = graphData.nodes[j];
+                    for (int k = 0; k < node.parentIds.Count; k++)
+                    {
+                        var otherNode = nodeIdMap.GetValueOrDefault(node.parentIds[k]);
+
+                        if (otherNode == null) continue;
+
+                        var dist = node.position - otherNode.position;
+                        var magnitude = dist.magnitude;
+                        dispositionMap[node] -= dist.normalized * GetAttractionForce(magnitude, force);
+                        dispositionMap[otherNode] += dist.normalized * GetAttractionForce(magnitude, force);
+                    }
+
+                    for (int k = 0; k < node.childIds.Count; k++)
+                    {
+                        var otherNode = nodeIdMap.GetValueOrDefault(node.childIds[k]);
+
+                        if (otherNode == null) continue;
+
+                        var dist = node.position - otherNode.position;
+                        var magnitude = dist.magnitude;
+                        dispositionMap[node] -= dist.normalized * GetAttractionForce(magnitude, force);
+                        dispositionMap[otherNode] += dist.normalized * GetAttractionForce(magnitude, force);
+                    }
+                }
+
+                maxdist *= 0.95f;
+                for (int j = 0; j < graphData.nodes.Count; j++)
+                {
+                    var node = graphData.nodes[j];
+                    var rawDisp = dispositionMap[node];
+                    var magnitude = rawDisp.magnitude;
+
+                    if (magnitude > maxdist) rawDisp *= maxdist / magnitude;
+
+                    node.position += rawDisp;
+                    dispositionMap[node] = new Vector2(0f, 0f);
+                }
+            }            
+        }
+
+        private void foo(GraphData graphData)
         {
             var states = graphData.nodes.FindAll(n => n.node.MaxInputConnections == -1);
 

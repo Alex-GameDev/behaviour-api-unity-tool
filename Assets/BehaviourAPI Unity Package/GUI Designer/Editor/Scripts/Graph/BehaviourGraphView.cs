@@ -9,6 +9,7 @@ using Vector2 = UnityEngine.Vector2;
 namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
 {
     using Framework;
+    using System.Linq;
 
     /// <summary>
     /// Class used to represent the nodes of a <see cref="GraphData"/> element in a editor window.
@@ -118,6 +119,13 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
             }
 
             m_Adapter = GraphAdapter.GetAdapter(graphData.graph.GetType());
+
+            if( serializedProperty == null && graphData.nodes.All(n => n.position == Vector2.zero))
+            {
+                AutoLayoutGraph();
+
+            }
+
             m_CurrentGraphNodesProperty = serializedProperty;
             DrawGraph();
         }
@@ -371,6 +379,8 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
             }
         }
 
+        #endregion
+
         #region --------------------------------- Selection ---------------------------------
 
         public override void AddToSelection(ISelectable selectable)
@@ -406,6 +416,8 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor.Graphs
         }
 
         #endregion
+
+        #region --------------- Other methods ----------------
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
