@@ -8,7 +8,7 @@ namespace BehaviourAPI.UnityToolkit
     /// <summary>
     /// Smart object that contains a list of interactions, each one binded to a different need.
     /// </summary>
-    public abstract class CompoundSmartObject : SmartObject
+    public class CompoundSmartObject : SmartObject
     {
         [SerializeField] InteractionMap interactionMap;
         [SerializeField] string defaultInteractionName;
@@ -60,6 +60,17 @@ namespace BehaviourAPI.UnityToolkit
         protected virtual void SetInteractionEvents(SmartInteraction interaction, string name) 
         {
             return;
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// Override this method on subclases to specify when the agent is not valid.
+        /// </summary>
+        /// <param name="agent"><inheritdoc/></param>
+        /// <returns><inheritdoc/></returns>
+        public override bool ValidateAgent(SmartAgent agent)
+        {
+            return true;
         }
     }
 }

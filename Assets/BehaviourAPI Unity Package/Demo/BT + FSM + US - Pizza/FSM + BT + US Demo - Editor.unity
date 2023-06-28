@@ -781,7 +781,7 @@ MonoBehaviour:
         - 51e76747-a01a-4d08-9ffe-446c0613ee4f
       - name: vegetarian
         id: d14f4053-078a-4324-b310-ee414c6b23cd
-        position: {x: 631, y: 40}
+        position: {x: 600, y: 33.33333}
         node:
           rid: 6537695503399780394
         references:

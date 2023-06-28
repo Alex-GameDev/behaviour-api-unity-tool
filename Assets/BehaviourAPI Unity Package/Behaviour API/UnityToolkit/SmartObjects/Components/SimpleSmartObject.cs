@@ -8,7 +8,7 @@ namespace BehaviourAPI.UnityToolkit
     /// <summary>
     /// Smart object that provide always the same interaction
     /// </summary>
-    public abstract class SimpleSmartObject : SmartObject
+    public class SimpleSmartObject : SmartObject
     {
         [SerializeField] SmartInteractionProvider interactionProvider;
 
@@ -32,6 +32,17 @@ namespace BehaviourAPI.UnityToolkit
         public virtual void SetInteractionEvents(SmartInteraction interaction) 
         {
             return;
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// Override this method on subclases to specify when the agent is not valid.
+        /// </summary>
+        /// <param name="agent"><inheritdoc/></param>
+        /// <returns><inheritdoc/></returns>
+        public override bool ValidateAgent(SmartAgent agent)
+        {
+            return true;
         }
     }
 }

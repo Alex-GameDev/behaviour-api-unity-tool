@@ -11,6 +11,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: House Boy BT
       objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788833, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.0042496
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788835, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.8802321
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788845, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.61551845
+      objectReference: {fileID: 0}
     - target: {fileID: 4600201873981788853, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -55,6 +67,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4600201873981788863, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.7302067
+      objectReference: {fileID: 0}
+    - target: {fileID: 5236131728996635054, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
+      propertyPath: m_Center.y
+      value: 1.6
+      objectReference: {fileID: 0}
     - target: {fileID: 8275284379017087738, guid: e3391db9a3c6a51488aaa9ea5bfae244, type: 3}
       propertyPath: minDistanceToTarget
       value: 2
@@ -79,12 +99,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85cb27fcedf31194b912dd04c361542e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExecuteOnLoop: 0
-  DontStopOnDisable: 0
+  executeOnLoop: 0
+  interruptOptions: 0
   doorOpenClip: {fileID: 8300000, guid: 24139dc6952d31f4486ec25245533cb1, type: 3}
   keyFoundClip: {fileID: 8300000, guid: 69994e2ff543a7c40ba881ddacb0c0dc, type: 3}
   explosionClip: {fileID: 8300000, guid: 2638340574fe08e4ca49b88174dda3a1, type: 3}
   explosionFX: {fileID: 100004, guid: 6e8c7c425e5bc374daf95a774767b1e3, type: 3}
+--- !u!195 &1181920414997465117
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940405016730152400}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!114 &3543775450257027640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,4 +139,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1726e9fdb9ff2d4baa8710d607b31ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugStatusChanges: 0
+  _eventHandler:
+    debugStatusChanges: 0
+    identifier: 
+--- !u!114 &5883081464086205675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940405016730152400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81016613ea3feb04b8c61c0b1124211a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
+  targetThreshold: 1
+  minDistanceToTarget: 0.3
+  drawGizmos: 0
+  targetColor: {r: 1, g: 0, b: 0, a: 1}

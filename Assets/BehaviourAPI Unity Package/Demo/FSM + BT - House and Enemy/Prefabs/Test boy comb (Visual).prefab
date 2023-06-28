@@ -202,7 +202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   executeOnLoop: 0
-  dontStopOnDisable: 0
+  interruptOptions: 0
   _eventHandler:
     debugStatusChanges: 0
     identifier: 
@@ -498,7 +498,7 @@ MonoBehaviour:
       type: {class: SubgraphAction, ns: BehaviourAPI.UnityToolkit.GUIDesigner.Framework, asm: BehaviourAPI.UnityToolkit.GUIDesigner.Framework}
       data:
         ExecuteOnLoop: 0
-        DontStopOnInterrupt: 0
+        InterruptOptions: 2
         subgraphId: baab3991-04ac-4d4b-827e-739bb15f8572
 --- !u!114 &4898935086108083608
 MonoBehaviour:

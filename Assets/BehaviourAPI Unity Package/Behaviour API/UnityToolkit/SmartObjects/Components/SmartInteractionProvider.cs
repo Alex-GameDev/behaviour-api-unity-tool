@@ -18,7 +18,7 @@ namespace BehaviourAPI.UnityToolkit
             return smartInteraction;
         }
 
-        public abstract Action GetInteractionAction(SmartAgent agent);
+        protected abstract Action GetInteractionAction(SmartAgent agent);
 
         public Dictionary<string, float> GetCapabilityMap() => capabilities;
 

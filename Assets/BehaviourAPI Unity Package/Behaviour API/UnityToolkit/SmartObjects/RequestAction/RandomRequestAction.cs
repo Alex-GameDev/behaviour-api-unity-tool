@@ -3,8 +3,14 @@ using UnityEngine;
 
 namespace BehaviourAPI.UnityToolkit
 {
+    /// <summary>
+    /// Request action that uses a random smart object
+    /// </summary>
     public class RandomRequestAction : UnityRequestAction
     {
+        /// <summary>
+        /// The data sent with the request
+        /// </summary>
         public RequestData requestData;
 
         public RandomRequestAction(SmartAgent agent, RequestData requestData = null) : base(agent)

@@ -713,7 +713,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   executeOnLoop: 0
-  dontStopOnDisable: 0
+  interruptOptions: 0
   _eventHandler:
     debugStatusChanges: 0
     identifier: 
@@ -726,7 +726,7 @@ MonoBehaviour:
       nodes:
       - name: LoopNode
         id: 1fc0f671-e0e8-4a87-b8bf-846ca6557355
-        position: {x: 272, y: 110}
+        position: {x: 0, y: 0}
         node:
           rid: 6537695503399780486
         references: []
@@ -735,7 +735,7 @@ MonoBehaviour:
         - e9509c5e-a9b1-47b1-ab6b-fab0aef93658
       - name: patrol
         id: e9509c5e-a9b1-47b1-ab6b-fab0aef93658
-        position: {x: 277, y: 354}
+        position: {x: 0, y: 200}
         node:
           rid: 5274389672861106182
         references:

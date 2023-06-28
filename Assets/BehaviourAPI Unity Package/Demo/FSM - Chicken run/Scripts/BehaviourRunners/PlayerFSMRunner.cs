@@ -43,6 +43,8 @@ namespace BehaviourAPI.UnityToolkit.Demos
             // Las transiciones que pasan al estado "moving" se activan con percepciones Push.
             var idleToMoving = fsm.CreateTransition("idle to moving", idle, moving, statusFlags: StatusFlags.None);
             var movingToMoving = fsm.CreateTransition("moving to moving", moving, moving, statusFlags: StatusFlags.None);
+            
+            // El orden de los elementos es importante: la transición moving-moving se activará antes que la transición idle-moving
             _click = new PushPerception(movingToMoving, idleToMoving);
 
             // La transición que pasan al estado "idle" se lanzan cuando la acción del estado anterior termine.
