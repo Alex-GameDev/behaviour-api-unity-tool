@@ -17,7 +17,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
             _bSystem = BehaviourSystem.CreateSystem(data);
         }
 
-        protected override SystemData GetSystemdata()
+        protected override SystemData GetEditedSystemdata()
         {
             return _bSystem.GetBehaviourSystemData();
         }

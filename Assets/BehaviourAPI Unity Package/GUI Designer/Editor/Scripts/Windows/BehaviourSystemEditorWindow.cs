@@ -96,7 +96,8 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 
         private void OnUndoOperationPreformed()
         {
-            UpdateSelectionMenu();
+            if(System != null)
+                UpdateSelectionMenu();
         }
 
         /// <summary>
@@ -547,6 +548,8 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
                 using (var graphChangeCheck = new EditorGUI.ChangeCheckScope())
                 {
                     var selectedGraphProperty = graphsProperty.GetArrayElementAtIndex(selectedGraphIndex);
+
+                    if (selectedGraphProperty == null) return;
                     EditorGUILayout.BeginHorizontal();
                     EditorGUILayout.BeginVertical("box");
 
@@ -689,6 +692,13 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
                 IsRuntime = false;
                 ClearSystem();
             }
+        }
+
+        public void OnChangeOpenScene()
+        {
+            System = null;
+            IsRuntime = false;
+            ClearSystem();
         }
 
         #endregion

@@ -7,7 +7,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
     /// <summary>
     /// Subclass of  <see cref="BehaviourRunner"/> used to edit a behaviour runner with the editor tools.
     /// </summary>
-    public class EditorBehaviourRunner : DataBehaviourRunner, IBehaviourSystem
+    public class EditorBehaviourRunner : DataBehaviourRunner
     {
         #region ------------------------------- Private fields --------------------------------
 
@@ -17,9 +17,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
 
         #region --------------------------------- Properties ----------------------------------
 
-        public SystemData Data => data;
-
-        public Object ObjectReference => this;
+        public override SystemData Data => data;
 
         #endregion
 

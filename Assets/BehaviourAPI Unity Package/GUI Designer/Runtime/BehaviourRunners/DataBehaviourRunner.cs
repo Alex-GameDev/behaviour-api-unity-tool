@@ -11,7 +11,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
     /// <summary>
     /// Base class of components that use an editable behavior system.
     /// </summary>
-    public abstract class DataBehaviourRunner : UnityToolkit.BehaviourRunner
+    public abstract class DataBehaviourRunner : UnityToolkit.BehaviourRunner, IBehaviourSystem
     {
         #region -------------------------------- private fields ---------------------------------
 
@@ -27,6 +27,10 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
         /// The execution main graph
         /// </summary>
         public BehaviourGraph MainGraph { get; private set; }
+
+        public abstract SystemData Data { get; }
+
+        public UnityEngine.Object ObjectReference => this;
 
         #endregion
 

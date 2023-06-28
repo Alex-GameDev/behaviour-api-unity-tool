@@ -1,6 +1,7 @@
 namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
 {
     using Core.Perceptions;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Adaptation class for use custom <see cref="ConditionPerception"/> in editor tools.
@@ -58,6 +59,25 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Framework
             onUnpause = unpause.CreateDelegate(data.Runner);
         }
 
+        public override string ToString()
+        {
+            List<string> actionLines = new List<string>();
+            string startLine = init.ToString();
+            if (!string.IsNullOrEmpty(startLine)) actionLines.Add($"Init:{startLine}");
+            string updateLine = check.ToString();
+            if (!string.IsNullOrEmpty(updateLine)) actionLines.Add($"Check:{updateLine}");
+            string stopLine = reset.ToString();
+            if (!string.IsNullOrEmpty(stopLine)) actionLines.Add($"Reset:{stopLine}");
+            string pauseLine = pause.ToString();
+            if (!string.IsNullOrEmpty(pauseLine)) actionLines.Add($"Pause:{pauseLine}");
+            string unpauseLine = unpause.ToString();
+            if (!string.IsNullOrEmpty(unpauseLine)) actionLines.Add($"Unpause:{unpauseLine}");
+
+            return "CustomAction(" + string.Join(", ", actionLines) + ")";
+        }
+
         public bool Validate(BSValidationInfo validationInfo) => true;
+
+
     }
 }

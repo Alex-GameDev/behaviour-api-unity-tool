@@ -8,17 +8,17 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
 
     public abstract class DataSmartInteractionProvider : SmartInteractionProvider
     {
-        public override Action GetInteractionAction(SmartAgent agent)
+        protected override Action GetInteractionAction(SmartAgent agent)
         {
-            SystemData data = GetSystemdata();
+            SystemData data = GetEditedSystemdata();
             BSBuildingResults buildedData = data.BuildSystem(agent);
-            ModifyGraph(buildedData.GraphMap, buildedData.PushPerceptionMap);
+            ModifyGraphs(buildedData.GraphMap, buildedData.PushPerceptionMap);
             return new SubsystemAction(buildedData.MainGraph);
         }
 
-        protected abstract SystemData GetSystemdata();
+        protected abstract SystemData GetEditedSystemdata();
 
-        protected virtual void ModifyGraph(Dictionary<string, BehaviourGraph> graphs, Dictionary<string, PushPerception> pushPerceptionMap)
+        protected virtual void ModifyGraphs(Dictionary<string, BehaviourGraph> graphs, Dictionary<string, PushPerception> pushPerceptionMap)
         {
             return;
         }

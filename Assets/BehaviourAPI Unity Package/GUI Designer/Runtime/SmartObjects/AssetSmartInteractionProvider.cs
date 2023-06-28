@@ -10,13 +10,13 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
     {
         [SerializeField] BehaviourSystem _behaviourSystem;
 
-        public override Action GetInteractionAction(SmartAgent agent)
+        protected override Action GetInteractionAction(SmartAgent agent)
         {
             SystemData data = _behaviourSystem.GetBehaviourSystemData();
             BehaviourGraph graph = data.BuildSystem(agent).MainGraph;
             return new SubsystemAction(graph);
         }
 
-        protected override SystemData GetSystemdata() => _behaviourSystem.GetBehaviourSystemData();
+        protected override SystemData GetEditedSystemdata() => _behaviourSystem.GetBehaviourSystemData();
     }
 }

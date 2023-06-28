@@ -6,14 +6,12 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
     /// <summary>
     /// Subclass of  <see cref="BehaviourRunner"/> that executes a reusable <see cref="BehaviourSystem"/> 
     /// </summary>
-    public class AssetBehaviourRunner : DataBehaviourRunner, IBehaviourSystem
+    public class AssetBehaviourRunner : DataBehaviourRunner
     {
         public BehaviourSystem System;
         SystemData _runtimeSystem = null;
 
-        public SystemData Data => _runtimeSystem;
-
-        public Object ObjectReference => this;
+        public override SystemData Data => _runtimeSystem;
 
         /// <summary>
         /// Returns the system asset data to generate a runtime copy

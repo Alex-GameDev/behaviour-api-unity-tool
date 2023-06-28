@@ -1,4 +1,8 @@
+using System;
 using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
@@ -8,7 +12,14 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
         static EditorSettings()
         {
             EditorApplication.playModeStateChanged += RefreshBehaviourEditorWindow;
+            EditorSceneManager.sceneOpened += ClearBehaviourWindow;
             BehaviourAPISettings.instance.ReloadAssemblies();
+        }
+
+        private static void ClearBehaviourWindow(Scene scene, OpenSceneMode mode)
+        {
+            if (BehaviourSystemEditorWindow.instance != null)
+                BehaviourSystemEditorWindow.instance.OnChangeOpenScene();
         }
 
         static void RefreshBehaviourEditorWindow(PlayModeStateChange playModeStateChange)
@@ -16,5 +27,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
             if (BehaviourSystemEditorWindow.instance != null)
                 BehaviourSystemEditorWindow.instance.OnChangePlayModeState(playModeStateChange);
         }
+
+
     }
 }
