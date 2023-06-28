@@ -10,8 +10,8 @@ namespace BehaviourAPI.UnityToolkit
     [SelectionGroup("MOVEMENT")]
     public class MoveToMousePosAction : UnityAction
     {
-        [SerializeField] float maxRayDistance = 100f;
-        [SerializeField] LayerMask layerMask;
+        public float maxRayDistance = 100f;
+        public LayerMask layerMask = -1;
 
         /// <summary>
         /// Create a new MoveToMousePosAction
