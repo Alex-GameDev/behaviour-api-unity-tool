@@ -63,11 +63,6 @@ namespace BehaviourAPI.Core
         Finished = 6,
 
         /// <summary>
-        /// Equivalent to Status.Running | Status.Success | Status.Failure
-        /// </summary>
-        NotPaused = 7,
-
-        /// <summary>
         /// Equivalent to Status.Paused
         /// </summary>
         Paused = 8,

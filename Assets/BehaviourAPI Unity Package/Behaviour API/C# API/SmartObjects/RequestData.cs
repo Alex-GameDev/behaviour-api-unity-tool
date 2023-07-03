@@ -7,9 +7,9 @@
     public class RequestData
     {
         /// <summary>
-        /// The name of the interaction requested.
+        /// The name of the need requested.
         /// </summary>
-        public string InteractionName;
+        public string Need;
 
         /// <summary>
         /// Create a new request data without specify the interaction name.
@@ -21,10 +21,10 @@
         /// <summary>
         /// Create a new request interaction.
         /// </summary>
-        /// <param name="interactionName">The name of the interaction requested.</param>
-        public RequestData(string interactionName)
+        /// <param name="need">The name of the need requested.</param>
+        public RequestData(string need)
         {
-            InteractionName = interactionName;
+            Need = need;
         }
 
         public static implicit operator RequestData(string interactionName) => new RequestData(interactionName);

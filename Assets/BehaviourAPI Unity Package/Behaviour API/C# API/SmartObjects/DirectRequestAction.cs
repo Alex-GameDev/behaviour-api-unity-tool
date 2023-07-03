@@ -19,7 +19,7 @@
         /// <param name="agent">The agent used to send the request</param>
         /// <param name="smartObject">The smart object requested.</param>
         /// <param name="requestData">The data included in the request.</param>
-        public DirectRequestAction(T agent, ISmartObject<T> smartObject, RequestData requestData) : base(agent)
+        public DirectRequestAction(T agent, ISmartObject<T> smartObject, RequestData requestData = null) : base(agent)
         {
             SmartObject = smartObject;
             RequestData = requestData;

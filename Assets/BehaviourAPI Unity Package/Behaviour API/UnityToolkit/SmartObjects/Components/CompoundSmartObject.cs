@@ -38,16 +38,16 @@ namespace BehaviourAPI.UnityToolkit
 
         public override SmartInteraction RequestInteraction(SmartAgent agent, RequestData requestData)
         {
-            if(!string.IsNullOrEmpty(requestData.InteractionName) && interactionMap.TryGetValue(requestData.InteractionName, out SmartInteractionProvider provider))
+            if(!string.IsNullOrEmpty(requestData.Need) && interactionMap.TryGetValue(requestData.Need, out SmartInteractionProvider provider))
             {
                 SmartInteraction interaction = provider.CreateInteraction(agent);
-                SetInteractionEvents(interaction, requestData.InteractionName);
+                SetInteractionEvents(interaction, requestData.Need);
                 return interaction;
             }
             else if(interactionMap.TryGetValue(defaultInteractionName, out SmartInteractionProvider defaultProvider))
             {
                 SmartInteraction interaction = defaultProvider.CreateInteraction(agent);
-                SetInteractionEvents(interaction, requestData.InteractionName);
+                SetInteractionEvents(interaction, requestData.Need);
                 return interaction;
             }
             else

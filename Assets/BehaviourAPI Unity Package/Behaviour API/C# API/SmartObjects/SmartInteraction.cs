@@ -2,7 +2,7 @@
 
 namespace BehaviourAPI.SmartObjects
 {
-    using Core;
+    using BehaviourAPI.Core;
     using Core.Actions;
 
     /// <summary>   
@@ -52,7 +52,7 @@ namespace BehaviourAPI.SmartObjects
         public ISmartAgent Agent { get; private set; }
 
         /// <summary> 
-        /// Create a new Smart interaction with the given action and capabilities. 
+        /// Constructor. 
         /// </summary>
         /// <param name="agent"> The smart agent that was used to request the interaction. </param>
         /// <param name="action"> The action that this interaction executes </param>
@@ -61,18 +61,6 @@ namespace BehaviourAPI.SmartObjects
         {
             Action = action;
             Capabilities = capabilities;
-            Agent = agent;
-        }
-
-        /// <summary> 
-        /// Create a new Smart interaction with the given action. 
-        /// </summary>
-        /// <param name="agent"> The smart agent that was used to request the interaction. </param>
-        /// <param name="action"> The action that this interaction executes </param>   
-        public SmartInteraction(Action action, ISmartAgent agent)
-        {
-            Action = action;
-            Capabilities = new Dictionary<string, float>();
             Agent = agent;
         }
 
@@ -121,7 +109,7 @@ namespace BehaviourAPI.SmartObjects
         /// </summary>
         public void Pause()
         {
-            Action.Stop();
+            Action.Pause();
             OnPause?.Invoke();
         }
 

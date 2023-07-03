@@ -1,4 +1,4 @@
-﻿namespace BehaviourAPI.SmartObjects
+﻿    namespace BehaviourAPI.SmartObjects
 {
 
     /// <summary> 
@@ -27,12 +27,5 @@
         /// <param name="capabilityName"> Name of the capability. </param>
         /// <returns> The capability. </returns>
         float GetCapabilityValue(string capabilityName);
-
-        /// <summary>
-        /// Check if the smart object contains a determined tag.
-        /// </summary>
-        /// <param name="tag">The checked tag.</param>
-        /// <returns>True if the object contains the tag, false otherwise.</returns>
-        bool HasTag(string tag);
     }
 }
