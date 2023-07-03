@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RootPath: Assets/BehaviourAPI Unity Package/GUI Designer
-  CustomAssemblies: 
   GenerateScriptDefaultPath: Assets/Scripts/
   GenerateScriptDefaultName: NewBehaviourRunner
   LeafNodeColor: {r: 1, g: 0.45, b: 0.15, a: 1}

@@ -54,9 +54,9 @@ namespace BehaviourAPI.UnityToolkit.Demos
             var root = bt.CreateDecorator<LoopNode>("loop", seq).SetIterations(-1);
             bt.SetRootNode(root);
 
-            _debugger.RegisterGraph(bt);
-            _debugger.RegisterGraph(us);
-            _debugger.RegisterGraph(fsm);
+            _debugger.RegisterGraph(bt, "main");
+            _debugger.RegisterGraph(us, "recipe us");
+            _debugger.RegisterGraph(fsm, "make pizza fsm");
 
             return bt;
         }

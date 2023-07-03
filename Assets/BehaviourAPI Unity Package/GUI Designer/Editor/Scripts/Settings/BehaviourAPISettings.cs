@@ -33,7 +33,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
             "BehaviourAPI.UnityToolkit.GUIDesigner.Editor"
         };
 
-        private static readonly string k_RootPath = "Assets/BehaviourAPI Unity Package/GUI Editor Tool";
+        private static readonly string k_RootPath = "Assets/BehaviourAPI Unity Package/GUI Designer";
         #endregion
 
         #region ----------------------- Editor settings -----------------------

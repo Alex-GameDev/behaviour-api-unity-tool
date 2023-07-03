@@ -48,7 +48,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
 
             bt.SetRootNode(loop);
 
-            _debugger.RegisterGraph(bt);
+            _debugger.RegisterGraph(bt, "main");
             return bt;
         }
 

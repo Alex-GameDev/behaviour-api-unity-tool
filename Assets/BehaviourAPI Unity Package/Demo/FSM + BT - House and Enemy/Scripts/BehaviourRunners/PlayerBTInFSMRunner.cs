@@ -27,6 +27,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
             _enemyTransform = GameObject.FindGameObjectWithTag("Enemy").transform;
             _door = GameObject.FindGameObjectWithTag("Door").transform;
             _audioSource = GetComponent<AudioSource>();
+            _debugger = GetComponent<BSRuntimeDebugger>();
             base.Init();
         }
 

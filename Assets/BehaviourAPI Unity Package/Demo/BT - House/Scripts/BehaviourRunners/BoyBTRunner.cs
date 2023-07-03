@@ -61,7 +61,7 @@ namespace BehaviourAPI.UnityToolkit.Demos
             var root = bt.CreateComposite<SequencerNode>("root", false, walkToDoor, sel, enter);
 
             bt.SetRootNode(root);
-            _debugger.RegisterGraph(bt);
+            _debugger.RegisterGraph(bt, "main");
             return bt;
         }
 
