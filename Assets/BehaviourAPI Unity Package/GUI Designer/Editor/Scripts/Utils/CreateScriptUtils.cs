@@ -4,12 +4,12 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Editor
 {
     public static class CreateScriptUtils
     {
-        [MenuItem("Assets/Create/BehaviourAPI/CodeBehaviourRunner")]
+        [MenuItem("Assets/Create/BehaviourAPI/BehaviourRunner")]
         public static void CreateCodeBehaviourRunner()
         {
             string templatePath = BehaviourAPISettings.instance.ScriptTemplatePath + "/CodeRunnerTemplate.cs.txt";
 
-            ProjectWindowUtil.CreateScriptAssetFromTemplateFile(templatePath, "NewCodeBehaviourRunner.cs");
+            ProjectWindowUtil.CreateScriptAssetFromTemplateFile(templatePath, "NewBehaviourRunner.cs");
         }
 
         [MenuItem("Assets/Create/BehaviourAPI/EditorBehaviourRunner")]

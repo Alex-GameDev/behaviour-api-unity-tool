@@ -12,11 +12,11 @@ using BehaviourAPI.UnityToolkit.GUIDesigner.Runtime;
 public class #SCRIPTNAME# : EditorBehaviourRunner
 {
     // Use this method to modify the editor graph in code
-    protected override void ModifyGraphs()
+    protected override void ModifyGraphs(Dictionary<string, BehaviourGraph> graphMap, Dictionary<string, PushPerception> pushPerceptionMap)
     {
-        // Use FindGraph("graphname") to get a behaviourGraph called "graphname".
-        // Use FindPushPerception("pushname") to get a Pushperception called "pushname".
-        // Use FindGraph("graphname").FindNode("nodename") to get a node called "nodename" in a graph called "graphname".
+        // Use graphMap["graphname"] to get a behaviourGraph called "graphname".
+        // Use pushPerceptionMap["pushname"] to get a Pushperception called "pushname".
+        // Use graphMap["graphname"].FindNode("nodename") to get a node called "nodename" in a graph called "graphname".
     }
 
     // Use this method instead of Awake
@@ -26,13 +26,13 @@ public class #SCRIPTNAME# : EditorBehaviourRunner
     }
 
     // Use this method instead of OnDisable
-    protected override void OnUnpaused()
+    protected override void OnDisableSystem()
     {
         base.OnDisableSystem();
     }
 
     // Use this method instead of OnEnable
-    protected override void OnPaused()
+    protected override void OnEnableSystem()
     {
         base.OnEnableSystem();
     }
@@ -40,13 +40,13 @@ public class #SCRIPTNAME# : EditorBehaviourRunner
     // Use this method instead of Start
     protected override void OnStarted()
     {
-        base.OnStart();
+        base.OnStarted();
     }
 
     // Use this method instead of Update
     protected override void OnUpdated()
     {
-        base.OnUpdate();
+        base.OnUpdated();
     }
 }
 

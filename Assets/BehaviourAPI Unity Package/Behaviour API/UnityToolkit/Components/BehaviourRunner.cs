@@ -50,9 +50,9 @@ namespace BehaviourAPI.UnityToolkit
 
         private void Update() => OnUpdated();
 
-        private void OnEnable() => OnUnpaused();
+        private void OnEnable() => OnDisableSystem();
 
-        private void OnDisable() => OnPaused();
+        private void OnDisable() => OnEnableSystem();
 
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace BehaviourAPI.UnityToolkit
         /// Called in ondisable event.
         /// The method called in this event depends on dontStopOnDisable configuration.
         /// </summary>
-        protected virtual void OnPaused()
+        protected virtual void OnEnableSystem()
         {
             if (!_systemRunning || _executionGraph == null)
                 return;
@@ -147,7 +147,7 @@ namespace BehaviourAPI.UnityToolkit
         /// Called in onenable event.
         /// The method called in this event depends on dontStopOnDisable configuration.
         /// </summary>
-        protected virtual void OnUnpaused()
+        protected virtual void OnDisableSystem()
         {
             if (!_systemRunning || _executionGraph == null)
                 return;
