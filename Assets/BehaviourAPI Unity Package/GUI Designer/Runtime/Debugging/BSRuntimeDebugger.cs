@@ -27,7 +27,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
 
             GraphData graphData = new GraphData(behaviourGraph, name);
             Data.graphs.Add(graphData);
-            _eventHandler.RegisterEvents(behaviourGraph);
+            _eventHandler.RegisterEvents(behaviourGraph, name);
         }
 
         public void UnregisterGraph(BehaviourGraph behaviourGraph)

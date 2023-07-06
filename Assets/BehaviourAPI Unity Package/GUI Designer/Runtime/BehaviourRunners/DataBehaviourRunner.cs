@@ -46,7 +46,7 @@ namespace BehaviourAPI.UnityToolkit.GUIDesigner.Runtime
 
             foreach(GraphData graph in _executionSystem.graphs)
             {
-                _eventHandler.RegisterEvents(graph.graph);
+                _eventHandler.RegisterEvents(graph.graph, graph.name);
             }
         }
         protected sealed override BehaviourGraph CreateGraph()
